@@ -10,6 +10,7 @@ public class StudentUIManager : MonoBehaviour
     public Button quizButton;
 
     public GameObject personalVideoWindow;
+    public GameObject quizView;
 
     // Start is called before the first frame update
     void Start()

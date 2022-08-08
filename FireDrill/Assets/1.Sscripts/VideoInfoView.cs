@@ -1,22 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class VideoInfoView : View
 {
+    public int currentVideoIndex;
+    public Button playClipButton;
+
     public override void Initialize()
     {
+        playClipButton.onClick.AddListener(() => PlayVideoClip());
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public void PlayVideoClip()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        VideoManager.Instance.SendSelectedVideo(currentVideoIndex);
     }
 }

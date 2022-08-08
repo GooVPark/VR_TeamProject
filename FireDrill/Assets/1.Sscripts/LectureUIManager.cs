@@ -17,6 +17,13 @@ public class LectureUIManager : View
 
     public View videoListView;
 
+    public Button showQuizListView;
+
+    public Transform quizContents;
+    public List<Button> quizList = new List<Button>();
+    public GameObject quizInfoView;
+
+
     public override void Initialize()
     {
         for (int i = 0; i < contents.childCount; i++)
@@ -24,25 +31,31 @@ public class LectureUIManager : View
             videoList.Add(contents.GetChild(i).GetComponent<VideoElement>());
             int index = i;
             videoList[i].selectButton.onClick.AddListener(() => ViewManager.Show<VideoInfoView>(true));
+            videoList[i].selectButton.onClick.AddListener(() => ShowVideoInfo(index));
         }
 
         closeButton.onClick.AddListener(() => ViewManager.ShowLast());
         showVideoListButton.onClick.AddListener(() => ViewManager.Show<VideoListView>(true));
-    }
 
-    public void ShowVideoList()
-    {
-        videoListWindow.SetActive(true);
+        for (int i = 0; i < quizContents.childCount; i++)
+        {
+            quizList.Add(quizContents.GetChild(i).GetComponent<Button>());
+            int index = i;
+            quizList[i].onClick.AddListener(() => ViewManager.Show<QuizInfoView>(true));
+            quizList[i].onClick.AddListener(() => ShowQuizInfo(index));
+        }
+
+        showQuizListView.onClick.AddListener(() => ViewManager.Show<QuizListView>(true));
     }
 
     public void ShowVideoInfo(int index)
     {
-        videoInfoWindow.SetActive(true);
+        videoInfoWindow.GetComponent<VideoInfoView>().currentVideoIndex = index;
     }
 
-    public void CloseVideoInfo()
+    public void ShowQuizInfo(int index)
     {
-        videoInfoWindow.SetActive(false);
+        quizInfoView.GetComponent<QuizInfoView>().currentQuizIndex = index;
     }
 
    
