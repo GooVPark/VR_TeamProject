@@ -4,15 +4,39 @@ using UnityEngine;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
 
+using TMPro;
 using Photon.Pun;
 
-public class NetworkPlayer : MonoBehaviour
+public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
 {
+    #region 동기화 프로퍼티
+
+    [SerializeField] private string userName;
+    public string UserName { get => userName; set => ActionRPC(nameof(SetUserNameRPC), value); }
+    [PunRPC]
+    private void SetUserNameRPC(string value)
+    {
+        userName = value;
+        userNameUI.text = userName;
+    }
+
+    private void ActionRPC(string functionName, object value)
+    {
+        photonView.RPC(functionName, RpcTarget.All, value);
+    }
+
+    public void InvokeProperties()
+    {
+        UserName = UserName;
+    }
+    #endregion
     public Transform head;
     public Transform leftHand;
     public Transform rightHand;
 
     private PhotonView photonView;
+
+    public TMP_Text userNameUI;
 
     [SerializeField] private ActionBasedController leftController;
     [SerializeField] private ActionBasedController rightController;
@@ -22,9 +46,12 @@ public class NetworkPlayer : MonoBehaviour
     void Start()
     {
         photonView = GetComponent<PhotonView>();
+
         headset = Camera.main;
         leftController = GameObject.Find("LeftHand Controller").GetComponent<ActionBasedController>();
         rightController = GameObject.Find("RightHand Controller").GetComponent<ActionBasedController>();
+
+        Initialize();
     }
 
     // Update is called once per frame
@@ -38,6 +65,20 @@ public class NetworkPlayer : MonoBehaviour
 
             MapPosition();
         }
+    }
+
+    public void Initialize()
+    {
+        if (photonView.IsMine)
+        {
+            UserName = PhotonNetwork.LocalPlayer.NickName;
+        }
+    }
+
+    [PunRPC]
+    public void InitializeRPC()
+    {
+        userNameUI.text = NetworkManager.UserName;
     }
 
     private void MapPosition()
@@ -59,5 +100,10 @@ public class NetworkPlayer : MonoBehaviour
 
         rightHand.position = rightPosition;
         rightHand.rotation = rightRotation;
+    }
+
+    public void OnPhotonInstantiate(PhotonMessageInfo info)
+    {
+        info.Sender.TagObject = gameObject;
     }
 }

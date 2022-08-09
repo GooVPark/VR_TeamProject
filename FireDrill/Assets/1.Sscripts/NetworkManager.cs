@@ -71,7 +71,17 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         roomListUI.SetActive(false);
+        GameObject playerObject = PhotonNetwork.Instantiate("Player", transform.position, transform.rotation);
+        NetworkPlayer player = playerObject.GetComponent<NetworkPlayer>();
         Debug.Log("NetworkManager : Joined Room");
+    }
+
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        if(newPlayer != PhotonNetwork.LocalPlayer)
+        {
+            ((GameObject)PhotonNetwork.LocalPlayer.TagObject).GetComponent<NetworkPlayer>().InvokeProperties();
+        }
     }
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
@@ -124,6 +134,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             PhotonNetwork.JoinRoom(roomName);
         }
     }
+
 
     public void SetLogInData(LogInData _logInData)
     {

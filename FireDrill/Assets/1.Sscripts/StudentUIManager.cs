@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class StudentUIManager : MonoBehaviour
+public class StudentUIManager : View
 {
     public Button personalVideoButton;
     public Button quizButton;
@@ -12,16 +12,13 @@ public class StudentUIManager : MonoBehaviour
     public GameObject personalVideoWindow;
     public GameObject quizView;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public Button closeButton;
 
-    // Update is called once per frame
-    void Update()
+
+    public override void Initialize()
     {
-        
+        quizButton.onClick.AddListener(() => ShowCurrentQuizWindow());
+        closeButton.onClick.AddListener(() => ViewManager.ShowLast());
     }
 
     public void ShowPersonalVideoWindow()
@@ -31,6 +28,10 @@ public class StudentUIManager : MonoBehaviour
 
     public void ShowCurrentQuizWindow()
     {
+        QuizView quizView = this.quizView.GetComponent<QuizView>();
+        quizView.SetQuizView(QuizManager.Instance.currentQuizIndex);
 
+        this.quizView.SetActive(true);
     }
+
 }

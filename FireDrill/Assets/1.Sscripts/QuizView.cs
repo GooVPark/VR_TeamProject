@@ -4,10 +4,15 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class QuizView : MonoBehaviour
+public class QuizView : View
 {
     public List<QuizSelection> selections = new List<QuizSelection>();
     public TMP_Text content;
+
+    public override void Initialize()
+    {
+        
+    }
 
     public void SetQuizView(int index)
     {

@@ -11,6 +11,7 @@ public class QuizInfoView : View
 
     public override void Initialize()
     {
+        sendQuiz.onClick.AddListener(() => SendQuiz());
     }
 
     public void SendQuiz()
