@@ -48,6 +48,12 @@ public class LectureUIManager : View
         showQuizListView.onClick.AddListener(() => ViewManager.Show<QuizListView>(true));
     }
 
+    public override void Hide()
+    {
+        base.Hide();
+        InputManager.IsLeftHandStartContextValue = false;
+    }
+
     public void ShowVideoInfo(int index)
     {
         videoInfoWindow.GetComponent<VideoInfoView>().currentVideoIndex = index;

@@ -69,6 +69,19 @@ public class ViewManager : MonoBehaviour
         }
     }
 
+    public static View GetCurrentView()
+    {
+        return s_instance._currentView;
+    }
+
+    public static void ToMain()
+    {
+        while(s_instance._history.Count >0)
+        {
+            ShowLast();
+        }
+    }
+
     private void Awake() => s_instance = this;
 
     private void Start()

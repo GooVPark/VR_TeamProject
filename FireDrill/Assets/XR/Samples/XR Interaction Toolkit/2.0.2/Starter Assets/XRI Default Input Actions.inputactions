@@ -568,7 +568,7 @@
             ]
         },
         {
-            "name": "XR LeftHand Button",
+            "name": "XR LeftHand Extra",
             "id": "f77b086d-8ba9-432c-8834-d433fa9acec8",
             "actions": [
                 {
@@ -597,6 +597,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Stick",
+                    "type": "Value",
+                    "id": "8d159955-aab3-4c66-9c19-1592e118fb26",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -630,6 +639,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Secondary",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a8f490d2-cbfe-41d5-97d8-13f78eca3946",
+                    "path": "<XRController>{LeftHand}/primary2DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Stick",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -1143,7 +1163,7 @@
             ]
         },
         {
-            "name": "XR RightHand Button",
+            "name": "XR RightHand Extra",
             "id": "1373d187-8133-4d5b-85fb-7bdae4a1860f",
             "actions": [
                 {
@@ -1163,6 +1183,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Stick",
+                    "type": "Value",
+                    "id": "a875bd2d-020e-49e6-9fc8-527dc0ec8751",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -1185,6 +1214,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Secondary",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0e8adbfe-b7c1-438e-be06-dd5963e810a3",
+                    "path": "<XRController>{RightHand}/primary2DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Stick",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
