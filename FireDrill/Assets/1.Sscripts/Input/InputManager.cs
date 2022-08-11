@@ -13,6 +13,9 @@ public class InputManager : MonoBehaviour
     public InputActionReference leftSecondary = null;
 
     public InputActionReference leftStick = null;
+
+    public InputActionReference leftControllerDeviceRotation = null;
+    public InputActionReference leftControllerPosition = null;
     [Space(5)]
 
     [Header("Right Hand Button Input")]
@@ -20,6 +23,9 @@ public class InputManager : MonoBehaviour
     public InputActionReference rightSecondary = null;
 
     public InputActionReference rightStick = null;
+
+    public InputActionReference rightControllerRotation = null;
+    
 
     #region LeftHand Context Values
 
@@ -35,8 +41,15 @@ public class InputManager : MonoBehaviour
     private static bool isLeftHandStickActivated = false;
     public static bool IsLeftHandStickActivated { get { return isLeftHandStickActivated; } }
 
+    private static bool isHook = false;
+    public static bool IsHook { get { return isHook; } }
+    private static Vector3 hookingDirection = Vector3.zero;
+    public static Vector3 HookingDirection { get { return hookingDirection; } }
+
     private static Vector2 leftHandStickContextValue;
     public static Vector2 LeftHandStickContextValue { get { return leftHandStickContextValue; } }
+
+    private Vector3 prevPosition;
 
     #endregion
 
@@ -60,12 +73,19 @@ public class InputManager : MonoBehaviour
         leftStick.action.performed += OnLeftStickPerformed;
         leftStick.action.canceled += OnLeftStickCanceled;
 
+        leftControllerPosition.action.performed += OnLeftControllerPosition;
+        leftControllerDeviceRotation.action.performed += OnLeftHandDeviceRotate;
+
         rightPrimary.action.started += RightPrimary;
         rightSecondary.action.started += RightSecondary;
 
         rightStick.action.started += OnRightStickStarted;
         rightStick.action.performed += OnRightStickPerformed;
         rightStick.action.canceled += OnRightStickCanceled;
+    }
+
+    private void Start()
+    {
     }
 
     #region Left Hand Inputs
@@ -112,6 +132,28 @@ public class InputManager : MonoBehaviour
         isLeftHandStickActivated = false;
     }
 
+    private void OnLeftControllerPosition(InputAction.CallbackContext context)
+    {
+        Vector3 currPosition = context.ReadValue<Vector3>();
+        float distance = Vector3.Distance(prevPosition, currPosition);
+        if (distance > 0.02f)
+        {
+            Debug.Log("Hook");
+            isHook = true;
+            hookingDirection = prevPosition - currPosition;
+            Debug.Log(hookingDirection);
+        }
+        else
+        {
+            isHook = false;
+        }
+        prevPosition = context.ReadValue<Vector3>();
+    }
+
+    private void OnLeftHandDeviceRotate(InputAction.CallbackContext context)
+    {
+        
+    }
     #endregion
 
 
