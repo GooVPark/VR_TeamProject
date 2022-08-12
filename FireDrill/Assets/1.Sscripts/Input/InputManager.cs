@@ -96,7 +96,15 @@ public class InputManager : MonoBehaviour
 
         if(isLeftHandStartContextValue)
         {
-            ViewManager.Show<LectureUIManager>();
+            switch (NetworkManager.UserData.authority)
+            {
+                case Authority.Lecture:
+                    ViewManager.Show<LectureUIManager>();
+                    break;
+                case Authority.Student:
+                    ViewManager.Show<StudentUIManager>(); 
+                    break;
+            }
         }
         else
         {
@@ -177,13 +185,27 @@ public class InputManager : MonoBehaviour
     private void OnRightStickPerformed(InputAction.CallbackContext context)
     {
         Vector2 contextValue = context.ReadValue<Vector2>();
-
-        Debug.Log(contextValue);
     }
 
     private void OnRightStickCanceled(InputAction.CallbackContext context)
     {
         Debug.Log("Right Stick Canceled");
     }
+    #endregion
+
+    #region Input Timer
+
+    public IEnumerator PressTimer(float threshold)
+    {
+        float elapsedTime = 0f;
+        WaitForFixedUpdate fixedTime = new WaitForFixedUpdate();
+
+        while(elapsedTime > threshold)
+        {
+            elapsedTime += Time.deltaTime;
+            yield return fixedTime;
+        }
+    }
+
     #endregion
 }

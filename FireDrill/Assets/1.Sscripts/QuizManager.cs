@@ -4,11 +4,13 @@ using UnityEngine;
 using UnityEngine.UI.TableUI;
 using Photon.Pun;
 
+public enum QuizState { Correct, Incorrect, NotYet }
+
 public class QuizManager : MonoBehaviourPun
 {
     public static QuizManager Instance;
     public Alert alert;
-    public int currentQuizIndex;
+    public int currentQuizIndex = -1;
 
     public List<QuizObject> quizList = new List<QuizObject>();
     public Dictionary<string, List<Answer>> scoreBoardDict = new Dictionary<string, List<Answer>>();
@@ -25,25 +27,21 @@ public class QuizManager : MonoBehaviourPun
             Destroy(Instance.gameObject);
         }
 
-        for(int i = 0; i < quizList.Count; i++)
-        {
-            personalQuizAnswerList.Add(new Answer(false, -1));
-        }
+
     }
 
     #region Lectuure's Quiz UI Interactions
 
     public void SendSelectedQuiz(int index)
     {
-        //photonView.RPC(nameof(SendSelectedQuizRPC), RpcTarget.AllBufferedViaServer, index);
-
-        alert.OnAlert();
-        currentQuizIndex = index;
+        Debug.Log("Send selected Quiz");
+        photonView.RPC(nameof(SendSelectedQuizRPC), RpcTarget.AllBufferedViaServer, index);
     }
 
     [PunRPC]
     public void SendSelectedQuizRPC(int index)
     {
+        Debug.Log("Send selected Quiz RPC");
         alert.OnAlert();
         currentQuizIndex = index;
     }
@@ -52,16 +50,16 @@ public class QuizManager : MonoBehaviourPun
 
     #region Student's Quiz UI Interactions
 
-    public void SubmitAnswer(int quizIndex, int answer)
+    public void SubmitAnswer(int id, int quizIndex, int answer)
     {
-        bool isAnswer = quizList[quizIndex].IsAnswer(answer);
-        personalQuizAnswerList[quizIndex].Set(isAnswer, answer);
+        photonView.RPC(nameof(SubmitAnswerRPC), RpcTarget.All, id, quizIndex, answer);
     }
 
     [PunRPC]
-    public void SubmitAnswerRPC()
+    public void SubmitAnswerRPC(int id, int quizIndex, int answer)
     {
-
+        QuizState state = quizList[quizIndex].IsAnswer(answer);
+        DataManager.Instance.userDB.userDB[id].UpdateAnswer(quizIndex, answer, state);
     }
 
     #endregion
@@ -74,18 +72,18 @@ public class QuizManager : MonoBehaviourPun
 [System.Serializable]
 public class Answer
 {
-    public Answer(bool isCollect, int answer)
+    public Answer(QuizState state, int answer)
     {
-        this.isCollect = isCollect;
+        this.state = state;
         this.answer = answer;
     }
 
-    private int answer;
-    private bool isCollect = false;
+    [SerializeField] private int answer;
+    [SerializeField] private QuizState state;
 
-    public void Set(bool isCollect, int answer)
+    public void Update(QuizState state, int answer)
     {
-        this.isCollect = isCollect;
+        this.state = state;
         this.answer = answer;
     }
 }

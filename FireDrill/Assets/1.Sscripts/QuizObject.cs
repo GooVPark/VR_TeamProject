@@ -11,10 +11,10 @@ public class QuizObject : ScriptableObject
     [TextArea(30, 50)]
     public string contents;
 
-    public bool IsAnswer(int answer)
+    public QuizState IsAnswer(int answer)
     {
-        if (answer == this.answer) return true;
+        if (answer == this.answer) return QuizState.Correct;
 
-        return false;
+        return QuizState.Incorrect;
     }
 }

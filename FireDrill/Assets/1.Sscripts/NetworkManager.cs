@@ -15,8 +15,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     private static string userName;
     public static string UserName { get { return userName; } }
 
-    private static string userLevel;
-    public static string UserLevel { get { return userLevel; } }
+    private static Authority userLevel;
+    public static Authority UserLevel { get { return userLevel; } }
+
+    private static UserData userData;
+    public static UserData UserData { get => userData; }
 
     private string gameVersion = "1.0";
 
@@ -49,9 +52,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         }
     }
 
-    public void Connect(LogInData logInData)
+    public void Connect(UserData _userData)
     {
-        SetLogInData(logInData);
+        userData = _userData;
+        userName = userData.name;
+        userLevel = userData.authority;
 
         PhotonNetwork.GameVersion = gameVersion;
         PhotonNetwork.ConnectUsingSettings();
@@ -133,14 +138,5 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             Debug.Log("Join");
             PhotonNetwork.JoinRoom(roomName);
         }
-    }
-
-
-    public void SetLogInData(LogInData _logInData)
-    {
-        loginData = _logInData;
-
-        userName = loginData.GetUserName();
-        userLevel = loginData.GetUserLevel();
     }
 }

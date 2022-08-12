@@ -15,6 +15,8 @@ public class LogInMnager : MonoBehaviour
     public GameObject loginUI;
     public GameObject networkManager;
 
+    private UserData userData;
+
     private bool isLoginButtonInteractable = false;
 
     public void LogIn()
@@ -24,11 +26,19 @@ public class LogInMnager : MonoBehaviour
             return;
         }
 
+        if(DataManager.Instance.FindUserData(emailField.text, passwordField.text, out userData))
+        {
+
+        }
+        else
+        {
+            return;
+        }
+        
         loginButton.interactable = false;
 
         //sum actions...
-        LogInData logInData = new LogInData(emailField.text, passwordField.text); //DB 연동하면 여기다 유저 정보 담아서 네트워크 매니저로 넘겨줄것임
-        NetworkManager.Instance.Connect(logInData);
+        NetworkManager.Instance.Connect(userData);
         
         loginUI.SetActive(false);
     }
@@ -38,21 +48,29 @@ public class LogInMnager : MonoBehaviour
 public class LogInData
 {
     private string email;
-    private string password;
+    public string Email { get => email; }
+    private string name;
+    public string Name { get => name; }
+    private Authority authority;
+    public Authority Authority { get => authority; }
+    private List<Answer> answers = new List<Answer>();
 
-    public LogInData(string email, string password)
+    public LogInData(UserData userData)
     {
-        this.email = email;
-        this.password = password;
-    }
+        this.email = userData.email;
+        this.name = userData.name;
+        this.authority = userData.authority;
 
-    public string GetUserName()
-    {
-        return email.Split('@')[0];
+        if(userData.isNew)
+        {
+            this.answers = new List<Answer>(QuizManager.Instance.quizList.Count);
+            userData.answers = this.answers;
+        }
+        else
+        {
+            this.answers = userData.answers;
+        }
     }
+    
 
-    public string GetUserLevel()
-    {
-        return email.Split('@', '.')[1];
-    }
 }

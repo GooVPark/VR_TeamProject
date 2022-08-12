@@ -31,7 +31,7 @@ public class StudentUIManager : View
         QuizView quizView = this.quizView.GetComponent<QuizView>();
         quizView.SetQuizView(QuizManager.Instance.currentQuizIndex);
 
-        this.quizView.SetActive(true);
+        ViewManager.Show<QuizView>(true);
     }
 
 }

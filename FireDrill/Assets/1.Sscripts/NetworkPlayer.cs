@@ -20,6 +20,15 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         userNameUI.text = userName;
     }
 
+    [SerializeField] private string userLevel;
+    public string UserLevel { get => userLevel; set => ActionRPC(nameof(SetUserLevelRPC), value); }
+    [PunRPC]
+    private void SetUserLevelRPC(string value)
+    {
+        userLevel = value;
+        userLevelUI.text = userLevel;
+    }
+
     private void ActionRPC(string functionName, object value)
     {
         photonView.RPC(functionName, RpcTarget.All, value);
@@ -28,6 +37,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     public void InvokeProperties()
     {
         UserName = UserName;
+        UserLevel = UserLevel;
     }
     #endregion
     public Transform head;
@@ -37,6 +47,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     private PhotonView photonView;
 
     public TMP_Text userNameUI;
+    public TMP_Text userLevelUI;
 
     [SerializeField] private ActionBasedController leftController;
     [SerializeField] private ActionBasedController rightController;
@@ -71,7 +82,8 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     {
         if (photonView.IsMine)
         {
-            UserName = PhotonNetwork.LocalPlayer.NickName;
+            UserName = NetworkManager.UserName;
+            UserLevel = NetworkManager.UserLevel.ToString();
         }
     }
 
@@ -102,8 +114,17 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         rightHand.rotation = rightRotation;
     }
 
+    public void InteractionTest()
+    {
+        Debug.Log("On Cursor Hoverd");
+    }
+
+    #region Photon Interfaces
+
     public void OnPhotonInstantiate(PhotonMessageInfo info)
     {
         info.Sender.TagObject = gameObject;
     }
+
+    #endregion
 }
