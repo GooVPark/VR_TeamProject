@@ -48,6 +48,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
 
     public TMP_Text userNameUI;
     public TMP_Text userLevelUI;
+    public TMP_Text distanceUI;
 
     [SerializeField] private ActionBasedController leftController;
     [SerializeField] private ActionBasedController rightController;
@@ -56,6 +57,8 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     // Start is called before the first frame update
     void Start()
     {
+        Transform parent = GameObject.Find("Players").transform;
+        transform.SetParent(parent);
         photonView = GetComponent<PhotonView>();
 
         headset = Camera.main;
@@ -91,6 +94,11 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     public void InitializeRPC()
     {
         userNameUI.text = NetworkManager.UserName;
+    }
+
+    public void UpdateDistanceUI(float distance)
+    {
+        distanceUI.text = distance.ToString("0:0.0") + "m";
     }
 
     private void MapPosition()

@@ -28,7 +28,12 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     private Dictionary<string, GameObject> roomInfoDict = new Dictionary<string, GameObject>();
     public List<GameObject> rooms;
     public GameObject roomPrefab;
-    
+
+
+    public TMP_InputField chatInput;
+    public TMP_Text[] chatContents;
+
+
 
     private void Awake()
     {
@@ -58,35 +63,72 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         userName = userData.name;
         userLevel = userData.authority;
 
+        PhotonNetwork.LocalPlayer.NickName = userName;
+
         PhotonNetwork.GameVersion = gameVersion;
         PhotonNetwork.ConnectUsingSettings();
     }
 
     public override void OnConnectedToMaster()
     {
-        Debug.Log("Connected to Master Server");
         PhotonNetwork.JoinLobby();
     }
+
+    #region Lobby
 
     public override void OnJoinedLobby()
     {
         roomListUI.SetActive(true);
     }
 
+    #endregion
+
+    #region Room
+
+    public void JoinRoom(int roomNumber)
+    {
+        PhotonNetwork.NickName = UserName;
+
+        string roomName = $"Room_{roomNumber + 1:000}";
+        if (!roomDict.ContainsKey(roomName))
+        {
+            RoomOptions roomOptions = new RoomOptions();
+            roomOptions.IsOpen = true;
+            roomOptions.IsVisible = true;
+            roomOptions.MaxPlayers = 11;
+
+            PhotonNetwork.CreateRoom(roomName, roomOptions, TypedLobby.Default);
+        }
+        else
+        {
+            PhotonNetwork.JoinRoom(roomName);
+        }
+    }
+
     public override void OnJoinedRoom()
     {
+        chatInput.text = "";
+        for (int i = 0; i < chatContents.Length; i++)
+        {
+            chatContents[i].text = "";
+        }
+
         roomListUI.SetActive(false);
         GameObject playerObject = PhotonNetwork.Instantiate("Player", transform.position, transform.rotation);
-        NetworkPlayer player = playerObject.GetComponent<NetworkPlayer>();
-        Debug.Log("NetworkManager : Joined Room");
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        if(newPlayer != PhotonNetwork.LocalPlayer)
+        photonView.RPC(nameof(ChatRPC), RpcTarget.All, "<color=yellow>" + newPlayer.NickName + "¥‘¿Ã ¬¸∞° «œºÃΩ¿¥œ¥Ÿ</color>");
+        if (newPlayer != PhotonNetwork.LocalPlayer)
         {
             ((GameObject)PhotonNetwork.LocalPlayer.TagObject).GetComponent<NetworkPlayer>().InvokeProperties();
         }
+    }
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        photonView.RPC(nameof(ChatRPC), RpcTarget.All, "<color=yellow>" + otherPlayer.NickName + "¥‘¿Ã ≈¿Â «œºÃΩ¿¥œ¥Ÿ</color>");
     }
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
@@ -118,25 +160,42 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         }
     }
 
-    public void JoinRoom(int roomNumber)
+    #endregion
+
+    #region Chat
+
+    public void SendChat()
     {
-        PhotonNetwork.NickName = UserName;
+        string msg = PhotonNetwork.NickName + " : " + chatInput.text;
+        photonView.RPC(nameof(ChatRPC), RpcTarget.All, msg);
+        chatInput.text = "";
+    }
 
-        string roomName = $"Room_{roomNumber + 1:000}";
-        if (!roomDict.ContainsKey(roomName))
+    [PunRPC]
+    private void ChatRPC(string msg)
+    {
+        bool isInput = false;
+
+        for (int i = 0; i < chatContents.Length; i++)
         {
-            Debug.Log("Create");
-            RoomOptions roomOptions = new RoomOptions();
-            roomOptions.IsOpen = true;
-            roomOptions.IsVisible = true;
-            roomOptions.MaxPlayers = 10;
-
-            PhotonNetwork.CreateRoom(roomName, roomOptions, TypedLobby.Default);
+            if (chatContents[i].text == "")
+            {
+                isInput = true;
+                chatContents[i].text = msg;
+                break;
+            }
         }
-        else
+
+        if (!isInput)
         {
-            Debug.Log("Join");
-            PhotonNetwork.JoinRoom(roomName);
+            for (int i = 1; i < chatContents.Length; i++)
+            {
+                chatContents[i - 1].text = chatContents[i].text;
+            }
+
+            chatContents[chatContents.Length - 1].text = msg;
         }
     }
+
+    #endregion
 }

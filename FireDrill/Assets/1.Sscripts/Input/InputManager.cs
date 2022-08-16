@@ -5,6 +5,10 @@ using UnityEngine.InputSystem;
 
 public class InputManager : MonoBehaviour
 {
+    public delegate void ControllerInputReadEvent(bool value);
+    public static ControllerInputReadEvent PrimaryReaded;
+    public static ControllerInputReadEvent SecondaryReaded;
+
     public static InputManager Instance;
 
     [Header("Left Hand Button Input")]
@@ -40,6 +44,11 @@ public class InputManager : MonoBehaviour
 
     private static bool isLeftHandStickActivated = false;
     public static bool IsLeftHandStickActivated { get { return isLeftHandStickActivated; } }
+
+    private static bool isRightHandPrimaryPerformed = false;
+    public static bool IsRightHandPrimaryPerformed { get { return isRightHandPrimaryPerformed; } }
+
+    private static bool isRightHandSecondaryPerformed = false;
 
     private static bool isHook = false;
     public static bool IsHook { get { return isHook; } }
@@ -77,6 +86,9 @@ public class InputManager : MonoBehaviour
         leftControllerDeviceRotation.action.performed += OnLeftHandDeviceRotate;
 
         rightPrimary.action.started += RightPrimary;
+        rightPrimary.action.performed += RightHandPrimaryPerformed;
+        rightPrimary.action.canceled += RightHandPrimaryCanceled;
+
         rightSecondary.action.started += RightSecondary;
 
         rightStick.action.started += OnRightStickStarted;
@@ -149,7 +161,6 @@ public class InputManager : MonoBehaviour
             Debug.Log("Hook");
             isHook = true;
             hookingDirection = prevPosition - currPosition;
-            Debug.Log(hookingDirection);
         }
         else
         {
@@ -172,9 +183,25 @@ public class InputManager : MonoBehaviour
         Debug.Log("Right Primary Input");
     }
 
+    private void RightHandPrimaryPerformed(InputAction.CallbackContext context)
+    {
+        isRightHandPrimaryPerformed = true;
+
+        PrimaryReaded?.Invoke(IsRightHandPrimaryPerformed);
+    }
+
+    private void RightHandPrimaryCanceled(InputAction.CallbackContext context)
+    {
+        isRightHandPrimaryPerformed = false;
+
+        PrimaryReaded?.Invoke(IsRightHandPrimaryPerformed);
+    }
+
     private void RightSecondary(InputAction.CallbackContext context)
     {
-        Debug.Log("Rigth Secondary Input");
+        isRightHandSecondaryPerformed = !isRightHandSecondaryPerformed;
+
+        SecondaryReaded?.Invoke(isRightHandSecondaryPerformed);
     }
 
     private void OnRightStickStarted(InputAction.CallbackContext context)
