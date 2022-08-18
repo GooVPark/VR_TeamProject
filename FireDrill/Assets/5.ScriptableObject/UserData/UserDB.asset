@@ -52,19 +52,19 @@ MonoBehaviour:
       state: 0
     - answer: 0
       state: 0
-  - id: 0
+  - id: 3
     email: user4@student.com
     password: 123456
     name: "\uAE40\uCD98\uCD94"
     authority: 1
     isNew: 1
     answers:
-    - answer: 0
+    - answer: 1
       state: 0
-    - answer: 0
-      state: 0
-    - answer: 0
-      state: 0
+    - answer: 3
+      state: 1
+    - answer: -1
+      state: 2
   - id: 0
     email: user@lecture.com
     password: 123456
@@ -85,13 +85,13 @@ MonoBehaviour:
     authority: 0
     isNew: 1
     answers:
-    - answer: 0
-      state: 0
-    - answer: 0
-      state: 0
-    - answer: 0
-      state: 0
-  - id: 0
+    - answer: -1
+      state: 2
+    - answer: -1
+      state: 2
+    - answer: -1
+      state: 2
+  - id: 6
     email: 2
     password: 2
     name: "\uC2E0\uC0AC\uC784\uB2F9"

@@ -11,6 +11,9 @@ public class QuizObject : ScriptableObject
     [TextArea(30, 50)]
     public string contents;
 
+    [TextArea(30, 20)]
+    public string quizInfo;
+
     public QuizState IsAnswer(int answer)
     {
         if (answer == this.answer) return QuizState.Correct;

@@ -62,6 +62,7 @@ public class LectureUIManager : View
     public void ShowQuizInfo(int index)
     {
         quizInfoView.GetComponent<QuizInfoView>().currentQuizIndex = index;
+        quizInfoView.GetComponent<QuizInfoView>().quizInfo.text = QuizManager.Instance.quizList[index].quizInfo;
     }
 
    
