@@ -62,6 +62,9 @@ public class Quest : ScriptableObject
     [SerializeField] private bool isCancelable;
     public virtual bool IsCancelable => isCancelable && cancelConditions.All(x => x.IsPass(this));
 
+    private bool isSavable;
+    public virtual bool IsSavable => isSavable;
+
     [Header("Condition")]
     [SerializeField] private Condition[] acceptionConditions;
     public bool IsAcceptable => acceptionConditions.All(x => x.IsPass(this));
@@ -165,6 +168,36 @@ public class Quest : ScriptableObject
         clone.taskGroups = taskGroups.Select(x => new TaskGroup(x)).ToArray();
         
         return clone;
+    }
+
+    public QuestSaveData ToSaveData()
+    {
+        return new QuestSaveData
+        {
+            codeName = codeName,
+            state = State,
+            taskGroundIndex = currentTaskGroupIndex,
+            taskSuccessCounts = CurrentTaskGroup.Tasks.Select(x => x.CurrentSuccess).ToArray()
+        };
+    }
+
+    public void LoadFrom(QuestSaveData saveData)
+    {
+        State = saveData.state;
+        currentTaskGroupIndex = saveData.taskGroundIndex;
+
+        for(int i = 0; i < currentTaskGroupIndex; i++)
+        {
+            var taskGroup = taskGroups[i];
+            taskGroup.Start();
+            taskGroup.Complete();
+        }
+
+        for(int i = 0; i < saveData.taskSuccessCounts.Length; i++)
+        {
+            CurrentTaskGroup.Start();
+            CurrentTaskGroup.Tasks[i].CurrentSuccess = saveData.taskSuccessCounts[i];
+        }
     }
 
     private void OnSuccessChanged(Task task, int currentSuccess, int prevSuccess) => onTaskSuccessChanged?.Invoke(this, task, currentSuccess, prevSuccess);
