@@ -13,10 +13,6 @@ public class PlayerController : MonoBehaviour
     public QuestManager questManager;
     public QuestData questData;
     
-    private void Start()
-    {
-        questManager.StartQuest(questData, this);
-    }
 
     public void OnSelect(SelectEnterEventArgs arg)
     {

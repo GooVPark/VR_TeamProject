@@ -62,7 +62,7 @@ public class Quest : ScriptableObject
     [SerializeField] private bool isCancelable;
     public virtual bool IsCancelable => isCancelable && cancelConditions.All(x => x.IsPass(this));
 
-    private bool isSavable;
+    [SerializeField] private bool isSavable;
     public virtual bool IsSavable => isSavable;
 
     [Header("Condition")]
@@ -104,6 +104,8 @@ public class Quest : ScriptableObject
         {
             return;
         }
+
+        CurrentTaskGroup.ReceiveReport(category, target, successCount);
 
         if(CurrentTaskGroup.IsAllTaskComplete)
         {
@@ -161,6 +163,10 @@ public class Quest : ScriptableObject
         State = QuestState.Cancel;
         onCanceled?.Invoke(this);
     }
+
+    public bool ContainsTarget(object target) => taskGroups.Any(x => x.ContainsTarget(target));
+
+    public bool ContainsTarget(TaskTarget target) => ContainsTarget(target.Value);
 
     public Quest Clone()
     {

@@ -30,7 +30,7 @@ public class LectureUIManager : View
         {
             videoList.Add(contents.GetChild(i).GetComponent<VideoElement>());
             int index = i;
-            videoList[i].selectButton.onClick.AddListener(() => ViewManager.Show<VideoInfoView>(true));
+            videoList[i].selectButton.onClick.AddListener(() => ViewManager.Show<VideoInfoView>(true, false));
             videoList[i].selectButton.onClick.AddListener(() => ShowVideoInfo(index));
         }
 
@@ -41,7 +41,7 @@ public class LectureUIManager : View
         {
             quizList.Add(quizContents.GetChild(i).GetComponent<Button>());
             int index = i;
-            quizList[i].onClick.AddListener(() => ViewManager.Show<QuizInfoView>(true));
+            quizList[i].onClick.AddListener(() => ViewManager.Show<QuizInfoView>(true, false));
             quizList[i].onClick.AddListener(() => ShowQuizInfo(index));
         }
 

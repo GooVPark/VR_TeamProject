@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3b72c3b8429f064a9a54beef21b7bff, type: 3}
   m_Name: Quest
   m_EditorClassIdentifier: 
-  category: {fileID: 0}
+  category: {fileID: 11400000, guid: bc07b64fc59af4142ac69769c296af0c, type: 2}
   icon: {fileID: 0}
   taskGroups:
   - tasks:
@@ -23,5 +23,6 @@ MonoBehaviour:
   discription: 
   useAutoComplete: 0
   isCancelable: 0
+  isSavable: 0
   acceptionConditions: []
   cancelConditions: []

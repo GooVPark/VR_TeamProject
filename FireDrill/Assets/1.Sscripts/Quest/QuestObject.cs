@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class QuestObject : MonoBehaviour
 {
-    public QuestContentType questContentType;
     public string id;
 }
 

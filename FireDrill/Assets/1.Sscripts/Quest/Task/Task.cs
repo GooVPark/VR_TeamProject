@@ -86,6 +86,7 @@ public class Task : ScriptableObject
     public void Start()
     {
         State = TaskState.Running;
+
         if(initialSuccessValue)
         {
             CurrentSuccess = initialSuccessValue.GetValue(this);
@@ -109,5 +110,7 @@ public class Task : ScriptableObject
         CurrentSuccess = neededSuccessToComplete;
     }
 
-    public bool IsTarget(string category, object target) => Category == Category && targets.Any(x => x.IsEqual(target)) && (IsComplete || (IsComplete && canReceiveReportsDuringCompletion));
+    public bool IsTarget(string category, object target) => Category == Category && targets.Any(x => x.IsEqual(target)) && (!IsComplete || (IsComplete && canReceiveReportsDuringCompletion));
+
+    public bool ContainsTarget(object target) => targets.Any(x => x.IsEqual(target));
 }

@@ -33,7 +33,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public TMP_InputField chatInput;
     public TMP_Text[] chatContents;
 
-
+    private bool isJoinRoom = false;
+    private int roomIndex = -1;
 
     private void Awake()
     {
@@ -78,31 +79,53 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedLobby()
     {
-        roomListUI.SetActive(true);
-    }
+        //roomListUI.SetActive(true);
+        if (isJoinRoom)
+        {
+            isJoinRoom = false;
+            string roomName = $"Room_{roomIndex + 1:000}";
+            if (!roomDict.ContainsKey(roomName))
+            {
+                RoomOptions roomOptions = new RoomOptions();
+                roomOptions.IsOpen = true;
+                roomOptions.IsVisible = true;
+                roomOptions.MaxPlayers = 11;
 
+                PhotonNetwork.CreateRoom(roomName, roomOptions, TypedLobby.Default);
+            }
+            else
+            {
+                PhotonNetwork.JoinRoom(roomName);
+            }
+        }
+        else
+        {
+            JoinRoom();
+        }
+    }
     #endregion
 
     #region Room
 
-    public void JoinRoom(int roomNumber)
+    public void JoinRoom()
     {
         PhotonNetwork.NickName = UserName;
 
-        string roomName = $"Room_{roomNumber + 1:000}";
-        if (!roomDict.ContainsKey(roomName))
-        {
-            RoomOptions roomOptions = new RoomOptions();
-            roomOptions.IsOpen = true;
-            roomOptions.IsVisible = true;
-            roomOptions.MaxPlayers = 11;
+        string roomName = $"Loundge";
 
-            PhotonNetwork.CreateRoom(roomName, roomOptions, TypedLobby.Default);
-        }
-        else
-        {
-            PhotonNetwork.JoinRoom(roomName);
-        }
+        RoomOptions roomOptions = new RoomOptions();
+        roomOptions.IsOpen = true;
+        roomOptions.IsVisible = true;
+        roomOptions.MaxPlayers = 11;
+
+        PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, TypedLobby.Default);
+    }
+
+    public void JoinRoom(int roomNumber)
+    {
+        isJoinRoom = true;
+        roomIndex = roomNumber;
+        PhotonNetwork.LeaveRoom(false);
     }
 
     public override void OnJoinedRoom()
@@ -113,10 +136,14 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             chatContents[i].text = "";
         }
 
-        roomListUI.SetActive(false);
-        GameObject playerObject = PhotonNetwork.Instantiate("Player", transform.position, transform.rotation);
+        if (!isJoinRoom)
+        {
+            GameObject playerObject = PhotonNetwork.Instantiate("Player", transform.position, transform.rotation);
+            roomListUI.SetActive(false);
+        }
     }
 
+    
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         photonView.RPC(nameof(ChatRPC), RpcTarget.All, "<color=yellow>" + newPlayer.NickName + "´ÔÀÌ Âü°¡ ÇÏ¼Ì½À´Ï´Ù</color>");
