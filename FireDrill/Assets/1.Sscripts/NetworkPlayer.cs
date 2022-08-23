@@ -40,6 +40,9 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         UserLevel = UserLevel;
     }
     #endregion
+
+    [SerializeField] private float speechBubbleViualizeDistance;
+
     public Transform head;
     public Transform leftHand;
     public Transform rightHand;
@@ -49,6 +52,8 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     public TMP_Text userNameUI;
     public TMP_Text userLevelUI;
     public TMP_Text distanceUI;
+
+    public GameObject speechBubble;
 
     [SerializeField] private ActionBasedController leftController;
     [SerializeField] private ActionBasedController rightController;
@@ -126,6 +131,45 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     {
         Debug.Log("On Cursor Hoverd");
     }
+
+    #region Chat
+
+    Coroutine popChat;
+    IEnumerator PopChat(string message)
+    {
+        speechBubble.SetActive(true);
+
+        yield return new WaitForSeconds(3f);
+
+        speechBubble.SetActive(false);
+    }
+
+    public void OnSendChatMessage(string message)
+    {
+
+    }
+
+    [PunRPC] public void OnSendChatMessageRPC(string message)
+    {
+        if(popChat != null)
+        {
+            StopCoroutine(popChat);
+        }
+    }
+
+    public void UpdateSpeechBuble(float distance)
+    {
+        if (distance > speechBubbleViualizeDistance)
+        {
+            speechBubble.SetActive(false);
+        }
+        else
+        {
+            speechBubble.SetActive(true);
+        }
+    }
+
+    #endregion
 
     #region Photon Interfaces
 
