@@ -4,10 +4,17 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
+using HashTable = ExitGames.Client.Photon.Hashtable;
 
 
 public class NetworkManager : MonoBehaviourPunCallbacks
-{
+{ 
+    public delegate void ConnectedToMasterServerEvent();
+    public static ConnectedToMasterServerEvent onConnectedToMasterServer;
+    
+    public delegate void JoinedLobbyEvent();
+    public static JoinedLobbyEvent onJoinedLobby;
+
     public static NetworkManager Instance;
 
     private LogInData loginData;
@@ -38,25 +45,46 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     private void Awake()
     {
-        if(Instance == null)
+        if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
         else
         {
-            if(Instance != this)
+            if (Instance != this)
             {
                 Destroy(this.gameObject);
             }
         }
 
-        for (int i = 0; i < rooms.Count; i++)
-        {
-            roomInfoDict.Add($"Room_{i + 1:000}", rooms[i]);
-            rooms[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = $"Room_{i + 1:000} (0/11)";
-        }
+        //for (int i = 0; i < rooms.Count; i++)
+        //{
+        //    roomInfoDict.Add($"Room_{i + 1:000}", rooms[i]);
+        //    rooms[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = $"Room_{i + 1:000} (0/11)";
+        //}
     }
+
+    #region LogIn
+
+    //public bool OnTryLogin(string email, string password)
+    //{
+    //    if (email == string.Empty || password == string.Empty)
+    //    {
+    //        return false;
+    //    }
+    //    if (DataManager.Instance.FindUserData(email, password, out userData))
+    //    {
+    //        Connect(userData);
+    //        return true;
+    //    }
+    //    else
+    //    {
+    //        return false;
+    //    }
+    //}
+
+    #endregion
 
     public void Connect(UserData _userData)
     {
@@ -72,120 +100,118 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster()
     {
-        PhotonNetwork.JoinLobby();
+        onConnectedToMasterServer?.Invoke();
     }
 
     #region Lobby
 
     public override void OnJoinedLobby()
     {
+        onJoinedLobby?.Invoke();
+        //GameObject playerObject = PhotonNetwork.Instantiate("Player", transform.position, transform.rotation);
         //roomListUI.SetActive(true);
-        if (isJoinRoom)
-        {
-            isJoinRoom = false;
-            string roomName = $"Room_{roomIndex + 1:000}";
-            if (!roomDict.ContainsKey(roomName))
-            {
-                RoomOptions roomOptions = new RoomOptions();
-                roomOptions.IsOpen = true;
-                roomOptions.IsVisible = true;
-                roomOptions.MaxPlayers = 11;
+        //if (isJoinRoom)
+        //{
+        //    isJoinRoom = false;
+        //    string roomName = $"Room_{roomIndex + 1:000}";
+        //    if (!roomDict.ContainsKey(roomName))
+        //    {
+        //        RoomOptions roomOptions = new RoomOptions();
+        //        roomOptions.IsOpen = true;
+        //        roomOptions.IsVisible = true;
+        //        roomOptions.MaxPlayers = 11;
 
-                PhotonNetwork.CreateRoom(roomName, roomOptions, TypedLobby.Default);
-            }
-            else
-            {
-                PhotonNetwork.JoinRoom(roomName);
-            }
-        }
-        else
-        {
-            JoinRoom();
-        }
+        //        PhotonNetwork.CreateRoom(roomName, roomOptions, TypedLobby.Default);
+        //    }
+        //    else
+        //    {
+        //        PhotonNetwork.JoinRoom(roomName);
+        //    }
+        //}
     }
     #endregion
 
     #region Room
 
-    public void JoinRoom()
-    {
-        PhotonNetwork.NickName = UserName;
+    //public void JoinRoom()
+    //{
+    //    PhotonNetwork.NickName = UserName;
 
-        string roomName = $"Loundge";
+    //    string roomName = $"Loundge";
 
-        RoomOptions roomOptions = new RoomOptions();
-        roomOptions.IsOpen = true;
-        roomOptions.IsVisible = true;
-        roomOptions.MaxPlayers = 11;
+    //    RoomOptions roomOptions = new RoomOptions();
+    //    roomOptions.IsOpen = true;
+    //    roomOptions.IsVisible = true;
+    //    roomOptions.MaxPlayers = 11;
 
-        PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, TypedLobby.Default);
-    }
+    //    PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, TypedLobby.Default);
+    //}
 
-    public void JoinRoom(int roomNumber)
-    {
-        isJoinRoom = true;
-        roomIndex = roomNumber;
-        PhotonNetwork.LeaveRoom(false);
-    }
+    //public void JoinRoom(int roomNumber)
+    //{
+    //    isJoinRoom = true;
+    //    roomIndex = roomNumber;
+    //    PhotonNetwork.LeaveRoom(false);
+    //}
 
-    public override void OnJoinedRoom()
-    {
-        chatInput.text = "";
-        for (int i = 0; i < chatContents.Length; i++)
-        {
-            chatContents[i].text = "";
-        }
+    //public override void OnJoinedRoom()
+    //{
+    //    chatInput.text = "";
+    //    for (int i = 0; i < chatContents.Length; i++)
+    //    {
+    //        chatContents[i].text = "";
+    //    }
 
-        if (!isJoinRoom)
-        {
-            GameObject playerObject = PhotonNetwork.Instantiate("Player", transform.position, transform.rotation);
-            roomListUI.SetActive(false);
-        }
-    }
+    //    if (!isJoinRoom)
+    //    {
+    //        GameObject playerObject = PhotonNetwork.Instantiate("Player", transform.position, transform.rotation);
+    //        roomListUI.SetActive(false);
+    //    }
+    //}
 
     
-    public override void OnPlayerEnteredRoom(Player newPlayer)
-    {
-        photonView.RPC(nameof(ChatRPC), RpcTarget.All, "<color=yellow>" + newPlayer.NickName + "¥‘¿Ã ¬¸∞° «œºÃΩ¿¥œ¥Ÿ</color>");
-        if (newPlayer != PhotonNetwork.LocalPlayer)
-        {
-            ((GameObject)PhotonNetwork.LocalPlayer.TagObject).GetComponent<NetworkPlayer>().InvokeProperties();
-        }
-    }
+    //public override void OnPlayerEnteredRoom(Player newPlayer)
+    //{
+    //    photonView.RPC(nameof(ChatRPC), RpcTarget.All, "<color=yellow>" + newPlayer.NickName + "¥‘¿Ã ¬¸∞° «œºÃΩ¿¥œ¥Ÿ</color>");
+    //    if (newPlayer != PhotonNetwork.LocalPlayer)
+    //    {
+    //        ((GameObject)PhotonNetwork.LocalPlayer.TagObject).GetComponent<NetworkPlayer>().InvokeProperties();
+    //    }
+    //}
 
-    public override void OnPlayerLeftRoom(Player otherPlayer)
-    {
-        photonView.RPC(nameof(ChatRPC), RpcTarget.All, "<color=yellow>" + otherPlayer.NickName + "¥‘¿Ã ≈¿Â «œºÃΩ¿¥œ¥Ÿ</color>");
-    }
+    //public override void OnPlayerLeftRoom(Player otherPlayer)
+    //{
+    //    photonView.RPC(nameof(ChatRPC), RpcTarget.All, "<color=yellow>" + otherPlayer.NickName + "¥‘¿Ã ≈¿Â «œºÃΩ¿¥œ¥Ÿ</color>");
+    //}
 
-    public override void OnRoomListUpdate(List<RoomInfo> roomList)
-    {
-        GameObject tempRoom = null;
-        foreach (var room in roomList)
-        {
-            if (room.RemovedFromList == true)
-            {
-                roomDict.TryGetValue(room.Name, out tempRoom);
-                Destroy(tempRoom);
-                roomDict.Remove(room.Name);
-            }
-            else
-            {
-                if (!roomDict.ContainsKey(room.Name))
-                {
-                    GameObject roomEntity = Instantiate(roomPrefab);
+    //public override void OnRoomListUpdate(List<RoomInfo> roomList)
+    //{
+    //    GameObject tempRoom = null;
+    //    foreach (var room in roomList)
+    //    {
+    //        if (room.RemovedFromList == true)
+    //        {
+    //            roomDict.TryGetValue(room.Name, out tempRoom);
+    //            Destroy(tempRoom);
+    //            roomDict.Remove(room.Name);
+    //        }
+    //        else
+    //        {
+    //            if (!roomDict.ContainsKey(room.Name))
+    //            {
+    //                GameObject roomEntity = Instantiate(roomPrefab);
 
-                    roomEntity.GetComponent<RoomData>().SetRoomInfo(room, roomInfoDict[room.Name]);
-                    roomDict.Add(room.Name, roomEntity);
-                }
-                else
-                 {
-                    roomDict.TryGetValue(room.Name, out tempRoom);
-                    tempRoom.GetComponent<RoomData>().SetRoomInfo(room, roomInfoDict[room.Name]);
-                }
-            }
-        }
-    }
+    //                roomEntity.GetComponent<RoomData>().SetRoomInfo(room, roomInfoDict[room.Name]);
+    //                roomDict.Add(room.Name, roomEntity);
+    //            }
+    //            else
+    //             {
+    //                roomDict.TryGetValue(room.Name, out tempRoom);
+    //                tempRoom.GetComponent<RoomData>().SetRoomInfo(room, roomInfoDict[room.Name]);
+    //            }
+    //        }
+    //    }
+    //}
 
     #endregion
 
@@ -222,6 +248,17 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
             chatContents[chatContents.Length - 1].text = msg;
         }
+    }
+
+    #endregion
+
+    #region UserStatus
+
+    public bool hasExtingusher = false;
+
+    public void OnSelectExtingusher(bool hasExtingusher)
+    {
+        
     }
 
     #endregion

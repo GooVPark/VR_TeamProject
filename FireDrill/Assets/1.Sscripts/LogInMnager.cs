@@ -2,45 +2,48 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using TMPro;
 
 public class LogInMnager : MonoBehaviour
 {
-    public TMP_InputField emailField;
-    public TMP_InputField passwordField;
-
-    public Button loginButton;
-
-    public GameObject loginUI;
-    public GameObject networkManager;
-
     private UserData userData;
 
-    private bool isLoginButtonInteractable = false;
-
-    public void LogIn()
+    private void Awake()
     {
-        if (emailField.text == string.Empty || passwordField.text == string.Empty)
+        LoginSceneUIManager.TryLogIn += TryLogIn;
+
+        NetworkManager.onConnectedToMasterServer += OnConnectedToMasterServer;
+        NetworkManager.onJoinedLobby += OnJoinedLobby;
+    }
+
+    public bool TryLogIn(string email, string password)
+    {
+        if (email == string.Empty || password == string.Empty)
         {
-            return;
+            return false;
         }
 
-        if(DataManager.Instance.FindUserData(emailField.text, passwordField.text, out userData))
+        if(DataManager.Instance.FindUserData(email, password, out userData))
         {
-
+            NetworkManager.Instance.Connect(userData);
+            return true;
         }
         else
         {
-            return;
+            return false;
         }
-        
-        loginButton.interactable = false;
+    }
 
-        //sum actions...
-        NetworkManager.Instance.Connect(userData);
-        
-        loginUI.SetActive(false);
+    public void OnConnectedToMasterServer()
+    {
+        Debug.Log("Connected To Master Server.");
+    }
+
+    public void OnJoinedLobby()
+    {
+        Debug.Log("Joined to Lobby.");
     }
 }
 
@@ -71,6 +74,6 @@ public class LogInData
             this.answers = userData.answers;
         }
     }
-    
+
 
 }
