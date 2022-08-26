@@ -66,6 +66,7 @@ public class LoginSceneUIManager : MonoBehaviour
 
     private void Awake()
     {
+        NetworkManager.onConnectedToMasterServer += OnConnectedToMasterServer;
         NetworkManager.onJoinedLobby += OnJoinedLobby;
     }
 
@@ -121,8 +122,13 @@ public class LoginSceneUIManager : MonoBehaviour
         onSelectExtingusher?.Invoke(isSelected);
     }
 
-    public void OnJoinedLobby()
+    public void OnConnectedToMasterServer()
     {
         ShowExtingusherSelectWindow();
+    }
+
+    public void OnJoinedLobby()
+    {
+        
     }
 }

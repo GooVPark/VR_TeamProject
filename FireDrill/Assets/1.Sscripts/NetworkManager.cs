@@ -105,9 +105,16 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     #region Lobby
 
+    public void JoinLobby()
+    {
+        PhotonNetwork.JoinLobby();
+    }
+
     public override void OnJoinedLobby()
     {
         onJoinedLobby?.Invoke();
+
+        PhotonNetwork.LoadLevel("Loundge");
         //GameObject playerObject = PhotonNetwork.Instantiate("Player", transform.position, transform.rotation);
         //roomListUI.SetActive(true);
         //if (isJoinRoom)

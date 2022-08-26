@@ -2379,48 +2379,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 320203871}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &320203873 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6306988839375520730, guid: 1e47b7c25ffaf154d94cc5dbf2acf233,
-    type: 3}
-  m_PrefabInstance: {fileID: 320203871}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &320203874 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6306988838921937559, guid: 1e47b7c25ffaf154d94cc5dbf2acf233,
-    type: 3}
-  m_PrefabInstance: {fileID: 320203871}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2da0c512f12947e489f739169773d7ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &320203875 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6306988837966872421, guid: 1e47b7c25ffaf154d94cc5dbf2acf233,
-    type: 3}
-  m_PrefabInstance: {fileID: 320203871}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2da0c512f12947e489f739169773d7ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!1 &320203876 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6306988839187874411, guid: 1e47b7c25ffaf154d94cc5dbf2acf233,
-    type: 3}
-  m_PrefabInstance: {fileID: 320203871}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &320203877 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6306988838532914785, guid: 1e47b7c25ffaf154d94cc5dbf2acf233,
@@ -18200,11 +18158,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28f63fda693b9e540a1fe53fff7c0747, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  emailField: {fileID: 320203875}
-  passwordField: {fileID: 320203874}
-  loginButton: {fileID: 320203873}
-  loginUI: {fileID: 320203876}
-  networkManager: {fileID: 3467326689412891650}
 --- !u!114 &713814775317977080
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20316,6 +20269,7 @@ MonoBehaviour:
   - {fileID: 267477780}
   - {fileID: 493637358}
   - {fileID: 819762217}
+  hasExtingusher: 0
 --- !u!1 &3467326689412891650
 GameObject:
   m_ObjectHideFlags: 0
@@ -20334,7 +20288,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1001 &3947710686456079604
 PrefabInstance:
   m_ObjectHideFlags: 0
