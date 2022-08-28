@@ -59,7 +59,7 @@ public class QuizManager : MonoBehaviourPun
     public void SubmitAnswerRPC(int id, int quizIndex, int answer)
     {
         QuizState state = quizList[quizIndex].IsAnswer(answer);
-        DataManager.Instance.userDB.userDB[id].UpdateAnswer(quizIndex, answer, state);
+        //DataManager.Instance.userDB.userDB[id].UpdateAnswer(quizIndex, answer, state);
     }
 
     #endregion

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using TMPro;
 
@@ -8,8 +9,6 @@ public class LoginSceneUIManager : MonoBehaviour
 {
     #region Events
 
-    public delegate bool LogInEvent(string email, string passward);
-    public static LogInEvent TryLogIn;
     public delegate void SelectExtingusherEvent(bool hasExtingusher);
     public static SelectExtingusherEvent onSelectExtingusher;
 
@@ -82,14 +81,23 @@ public class LoginSceneUIManager : MonoBehaviour
         CurrentWindow = loginWindow;
     }
 
-    public void LogIn()
+    public void Login()
     {
-        if (!TryLogIn(emailInputField.text, passwordInputField.text))
+        User userData;
+        bool isContain = DataManager.UserTable.GetUser(emailInputField.text, passwordInputField.text, out userData);
+
+        if (isContain)
+        {
+            NetworkManager.Instance.Connect(userData);
+        }
+        else
         {
             ShowLoginErrorWindow();
-        }  
+        }
     }
 
+
+   
     public void ShowLoginErrorWindow()
     {
         CurrentWindow = loginErrorWindow;
@@ -120,6 +128,8 @@ public class LoginSceneUIManager : MonoBehaviour
     public void SelectExtingusher(bool isSelected)
     {
         onSelectExtingusher?.Invoke(isSelected);
+        NetworkManager.UserData.hasExtingisher = isSelected;
+        NetworkManager.Instance.JoinLobby();
     }
 
     public void OnConnectedToMasterServer()

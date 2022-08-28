@@ -28,12 +28,12 @@ public class DynamicRayVisualizer : MonoBehaviour
     private void Start()
     {
         teleportInteractor.gameObject.SetActive(false);
-        uiInteractor.GetComponent<LineRenderer>().enabled = false;
+        //uiInteractor.GetComponent<LineRenderer>().enabled = false;
     }
 
     private void Update()
     {
-        if (InputManager.IsLeftHandStickActivated)
+        if (InputManager.IsRightHandPrimaryPerformed)
         {
             teleportInteractor.gameObject.SetActive(true);
             isTeleportable = teleportInteractor.TryGetCurrent3DRaycastHit(out teleportRayHit);
@@ -63,7 +63,7 @@ public class DynamicRayVisualizer : MonoBehaviour
             isTeleportable = false;
         }
 
-        isUIDetected = uiInteractor.TryGetCurrent3DRaycastHit(out uiInteractorRayHit);
+        //isUIDetected = uiInteractor.TryGetCurrent3DRaycastHit(out uiInteractorRayHit);
         
     }
 

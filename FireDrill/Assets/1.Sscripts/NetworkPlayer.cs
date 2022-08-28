@@ -49,11 +49,12 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
 
     private PhotonView photonView;
 
+    public GameObject userInfoUI;
     public TMP_Text userNameUI;
     public TMP_Text userLevelUI;
     public TMP_Text distanceUI;
 
-    public GameObject speechBubble;
+    public GameObject speachBubble;
 
     [SerializeField] private ActionBasedController leftController;
     [SerializeField] private ActionBasedController rightController;
@@ -92,6 +93,8 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         {
             UserName = NetworkManager.UserName;
             UserLevel = NetworkManager.UserLevel.ToString();
+
+            userInfoUI.SetActive(false);
         }
     }
 
@@ -137,11 +140,11 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     Coroutine popChat;
     IEnumerator PopChat(string message)
     {
-        speechBubble.SetActive(true);
+        speachBubble.GetComponent<SpeachBubble>().ShowBubble();
 
         yield return new WaitForSeconds(3f);
 
-        speechBubble.SetActive(false);
+        speachBubble.GetComponent<SpeachBubble>().HideBubble();
     }
 
     public void OnSendChatMessage(string message)
@@ -161,12 +164,22 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     {
         if (distance > speechBubbleViualizeDistance)
         {
-            speechBubble.SetActive(false);
+            speachBubble.SetActive(false);
         }
         else
         {
-            speechBubble.SetActive(true);
+            speachBubble.SetActive(true);
         }
+    }
+
+    public void ShowSpeachBubble()
+    {
+        speachBubble.SetActive(true);
+    }
+
+    public void HideSpeachBubble()
+    {
+        speachBubble.SetActive(false);
     }
 
     #endregion

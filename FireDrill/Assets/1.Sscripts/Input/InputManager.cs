@@ -9,6 +9,9 @@ public class InputManager : MonoBehaviour
     public static ControllerInputReadEvent PrimaryReaded;
     public static ControllerInputReadEvent SecondaryReaded;
 
+    public delegate void LeftSecondaryButtonEvent();
+    public static LeftSecondaryButtonEvent leftSecondaryButton;
+
     public static InputManager Instance;
 
     [Header("Left Hand Button Input")]
@@ -108,12 +111,12 @@ public class InputManager : MonoBehaviour
 
         if(isLeftHandStartContextValue)
         {
-            switch (NetworkManager.UserData.authority)
+            switch (NetworkManager.UserData.userType)
             {
-                case Authority.Lecture:
+                case UserType.Lecture:
                     ViewManager.Show<LectureUIManager>();
                     break;
-                case Authority.Student:
+                case UserType.Student:
                     ViewManager.Show<StudentUIManager>(); 
                     break;
             }
@@ -127,12 +130,13 @@ public class InputManager : MonoBehaviour
     private void LeftPrimary(InputAction.CallbackContext context)
     {
         Debug.Log("Left Primary Button");
-        ViewManager.ShowLast();
+        
     }
 
     private void LeftSecondary(InputAction.CallbackContext context)
     {
         Debug.Log("Left Secondary Button");
+        leftSecondaryButton?.Invoke();
     }
 
     private void OnLeftStickStarted(InputAction.CallbackContext context)

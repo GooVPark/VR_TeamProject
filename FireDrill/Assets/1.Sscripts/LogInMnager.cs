@@ -12,39 +12,11 @@ public class LogInMnager : MonoBehaviour
 
     private void Awake()
     {
-        LoginSceneUIManager.TryLogIn += TryLogIn;
+    
 
-        NetworkManager.onConnectedToMasterServer += OnConnectedToMasterServer;
-        NetworkManager.onJoinedLobby += OnJoinedLobby;
     }
 
-    public bool TryLogIn(string email, string password)
-    {
-        if (email == string.Empty || password == string.Empty)
-        {
-            return false;
-        }
 
-        if(DataManager.Instance.FindUserData(email, password, out userData))
-        {
-            NetworkManager.Instance.Connect(userData);
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    public void OnConnectedToMasterServer()
-    {
-        Debug.Log("Connected To Master Server.");
-    }
-
-    public void OnJoinedLobby()
-    {
-        Debug.Log("Joined to Lobby.");
-    }
 }
 
 [SerializeField]

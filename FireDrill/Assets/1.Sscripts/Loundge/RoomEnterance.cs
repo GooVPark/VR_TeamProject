@@ -1,14 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class RoomEnterance : MonoBehaviour
 {
-    public delegate void RoomEnteranceDelegate();
-    public RoomEnteranceDelegate onShowRoomPanel;
+    [SerializeField] private int roomNumber;
 
     [SerializeField] private BoxCollider enteranceCollider;
     [SerializeField] private string targetTag;
+
+    [SerializeField] private Button joinRoomButton;
 
     private void Awake()
     {
@@ -19,7 +22,7 @@ public class RoomEnterance : MonoBehaviour
     {
         if(other.CompareTag(targetTag))
         {
-            onShowRoomPanel?.Invoke();
+
         }
     }
 }

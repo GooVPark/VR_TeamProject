@@ -8,7 +8,10 @@ using HashTable = ExitGames.Client.Photon.Hashtable;
 
 
 public class NetworkManager : MonoBehaviourPunCallbacks
-{ 
+{
+    public enum RoomType { Room, Loundge }
+    public RoomType roomType;
+
     public delegate void ConnectedToMasterServerEvent();
     public static ConnectedToMasterServerEvent onConnectedToMasterServer;
     
@@ -22,11 +25,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     private static string userName;
     public static string UserName { get { return userName; } }
 
-    private static Authority userLevel;
-    public static Authority UserLevel { get { return userLevel; } }
+    private static UserType userLevel;
+    public static UserType UserLevel { get { return userLevel; } }
 
-    private static UserData userData;
-    public static UserData UserData { get => userData; }
+    private static User userData;
+    public static User UserData { get => userData; }
 
     private string gameVersion = "1.0";
 
@@ -65,32 +68,13 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         //}
     }
 
-    #region LogIn
 
-    //public bool OnTryLogin(string email, string password)
-    //{
-    //    if (email == string.Empty || password == string.Empty)
-    //    {
-    //        return false;
-    //    }
-    //    if (DataManager.Instance.FindUserData(email, password, out userData))
-    //    {
-    //        Connect(userData);
-    //        return true;
-    //    }
-    //    else
-    //    {
-    //        return false;
-    //    }
-    //}
 
-    #endregion
-
-    public void Connect(UserData _userData)
+    public void Connect(User _userData)
     {
         userData = _userData;
         userName = userData.name;
-        userLevel = userData.authority;
+        userLevel = userData.userType;
 
         PhotonNetwork.LocalPlayer.NickName = userName;
 
@@ -101,6 +85,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         onConnectedToMasterServer?.Invoke();
+        //JoinLobby();
     }
 
     #region Lobby
@@ -113,78 +98,73 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnJoinedLobby()
     {
         onJoinedLobby?.Invoke();
+        roomType = RoomType.Loundge;
 
-        PhotonNetwork.LoadLevel("Loundge");
-        //GameObject playerObject = PhotonNetwork.Instantiate("Player", transform.position, transform.rotation);
-        //roomListUI.SetActive(true);
-        //if (isJoinRoom)
-        //{
-        //    isJoinRoom = false;
-        //    string roomName = $"Room_{roomIndex + 1:000}";
-        //    if (!roomDict.ContainsKey(roomName))
-        //    {
-        //        RoomOptions roomOptions = new RoomOptions();
-        //        roomOptions.IsOpen = true;
-        //        roomOptions.IsVisible = true;
-        //        roomOptions.MaxPlayers = 11;
+        string roomName = $"Loundge";
 
-        //        PhotonNetwork.CreateRoom(roomName, roomOptions, TypedLobby.Default);
-        //    }
-        //    else
-        //    {
-        //        PhotonNetwork.JoinRoom(roomName);
-        //    }
-        //}
+        RoomOptions roomOptions = new RoomOptions();
+        roomOptions.IsOpen = true;
+        roomOptions.IsVisible = true;
+        roomOptions.MaxPlayers = 0;
+
+        PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, TypedLobby.Default);
     }
     #endregion
 
     #region Room
 
-    //public void JoinRoom()
-    //{
-    //    PhotonNetwork.NickName = UserName;
+    public void JoinRoom()
+    {
+        string roomName = $"Loundge";
 
-    //    string roomName = $"Loundge";
+        RoomOptions roomOptions = new RoomOptions();
+        roomOptions.IsOpen = true;
+        roomOptions.IsVisible = true;
+        roomOptions.MaxPlayers = 0;
 
-    //    RoomOptions roomOptions = new RoomOptions();
-    //    roomOptions.IsOpen = true;
-    //    roomOptions.IsVisible = true;
-    //    roomOptions.MaxPlayers = 11;
+        PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, TypedLobby.Default);
+    }
 
-    //    PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, TypedLobby.Default);
-    //}
+    public void JoinRoom(int roomNumber)
+    {
+        isJoinRoom = true;
+        roomIndex = roomNumber;
+        PhotonNetwork.LeaveRoom(false);
+    }
 
-    //public void JoinRoom(int roomNumber)
-    //{
-    //    isJoinRoom = true;
-    //    roomIndex = roomNumber;
-    //    PhotonNetwork.LeaveRoom(false);
-    //}
+    public override void OnJoinedRoom()
+    {
+        Debug.Log("NetworkMnanager : OnJoinedRoom");
+        switch (roomType)
+        {
+            case RoomType.Room:
+                break;
+            case RoomType.Loundge:
+                PhotonNetwork.LoadLevel("Loundge");
+                break;
+        }
+        chatInput.text = "";
+        for (int i = 0; i < chatContents.Length; i++)
+        {
+            chatContents[i].text = "";
+        }
 
-    //public override void OnJoinedRoom()
-    //{
-    //    chatInput.text = "";
-    //    for (int i = 0; i < chatContents.Length; i++)
-    //    {
-    //        chatContents[i].text = "";
-    //    }
+        //if (!isJoinRoom)
+        //{
+        //    GameObject playerObject = PhotonNetwork.Instantiate("Player", transform.position, transform.rotation);
+        //    roomListUI.SetActive(false);
+        //}
+    }
 
-    //    if (!isJoinRoom)
-    //    {
-    //        GameObject playerObject = PhotonNetwork.Instantiate("Player", transform.position, transform.rotation);
-    //        roomListUI.SetActive(false);
-    //    }
-    //}
 
-    
-    //public override void OnPlayerEnteredRoom(Player newPlayer)
-    //{
-    //    photonView.RPC(nameof(ChatRPC), RpcTarget.All, "<color=yellow>" + newPlayer.NickName + "´ÔÀÌ Âü°¡ ÇÏ¼Ì½À´Ï´Ù</color>");
-    //    if (newPlayer != PhotonNetwork.LocalPlayer)
-    //    {
-    //        ((GameObject)PhotonNetwork.LocalPlayer.TagObject).GetComponent<NetworkPlayer>().InvokeProperties();
-    //    }
-    //}
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        photonView.RPC(nameof(ChatRPC), RpcTarget.All, "<color=yellow>" + newPlayer.NickName + "´ÔÀÌ Âü°¡ ÇÏ¼Ì½À´Ï´Ù</color>");
+        if (newPlayer != PhotonNetwork.LocalPlayer)
+        {
+            ((GameObject)PhotonNetwork.LocalPlayer.TagObject).GetComponent<NetworkPlayer>().InvokeProperties();
+        }
+    }
 
     //public override void OnPlayerLeftRoom(Player otherPlayer)
     //{
@@ -224,37 +204,18 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     #region Chat
 
-    public void SendChat()
+    public delegate void ChatCallbackEvent(string message);
+    public static ChatCallbackEvent ChatCallback;
+
+    public void SendChat(string msg)
     {
-        string msg = PhotonNetwork.NickName + " : " + chatInput.text;
         photonView.RPC(nameof(ChatRPC), RpcTarget.All, msg);
-        chatInput.text = "";
     }
 
     [PunRPC]
     private void ChatRPC(string msg)
     {
-        bool isInput = false;
-
-        for (int i = 0; i < chatContents.Length; i++)
-        {
-            if (chatContents[i].text == "")
-            {
-                isInput = true;
-                chatContents[i].text = msg;
-                break;
-            }
-        }
-
-        if (!isInput)
-        {
-            for (int i = 1; i < chatContents.Length; i++)
-            {
-                chatContents[i - 1].text = chatContents[i].text;
-            }
-
-            chatContents[chatContents.Length - 1].text = msg;
-        }
+        ChatCallback(msg);
     }
 
     #endregion

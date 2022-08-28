@@ -1273,8 +1273,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8927009445851248866}
-  - component: {fileID: 5759507973839025135}
   - component: {fileID: 1712719759665754826}
+  - component: {fileID: 5759507973839025135}
   - component: {fileID: 6353307949132661138}
   - component: {fileID: 2748472248791821540}
   - component: {fileID: 7943717608254057873}
@@ -1308,6 +1308,31 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1712719759665754826
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7593364856476881102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2434b0f5a614dd4492faba83f66b1fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  userName: 
+  userLevel: 
+  speechBubbleViualizeDistance: 0
+  head: {fileID: 6355852390259795341}
+  leftHand: {fileID: 310039265530613419}
+  rightHand: {fileID: 873182714036041288}
+  userInfoUI: {fileID: 8854221496384943744}
+  userNameUI: {fileID: 6480071702493464080}
+  userLevelUI: {fileID: 4243100460572200725}
+  distanceUI: {fileID: 1344775777845816187}
+  speachBubble: {fileID: 0}
+  leftController: {fileID: 0}
+  rightController: {fileID: 0}
 --- !u!114 &5759507973839025135
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1334,30 +1359,6 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &1712719759665754826
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7593364856476881102}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2434b0f5a614dd4492faba83f66b1fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  userName: 
-  userLevel: 
-  speechBubbleViualizeDistance: 0
-  head: {fileID: 6355852390259795341}
-  leftHand: {fileID: 310039265530613419}
-  rightHand: {fileID: 873182714036041288}
-  userNameUI: {fileID: 6480071702493464080}
-  userLevelUI: {fileID: 4243100460572200725}
-  distanceUI: {fileID: 1344775777845816187}
-  speechBubble: {fileID: 2767466005413317711}
-  leftController: {fileID: 0}
-  rightController: {fileID: 0}
 --- !u!114 &6353307949132661138
 MonoBehaviour:
   m_ObjectHideFlags: 0

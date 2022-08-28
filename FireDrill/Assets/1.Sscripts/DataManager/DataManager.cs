@@ -6,8 +6,10 @@ using UnityEngine;
 public class DataManager : MonoBehaviour
 {
     public static DataManager Instance;
+    public TestDataManager testDataManager;
 
-    public DataObject userDB;
+    private static UserTable userTable;
+    public static UserTable UserTable { get => userTable; }
 
     private void Awake()
     {
@@ -19,11 +21,7 @@ public class DataManager : MonoBehaviour
         {
             Destroy(Instance.gameObject);
         }
-    }
 
-
-    public bool FindUserData(string email, string password, out UserData userData)
-    {
-        return userDB.IsContain(email, password, out userData);
+        userTable = testDataManager.GetUserTable();
     }
 }
