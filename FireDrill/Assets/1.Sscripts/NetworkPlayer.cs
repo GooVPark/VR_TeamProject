@@ -67,6 +67,9 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         transform.SetParent(parent);
         photonView = GetComponent<PhotonView>();
 
+        HUDController hudController = FindObjectOfType<HUDController>();
+        hudController.showSpeechBubble += OnSendChatMessage;
+
         headset = Camera.main;
         leftController = GameObject.Find("LeftHand Controller").GetComponent<ActionBasedController>();
         rightController = GameObject.Find("RightHand Controller").GetComponent<ActionBasedController>();
@@ -91,8 +94,8 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     {
         if (photonView.IsMine)
         {
-            UserName = NetworkManager.UserName;
-            UserLevel = NetworkManager.UserLevel.ToString();
+            UserName = NetworkManager.User.name;
+            UserLevel = NetworkManager.User.userType.ToString();
 
             userInfoUI.SetActive(false);
         }
@@ -101,7 +104,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     [PunRPC]
     public void InitializeRPC()
     {
-        userNameUI.text = NetworkManager.UserName;
+        userNameUI.text = NetworkManager.User.name;
     }
 
     public void UpdateDistanceUI(float distance)
@@ -142,14 +145,14 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     {
         speachBubble.GetComponent<SpeachBubble>().ShowBubble();
 
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(10f);
 
         speachBubble.GetComponent<SpeachBubble>().HideBubble();
     }
 
     public void OnSendChatMessage(string message)
     {
-
+        photonView.RPC(nameof(OnSendChatMessageRPC), RpcTarget.All, message);
     }
 
     [PunRPC] public void OnSendChatMessageRPC(string message)
@@ -158,6 +161,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         {
             StopCoroutine(popChat);
         }
+        popChat = StartCoroutine(PopChat(message));
     }
 
     public void UpdateSpeechBuble(float distance)
@@ -180,6 +184,24 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     public void HideSpeachBubble()
     {
         speachBubble.SetActive(false);
+    }
+
+    /// <summary>
+    /// 음성 채팅 초대
+    /// 초대 수락하면 로컬에서 자신과 대상을 제외한 모든 유저의 보이스를 끈다. (확성기 제외)
+    /// </summary>
+    public void InviteChat()
+    {
+        photonView.RPC(nameof(InviteChatRPC), RpcTarget.All, photonView.ViewID);
+    }
+
+    public void InviteChatRPC(int id)
+    {
+        if(id == photonView.ViewID)
+        {
+
+        }
+
     }
 
     #endregion

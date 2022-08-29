@@ -111,7 +111,7 @@ public class InputManager : MonoBehaviour
 
         if(isLeftHandStartContextValue)
         {
-            switch (NetworkManager.UserData.userType)
+            switch (NetworkManager.User.userType)
             {
                 case UserType.Lecture:
                     ViewManager.Show<LectureUIManager>();

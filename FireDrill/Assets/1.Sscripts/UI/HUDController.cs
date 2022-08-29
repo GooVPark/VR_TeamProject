@@ -7,6 +7,7 @@ using TMPro;
 
 public class HUDController : MonoBehaviour
 {
+    enum CameraUI { MegaPhone, ScoreBoard, VoiceChat, TextChat }
     [Header("Chat")]
     public GameObject virtualKeyboard;
     public GameObject chatUI;
@@ -15,17 +16,41 @@ public class HUDController : MonoBehaviour
     public InputField chatInputField;
     public TMP_Text[] chatList;
 
+    public ButtonState[] cameraUIIcons;
+
     private void Awake()
     {
-        InputManager.leftSecondaryButton += ShowTextChatWindow;
         NetworkManager.ChatCallback += UpdateChat;
 
         for (int i = 0; i < chatList.Length; i++)
         {
             chatList[i].text = "";
         }
-
+        chatInputField.text = "";
     }
+
+    #region Camera UI
+
+    public void SetCameraUI()
+    {
+        User user = NetworkManager.User;
+
+        if(user.userType == UserType.Lecture)
+        {
+            cameraUIIcons[0].gameObject.SetActive(true);
+            cameraUIIcons[1].gameObject.SetActive(true);
+        }
+
+        cameraUIIcons[2].gameObject.SetActive(true);
+        cameraUIIcons[3].gameObject.SetActive(true);
+    }
+
+    #endregion
+
+    #region Chat
+
+    public delegate void ShowSpeechBubbleEvent(string text);
+    public ShowSpeechBubbleEvent showSpeechBubble;
 
     public void ShowTextChatWindow()
     {
@@ -74,5 +99,9 @@ public class HUDController : MonoBehaviour
 
             chatList[chatList.Length - 1].text = msg;
         }
+
+        showSpeechBubble?.Invoke(msg);
     }
+
+    #endregion
 }

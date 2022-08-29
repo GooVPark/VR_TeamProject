@@ -5,12 +5,12 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 using TMPro;
 
-public class LoginSceneUIManager : MonoBehaviour
+using Photon.Pun;
+using Photon.Realtime;
+
+public class LoginSceneManager : MonoBehaviourPunCallbacks
 {
     #region Events
-
-    public delegate void SelectExtingusherEvent(bool hasExtingusher);
-    public static SelectExtingusherEvent onSelectExtingusher;
 
     #endregion
 
@@ -45,6 +45,11 @@ public class LoginSceneUIManager : MonoBehaviour
     [SerializeField] private Button deselectExtingusherButton;
     [Space(5)]
 
+    private static User userData;
+    public static User UserData { get => userData; }
+
+    private string gameVersion = "1.0";
+
     private GameObject currentWindow;
     public GameObject CurrentWindow
     {
@@ -65,21 +70,25 @@ public class LoginSceneUIManager : MonoBehaviour
 
     private void Awake()
     {
-        NetworkManager.onConnectedToMasterServer += OnConnectedToMasterServer;
-        NetworkManager.onJoinedLobby += OnJoinedLobby;
+
     }
 
     private void Start()
     {
         CurrentWindow = logoWindow;
+
     }
 
-    #region Login
+    #region Logo
 
     public void ShowLoginWindow()
     {
         CurrentWindow = loginWindow;
     }
+
+    #endregion
+
+    #region Login
 
     public void Login()
     {
@@ -88,7 +97,8 @@ public class LoginSceneUIManager : MonoBehaviour
 
         if (isContain)
         {
-            NetworkManager.Instance.Connect(userData);
+            //NetworkManager.Instance.Connect(userData);
+            Connect(userData);
         }
         else
         {
@@ -96,8 +106,17 @@ public class LoginSceneUIManager : MonoBehaviour
         }
     }
 
+    public void Connect(User _userData)
+    {
+        NetworkManager.Instance.SetUser(_userData);
 
-   
+        PhotonNetwork.LocalPlayer.NickName = _userData.name;
+
+        PhotonNetwork.GameVersion = gameVersion;
+        PhotonNetwork.ConnectUsingSettings();
+    }
+
+
     public void ShowLoginErrorWindow()
     {
         CurrentWindow = loginErrorWindow;
@@ -105,10 +124,12 @@ public class LoginSceneUIManager : MonoBehaviour
 
     public void ConfirmLoginError()
     {
-        ShowLoginWindow();
+        currentWindow = logoWindow;
     }
 
     #endregion
+
+    #region Character Select
 
     public void ShowCharacterSelectWindow()
     {
@@ -120,25 +141,53 @@ public class LoginSceneUIManager : MonoBehaviour
         
     }
 
-    public void ShowExtingusherSelectWindow()
+    public void SelectExtingusher(bool isSelected)
+    {
+        PhotonNetwork.JoinLobby();
+    }
+
+    #endregion
+
+    #region Photon Callbacks
+
+    public override void OnConnectedToMaster()
     {
         CurrentWindow = extingusherSelectWindow;
     }
 
-    public void SelectExtingusher(bool isSelected)
+    public override void OnJoinedLobby()
     {
-        onSelectExtingusher?.Invoke(isSelected);
-        NetworkManager.UserData.hasExtingisher = isSelected;
-        NetworkManager.Instance.JoinLobby();
+        Debug.Log("NetworkManager : OnJoinedLobby");
+        string roomName = $"Loundge";
+
+        NetworkManager.Instance.roomType = NetworkManager.RoomType.Loundge;
+
+        RoomOptions roomOptions = new RoomOptions();
+        roomOptions.IsOpen = true;
+        roomOptions.IsVisible = true;
+        roomOptions.MaxPlayers = 0;
+
+        PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, TypedLobby.Default);
     }
 
-    public void OnConnectedToMasterServer()
+    public override void OnJoinedRoom()
     {
-        ShowExtingusherSelectWindow();
+        Debug.Log("NetworkMnanager : OnJoinedRoom");
+        switch (NetworkManager.Instance.roomType)
+        {
+            case NetworkManager.RoomType.Room:
+                break;
+            case NetworkManager.RoomType.Loundge:
+                PhotonNetwork.LoadLevel("Loundge");
+                break;
+        }
+
+        //if (!isJoinRoom)
+        //{
+        //    GameObject playerObject = PhotonNetwork.Instantiate("Player", transform.position, transform.rotation);
+        //    roomListUI.SetActive(false);
+        //}
     }
 
-    public void OnJoinedLobby()
-    {
-        
-    }
+    #endregion
 }
