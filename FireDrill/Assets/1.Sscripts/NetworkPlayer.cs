@@ -213,23 +213,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         speachBubble.SetActive(false);
     }
 
-    /// <summary>
-    /// 음성 채팅 초대
-    /// 초대 수락하면 로컬에서 자신과 대상을 제외한 모든 유저의 보이스를 끈다. (확성기 제외)
-    /// </summary>
-    public void InviteChat()
-    {
-        photonView.RPC(nameof(InviteChatRPC), RpcTarget.All, photonView.ViewID);
-    }
 
-    public void InviteChatRPC(int id)
-    {
-        if(id == photonView.ViewID)
-        {
-
-        }
-
-    }
 
     #endregion
 

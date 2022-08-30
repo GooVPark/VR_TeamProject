@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using Photon.Voice.Unity;
 using TMPro;
-using Photon.Realtime;
 
 public class LoundgeSceneManager : MonoBehaviourPunCallbacks
 {
     public static LoundgeSceneManager Instance;
+    public Recorder localRecoder;
 
     public Transform playerTransforms;
     private NetworkPlayer player;
@@ -46,6 +47,11 @@ public class LoundgeSceneManager : MonoBehaviourPunCallbacks
     private int voiceTargetID;
     private Transform voiceChatTarget;
 
+    public void ToggleVoiceChat()
+    {
+        localRecoder.TransmitEnabled = !localRecoder.TransmitEnabled;
+    }
+
     public void RequsetVoiceChat(int receiverID, int senderID)
     {
         photonView.RPC(nameof(RequestVoiceChatRPC), RpcTarget.All, receiverID, senderID);
@@ -53,7 +59,7 @@ public class LoundgeSceneManager : MonoBehaviourPunCallbacks
 
     [PunRPC]
     public void RequestVoiceChatRPC(int senderID, int recieverID)
-    {
+    { 
         if (NetworkManager.User.id == recieverID)
         {
             voiceChatRequestToast.gameObject.SetActive(true);
@@ -85,6 +91,7 @@ public class LoundgeSceneManager : MonoBehaviourPunCallbacks
         if (NetworkManager.User.id == senderID || NetworkManager.User.id == recieverID)
         {
             voiceChatDistanceCheck = StartCoroutine(VoiceChatDistanceCheck(senderID, recieverID));
+            localRecoder.TransmitEnabled = true;
 
             for (int i = 0; i < playerTransforms.childCount; i++)
             {
@@ -147,6 +154,8 @@ public class LoundgeSceneManager : MonoBehaviourPunCallbacks
 
         if (NetworkManager.User.id == senderID || NetworkManager.User.id == recieverID)
         {
+            localRecoder.TransmitEnabled = false;
+
             if(voiceChatDistanceCheck != null)
             {
                 StopCoroutine(voiceChatDistanceCheck);
