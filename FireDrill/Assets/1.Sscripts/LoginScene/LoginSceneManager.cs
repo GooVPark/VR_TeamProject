@@ -181,12 +181,6 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
                 PhotonNetwork.LoadLevel("Loundge");
                 break;
         }
-
-        //if (!isJoinRoom)
-        //{
-        //    GameObject playerObject = PhotonNetwork.Instantiate("Player", transform.position, transform.rotation);
-        //    roomListUI.SetActive(false);
-        //}
     }
 
     #endregion

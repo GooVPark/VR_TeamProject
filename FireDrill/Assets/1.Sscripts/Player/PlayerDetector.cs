@@ -17,11 +17,11 @@ public class PlayerDetector : MonoBehaviour
 
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         if(other.CompareTag(detectableTag))
         {
-            other.GetComponent<NetworkPlayer>()?.ShowSpeachBubble();
+            other.GetComponentInParent<NetworkPlayer>()?.ShowSpeachBubble();
         }
     }
 
@@ -29,7 +29,7 @@ public class PlayerDetector : MonoBehaviour
     {
         if (other.CompareTag(detectableTag))
         {
-            other.GetComponent<NetworkPlayer>()?.HideSpeachBubble();
+            other.GetComponentInParent<NetworkPlayer>()?.HideSpeachBubble();
         }
     }
 }

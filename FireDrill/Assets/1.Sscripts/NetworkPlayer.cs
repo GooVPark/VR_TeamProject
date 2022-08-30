@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.UI;
 
 using TMPro;
 using Photon.Pun;
@@ -10,6 +11,13 @@ using Photon.Pun;
 public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
 {
     #region 동기화 프로퍼티
+    [SerializeField] private int userID;
+    public int UserID { get => userID; set => ActionRPC(nameof(SetUserIDRPC), value); }
+    [PunRPC]
+    private void SetUserIDRPC(int value)
+    {
+        userID = value;
+    }
 
     [SerializeField] private string userName;
     public string UserName { get => userName; set => ActionRPC(nameof(SetUserNameRPC), value); }
@@ -29,6 +37,14 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         userLevelUI.text = userLevel;
     }
 
+    [SerializeField] private bool onVoiceChat;
+    public bool OnVoiceChat { get => onVoiceChat; set => ActionRPC(nameof(SetOnVoiceChatRPC), value); }
+    [PunRPC]
+    private void SetOnVoiceChatRPC(bool value)
+    {
+        onVoiceChat = value;    
+    }
+
     private void ActionRPC(string functionName, object value)
     {
         photonView.RPC(functionName, RpcTarget.All, value);
@@ -36,8 +52,10 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
 
     public void InvokeProperties()
     {
+        UserID = UserID;
         UserName = UserName;
         UserLevel = UserLevel;
+        OnVoiceChat = OnVoiceChat;
     }
     #endregion
 
@@ -48,6 +66,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     public Transform rightHand;
 
     private PhotonView photonView;
+    [SerializeField] private AudioSource audioSource;
 
     public GameObject userInfoUI;
     public TMP_Text userNameUI;
@@ -59,6 +78,9 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     [SerializeField] private ActionBasedController leftController;
     [SerializeField] private ActionBasedController rightController;
     private Camera headset;
+
+    public Button requestVoiceChatButton;
+
 
     // Start is called before the first frame update
     void Start()
@@ -73,6 +95,8 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         headset = Camera.main;
         leftController = GameObject.Find("LeftHand Controller").GetComponent<ActionBasedController>();
         rightController = GameObject.Find("RightHand Controller").GetComponent<ActionBasedController>();
+
+        onVoiceChat = false;
 
         Initialize();
     }
@@ -94,11 +118,14 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     {
         if (photonView.IsMine)
         {
+            UserID = NetworkManager.User.id;
             UserName = NetworkManager.User.name;
             UserLevel = NetworkManager.User.userType.ToString();
 
             userInfoUI.SetActive(false);
         }
+
+        requestVoiceChatButton.onClick.AddListener(() => LoundgeSceneManager.Instance.RequsetVoiceChat(NetworkManager.User.id, UserID));
     }
 
     [PunRPC]
@@ -138,12 +165,12 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         Debug.Log("On Cursor Hoverd");
     }
 
-    #region Chat
+    #region Text Chat
 
     Coroutine popChat;
     IEnumerator PopChat(string message)
     {
-        speachBubble.GetComponent<SpeachBubble>().ShowBubble();
+        speachBubble.GetComponent<SpeachBubble>().ShowBubble(message);
 
         yield return new WaitForSeconds(10f);
 
@@ -152,7 +179,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
 
     public void OnSendChatMessage(string message)
     {
-        photonView.RPC(nameof(OnSendChatMessageRPC), RpcTarget.All, message);
+        if(photonView.IsMine) photonView.RPC(nameof(OnSendChatMessageRPC), RpcTarget.All, message);
     }
 
     [PunRPC] public void OnSendChatMessageRPC(string message)
@@ -202,6 +229,20 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
 
         }
 
+    }
+
+    #endregion
+
+    #region Voice Chat
+
+    public void VoiceOn()
+    {
+        audioSource.enabled = true;
+    }
+
+    public void VoiceOff()
+    {
+        audioSource.enabled = false;
     }
 
     #endregion

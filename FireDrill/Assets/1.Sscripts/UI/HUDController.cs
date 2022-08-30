@@ -73,6 +73,7 @@ public class HUDController : MonoBehaviour
     public void SendChatMessage()
     {
         NetworkManager.Instance.SendChat(chatInputField.text);
+        LoundgeSceneManager.Instance.SendTextChat(chatInputField.text);
         chatInputField.text = "";
     }
 
@@ -102,6 +103,12 @@ public class HUDController : MonoBehaviour
 
         showSpeechBubble?.Invoke(msg);
     }
+
+    #endregion
+
+    #region Voice Chat
+
+    
 
     #endregion
 }

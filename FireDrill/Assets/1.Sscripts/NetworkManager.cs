@@ -40,6 +40,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         user = _user;
     }
 
+
     #region Lobby
 
     #endregion

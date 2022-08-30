@@ -1,18 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class SpeachBubble : MonoBehaviour
 {
+    public TMP_Text bubbleText;
     public GameObject bubble;
 
-    public void ShowBubble()
+    public void ShowBubble(string message)
     {
-        bubble.SetActive(true);
+        bubble.gameObject.SetActive(true);
+        bubbleText.text = message;
+
     }
 
     public void HideBubble()
     {
-        bubble.SetActive(false);
+        bubble.gameObject.SetActive(false);
+        bubbleText.text = "";
     }
 }
