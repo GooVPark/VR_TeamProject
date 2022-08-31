@@ -170,6 +170,11 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, TypedLobby.Default);
     }
 
+    public override void OnCreatedRoom()
+    {
+        
+    }
+
     public override void OnJoinedRoom()
     {
         Debug.Log("NetworkMnanager : OnJoinedRoom");

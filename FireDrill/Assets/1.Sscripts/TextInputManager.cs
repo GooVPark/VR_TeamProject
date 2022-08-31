@@ -25,8 +25,7 @@ public class TextInputManager : MonoBehaviour
 
     public void Submit()
     {
-        input.text = virtualKeyboard.TextInputBox.TextField;
-        Debug.Log(virtualKeyboard.TextInputBox.TextField);
+        input.text = virtualKeyboard.TextInputBox.TextField;    
         virtualKeyboard.gameObject.SetActive(false);
     }
 }

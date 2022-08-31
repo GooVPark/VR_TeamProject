@@ -2025,8 +2025,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 442421933}
-  - component: {fileID: 442421932}
   - component: {fileID: 442421931}
+  - component: {fileID: 442421932}
   m_Layer: 0
   m_Name: LoundgeSceneManager
   m_TagString: Untagged
@@ -2068,10 +2068,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec95a615e46fa2043a0eb75560851eb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  localRecoder: {fileID: 1559390609}
   playerTransforms: {fileID: 162511461}
   voiceChatRequestToast: {fileID: 1806084302}
   voiceChatAcceptToast: {fileID: 2018209821}
   voiceChatDeacceptToast: {fileID: 484527424}
+  hapticTargetController: {fileID: 779158800944872192}
 --- !u!4 &442421933
 Transform:
   m_ObjectHideFlags: 0
@@ -2460,10 +2462,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86cea0e7b4ce017448ac660ae1644cdd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomNumber: 0
+  roomNumber: 1
   enteranceCollider: {fileID: 0}
-  targetTag: 
+  targetTag: NetworkPlayer
   joinRoomButton: {fileID: 1087488948}
+  roomInfo: {fileID: 2065558814}
 --- !u!1 &624915053
 GameObject:
   m_ObjectHideFlags: 0
@@ -2502,7 +2505,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -79.1, y: -0}
+  m_AnchoredPosition: {x: -46.7, y: -0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &624915055
@@ -3544,7 +3547,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1087488949}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 442421932}
+        m_TargetAssemblyTypeName: LoundgeSceneManager, Assembly-CSharp
+        m_MethodName: JoinRoom
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1087488949
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5136,7 +5151,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1813286688}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 442421932}
+        m_TargetAssemblyTypeName: LoundgeSceneManager, Assembly-CSharp
+        m_MethodName: ToggleVoiceChat
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1813286688
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -60,6 +60,7 @@ public class HUDController : MonoBehaviour
             chatUI.SetActive(false);
             
             onChatView = false;
+            LoundgeSceneManager.Instance.Haptic(0.2f, 0.1f);
         }
         else
         {
@@ -67,13 +68,14 @@ public class HUDController : MonoBehaviour
             chatUI.SetActive(true);
 
             onChatView = true;
+            LoundgeSceneManager.Instance.Haptic(0.5f, 0.1f);
         }
     }
 
     public void SendChatMessage()
     {
         NetworkManager.Instance.SendChat(chatInputField.text);
-        LoundgeSceneManager.Instance.SendTextChat(chatInputField.text);
+        ///LoundgeSceneManager.Instance.SendTextChat(chatInputField.text);
         chatInputField.text = "";
     }
 

@@ -13,16 +13,31 @@ public class RoomEnterance : MonoBehaviour
 
     [SerializeField] private Button joinRoomButton;
 
+    [SerializeField] private TMP_Text roomInfo;
+
     private void Awake()
     {
         enteranceCollider = GetComponent<BoxCollider>();
+    }
+
+    private void Update()
+    {
+        roomInfo.text = $"참여 인원 ({NetworkManager.Instance.GetPlayerCount(roomNumber)} / 11)";
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if(other.CompareTag(targetTag))
         {
+            joinRoomButton.gameObject.SetActive(true);
+        }
+    }
 
+    private void OnTriggerExit(Collider other)
+    {
+        if(other.CompareTag(targetTag))
+        {
+            joinRoomButton.gameObject.SetActive(false);
         }
     }
 }

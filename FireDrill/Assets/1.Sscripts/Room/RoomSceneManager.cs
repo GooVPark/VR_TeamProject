@@ -7,13 +7,13 @@ using Photon.Realtime;
 using Photon.Voice.Unity;
 using TMPro;
 
-public class LoundgeSceneManager : GameManager
+public class RoomSceneManager : GameManager
 {
-    public static LoundgeSceneManager Instance;
-   
+    public static RoomSceneManager Instance;
+
     private void Awake()
     {
-        if(Instance == null)
+        if (Instance == null)
         {
             Instance = this;
         }

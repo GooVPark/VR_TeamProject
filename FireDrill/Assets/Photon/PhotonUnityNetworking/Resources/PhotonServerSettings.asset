@@ -19,7 +19,7 @@ MonoBehaviour:
     AppIdVoice: 1acc4a1f-4e8e-4db0-9318-2dca1e9ede68
     AppVersion: 
     UseNameServer: 1
-    FixedRegion: 
+    FixedRegion: kr
     Server: 
     Port: 0
     ProxyServer: 
@@ -61,6 +61,7 @@ MonoBehaviour:
   - DisconnectVoiceChatRPC
   - SetOnVoiceChatRPC
   - SendTextChatRPC
+  - PullRoomListRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

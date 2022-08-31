@@ -165,6 +165,15 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         Debug.Log("On Cursor Hoverd");
     }
 
+    #region Haptic
+
+    public void ExcuteHaptic(float amplitude, float duration)
+    {
+        rightController.SendHapticImpulse(amplitude, duration);
+    }
+
+    #endregion
+
     #region Text Chat
 
     Coroutine popChat;

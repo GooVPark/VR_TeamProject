@@ -106,7 +106,6 @@ public class InputManager : MonoBehaviour
     #region Left Hand Inputs
     private void LeftStart(InputAction.CallbackContext context)
     {
-        Debug.Log("Left Start Button");
         isLeftHandStartContextValue = !isLeftHandStartContextValue;
 
         if(isLeftHandStartContextValue)
@@ -129,19 +128,16 @@ public class InputManager : MonoBehaviour
 
     private void LeftPrimary(InputAction.CallbackContext context)
     {
-        Debug.Log("Left Primary Button");
         
     }
 
     private void LeftSecondary(InputAction.CallbackContext context)
     {
-        Debug.Log("Left Secondary Button");
         leftSecondaryButton?.Invoke();
     }
 
     private void OnLeftStickStarted(InputAction.CallbackContext context)
     {
-        Debug.Log("Left Stick Started");
         isLeftHandStickActivated = true;
     }
 
@@ -152,7 +148,6 @@ public class InputManager : MonoBehaviour
 
     private void OnLeftStickCanceled(InputAction.CallbackContext context)
     {
-        Debug.Log("Left Stick Canceled");
         isLeftHandStickActivated = false;
     }
 
@@ -162,7 +157,6 @@ public class InputManager : MonoBehaviour
         float distance = Vector3.Distance(prevPosition, currPosition);
         if (distance > 0.02f)
         {
-            Debug.Log("Hook");
             isHook = true;
             hookingDirection = prevPosition - currPosition;
         }
@@ -184,7 +178,7 @@ public class InputManager : MonoBehaviour
 
     private void RightPrimary(InputAction.CallbackContext context)
     {
-        Debug.Log("Right Primary Input");
+        
     }
 
     private void RightHandPrimaryPerformed(InputAction.CallbackContext context)
@@ -210,7 +204,7 @@ public class InputManager : MonoBehaviour
 
     private void OnRightStickStarted(InputAction.CallbackContext context)
     {
-        Debug.Log("Right Stick Started");
+
     }
 
     private void OnRightStickPerformed(InputAction.CallbackContext context)
@@ -220,7 +214,7 @@ public class InputManager : MonoBehaviour
 
     private void OnRightStickCanceled(InputAction.CallbackContext context)
     {
-        Debug.Log("Right Stick Canceled");
+        
     }
     #endregion
 
