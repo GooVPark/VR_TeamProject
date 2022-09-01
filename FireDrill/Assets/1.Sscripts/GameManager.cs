@@ -21,8 +21,9 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     [SerializeField] private ActionBasedController hapticTargetController;
 
-    void Start()
+    protected void Initialize()
     {
+        localRecoder = FindObjectOfType<Recorder>();
         SpawnPlayer();
     }
 
@@ -207,7 +208,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         Debug.Log("LoundgeSceneManager: OnJoinedLobby");
         string roomName = roomNumber.ToString();
 
-        NetworkManager.Instance.roomType = NetworkManager.RoomType.Room;
+        //NetworkManager.Instance.roomType = NetworkManager.RoomType.Room;
 
         RoomOptions roomOptions = new RoomOptions();
         roomOptions.IsOpen = true;
@@ -217,19 +218,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, TypedLobby.Default);
     }
 
-    public override void OnJoinedRoom()
-    {
-        switch (NetworkManager.Instance.roomType)
-        {
-            case NetworkManager.RoomType.Room:
-                Debug.Log("LoundgeSceneManager: OnJoinedRoom");
-
-                PhotonNetwork.LoadLevel("Room");
-                break;
-            case NetworkManager.RoomType.Loundge:
-                break;
-        }
-    }
 
     #endregion
 

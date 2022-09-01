@@ -22,4 +22,11 @@ public class LoundgeSceneManager : GameManager
             Destroy(Instance.gameObject);
         }
     }
+
+    private void Start()
+    {
+        Initialize();
+        NetworkManager.Instance.roomType = NetworkManager.RoomType.Loundge;
+        NetworkManager.Instance.PullRoomList();
+    }
 }

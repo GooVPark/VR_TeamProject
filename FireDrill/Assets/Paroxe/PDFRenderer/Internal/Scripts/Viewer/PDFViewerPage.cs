@@ -14,9 +14,9 @@ namespace Paroxe.PdfRenderer.Internal.Viewer
 #endif
 
 #if !UNITY_WEBGL
-    public class PDFViewerPage : UIBehaviour, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler
+    public class PDFViewerPage : UIBehaviour, IPointerDownHandler, IPointerUpHandler
 #if UNITY_EDITOR || UNITY_STANDALONE_WIN|| UNITY_STANDALONE_OSX
-        , IPointerEnterHandler, IPointerExitHandler
+
 #endif
     {
         [SerializeField]
@@ -54,112 +54,112 @@ namespace Paroxe.PdfRenderer.Internal.Viewer
             }
         }
 
-        void IPointerClickHandler.OnPointerClick(PointerEventData eventData)
-        {
-#if UNITY_EDITOR || UNITY_STANDALONE_WIN|| UNITY_STANDALONE_OSX
-	        if (!m_PointerInside)
-		        return;
-#endif
+//        void IPointerClickHandler.OnPointerClick(PointerEventData eventData)
+//        {
+//#if UNITY_EDITOR || UNITY_STANDALONE_WIN|| UNITY_STANDALONE_OSX
+//	        if (!m_PointerInside)
+//		        return;
+//#endif
 
-            if (m_Viewer == null)
-                m_Viewer = GetComponentInParent<PDFViewer>();
+//            if (m_Viewer == null)
+//                m_Viewer = GetComponentInParent<PDFViewer>();
 
-            if (m_Viewer == null || m_Viewer.Document == null || m_Viewer.LinksActionHandler == null)
-	            return;
+//            if (m_Viewer == null || m_Viewer.Document == null || m_Viewer.LinksActionHandler == null)
+//	            return;
 
-            PDFPage page = m_Page;
+//            PDFPage page = m_Page;
 			
-			bool unloadPage = false;
+//			bool unloadPage = false;
 			
-			if (page == null)
-			{
-				page = m_Viewer.Document.GetPage(PageIndex);
+//			if (page == null)
+//			{
+//				page = m_Viewer.Document.GetPage(PageIndex);
 				
-				unloadPage = true;
-			}
+//				unloadPage = true;
+//			}
 			
-			try
-			{
-				PDFLink link = GetLinkAtPoint(page, eventData.pressPosition, eventData.pressEventCamera);
+//			try
+//			{
+//				PDFLink link = GetLinkAtPoint(page, eventData.pressPosition, eventData.pressEventCamera);
 
-				if (link != null)
-				{
-					PDFActionHandlerHelper.ExecuteLinkAction(link, m_Viewer);
-				}
-				else if (m_Viewer.ParagraphZoomingEnable && eventData.clickCount == 2)
-				{
-					using (PDFTextPage textPage = page.GetTextPage())
-					{
-						Vector2 pos = eventData.pressPosition;
-						RectTransformUtility.ScreenPointToLocalPointInRectangle((RectTransform)transform, pos, GetComponent<Camera>(), out pos);
-						RectTransform rt = (RectTransform)transform;
-						pos += rt.sizeDelta.x * 0.5f * Vector2.right;
+//				if (link != null)
+//				{
+//					PDFActionHandlerHelper.ExecuteLinkAction(link, m_Viewer);
+//				}
+//				else if (m_Viewer.ParagraphZoomingEnable && eventData.clickCount == 2)
+//				{
+//					using (PDFTextPage textPage = page.GetTextPage())
+//					{
+//						Vector2 pos = eventData.pressPosition;
+//						RectTransformUtility.ScreenPointToLocalPointInRectangle((RectTransform)transform, pos, GetComponent<Camera>(), out pos);
+//						RectTransform rt = (RectTransform)transform;
+//						pos += rt.sizeDelta.x * 0.5f * Vector2.right;
 
-						pos.y = -pos.y + rt.sizeDelta.y * 0.5f;
+//						pos.y = -pos.y + rt.sizeDelta.y * 0.5f;
 
-						pos = pos.x * (rt.sizeDelta.y / rt.sizeDelta.x) * Vector2.right + pos.y * Vector2.up;
+//						pos = pos.x * (rt.sizeDelta.y / rt.sizeDelta.x) * Vector2.right + pos.y * Vector2.up;
 
-						Vector2 pagePoint = page.DeviceToPage(0, 0, (int)rt.sizeDelta.y, (int)rt.sizeDelta.y, PDFPage.PageRotation.Normal, (int)pos.x, (int)pos.y);
-						Vector2 pageSize = page.GetPageSize();
+//						Vector2 pagePoint = page.DeviceToPage(0, 0, (int)rt.sizeDelta.y, (int)rt.sizeDelta.y, PDFPage.PageRotation.Normal, (int)pos.x, (int)pos.y);
+//						Vector2 pageSize = page.GetPageSize();
 
-						float threshold = m_Viewer.ParagraphDetectionThreshold;
+//						float threshold = m_Viewer.ParagraphDetectionThreshold;
 
-						string text = GetBoundedText(textPage, 0.0f, pagePoint.y + 0.0f, pageSize.x, pagePoint.y - 1.0f);
+//						string text = GetBoundedText(textPage, 0.0f, pagePoint.y + 0.0f, pageSize.x, pagePoint.y - 1.0f);
 
-						if (!string.IsNullOrEmpty(text.Trim()) && text.Trim().Length > 4)
-						{
-							string prevText = text;
+//						if (!string.IsNullOrEmpty(text.Trim()) && text.Trim().Length > 4)
+//						{
+//							string prevText = text;
 
-							float bottomOffset = 0.0f;
-							float topOffset = 0.0f;
-							float t = 0.0f;
+//							float bottomOffset = 0.0f;
+//							float topOffset = 0.0f;
+//							float t = 0.0f;
 
-							while (true)
-							{
-								bottomOffset += 2.0f;
-								text = GetBoundedText(textPage, 0.0f, pagePoint.y + 0.0f, pageSize.x, pagePoint.y - bottomOffset);
+//							while (true)
+//							{
+//								bottomOffset += 2.0f;
+//								text = GetBoundedText(textPage, 0.0f, pagePoint.y + 0.0f, pageSize.x, pagePoint.y - bottomOffset);
 
-								if (text == prevText)
-									t += 2.0f;
-								else
-									t = 0.0f;
-								if (t >= threshold)
-									break;
+//								if (text == prevText)
+//									t += 2.0f;
+//								else
+//									t = 0.0f;
+//								if (t >= threshold)
+//									break;
 
-								prevText = text;
-							}
+//								prevText = text;
+//							}
 
-							t = 0.0f;
-							while (true)
-							{
-								topOffset += 2.0f;
-								text = GetBoundedText(textPage, 0.0f, pagePoint.y + topOffset, pageSize.x, pagePoint.y - bottomOffset);
+//							t = 0.0f;
+//							while (true)
+//							{
+//								topOffset += 2.0f;
+//								text = GetBoundedText(textPage, 0.0f, pagePoint.y + topOffset, pageSize.x, pagePoint.y - bottomOffset);
 
-								if (text == prevText)
-									t += 2.0f;
-								else
-									t = 0.0f;
-								if (t >= threshold)
-									break;
+//								if (text == prevText)
+//									t += 2.0f;
+//								else
+//									t = 0.0f;
+//								if (t >= threshold)
+//									break;
 
-								prevText = text;
-							}
+//								prevText = text;
+//							}
 
-							Rect pageRect = new Rect(0.0f, pagePoint.y + topOffset, pageSize.x, (pagePoint.y + topOffset) - (pagePoint.y - bottomOffset));
+//							Rect pageRect = new Rect(0.0f, pagePoint.y + topOffset, pageSize.x, (pagePoint.y + topOffset) - (pagePoint.y - bottomOffset));
 
-							m_Viewer.ZoomOnParagraph(this, pageRect);
-						}
-					}
-				}
-			}
-			finally
-			{
-				if (unloadPage)
-				{
-					page.Dispose();
-				}
-			}
-        }
+//							m_Viewer.ZoomOnParagraph(this, pageRect);
+//						}
+//					}
+//				}
+//			}
+//			finally
+//			{
+//				if (unloadPage)
+//				{
+//					page.Dispose();
+//				}
+//			}
+//        }
 
         private string GetBoundedText(PDFTextPage textPage, float left, float top, float right, float bottom)
         {
@@ -167,27 +167,27 @@ namespace Paroxe.PdfRenderer.Internal.Viewer
         }
 
 #if UNITY_EDITOR || UNITY_STANDALONE_WIN|| UNITY_STANDALONE_OSX
-        void IPointerEnterHandler.OnPointerEnter(PointerEventData eventData)
-        {
-            if (m_Page == null)
-                m_Page = m_Viewer.Document.GetPage(PageIndex);
+        //void IPointerEnterHandler.OnPointerEnter(PointerEventData eventData)
+        //{
+        //    if (m_Page == null)
+        //        m_Page = m_Viewer.Document.GetPage(PageIndex);
 
-            m_PointerInside = true;
-        }
+        //    m_PointerInside = true;
+        //}
 
-        void IPointerExitHandler.OnPointerExit(PointerEventData eventData)
-        {
-            if (m_Page != null)
-            {
-                m_Page.Dispose();
-                m_Page = null;
-            }
+        //void IPointerExitHandler.OnPointerExit(PointerEventData eventData)
+        //{
+        //    if (m_Page != null)
+        //    {
+        //        m_Page.Dispose();
+        //        m_Page = null;
+        //    }
 
-            m_PointerInside = false;
+        //    m_PointerInside = false;
 
-            if (m_HandCursorSettedByMe)
-                Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-        }
+        //    if (m_HandCursorSettedByMe)
+        //        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+        //}
 #endif
         protected override void OnEnable()
         {
@@ -260,24 +260,24 @@ namespace Paroxe.PdfRenderer.Internal.Viewer
                 m_CanvasCameraCached = true;
             }
 
-            if (m_PointerInside)
-			{
-				Vector2 pointerPosition = Input.mousePosition;
+            //          if (m_PointerInside)
+            //	{
+            //		Vector2 pointerPosition = Input.mousePosition;
 
-				PDFLink link = GetLinkAtPoint(m_Page, pointerPosition, m_CanvasCamera);
+            //		PDFLink link = GetLinkAtPoint(m_Page, pointerPosition, m_CanvasCamera);
 
-				if (link != null)
-				{
-					Cursor.SetCursor(m_HandCursor, new Vector2(6.0f, 0.0f), CursorMode.Auto);
-					m_HandCursorSettedByMe = true;
-				}
-				else
-				{
-					Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-					m_HandCursorSettedByMe = false;
-				}
-			}
-		}
+            //		if (link != null)
+            //		{
+            //			Cursor.SetCursor(m_HandCursor, new Vector2(6.0f, 0.0f), CursorMode.Auto);
+            //			m_HandCursorSettedByMe = true;
+            //		}
+            //		else
+            //		{
+            //			Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+            //			m_HandCursorSettedByMe = false;
+            //		}
+            //	}
+        }
 #endif
 
         void IPointerDownHandler.OnPointerDown(PointerEventData eventData) { }

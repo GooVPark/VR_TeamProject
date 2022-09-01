@@ -143,6 +143,7 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
 
     public void SelectExtingusher(bool isSelected)
     {
+        Debug.Log("LoginManager : SelectExtingusher");
         PhotonNetwork.JoinLobby();
     }
 
@@ -152,40 +153,23 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster()
     {
+        Debug.Log("LoginManager : OnConnectedToMaster");
         CurrentWindow = extingusherSelectWindow;
     }
 
     public override void OnJoinedLobby()
     {
-        Debug.Log("NetworkManager : OnJoinedLobby");
+        Debug.Log("LoginManager : OnJoinedLobby");
         string roomName = $"Loundge";
 
-        NetworkManager.Instance.roomType = NetworkManager.RoomType.Loundge;
+        //NetworkManager.Instance.roomType = NetworkManager.RoomType.Loundge;
 
         RoomOptions roomOptions = new RoomOptions();
         roomOptions.IsOpen = true;
         roomOptions.IsVisible = true;
         roomOptions.MaxPlayers = 0;
 
-        PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, TypedLobby.Default);
-    }
-
-    public override void OnCreatedRoom()
-    {
-        
-    }
-
-    public override void OnJoinedRoom()
-    {
-        Debug.Log("NetworkMnanager : OnJoinedRoom");
-        switch (NetworkManager.Instance.roomType)
-        {
-            case NetworkManager.RoomType.Room:
-                break;
-            case NetworkManager.RoomType.Loundge:
-                PhotonNetwork.LoadLevel("Loundge");
-                break;
-        }
+        PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, null);
     }
 
     #endregion

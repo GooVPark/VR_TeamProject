@@ -9,7 +9,7 @@ using HashTable = ExitGames.Client.Photon.Hashtable;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
-    public enum RoomType { Room, Loundge }
+    public enum RoomType { Login, Room, Loundge }
     public RoomType roomType;
 
     public static NetworkManager Instance;
@@ -42,9 +42,9 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         elapsedTime += Time.deltaTime;
         
-        if(elapsedTime > 1f)
+        if(elapsedTime > 1f && roomType != RoomType.Login)
         {
-            PullRoomList();
+            //PullRoomList();
             elapsedTime = 0f;
         }
     }
@@ -76,22 +76,39 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         photonView.RPC(nameof(ChatRPC), RpcTarget.All, "<color=yellow>" + newPlayer.NickName + "´ÔÀÌ Âü°¡ ÇÏ¼Ì½À´Ï´Ù</color>");
+        PullRoomList();
         if (newPlayer != PhotonNetwork.LocalPlayer)
         {
             ((GameObject)PhotonNetwork.LocalPlayer.TagObject).GetComponent<NetworkPlayer>().InvokeProperties();
         }
     }
 
-    public override void OnRoomListUpdate(List<RoomInfo> roomList)
+    public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        for(int i = 0; i < roomList.Count; i++)
+        PullRoomList();
+    }
+
+
+    public override void OnJoinedRoom()
+    {
+        Debug.Log("NetworkMnanager : OnJoinedRoom");
+        Debug.Log(PhotonNetwork.CurrentRoom.Name);
+        switch (Instance.roomType)
         {
-            if (!roomsByName.ContainsKey(roomList[i].Name))
-            {
-                roomsByName.Add(roomList[i].Name, roomList[i]);
-            }
-            
+            case RoomType.Login:
+                PhotonNetwork.LoadLevel("Loundge");
+                break;
+            case RoomType.Room:
+                break;
+            case RoomType.Loundge:
+                PhotonNetwork.LoadLevel("Room");
+                break;
         }
+    }
+
+    public override void OnCreatedRoom()
+    {
+        Debug.Log("NetworkManager : OnCreateRoom");
     }
 
     #endregion
