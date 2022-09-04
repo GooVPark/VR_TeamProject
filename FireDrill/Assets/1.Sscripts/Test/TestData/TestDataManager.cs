@@ -123,6 +123,11 @@ public class User
 
     public bool[] quizResult = new bool[10];
 
+    public User()
+    {
+
+    }
+
     public User(string email, string password, string name, UserType userType, string company, int id)
     {
         this.email = email;

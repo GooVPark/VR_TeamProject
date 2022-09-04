@@ -45,6 +45,19 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
     [SerializeField] private Button deselectExtingusherButton;
     [Space(5)]
 
+
+    [Header("Sign-In UI")]
+    [SerializeField] private TMP_InputField signInID;
+    [SerializeField] private TMP_InputField signInPassword;
+    [SerializeField] private TMP_InputField signInPasswordCheck;
+    [SerializeField] private TMP_InputField signInName;
+
+    [SerializeField] private GameObject signInWindow;
+    [SerializeField] private Button idCheckButton;
+    [SerializeField] private GameObject idCheckPopUp;
+    [SerializeField] private TMP_Text idCheckText;
+    [SerializeField] private bool idCheck = false;
+
     private static User userData;
     public static User UserData { get => userData; }
 
@@ -76,7 +89,7 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
     private void Start()
     {
         CurrentWindow = logoWindow;
-
+            
     }
 
     #region Logo
@@ -93,7 +106,7 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
     public void Login()
     {
         User userData;
-        bool isContain = DataManager.UserTable.GetUser(emailInputField.text, passwordInputField.text, out userData);
+        bool isContain = DataManager.Instance.IsExistAccount(emailInputField.text, passwordInputField.text, out userData);
 
         if (isContain)
         {
@@ -124,7 +137,7 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
 
     public void ConfirmLoginError()
     {
-        currentWindow = logoWindow;
+        CurrentWindow = loginWindow;
     }
 
     #endregion
@@ -145,6 +158,66 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("LoginManager : SelectExtingusher");
         PhotonNetwork.JoinLobby();
+    }
+
+    #endregion
+
+    #region Sgin In
+
+    public void ShowSignInWindow()
+    {
+        CurrentWindow = signInWindow;
+    }
+
+    public void SignInAccount()
+    {
+        if(signInPassword.text == string.Empty || signInPasswordCheck.text == string.Empty || signInID.text == string.Empty || signInName.text == string.Empty)
+        {
+            return;
+        }
+        else if(!idCheck)
+        {
+            return;
+        }
+        else if(!signInPassword.text.Equals(signInPasswordCheck.text))
+        {
+            return;
+        }
+
+        //아이디가 영어인지 검사
+
+        User member = new User();
+        member.email = signInID.text;
+        member.password = signInPassword.text;
+        member.name = signInName.text;
+        member.userType = UserType.Student;
+
+        DataManager.Instance.InsertMember(member);
+
+        CurrentWindow = loginWindow;
+    }
+
+    public void CheckID()
+    {
+        string id = signInID.text;
+
+        if(DataManager.Instance.IsExistID(id) || id == string.Empty)
+        {
+            idCheckText.text = "사용 불가";
+            idCheck = false;
+        }
+        else
+        {
+            idCheckText.text = "사용 가능";
+            idCheck = true;
+        }
+
+        idCheckPopUp.SetActive(true);
+    }
+
+    public void IDCheckConfirm()
+    {
+        idCheckPopUp.SetActive(false);
     }
 
     #endregion
