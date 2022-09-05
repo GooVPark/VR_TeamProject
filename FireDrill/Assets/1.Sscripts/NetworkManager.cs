@@ -88,11 +88,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         PullRoomList();
     }
 
-
     public override void OnJoinedRoom()
     {
         Debug.Log("NetworkMnanager : OnJoinedRoom");
-        Debug.Log(PhotonNetwork.CurrentRoom.Name);
+        
         switch (Instance.roomType)
         {
             case RoomType.Login:
@@ -161,5 +160,20 @@ public class NetworkManager : MonoBehaviourPunCallbacks
                 Destroy(roomPoller);
             }
         );
+    }
+
+    public override void OnConnectedToMaster()
+    {
+        DataManager.Instance.SetOnline(User.email);
+    }
+
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        DataManager.Instance.SetOffline(User.email);
+    }
+
+    private void OnApplicationQuit()
+    {
+        DataManager.Instance.SetOffline(User.email);
     }
 }

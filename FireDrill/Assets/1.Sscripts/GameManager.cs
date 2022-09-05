@@ -189,10 +189,11 @@ public class GameManager : MonoBehaviourPunCallbacks
     #endregion
 
     #region Enter Room
-    private int roomNumber;
+    public int roomNumber;
 
     public void JoinRoom(int roomNumber)
     {
+        this.roomNumber = roomNumber;
         Debug.Log("LoundgeSceneManager: LeavRoom");
         PhotonNetwork.LeaveRoom();
     }

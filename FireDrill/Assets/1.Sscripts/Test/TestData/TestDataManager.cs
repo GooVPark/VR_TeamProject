@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 
 using UnityEngine;
+using MongoDB.Bson;
+using MongoDB.Driver;
 
 [CreateAssetMenu(menuName = "Test Database")]
 public class TestDataManager : ScriptableObject
@@ -107,9 +109,12 @@ public class UserTable
     }
 }
 
+
+
 [System.Serializable]
 public class User
 {
+
     public string email;
     public string password;
 
@@ -117,6 +122,8 @@ public class User
     public string name;
     public UserType userType;
     public string company;
+
+    public bool isOnline;
 
     public int trainingProgress = 0;
     public bool hasExtingisher;

@@ -171,27 +171,36 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
 
     public void SignInAccount()
     {
+        Debug.Log("SignInAccount");
+
         if(signInPassword.text == string.Empty || signInPasswordCheck.text == string.Empty || signInID.text == string.Empty || signInName.text == string.Empty)
         {
+            Debug.Log("Empty Slot Exist");
             return;
         }
         else if(!idCheck)
         {
+            Debug.Log("Need ID Check");
             return;
         }
         else if(!signInPassword.text.Equals(signInPasswordCheck.text))
         {
+            Debug.Log("Password Not Equal");
             return;
         }
 
         //아이디가 영어인지 검사
+        Debug.Log("Set UserData");
+        User member = new User
+        {
+            email = signInID.text,
+            password = signInPassword.text,
+            name = signInName.text,
+            userType = UserType.Student,
+            id = DataManager.Instance.GetUserCount()
+        };
 
-        User member = new User();
-        member.email = signInID.text;
-        member.password = signInPassword.text;
-        member.name = signInName.text;
-        member.userType = UserType.Student;
-
+        Debug.Log("Insert Request");
         DataManager.Instance.InsertMember(member);
 
         CurrentWindow = loginWindow;

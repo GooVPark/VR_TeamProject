@@ -31,6 +31,7 @@ public class LoundgeSceneManager : GameManager
         NetworkManager.Instance.PullRoomList();
 
         LoadFirstPage();
+        UpdateProgressBoard();
     }
 
     private void FixedUpdate()
@@ -40,6 +41,13 @@ public class LoundgeSceneManager : GameManager
         {
             refreshTimeCount = 0;
             RefreshNoticeBoard();
+        }
+
+        progressBoardElapsedTime += Time.fixedDeltaTime;
+        if(progressBoardElapsedTime > progressBoardUpdateInterval)
+        {
+            progressBoardElapsedTime = 0f;
+            UpdateProgressBoard();
         }
     }
 
@@ -182,7 +190,33 @@ public class LoundgeSceneManager : GameManager
         if(value) postingWindow.SetActive(false);
     }
 
-    
+
+
+    #endregion
+
+    #region Training Progress Boards
+    [Header("Progress Board")]
+    [SerializeField] private List<RoomData> roomDatas;
+    [SerializeField] private List<ProgressUI> progresses;
+    [SerializeField] private TMP_Text playerCountText;
+
+    private float progressBoardElapsedTime = 0f;
+    private float progressBoardUpdateInterval = 1f;
+
+    private void UpdateProgressBoard()
+    {
+        roomDatas = DataManager.Instance.GetRoomData();
+
+        for(int i = 0; i < roomDatas.Count; i++)
+        {
+            progresses[i].UpdateProgressUI(roomDatas[i]);
+        }
+
+        for(int i = roomDatas.Count; i < progresses.Count; i++)
+        {
+            progresses[i].UpdateProgressUI(null);
+        }
+    }
 
     #endregion
 }

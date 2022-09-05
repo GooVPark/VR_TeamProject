@@ -16,7 +16,11 @@ public class RoomSceneManager : GameManager
     [SerializeField] private Button nextPage;
     [SerializeField] private Button prevPage;
 
+    [Header("Lecture's Controller")]
+    [SerializeField] private Button[] testButtons;
 
+    private float elapsedTime = 1f;
+    private float interval = 1f;
 
     private void Awake()
     {
@@ -34,5 +38,20 @@ public class RoomSceneManager : GameManager
     {
         Initialize();
         NetworkManager.Instance.roomType = NetworkManager.RoomType.Room;
+    }
+
+    private void Update()
+    {
+        elapsedTime += Time.deltaTime;
+        if(elapsedTime > interval)
+        {
+            elapsedTime = 0f;
+            DataManager.Instance.UpdateRoomPlayerCount(roomNumber, PhotonNetwork.CurrentRoom.PlayerCount);
+        }
+    }
+
+    public void PhaseShift(int progress)
+    {
+        DataManager.Instance.UpdateRoomProgress(roomNumber, progress);
     }
 }
