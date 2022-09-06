@@ -241,17 +241,19 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedLobby()
     {
-        Debug.Log("LoginManager : OnJoinedLobby");
-        string roomName = $"Loundge";
+        //Debug.Log("LoginManager : OnJoinedLobby");
+        //string roomName = $"Loundge";
 
-        //NetworkManager.Instance.roomType = NetworkManager.RoomType.Loundge;
+        ////NetworkManager.Instance.roomType = NetworkManager.RoomType.Loundge;
 
-        RoomOptions roomOptions = new RoomOptions();
-        roomOptions.IsOpen = true;
-        roomOptions.IsVisible = true;
-        roomOptions.MaxPlayers = 0;
+        //RoomOptions roomOptions = new RoomOptions();
+        //roomOptions.IsOpen = true;
+        //roomOptions.IsVisible = true;
+        //roomOptions.MaxPlayers = 0;
 
-        PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, null);
+        //PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, null);
+
+        PhotonNetwork.LoadLevel("Loundge");
     }
 
     #endregion

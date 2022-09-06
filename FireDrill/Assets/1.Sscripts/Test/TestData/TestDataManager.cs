@@ -128,7 +128,8 @@ public class User
     public int trainingProgress = 0;
     public bool hasExtingisher;
 
-    public bool[] quizResult = new bool[10];
+    public int currentRoom;
+    public int[] quizResult = new int[10];
 
     public User()
     {

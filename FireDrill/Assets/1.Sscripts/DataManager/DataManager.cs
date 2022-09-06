@@ -20,7 +20,7 @@ public class DataManager : MonoBehaviour
 
     IMongoDatabase roomDatabase;
     IMongoCollection<RoomData> roomCollection;
-
+    
     IMongoDatabase textDatabase;
     IMongoCollection<ToastJson> toastCollection;
 
@@ -59,7 +59,7 @@ public class DataManager : MonoBehaviour
 
         roomDatabase = client.GetDatabase("RoomDatabase");
         roomCollection = roomDatabase.GetCollection<RoomData>("RoomInfo");
-
+        
         textDatabase = client.GetDatabase("TextDatabase");
         toastCollection = textDatabase.GetCollection<ToastJson>("Toasts");
 
@@ -202,12 +202,10 @@ public class DataManager : MonoBehaviour
 
     public void UpdateRoomPlayerCount(int number, int count)
     {
-        Debug.Log("UpdateRoomPlayerCount1");
         var filter = Builders<RoomData>.Filter.Eq("roomNumber", number);
         var update = Builders<RoomData>.Update.Set("currentPlayerCount", count);
-        Debug.Log("UpdateRoomPlayerCount2");
         roomCollection.UpdateOne(filter, update);
-        Debug.Log("UpdateRoomPlayerCount3");
+
     }
 
     public void UpdateRoomProgress(int number, int progress)
@@ -255,12 +253,45 @@ public class DataManager : MonoBehaviour
         }
     }
 
-    public void SetQuizResult(string email, bool result, int code)
+    public void SetQuizResult(string email, int result, int code)
     {
         var filter = Builders<User>.Filter.Eq("email", email);
         var update = Builders<User>.Update.Set(x => x.quizResult[code], result);
 
         accountCollection.UpdateOne(filter, update);
+    }
+
+    public void GetScoreBoard()
+    {
+
+    }
+
+    #endregion
+
+    #region User
+
+    public User FindUserByEmail(string email)
+    {
+        if (!IsExistID(email)) return null;
+
+        List<User> users = accountCollection.Find(x => x.email == email).ToList();
+
+        return users[0];
+    }
+
+    public void UpdateCurrentRoom(string email, int number)
+    {
+        var filter = Builders<User>.Filter.Eq("email", email);
+        var update = Builders<User>.Update.Set("currentRoom", number);
+
+        accountCollection.UpdateOne(filter, update);
+    }
+
+    public List<User> GetUsersListInRoom(int roomNumber)
+    {
+        var filter = Builders<User>.Filter.Eq("currentRoom", roomNumber);
+
+        return accountCollection.Find(filter).ToList();
     }
 
     #endregion
@@ -278,4 +309,9 @@ public class DataManager : MonoBehaviour
     /// 
     /// var result = collection.Find(filter).ToList(); 필터로 가져오기
     ///
+}
+
+public class UserInRoom
+{
+    public string email;
 }

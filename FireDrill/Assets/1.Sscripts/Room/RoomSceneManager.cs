@@ -18,6 +18,7 @@ public class RoomSceneManager : GameManager
 
     [Header("Lecture's Controller")]
     [SerializeField] private Button[] testButtons;
+    [SerializeField] private ScoreUI[] scoureRows;
 
     private float elapsedTime = 1f;
     private float interval = 1f;
@@ -37,9 +38,11 @@ public class RoomSceneManager : GameManager
     private void Start()
     {
         Initialize();
+        SpawnPlayer();
         NetworkManager.Instance.roomType = NetworkManager.RoomType.Room;
 
         if(photonView.IsMine) DataManager.Instance.UpdateRoomPlayerCount(roomNumber, PhotonNetwork.CurrentRoom.PlayerCount);
+        DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, NetworkManager.RoomNumber);
     }
 
     public void PhaseShift(int progress)
@@ -47,10 +50,33 @@ public class RoomSceneManager : GameManager
         DataManager.Instance.UpdateRoomProgress(roomNumber, progress);
     }
 
-    private void OnApplicationQuit()
+    private List<User> GetUsersInRoom(int number)
     {
-        if (photonView.IsMine) DataManager.Instance.UpdateRoomPlayerCount(roomNumber, PhotonNetwork.CurrentRoom.PlayerCount);
+        return DataManager.Instance.GetUsersListInRoom(number);
     }
 
+    public void ShowScoreBoard()
+    {
+        List<User> users = GetUsersInRoom(NetworkManager.RoomNumber);
+
+        for(int i = 0; i < users.Count; i++)
+        {
+            if (users[i].userType == UserType.Lecture) continue;
+
+            scoureRows[i].gameObject.SetActive(true);
+            scoureRows[i].UpdateScore(users[i]);
+        }
+        for(int i = users.Count; i < scoureRows.Length; i++)
+        {
+            scoureRows[i].gameObject.SetActive(false);
+        }
+    }
+
+    private void OnApplicationQuit()
+    {
+        int playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
+        DataManager.Instance.UpdateRoomPlayerCount(NetworkManager.RoomNumber, playerCount - 1);
+        DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, 0);
+    }
 
 }

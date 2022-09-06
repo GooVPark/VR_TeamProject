@@ -19,6 +19,9 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     private static User user;
     public static User User => user;
 
+    private static int roomNumber;
+    public static int RoomNumber => roomNumber;
+
     private string gameVersion = "1.0";
 
     private void Awake()
@@ -40,13 +43,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     private void Update()
     {
-        elapsedTime += Time.deltaTime;
-        
-        if(elapsedTime > 1f && roomType != RoomType.Login)
-        {
-            //PullRoomList();
-            elapsedTime = 0f;
-        }
+
     }
 
     public void SetUser(User _user)
@@ -54,6 +51,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         user = _user;
     }
 
+    public void SetRoomNumber(int _roomNumber)
+    {
+        roomNumber = _roomNumber;
+    }
 
     #region Lobby
 
@@ -76,7 +77,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         photonView.RPC(nameof(ChatRPC), RpcTarget.All, "<color=yellow>" + newPlayer.NickName + "´ÔÀÌ Âü°¡ ÇÏ¼Ì½À´Ï´Ù</color>");
-        PullRoomList();
+
         if (newPlayer != PhotonNetwork.LocalPlayer)
         {
             ((GameObject)PhotonNetwork.LocalPlayer.TagObject).GetComponent<NetworkPlayer>().InvokeProperties();
@@ -85,24 +86,13 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        PullRoomList();
+
     }
 
     public override void OnJoinedRoom()
     {
-        Debug.Log("NetworkMnanager : OnJoinedRoom");
-        
-        switch (Instance.roomType)
-        {
-            case RoomType.Login:
-                PhotonNetwork.LoadLevel("Loundge");
-                break;
-            case RoomType.Room:
-                break;
-            case RoomType.Loundge:
-                PhotonNetwork.LoadLevel("Room");
-                break;
-        }
+
+        PhotonNetwork.LoadLevel("Room");
     }
 
     public override void OnCreatedRoom()

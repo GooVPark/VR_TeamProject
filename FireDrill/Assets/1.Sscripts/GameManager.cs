@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     protected void Initialize()
     {
         localRecoder = FindObjectOfType<Recorder>();
-        SpawnPlayer();
+        //SpawnPlayer();
 
 
         switch (NetworkManager.User.userType)
@@ -41,7 +41,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     }
 
-    private void SpawnPlayer()
+    protected void SpawnPlayer()
     {
         GameObject playerObject = PhotonNetwork.Instantiate("Player", transform.position, transform.rotation);
         player = playerObject.GetComponent<NetworkPlayer>();
@@ -216,20 +216,9 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void JoinRoom(int roomNumber)
     {
+        NetworkManager.Instance.SetRoomNumber(roomNumber);
+
         this.roomNumber = roomNumber;
-        Debug.Log("LoundgeSceneManager: LeavRoom");
-        PhotonNetwork.LeaveRoom();
-    }
-
-    public override void OnConnectedToMaster()
-    {
-        Debug.Log("LoundgeSceneManager: OnConnectedToMaster");
-        PhotonNetwork.JoinLobby();
-    }
-
-    public override void OnJoinedLobby()
-    {
-        Debug.Log("LoundgeSceneManager: OnJoinedLobby");
         string roomName = roomNumber.ToString();
 
         //NetworkManager.Instance.roomType = NetworkManager.RoomType.Room;
@@ -241,6 +230,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, TypedLobby.Default);
     }
+
 
 
     #endregion

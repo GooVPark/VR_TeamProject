@@ -8,9 +8,9 @@ public class QuizSlot : MonoBehaviour
 {
     [SerializeField] private TMP_Text text;
 
-    private void OnEnable()
+    private void Awake()
     {
-        text = GetComponentInChildren<TextMeshProUGUI>();
+        
     }
 
     public string GetText()
@@ -26,6 +26,7 @@ public class QuizSlot : MonoBehaviour
 
     public void SetText(string text)
     {
+        this.text = GetComponentInChildren<TextMeshProUGUI>();
         this.text.text = text;
     }
 

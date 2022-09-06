@@ -48,6 +48,8 @@ public class LoundgeSceneManager : GameManager
             progressBoardElapsedTime = 0f;
             UpdateProgressBoard();
         }
+
+        UpdateLobbyPlayerCount();
     }
 
     #region Notice Board
@@ -194,6 +196,7 @@ public class LoundgeSceneManager : GameManager
     #endregion
 
     #region Training Progress Boards
+
     [Header("Progress Board")]
     [SerializeField] private List<RoomData> roomDatas;
     [SerializeField] private List<ProgressUI> progresses;
@@ -215,6 +218,21 @@ public class LoundgeSceneManager : GameManager
         {
             progresses[i].UpdateProgressUI(null);
         }
+    }
+    private void UpdateLobbyPlayerCount()
+    {
+        playerCountText.text = PhotonNetwork.CountOfPlayers.ToString();
+    }
+
+
+
+    #endregion
+
+    #region Photon Callbacks
+
+    public override void OnJoinedLobby()
+    {
+        
     }
 
     #endregion
