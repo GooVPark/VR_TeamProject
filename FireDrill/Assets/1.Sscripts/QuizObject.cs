@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MongoDB.Bson;
 
 [CreateAssetMenu(menuName = "Quiz")]
 public class QuizObject : ScriptableObject
@@ -20,4 +21,16 @@ public class QuizObject : ScriptableObject
 
         return QuizState.Incorrect;
     }
+}
+
+public enum QuizType { Selection, Sequence, OX }
+public class QuizJson
+{
+    public ObjectId _id;
+
+    public QuizType type;
+    public string question;
+    public string[] selections;
+    public int[] answer;
+    public int code;
 }

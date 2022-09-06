@@ -21,6 +21,12 @@ public class DataManager : MonoBehaviour
     IMongoDatabase roomDatabase;
     IMongoCollection<RoomData> roomCollection;
 
+    IMongoDatabase textDatabase;
+    IMongoCollection<ToastJson> toastCollection;
+
+    IMongoDatabase quizDatabase;
+    IMongoCollection<QuizJson> selectionQuizCollection;
+
     private static UserTable userTable;
     public static UserTable UserTable { get => userTable; }
 
@@ -53,6 +59,15 @@ public class DataManager : MonoBehaviour
 
         roomDatabase = client.GetDatabase("RoomDatabase");
         roomCollection = roomDatabase.GetCollection<RoomData>("RoomInfo");
+
+        textDatabase = client.GetDatabase("TextDatabase");
+        toastCollection = textDatabase.GetCollection<ToastJson>("Toasts");
+
+        quizDatabase = client.GetDatabase("QuizDatabase");
+        selectionQuizCollection = quizDatabase.GetCollection<QuizJson>("Selection");
+
+        GetAllToast();
+        GetQuizDatabase();
     }
 
 
@@ -201,6 +216,51 @@ public class DataManager : MonoBehaviour
         var update = Builders<RoomData>.Update.Set("progress", progress);
 
         roomCollection.UpdateOne(filter, update);
+    }
+
+    #endregion
+
+    #region Toast Text
+
+    public Dictionary<string, ToastJson> toastsByCode = new Dictionary<string, ToastJson>();
+
+    public void GetAllToast()
+    {
+        BsonDocument bson = new BsonDocument { };
+        List<ToastJson> toastJsons = new List<ToastJson>();
+        toastJsons = toastCollection.Find(bson).ToList();
+
+        foreach(ToastJson toast in toastJsons)
+        {
+            toastsByCode.Add(toast.code, toast);
+        }
+    }
+
+
+    #endregion
+
+    #region Quiz
+
+    public Dictionary<int, QuizJson> quizsByCode = new Dictionary<int, QuizJson>();
+
+    public void GetQuizDatabase()
+    {
+        BsonDocument bson = new BsonDocument { };
+        List<QuizJson> quizJsons = new List<QuizJson>();
+        quizJsons = selectionQuizCollection.Find(bson).ToList();
+
+        foreach (QuizJson quiz in quizJsons)
+        {
+            quizsByCode.Add(quiz.code, quiz);
+        }
+    }
+
+    public void SetQuizResult(string email, bool result, int code)
+    {
+        var filter = Builders<User>.Filter.Eq("email", email);
+        var update = Builders<User>.Update.Set(x => x.quizResult[code], result);
+
+        accountCollection.UpdateOne(filter, update);
     }
 
     #endregion

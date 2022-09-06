@@ -19,7 +19,7 @@ public class CameraTrackingUICanvas : MonoBehaviour
     private void Update()
     {
         Vector2 start = new Vector2(pivot.position.x, pivot.position.z);
-        Vector2 end = new Vector2(cameraTransform.position.x, cameraTransform.position.z);
+        Vector2 end = new Vector2(cameraTransform.position.x, cameraTransform.position.z) / 2f;
         Vector2 v2 = end - start;
 
         transform.rotation = Quaternion.Euler(offsetRotation) * Quaternion.Euler(0, -Mathf.Atan2(v2.y, v2.x) * Mathf.Rad2Deg - 90, 0);

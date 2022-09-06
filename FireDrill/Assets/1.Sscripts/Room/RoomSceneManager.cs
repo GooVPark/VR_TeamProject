@@ -38,20 +38,19 @@ public class RoomSceneManager : GameManager
     {
         Initialize();
         NetworkManager.Instance.roomType = NetworkManager.RoomType.Room;
-    }
 
-    private void Update()
-    {
-        elapsedTime += Time.deltaTime;
-        if(elapsedTime > interval)
-        {
-            elapsedTime = 0f;
-            DataManager.Instance.UpdateRoomPlayerCount(roomNumber, PhotonNetwork.CurrentRoom.PlayerCount);
-        }
+        if(photonView.IsMine) DataManager.Instance.UpdateRoomPlayerCount(roomNumber, PhotonNetwork.CurrentRoom.PlayerCount);
     }
 
     public void PhaseShift(int progress)
     {
         DataManager.Instance.UpdateRoomProgress(roomNumber, progress);
     }
+
+    private void OnApplicationQuit()
+    {
+        if (photonView.IsMine) DataManager.Instance.UpdateRoomPlayerCount(roomNumber, PhotonNetwork.CurrentRoom.PlayerCount);
+    }
+
+
 }

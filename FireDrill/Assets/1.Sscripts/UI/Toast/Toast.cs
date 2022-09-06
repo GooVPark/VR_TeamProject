@@ -7,13 +7,24 @@ public class Toast : MonoBehaviour
 {
     public TMP_Text message;
 
-    public void Activate()
+    public void Activate(float duration)
     {
         gameObject.SetActive(true);
+    }
+
+    public virtual void SetToastMeesage(ToastJson toast)
+    {
+
     }
 
     public virtual void SetToastMessage(string message)
     {
         this.message.text = message;
+    }
+
+    private IEnumerator ToastDuration(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        gameObject.SetActive(false);
     }
 }

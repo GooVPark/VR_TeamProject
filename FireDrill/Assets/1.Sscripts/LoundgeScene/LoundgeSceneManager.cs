@@ -29,7 +29,6 @@ public class LoundgeSceneManager : GameManager
         Initialize();
         NetworkManager.Instance.roomType = NetworkManager.RoomType.Loundge;
         NetworkManager.Instance.PullRoomList();
-
         LoadFirstPage();
         UpdateProgressBoard();
     }

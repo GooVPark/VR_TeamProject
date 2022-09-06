@@ -25,6 +25,20 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         localRecoder = FindObjectOfType<Recorder>();
         SpawnPlayer();
+
+
+        switch (NetworkManager.User.userType)
+        {
+            case UserType.Lecture:
+                megaPhoneButton.SetActive(true);
+                scoreBoardButton.SetActive(true);
+                break;
+            case UserType.Student:
+                megaPhoneButton.SetActive(false);
+                scoreBoardButton.SetActive(false);
+                break;
+        }
+
     }
 
     private void SpawnPlayer()
@@ -32,6 +46,15 @@ public class GameManager : MonoBehaviourPunCallbacks
         GameObject playerObject = PhotonNetwork.Instantiate("Player", transform.position, transform.rotation);
         player = playerObject.GetComponent<NetworkPlayer>();
     }
+
+    #region Camera UI
+
+    [Header("Camera UI")]
+    [SerializeField] protected GameObject megaPhoneButton;
+    [SerializeField] protected GameObject scoreBoardButton;
+
+    #endregion
+
 
     #region Voice Chat
 

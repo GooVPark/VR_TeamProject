@@ -1,18 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MongoDB.Bson;
 
 public class ToastManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public Toast singleTextAndTypeToast;
+
+    private Coroutine toastDuration;
+    private IEnumerator ToastDuration(Toast toast, float duration)
     {
-        
+        yield return new WaitForSeconds(duration);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void OnToast(string code, Toast toast)
     {
-        
+        ToastJson toastJson = DataManager.Instance.toastsByCode[code];
+        toast.SetToastMeesage(toastJson);
     }
+}
+
+
+[System.Serializable]
+public class ToastJson
+{
+    public ObjectId _id;
+    public string code;
+    public string text;
+    public string type;
 }
