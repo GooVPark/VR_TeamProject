@@ -93,7 +93,7 @@ public class InteractableQuizObject : MonoBehaviour
 
     public void SelectAnswer(int number)
     {
-        answers[currentSlot] = number;
+        answers[currentSlot-1] = number;
     }
 
     public void SelectSlot(int number)
@@ -119,7 +119,7 @@ public class InteractableQuizObject : MonoBehaviour
         else //선택한 선택지가 있는 경우
         {
             currentSlot = number;
-            SelectAnswer(currentSequence-1);
+            SelectAnswer(currentSequence);
 
             slots[number-1].SetText(sequences[currentSequence-1].GetText());
             //sequences[currentSlot-1].SetInteractable(false);
@@ -146,7 +146,7 @@ public class InteractableQuizObject : MonoBehaviour
         else //선택한 슬롯이 있을 경우
         {
             currentSequence = number;
-            SelectAnswer(currentSequence-1);
+            SelectAnswer(currentSequence);
             slots[currentSlot-1].SetText(sequences[currentSequence-1].GetText());
             //sequences[currentSequence-1].SetInteractable(false);
 

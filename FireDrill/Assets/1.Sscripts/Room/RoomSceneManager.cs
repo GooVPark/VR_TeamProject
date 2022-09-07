@@ -18,6 +18,8 @@ public class RoomSceneManager : GameManager
 
     [Header("Lecture's Controller")]
     [SerializeField] private Button[] testButtons;
+
+    [SerializeField] private GameObject scoreBoardUI;
     [SerializeField] private ScoreUI[] scoureRows;
 
     private float elapsedTime = 1f;
@@ -57,6 +59,14 @@ public class RoomSceneManager : GameManager
 
     public void ShowScoreBoard()
     {
+        if (scoreBoardUI.activeSelf)
+        {
+            scoreBoardUI.SetActive(false);
+            return;
+        }
+
+        scoreBoardUI.SetActive(true);
+
         List<User> users = GetUsersInRoom(NetworkManager.RoomNumber);
 
         for(int i = 0; i < users.Count; i++)
