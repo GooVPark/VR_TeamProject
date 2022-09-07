@@ -72,7 +72,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     public TMP_Text userNameUI;
     public TMP_Text userLevelUI;
     public TMP_Text distanceUI;
-
+    public Image image;
     public GameObject speachBubble;
 
     [SerializeField] private ActionBasedController leftController;
@@ -85,6 +85,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     // Start is called before the first frame update
     void Start()
     {
+         
         Transform parent = GameObject.Find("Players").transform;
         transform.SetParent(parent);
         photonView = GetComponent<PhotonView>();

@@ -294,7 +294,16 @@ public class DataManager : MonoBehaviour
         return accountCollection.Find(filter).ToList();
     }
 
+    public void UpdateExtingusher(string email, bool value)
+    {
+        var filter = Builders<User>.Filter.Eq("email", email);
+        var update = Builders<User>.Update.Set("hasExtingisher", value);
+
+        accountCollection.UpdateOne(filter, update);
+    }
+
     #endregion
+
     ///
     /// Mongo DB ¿¹Á¦
     /// 

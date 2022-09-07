@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EventArea : MonoBehaviour
 {
-    [SerializeField] private int playerCount = 0;
+    public int playerCount = 0;
     [SerializeField] private int requiredCount = 2;
 
     public delegate void ToastEvent();
@@ -14,6 +14,8 @@ public class EventArea : MonoBehaviour
     {
         ToastEventHandler toastEventHandler = gameObject.GetComponent<ToastEventHandler>();
         if (toastEventHandler != null) onToastEvent += toastEventHandler.OnToastEvent;
+
+
     }
 
     private void OnTriggerEnter(Collider other)

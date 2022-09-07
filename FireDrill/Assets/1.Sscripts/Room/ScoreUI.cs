@@ -13,7 +13,7 @@ public class ScoreUI : MonoBehaviour
     public void UpdateScore(User user)
     {
         userName.text = user.name;
-        
+        int score = 0;
         for(int i = 0; i < user.quizResult.Length; i++)
         {
             int result = user.quizResult[i];
@@ -24,11 +24,14 @@ public class ScoreUI : MonoBehaviour
                     break;
                 case 1:
                     results[i].text = "O";
+                    score += 10;
                     break;
                 case 2:
                     results[i].text = "X";
                     break;
             }
         }
+
+        this.score.text = score.ToString();
     }
 }

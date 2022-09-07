@@ -10,6 +10,28 @@ using TMPro;
 
 public class RoomSceneManager : GameManager
 {
+    #region Events
+
+    public delegate void RoomStateSimpleEvent();
+    public RoomStateSimpleEvent onRoomStateEvent;
+    public void OnRoomState() => onRoomStateEvent?.Invoke();
+
+    #endregion
+    private RoomState roomState;
+    public RoomState RoomState
+    {
+        get { return roomState; }
+        set
+        {
+            if(roomState != null)
+            {
+                roomState.OnStateExit();
+            }
+            roomState = value;
+            roomState.OnStateEnter();
+        }
+    }
+
     public static RoomSceneManager Instance;
 
     [SerializeField] private GameObject PDFViewr;
@@ -24,6 +46,27 @@ public class RoomSceneManager : GameManager
 
     private float elapsedTime = 1f;
     private float interval = 1f;
+
+    [SerializeField] private RoomData roomData;
+
+    [Header("Event Area")]
+    [SerializeField] private EventArea eventAreaA;
+    [SerializeField] private EventArea eventAreaB;
+    [SerializeField] private EventArea eventAreaC;
+    [Space(5)]
+
+    [Header("Toast")]
+    [SerializeField] private ToastTypeAndMessage toasts;
+    private int currentProcess;
+    public int CurrentProcess
+    {
+        get { return currentProcess; }
+        set
+        {
+            currentProcess = value;
+            DataManager.Instance.UpdateRoomProgress(roomNumber, currentProcess);
+        }
+    }
 
     private void Awake()
     {
@@ -44,7 +87,13 @@ public class RoomSceneManager : GameManager
         NetworkManager.Instance.roomType = NetworkManager.RoomType.Room;
 
         if(photonView.IsMine) DataManager.Instance.UpdateRoomPlayerCount(roomNumber, PhotonNetwork.CurrentRoom.PlayerCount);
+        roomData = DataManager.Instance.GetRoomData()[roomNumber-1];
         DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, NetworkManager.RoomNumber);
+    }
+
+    private void Update()
+    {
+        RoomState.OnUpdate();
     }
 
     public void PhaseShift(int progress)
@@ -80,6 +129,15 @@ public class RoomSceneManager : GameManager
         {
             scoureRows[i].gameObject.SetActive(false);
         }
+    }
+
+    public bool IsReady()
+    {
+        return PhotonNetwork.CurrentRoom.PlayerCount >= roomData.requirePlayerCount;
+    }
+    public bool IsReady(int playerCount)
+    {
+        return playerCount >= roomData.requirePlayerCount;
     }
 
     private void OnApplicationQuit()

@@ -41,14 +41,31 @@ public class InteractableQuizObject : MonoBehaviour
     [SerializeField] private TMP_Text oxQuizText;
     [SerializeField] private GameObject oxQuizUI;
     [SerializeField] private QuizSlot[] ox;
+    [Space(5)]
+
+    [Header("Feedback")]
+    [SerializeField] private GameObject[] oxFeedbackUI;
+
+    [SerializeField] private GameObject feedbackUI;
+    [SerializeField] private TMP_Text feedbackTitle;
+    [SerializeField] private TMP_Text feedbackBody;
+
+    [SerializeField] private AudioClip correctAudio;
+    [SerializeField] private AudioClip incorrectAudio;
+
+    [SerializeField] private GameObject solvedUI;
+    private GameObject currentQuizUI;
 
     [Header("Parameters")]
     QuizJson quiz;
+    private bool isSolved = false;
     [SerializeField] private Transform userTransform; // 로컬 플레이어의 transform을 가져옴
     
     public void OnSelected()
-    {
+    { 
         quizUI.SetActive(true);
+        if (isSolved) return;
+
 
         quiz = DataManager.Instance.quizsByCode[code];
         question.text = quiz.question;
@@ -64,6 +81,7 @@ public class InteractableQuizObject : MonoBehaviour
                     selections[i].SetText(quiz.selections[i]);
                 }
                 selectionQuizUI.SetActive(true);
+                currentQuizUI = selectionQuizUI;
                 break;
             case QuizType.Sequence:
                 sequenceQuizText.text = quiz.question;
@@ -72,6 +90,7 @@ public class InteractableQuizObject : MonoBehaviour
                     sequences[i].SetText(quiz.selections[i]);
                 }
                 sequenceQuizUI.SetActive(true);
+                currentQuizUI = sequenceQuizUI;
                 break;
             case QuizType.OX:
                 oxQuizText.text = quiz.question;
@@ -80,6 +99,7 @@ public class InteractableQuizObject : MonoBehaviour
                     ox[i].SetText(quiz.selections[i]);
                 }
                 oxQuizUI.SetActive(true);
+                currentQuizUI = oxQuizUI;
                 break;
         }
 
@@ -93,12 +113,11 @@ public class InteractableQuizObject : MonoBehaviour
 
     public void SelectAnswer(int number)
     {
-        answers[currentSlot-1] = number;
+        answers[currentSlot] = number;
     }
 
     public void SelectSlot(int number)
     {
-        Debug.Log("Select Slot");
         if(currentSlot != 0) //슬롯을 연속으로 누른 경우
         {
             //이전 슬롯의 정보를 선택한 슬롯에 넘겨주고 초기화
@@ -118,7 +137,7 @@ public class InteractableQuizObject : MonoBehaviour
         }
         else //선택한 선택지가 있는 경우
         {
-            currentSlot = number;
+            currentSlot = number-1;
             SelectAnswer(currentSequence);
 
             slots[number-1].SetText(sequences[currentSequence-1].GetText());
@@ -130,6 +149,7 @@ public class InteractableQuizObject : MonoBehaviour
     }
 
     public void SelectSequence(int number)
+
     {
         //선택지를 먼저 선택한 경우
         if(currentSlot == 0)
@@ -167,8 +187,46 @@ public class InteractableQuizObject : MonoBehaviour
                 break;
             }
         }
-        
+
+        StartCoroutine(OXFeedback(2f, result));
+
         DataManager.Instance.SetQuizResult(NetworkManager.User.email, result, code);
+    }
+
+    IEnumerator OXFeedback(float duration, int result)
+    {
+        oxFeedbackUI[result - 1].SetActive(true);
+
+        yield return new WaitForSeconds(duration);
+
+        oxFeedbackUI[result - 1].SetActive(false);
+        currentQuizUI.SetActive(false);
+        ShowSolution(result-1);
+    }
+
+    private void ShowSolution(int result)
+    {
+        feedbackUI.SetActive(true);
+        string text = string.Empty;
+        if (result == 0)
+        {
+            text = "정답입니다.\n10점을 획득 하셨습니다.";
+        }
+        else if(result == 1)
+        {
+            text = "오답입니다.\n";
+        }
+
+        feedbackTitle.text = text;
+        feedbackBody.text = quiz.solutions[result];
+    }
+
+    public void CloseQuizWindow()
+    {
+        isSolved = true;
+        solvedUI.SetActive(true);
+        quizUI.SetActive(false);
+        feedbackUI.SetActive(false);
     }
 
     /// <summary>

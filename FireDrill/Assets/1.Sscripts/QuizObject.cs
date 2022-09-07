@@ -33,4 +33,6 @@ public class QuizJson
     public string[] selections;
     public int[] answer;
     public int code;
+
+    public string[] solutions;
 }

@@ -16,8 +16,7 @@ public class RoomData
     public int progress;
     public int currentPlayerCount;
     public int maxPlayerCount;
+    public int requirePlayerCount;
 
     public string company;
-
-
 }
