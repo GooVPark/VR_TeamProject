@@ -7,6 +7,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using Photon.Voice.Unity;
 using TMPro;
+using Paroxe.PdfRenderer;
 
 public class RoomSceneManager : GameManager
 {
@@ -31,10 +32,11 @@ public class RoomSceneManager : GameManager
             roomState.OnStateEnter();
         }
     }
+    public RoomState_WaitPlayer roomStateWaitPlayer;
 
     public static RoomSceneManager Instance;
 
-    [SerializeField] private GameObject PDFViewr;
+    [SerializeField] private PDFViewer pdfViewr;
     [SerializeField] private Button nextPage;
     [SerializeField] private Button prevPage;
 
@@ -86,8 +88,10 @@ public class RoomSceneManager : GameManager
         SpawnPlayer();
         NetworkManager.Instance.roomType = NetworkManager.RoomType.Room;
 
+        RoomState = roomStateWaitPlayer;
+
         if(photonView.IsMine) DataManager.Instance.UpdateRoomPlayerCount(roomNumber, PhotonNetwork.CurrentRoom.PlayerCount);
-        roomData = DataManager.Instance.GetRoomData()[roomNumber-1];
+        roomData = DataManager.Instance.GetRoomData()[roomNumber];
         DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, NetworkManager.RoomNumber);
     }
 
@@ -138,6 +142,16 @@ public class RoomSceneManager : GameManager
     public bool IsReady(int playerCount)
     {
         return playerCount >= roomData.requirePlayerCount;
+    }
+
+    public void NextPage()
+    {
+        pdfViewr.GoToNextPage();
+    }
+
+    public void PrevPage()
+    {
+        pdfViewr.GoToPreviousPage();
     }
 
     private void OnApplicationQuit()

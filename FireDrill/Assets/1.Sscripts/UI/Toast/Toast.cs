@@ -10,6 +10,7 @@ public class Toast : MonoBehaviour
     public void Activate(float duration)
     {
         gameObject.SetActive(true);
+        StartCoroutine(ToastDuration(duration));
     }
 
     public virtual void SetToastMeesage(ToastJson toast)

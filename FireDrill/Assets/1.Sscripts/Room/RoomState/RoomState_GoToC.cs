@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class RoomState_GoToC : RoomState
 {
-    [Header("Room State")]
-    public RoomState_GoToC roomStateGoToC;
+    public override void OnStateEnter()
+    {
+        base.OnStateEnter();
+        Debug.Log("End");
+    }
 }

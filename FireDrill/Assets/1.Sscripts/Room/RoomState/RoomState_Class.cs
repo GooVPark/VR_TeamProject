@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class RoomState_Class : RoomState
 {
@@ -8,7 +9,7 @@ public class RoomState_Class : RoomState
     public RoomState_ClassEnd roomStateClassEnd;
 
     [Header("Toast")]
-    public Toast lectureToast;
+    public ToastThreeButton lectureToast;
     public Toast studentToast;
     private GameObject currentToast;
 
@@ -37,5 +38,38 @@ public class RoomState_Class : RoomState
     public override void OnUpdate()
     {
         
+    }
+
+    public void ClasssEnd()
+    {
+        photonView.RPC(nameof(ClassEndRPC), RpcTarget.All);
+    }
+
+    [PunRPC]
+    public void ClassEndRPC()
+    {
+        roomSceneManager.RoomState = roomStateClassEnd;
+    }
+
+    public void NextPage()
+    {
+        photonView.RPC(nameof(NextPageRPC), RpcTarget.All);
+    }
+
+    [PunRPC]
+    public void NextPageRPC()
+    {
+        roomSceneManager.NextPage();
+    }
+
+    public void PrevPage()
+    {
+        photonView.RPC(nameof(PrevPageRPC), RpcTarget.All);
+    }
+
+    [PunRPC]
+    public void PrevPageRPC()
+    {
+        roomSceneManager.PrevPage();
     }
 }

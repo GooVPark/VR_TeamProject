@@ -19,10 +19,12 @@ public class RoomState_GoToB : RoomState
     public override void OnStateEnter()
     {
         base.OnStateEnter();
+        toast.gameObject.SetActive(true);
     }
 
     public override void OnStateExit()
     {
+        toast.gameObject.SetActive(false);
         base.OnStateExit();
     }
 

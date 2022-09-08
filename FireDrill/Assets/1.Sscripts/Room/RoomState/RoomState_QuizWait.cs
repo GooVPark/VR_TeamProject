@@ -3,22 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-public class RoomState_EndQuiz : RoomState
+public class RoomState_QuizWait : RoomState
 {
-    [Header("Room State")]
-    public RoomState_GoToC roomStateGoToC;
+    [Header("RoomState")]
+    public RoomState_EndQuiz roomStateQuizEnd;
     [Space(5)]
 
     [Header("Toast")]
     public Toast toast;
+    [Space(5)]
+
+    private int playerCount = 0;
 
     public override void OnStateEnter()
     {
         base.OnStateEnter();
         if(NetworkManager.User.userType == UserType.Lecture)
         {
+            photonView.RPC(nameof(SetState), RpcTarget.All);
+        }
+        else
+        {
             toast.gameObject.SetActive(true);
-            Invoke(nameof(SetState), 2f);
         }
     }
 
@@ -28,14 +34,9 @@ public class RoomState_EndQuiz : RoomState
         base.OnStateExit();
     }
 
+    [PunRPC]
     public void SetState()
     {
-        photonView.RPC(nameof(SetStateRPC), RpcTarget.All);
-    }
-
-    [PunRPC]
-    public void SetStateRPC()
-    {
-        roomSceneManager.RoomState = roomStateGoToC;
+        roomSceneManager.RoomState = roomStateQuizEnd;
     }
 }

@@ -17,7 +17,7 @@ public class RoomState_ClassEnd : RoomState
     public override void OnStateEnter()
     {
         base.OnStateEnter();
-        classEndToast.gameObject.SetActive(true);
+        classEndToast.Activate(2f);
     }
 
     public override void OnStateExit()
@@ -28,7 +28,8 @@ public class RoomState_ClassEnd : RoomState
 
     public override void OnUpdate()
     {
-        if(elapsedTime > waitingTime)
+        elapsedTime += Time.deltaTime;
+        if(elapsedTime > waitingTime + 1)
         {
             roomSceneManager.RoomState = roomStateGoToB;
         }

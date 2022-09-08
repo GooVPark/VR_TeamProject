@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class RoomState_InClass : RoomState
 {
@@ -22,7 +23,7 @@ public class RoomState_InClass : RoomState
             lectureToast.gameObject.SetActive(true);
             currentToast = lectureToast.gameObject;
 
-            roomSceneManager.onRoomStateEvent += OnClassEnd;
+            roomSceneManager.onRoomStateEvent += OnClassStart;
         }
         if (NetworkManager.User.userType == UserType.Student)
         {
@@ -34,7 +35,7 @@ public class RoomState_InClass : RoomState
     public override void OnStateExit()
     {
         currentToast.SetActive(false);
-        roomSceneManager.onRoomStateEvent -= OnClassEnd;
+        roomSceneManager.onRoomStateEvent -= OnClassStart;
         base.OnStateExit();
     }
 
@@ -44,8 +45,14 @@ public class RoomState_InClass : RoomState
 
     }
 
-    public void OnClassEnd()
+    public void OnClassStart()
     {
-        
+        photonView.RPC(nameof(ClassStartRPC), RpcTarget.All);
+    }
+
+    [PunRPC]
+    public void ClassStartRPC()
+    {
+        roomSceneManager.RoomState = roomStateClass;
     }
 }

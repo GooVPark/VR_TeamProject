@@ -7,12 +7,13 @@ using TMPro;
 
 public class InteractableQuizObject : MonoBehaviour
 {
-    /*
-     * 퀴즈를 푸는것 자체는 네트워크에 반영되지 않는다.
-     * DB에는 문제의 번호, 정답 현황만을 보낸다.
-     * 따라서 네트워크 동기화도 하지 않는다.
-     * 답은 QuizManager에서 모아서 동기화한다.
-     */
+    #region Events
+
+    public delegate void SubmitEvent(int value);
+    public SubmitEvent onSubmit;
+
+    #endregion
+
     [Header("Quiz")]
     [SerializeField] private GameObject quizUI;
     [SerializeField] private TMP_Text question;
@@ -188,8 +189,9 @@ public class InteractableQuizObject : MonoBehaviour
             }
         }
 
+        onSubmit?.Invoke(result);
+        
         StartCoroutine(OXFeedback(2f, result));
-
         DataManager.Instance.SetQuizResult(NetworkManager.User.email, result, code);
     }
 

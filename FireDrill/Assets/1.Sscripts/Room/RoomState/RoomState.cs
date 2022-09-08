@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public abstract class RoomState : MonoBehaviour
+public abstract class RoomState : MonoBehaviourPun
 {
     public RoomSceneManager roomSceneManager;
 
