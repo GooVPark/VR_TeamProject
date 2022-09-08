@@ -276,7 +276,20 @@ public class DataManager : MonoBehaviour
 
         List<User> users = accountCollection.Find(x => x.email == email).ToList();
 
+        temp = NetworkManager.User.email;
+
         return users[0];
+    }
+
+
+    public string temp;
+
+    public void UpdateExtingusher(string email, bool value)
+    {
+        var filter = Builders<User>.Filter.Eq("email", email);
+        var update = Builders<User>.Update.Set("hasExtingisher", value);
+
+        accountCollection.UpdateOne(filter, update);
     }
 
     public void UpdateCurrentRoom(string email, int number)

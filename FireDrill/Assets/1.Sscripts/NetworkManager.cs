@@ -17,7 +17,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public List<RoomInfo> roomList = new List<RoomInfo>();
 
     private static User user;
-    public static User User => user;
+    public static User User => user; //싱글톤 같은거(어디서든 가능) networkmanager.user로 써야함
 
     private static int roomNumber;
     public static int RoomNumber => roomNumber;

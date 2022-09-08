@@ -37,6 +37,17 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         userLevelUI.text = userLevel;
     }
 
+    [SerializeField] private bool hasExtinguisher;
+    public bool HasExtingusher { get => hasExtinguisher; set => ActionRPC(nameof(SetHasExtinguisher), value); }
+    [PunRPC]
+    private void SetHasExtinguisher(bool value)
+    {
+        hasExtinguisher = value;
+        //소화기 유무에 따른 UI작업
+        userHasExtingusher.gameObject.SetActive(value);
+
+    }
+
     [SerializeField] private bool onVoiceChat;
     public bool OnVoiceChat { get => onVoiceChat; set => ActionRPC(nameof(SetOnVoiceChatRPC), value); }
     [PunRPC]
@@ -55,6 +66,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         UserID = UserID;
         UserName = UserName;
         UserLevel = UserLevel;
+        HasExtingusher = HasExtingusher;
         OnVoiceChat = OnVoiceChat;
     }
     #endregion
@@ -72,6 +84,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     public TMP_Text userNameUI;
     public TMP_Text userLevelUI;
     public TMP_Text distanceUI;
+    public Image userHasExtingusher;
 
     public GameObject speachBubble;
 
@@ -121,7 +134,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
             UserID = NetworkManager.User.id;
             UserName = NetworkManager.User.name;
             UserLevel = NetworkManager.User.userType.ToString();
-
+            HasExtingusher = NetworkManager.User.hasExtingisher;
             userInfoUI.SetActive(false);
         }
 

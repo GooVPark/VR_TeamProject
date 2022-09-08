@@ -126,7 +126,7 @@ public class User
     public bool isOnline;
 
     public int trainingProgress = 0;
-    public bool hasExtingisher;
+    public bool hasExtingisher; //ÂüÁ¶
 
     public int currentRoom;
     public int[] quizResult = new int[10];
