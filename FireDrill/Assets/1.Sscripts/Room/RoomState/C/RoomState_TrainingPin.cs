@@ -13,6 +13,10 @@ public class RoomState_TrainingPin : RoomState
     public ToastOneButton toast;
     private GameObject currentToast;
 
+    [Header("Extinguisher")]
+    public PinTrigger pinTrigger;
+    private bool isPinRemoved = false;
+
     public override void OnStateEnter()
     {
         base.OnStateEnter();
@@ -25,6 +29,8 @@ public class RoomState_TrainingPin : RoomState
                 {
                     currentToast = toast.gameObject;
                     roomSceneManager.onRoomStateEvent += EventTrigger;
+                    pinTrigger = roomSceneManager.player.pinTrigger;
+                    pinTrigger.onPinRemoved += OnPinRemove;
                 }
                 break;
         }
@@ -41,12 +47,20 @@ public class RoomState_TrainingPin : RoomState
 
     public void EventTrigger()
     {
-        photonView.RPC(nameof(EventTriggerRPC), RpcTarget.All);
+        if (isPinRemoved)
+        {
+            photonView.RPC(nameof(EventTriggerRPC), RpcTarget.All);
+        }
     }
 
     [PunRPC]
     public void EventTriggerRPC()
     {
         roomSceneManager.RoomState = roomStateTrainingController;
+    }
+
+    public void OnPinRemove()
+    {
+        isPinRemoved = true;
     }
 }

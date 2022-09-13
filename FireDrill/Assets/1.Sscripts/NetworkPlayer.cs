@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 using TMPro;
 using Photon.Pun;
+using Photon.Voice.Unity;
+using Photon.Voice.PUN;
 
 public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
 {
@@ -28,13 +30,39 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         userNameUI.text = userName;
     }
 
-    [SerializeField] private string userLevel;
-    public string UserLevel { get => userLevel; set => ActionRPC(nameof(SetUserLevelRPC), value); }
+    [SerializeField] private UserType userLevel;
+    public UserType UserLevel { get => userLevel; set => ActionRPC(nameof(SetUserLevelRPC), value); }
     [PunRPC]
-    private void SetUserLevelRPC(string value)
+    private void SetUserLevelRPC(UserType value)
     {
         userLevel = value;
-        userLevelUI.text = userLevel;
+        switch (userLevel)
+        {
+            case UserType.Lecture:
+                userTypeLecture.SetActive(true);
+                break;
+            case UserType.Student:
+                userTypeStudent.SetActive(true);
+                break;
+        }
+    }
+
+    [SerializeField] private bool hasExtinguisher;
+    public bool HasExtinguisher { get => hasExtinguisher; set => ActionRPC(nameof(SetHasExtinguisher), value); }
+    [PunRPC]
+    private void SetHasExtinguisher(bool value)
+    {
+        hasExtinguisher = value;
+        if(hasExtinguisher)
+        {
+            extingusiherEnabled.SetActive(true);
+        }
+        else
+        {
+            extinguisherDisabled.SetActive(false);
+            var collision = hoseWater.collision;
+            collision.enabled = false;
+        }
     }
 
     [SerializeField] private bool onVoiceChat;
@@ -43,6 +71,21 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     private void SetOnVoiceChatRPC(bool value)
     {
         onVoiceChat = value;    
+    }
+
+    [SerializeField] private bool onMegaphone;
+    public bool OnMegaPhone { get => onMegaphone; set => ActionRPC(nameof(SetOnMegaPhoneRPC), value); }
+    [PunRPC]
+    private void SetOnMegaPhoneRPC(bool value)
+    {
+        if(value)
+        {
+            megaphotnEnabled.SetActive(true);
+        }
+        else
+        {
+            megaphotnEnabled.SetActive(false);
+        }
     }
 
     private void ActionRPC(string functionName, object value)
@@ -55,6 +98,8 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         UserID = UserID;
         UserName = UserName;
         UserLevel = UserLevel;
+        HasExtinguisher = HasExtinguisher;
+        OnMegaPhone = OnMegaPhone;
         OnVoiceChat = OnVoiceChat;
     }
     #endregion
@@ -67,7 +112,12 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
 
     private PhotonView photonView;
     [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioSource megaphone;
 
+    [SerializeField] private Speaker micSpeaker;
+    [SerializeField] private Speaker megaphoneSpeaker;
+
+    [Header("Player UI")]
     public GameObject userInfoUI;
     public TMP_Text userNameUI;
     public TMP_Text userLevelUI;
@@ -75,12 +125,40 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     public Image image;
     public GameObject speachBubble;
 
+    [Header("User Type Icons")]
+    public GameObject userTypeLecture;
+    public GameObject userTypeStudent;
+    [Space(5)]
+
+    [Header("Extinguisher Enabled")]
+    public GameObject extingusiherEnabled;
+    public GameObject extinguisherDisabled;
+    [Space(5)]
+
+    [Header("Voice Chat Icons")]
+    public GameObject voiceChatDisabled;
+    public GameObject voiceChatEnabled;
+    public GameObject voiceChatHoverd;
+    public GameObject voiceChatOn;
+    [Space(5)]
+
+    [Header("Megaphotn Icon")]
+    public GameObject megaphotnEnabled;
+    [Space(5)]
+
     [SerializeField] private ActionBasedController leftController;
     [SerializeField] private ActionBasedController rightController;
     private Camera headset;
 
     public Button requestVoiceChatButton;
+    private PhotonVoiceView voiceView;
 
+    [Header("Extinguisher")]
+    public PinTrigger pinTrigger;
+    public GameObject extinguisher;
+    public ParticleSystem hoseWater;
+    public GameObject hose;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -90,14 +168,17 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         transform.SetParent(parent);
         photonView = GetComponent<PhotonView>();
 
-        HUDController hudController = FindObjectOfType<HUDController>();
-        hudController.showSpeechBubble += OnSendChatMessage;
+        GameManager gameManager = FindObjectOfType<GameManager>();
+        gameManager.showSpeechBubble += OnSendChatMessage;
 
         headset = Camera.main;
         leftController = GameObject.Find("LeftHand Controller").GetComponent<ActionBasedController>();
         rightController = GameObject.Find("RightHand Controller").GetComponent<ActionBasedController>();
 
         onVoiceChat = false;
+
+        voiceView = GetComponent<PhotonVoiceView>();
+        voiceView.SpeakerInUse = micSpeaker;
 
         Initialize();
     }
@@ -115,13 +196,50 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         }
     }
 
+    public void OnExtinguisher()
+    {
+        Debug.Log("OnExtinguisher");
+        if (photonView.IsMine)
+        {
+            Debug.Log("OnExtinguisher Is Mine");
+            photonView.RPC(nameof(OnExtinguisherRPC), RpcTarget.All);
+        }
+    }
+    [PunRPC]
+    public void OnExtinguisherRPC()
+    {
+        hose.SetActive(true);
+        extinguisher.SetActive(true);
+    }
+
+    public void OffExtinguisher()
+    {
+        hose.SetActive(false);
+        extinguisher.SetActive(false);
+    }
+
+    public void Spread(bool value)
+    {
+        if(photonView.IsMine)
+        {
+            photonView.RPC(nameof(SpreadRPC), RpcTarget.All, value);
+        }
+    }
+
+    [PunRPC]
+    public void SpreadRPC(bool value)
+    {
+        hoseWater.gameObject.SetActive(value);
+    }
+
     public void Initialize()
     {
         if (photonView.IsMine)
         {
             UserID = NetworkManager.User.id;
             UserName = NetworkManager.User.name;
-            UserLevel = NetworkManager.User.userType.ToString();
+            UserLevel = NetworkManager.User.userType;
+            HasExtinguisher = NetworkManager.User.hasExtingisher;
 
             userInfoUI.SetActive(false);
         }
@@ -163,7 +281,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
 
     public void InteractionTest()
     {
-        Debug.Log("On Cursor Hoverd");
+     //   Debug.Log("On Cursor Hoverd");
     }
 
     #region Haptic
@@ -237,6 +355,22 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     public void VoiceOff()
     {
         audioSource.enabled = false;
+    }
+    
+    public void MegaphoneOn()
+    {
+        megaphone.enabled = true;
+        audioSource.enabled = false;
+
+        voiceView.SpeakerInUse = megaphoneSpeaker;
+    }
+
+    public void MegaPhoneOff()
+    {
+        megaphone.enabled = false;
+        audioSource.enabled = false;
+
+        voiceView.SpeakerInUse = micSpeaker;
     }
 
     #endregion

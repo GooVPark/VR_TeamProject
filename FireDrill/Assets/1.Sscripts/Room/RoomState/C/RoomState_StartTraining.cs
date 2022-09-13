@@ -23,6 +23,7 @@ public class RoomState_StartTraining : RoomState
                 {
                     toast.gameObject.SetActive(true);
                     roomSceneManager.onRoomStateEvent += EventTrigger;
+                    roomSceneManager.player.OnExtinguisher();
                 }
                 break;
         }
@@ -53,5 +54,13 @@ public class RoomState_StartTraining : RoomState
     public void EventTriggerRPC()
     {
         roomSceneManager.RoomState = roomStateTrainingPin;
+    }
+
+    [PunRPC]
+    public void ShowExtinguisherRPC()
+    {
+        roomSceneManager.player.hose.SetActive(true);
+        roomSceneManager.player.extinguisher.SetActive(true);
+        roomSceneManager.onRoomStateEvent += EventTrigger;
     }
 }

@@ -14,12 +14,13 @@ public class RoomState_GoToB : RoomState
 
     [Header("Event Area")]
     public EventArea eventArea;
-    
 
     public override void OnStateEnter()
     {
         base.OnStateEnter();
         toast.gameObject.SetActive(true);
+        megaphone.ChangeIconState(ButtonState.IconState.Off);
+        voiceChat.ChangeIconState(ButtonState.IconState.Off);
     }
 
     public override void OnStateExit()

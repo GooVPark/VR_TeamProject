@@ -158,6 +158,7 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
     {
         
         Debug.Log("LoginManager : SelectExtingusher");
+        NetworkManager.User.hasExtingisher = isSelected;
         PhotonNetwork.JoinLobby();
     }
 

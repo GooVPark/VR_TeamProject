@@ -5,35 +5,71 @@ using UnityEngine.UI;
 
 public class ButtonState : MonoBehaviour
 {
+    public delegate void OnButtonEvent();
+    public OnButtonEvent onButtonEvent;
+
     public enum IconState { Disable, On, Off }
     public IconState iconState;
 
-    public Image targetImage;
-    [SerializeField] private Sprite[] sprites;
+    public GameObject on;
+    public GameObject off;
+    public GameObject disable;
 
-    private Color disableColor = Color.gray;
-    private Color onColor = Color.white;
-    private Color offColor = Color.red;
+    public Button button;
+
+    public GameObject current;
+
+    private void Start()
+    {
+        button = GetComponent<Button>();
+        button.onClick.AddListener(() => OnButton());
+
+        //current = disable.gameObject;
+    }
 
     public void ChangeIconState(IconState iconState)
     {
-        //targetImage.sprite = sprites[(int)iconState];
-        Color color = Color.blue;
+        Debug.Log("Begin ChangeIconState: " + iconState);
+        current.SetActive(false);
+
         switch (iconState)
         {
             case IconState.Disable:
-                color = disableColor;
+                Debug.Log("To Disable");
+                current = disable;
+                this.iconState = IconState.Disable;
                 break;
             case IconState.On:
-                color = onColor;
+                Debug.Log("To On");
+                current = on;
+                this.iconState = IconState.On;
                 break;
             case IconState.Off:
-                color = offColor;
+                Debug.Log("To Off");
+                current = off;
+                this.iconState = IconState.Off;
                 break;
         }
 
-        targetImage.color = color;
+        current.SetActive(true);
+        Debug.Log("End ChangeIconState: " + iconState);
     }
 
+    public void OnButton()
+    {
+        Debug.Log("On Button");
+        Debug.Log("Begin: " + iconState);
+        if(iconState == IconState.Off)
+        {
+            ChangeIconState(IconState.On);
+        }
+        else if(iconState == IconState.On)
+        {
+            ChangeIconState(IconState.Off);
+        }
 
+        onButtonEvent?.Invoke();
+
+        Debug.Log("End: " + iconState);
+    }
 }

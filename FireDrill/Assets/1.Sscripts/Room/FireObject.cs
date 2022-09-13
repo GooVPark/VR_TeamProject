@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class FireObject : MonoBehaviour
 {
+    public delegate void FireObjectDelegate(int fireObjectIndex, int flameIndex, bool state);
+    public FireObjectDelegate onFireObjectTriggerd;
     public GameObject[] flames;
 
+    public int fireObjectIndex = 0;
     [SerializeField] private float extinguishThrashold = 0f;
     [SerializeField] private float reviveThrashold = 0f;
     [SerializeField] private int flameIndex = 0;
@@ -31,6 +34,7 @@ public class FireObject : MonoBehaviour
             reviveTime += Time.deltaTime;
             if (reviveThrashold < reviveTime)
             {
+                onFireObjectTriggerd(fireObjectIndex, flameIndex, true);
                 flames[flameIndex].SetActive(true);
                 flameIndex--;
                 flameIndex = Mathf.Clamp(flameIndex, 0, flames.Length);
@@ -60,6 +64,7 @@ public class FireObject : MonoBehaviour
         killTime += Time.deltaTime;
         if (extinguishThrashold < killTime)
         {
+            onFireObjectTriggerd(fireObjectIndex, flameIndex, false);
             flames[flameIndex].SetActive(false);
             flameIndex++;
             killTime = 0f;

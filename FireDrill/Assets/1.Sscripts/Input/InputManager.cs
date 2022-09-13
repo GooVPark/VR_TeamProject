@@ -12,6 +12,9 @@ public class InputManager : MonoBehaviour
     public delegate void LeftSecondaryButtonEvent();
     public static LeftSecondaryButtonEvent leftSecondaryButton;
 
+    public delegate void RightTriggerButtonEvent(bool value);
+    public static RightTriggerButtonEvent rightTriggerButton;
+
     public static InputManager Instance;
 
     [Header("Left Hand Button Input")]
@@ -28,6 +31,8 @@ public class InputManager : MonoBehaviour
     [Header("Right Hand Button Input")]
     public InputActionReference rightPrimary = null;
     public InputActionReference rightSecondary = null;
+
+    public InputActionReference rightTrigger = null;
 
     public InputActionReference rightStick = null;
 
@@ -97,6 +102,9 @@ public class InputManager : MonoBehaviour
         rightStick.action.started += OnRightStickStarted;
         rightStick.action.performed += OnRightStickPerformed;
         rightStick.action.canceled += OnRightStickCanceled;
+
+        rightTrigger.action.started += OnRightTriggerStarted;
+        rightTrigger.action.canceled += OnRightTriggerCanceled;
     }
 
     private void Start()
@@ -216,6 +224,18 @@ public class InputManager : MonoBehaviour
     {
         
     }
+
+    private void OnRightTriggerStarted(InputAction.CallbackContext context)
+    {
+        Debug.Log("Start");
+        rightTriggerButton?.Invoke(true);
+    }
+
+    private void OnRightTriggerCanceled(InputAction.CallbackContext context)
+    {
+        Debug.Log("Cancel");
+        rightTriggerButton?.Invoke(false);
+    }    
     #endregion
 
     #region Input Timer

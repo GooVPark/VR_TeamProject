@@ -19,6 +19,11 @@ public class TrainingManager : MonoBehaviourPunCallbacks, IPunObservable
 
     private void Start()
     {
+        for(int i = 0; i < fireObjects.Length; i++)
+        {
+            fireObjects[i].fireObjectIndex = i;
+            fireObjects[i].onFireObjectTriggerd += SyncFireObject;
+        }
         totalProgress = GetTotalProgress();
     }
 
@@ -48,9 +53,9 @@ public class TrainingManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         float current = 0;
 
-        foreach(FireObject fireObject in fireObjects)
+        foreach (FireObject fireObject in fireObjects)
         {
-            if(fireObject.isActiveAndEnabled)
+            if (fireObject.isActiveAndEnabled)
             {
                 current += fireObject.currentDuration;
             }
@@ -58,6 +63,16 @@ public class TrainingManager : MonoBehaviourPunCallbacks, IPunObservable
         return current;
     }
 
+    public void SyncFireObject(int fireObjectIndex, int flameIndex, bool state)
+    {
+        photonView.RPC(nameof(SyncFireObjectRPC), RpcTarget.Others, fireObjectIndex, flameIndex, state);
+    }
+
+    [PunRPC]
+    public void SyncFireObjectRPC(int fireObjectIndex, int flameIndex, bool state)
+    {
+        fireObjects[fireObjectIndex].flames[flameIndex].gameObject.SetActive(state);
+    }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {

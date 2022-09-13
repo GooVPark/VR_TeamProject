@@ -2,6 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 강사가 강의 종료를 누른 직후의 상태
+/// 
+/// 2초정도 대기하고 다음 상태로 넘어감
+/// </summary>
 public class RoomState_ClassEnd : RoomState
 {
     [Header("Room State")]

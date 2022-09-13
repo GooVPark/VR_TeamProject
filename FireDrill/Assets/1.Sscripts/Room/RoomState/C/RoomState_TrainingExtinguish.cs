@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.XR.Interaction.Toolkit;
 using Photon.Pun;
 
 /*
@@ -24,6 +25,8 @@ public class RoomState_TrainingExtinguish : RoomState
 
     [Header("Training Manager")]
     public TrainingManager trainingManager;
+    [Header("Controller")]
+    public XRDirectInteractor controller;
 
     public override void OnStateEnter()
     {
@@ -31,18 +34,40 @@ public class RoomState_TrainingExtinguish : RoomState
         trainingManager = FindObjectOfType<TrainingManager>();
         trainingManager.GetTrainingProgress += GetProgress;
 
-        progressUIObject.SetActive(true);
+        //progressUIObject.SetActive(true);
+
+        if(user.hasExtingisher)
+        { 
+            InputManager.rightTriggerButton += OnExtinguisher;
+        }
     }
 
     public override void OnStateExit()
     {
+        if(user.hasExtingisher)
+        {
+            roomSceneManager.player.hose.SetActive(false);
+            roomSceneManager.player.extinguisher.SetActive(false);
+            InputManager.rightTriggerButton -= OnExtinguisher;
+        }
         trainingManager.GetTrainingProgress -= GetProgress;
         progressUIObject.SetActive(false);
         base.OnStateExit();
     }
 
+    public override void OnUpdate()
+    {
+        
+    }
+
     public void GetProgress(float progress)
     {
         progressUI.fillAmount = progress;
+    }
+
+    public void OnExtinguisher(bool value)
+    {
+        Debug.Log("Spread");
+        roomSceneManager.player.Spread(value);
     }
 }

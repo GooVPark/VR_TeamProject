@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.XR.Interaction.Toolkit;
 using Photon.Pun;
 using Photon.Realtime;
@@ -12,12 +13,9 @@ public class GameManager : MonoBehaviourPunCallbacks
     public Recorder localRecoder;
 
     public Transform playerTransforms;
-    private NetworkPlayer player;
+    public NetworkPlayer player;
 
     public VoiceChatRequestToast voiceChatRequestToast;
-
-    public Toast voiceChatAcceptToast;
-    public Toast voiceChatDeacceptToast;
 
     [SerializeField] private ActionBasedController hapticTargetController;
 
@@ -25,17 +23,18 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         localRecoder = FindObjectOfType<Recorder>();
         //SpawnPlayer();
+        NetworkManager.ChatCallback += UpdateChat;
 
 
         switch (NetworkManager.User.userType)
         {
             case UserType.Lecture:
-                megaPhoneButton.SetActive(true);
-                scoreBoardButton.SetActive(true);
+                megaPhoneButton.gameObject.SetActive(true);
+                scoreBoardButton.gameObject.SetActive(true);
                 break;
             case UserType.Student:
-                megaPhoneButton.SetActive(false);
-                scoreBoardButton.SetActive(false);
+                megaPhoneButton.gameObject.SetActive(false);
+                scoreBoardButton.gameObject.SetActive(false);
                 break;
         }
 
@@ -50,21 +49,59 @@ public class GameManager : MonoBehaviourPunCallbacks
     #region Camera UI
 
     [Header("Camera UI")]
-    [SerializeField] protected GameObject megaPhoneButton;
-    [SerializeField] protected GameObject scoreBoardButton;
-
+    public ButtonState megaPhoneButton;
+    public ButtonState scoreBoardButton;
+    public ButtonState voiceChatButton;
+    public ButtonState textChatButton;
     #endregion
 
+    #region Megaphone
+
+    private bool onMegaphone = false;
+
+    public void MegaphoneOn()
+    {
+        onMegaphone = true;
+        player.MegaphoneOn();
+    }
+
+    public void MegaphoneOff()
+    {
+        onMegaphone = false;
+        player.MegaPhoneOff();
+    }
+
+    public void MegaphoneToggle()
+    {
+        if(onMegaphone)
+        {
+            MegaphoneOff();
+        }
+        else
+        {
+            MegaphoneOn();
+        }
+    }
+
+    #endregion
 
     #region Voice Chat
 
     private int voiceTargetID;
     private Transform voiceChatTarget;
 
+    public Toast voiceChatAcceptToast;
+    public Toast voiceChatDeacceptToast;
+
     public void ToggleVoiceChat()
     {
         localRecoder.TransmitEnabled = !localRecoder.TransmitEnabled;
         Haptic(0.5f, 0.1f);
+    }
+
+    public void DisableVoiceChat()
+    {
+        localRecoder.TransmitEnabled = true;
     }
 
     public void RequsetVoiceChat(int receiverID, int senderID)
@@ -210,6 +247,83 @@ public class GameManager : MonoBehaviourPunCallbacks
         DisconnectVoiceChat(senderID, recieverID);
     }
     #endregion
+
+    #region Chat
+
+    public delegate void ShowSpeechBubbleEvent(string text);
+    public ShowSpeechBubbleEvent showSpeechBubble;
+
+    [Header("Chat")]
+    public GameObject virtualKeyboard;
+    public GameObject chatUI;
+    private bool onChatView;
+
+    public InputField chatInputField;
+    public TMP_Text[] chatList;
+
+    public void ToggleTextChat()
+    {
+        if (onChatView)
+        {
+            virtualKeyboard.SetActive(false);
+            chatUI.SetActive(false);
+
+            onChatView = false;
+            //LoundgeSceneManager.Instance.Haptic(0.2f, 0.1f);
+        }
+        else
+        {
+            virtualKeyboard.SetActive(true);
+            chatUI.SetActive(true);
+
+            onChatView = true;
+            //LoundgeSceneManager.Instance.Haptic(0.5f, 0.1f);
+        }
+    }
+
+    public void DisableTextChat()
+    {
+        chatUI.SetActive(false);
+        virtualKeyboard.SetActive(false);
+        onChatView = false;
+    }
+
+    public void SendChatMessage()
+    {
+        NetworkManager.Instance.SendChat(chatInputField.text);
+        ///LoundgeSceneManager.Instance.SendTextChat(chatInputField.text);
+        chatInputField.text = "";
+    }
+
+    public void UpdateChat(string msg)
+    {
+        bool isInput = false;
+
+        for (int i = 0; i < chatList.Length; i++)
+        {
+            if (chatList[i].text == "")
+            {
+                isInput = true;
+                chatList[i].text = msg;
+                break;
+            }
+        }
+
+        if (!isInput)
+        {
+            for (int i = 1; i < chatList.Length; i++)
+            {
+                chatList[i - 1].text = chatList[i].text;
+            }
+
+            chatList[chatList.Length - 1].text = msg;
+        }
+
+        showSpeechBubble?.Invoke(msg);
+    }
+
+    #endregion
+
 
     #region Enter Room
     public int roomNumber;

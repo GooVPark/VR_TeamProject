@@ -27,11 +27,13 @@ public class RoomState_Quiz : RoomState, IPunObservable
 
     [Header("Quiz Objects")]
     public QuizObjectManager quizManager;
+    [Space(5)]
 
     private float time = 600f;
     private int scoreCount = 0;
     private int solveCount = 0;
-    private int playerCount = 1;
+    [SerializeField] private int playerCount = 1;
+
 
     public override void OnStateEnter()
     {
@@ -42,6 +44,7 @@ public class RoomState_Quiz : RoomState, IPunObservable
         if(NetworkManager.User.userType == UserType.Lecture)
         {
             scoreObject.SetActive(false);
+            scoreBoard.ChangeIconState(ButtonState.IconState.Off);
         }
         if(NetworkManager.User.userType == UserType.Student)
         {
@@ -49,6 +52,8 @@ public class RoomState_Quiz : RoomState, IPunObservable
             {
                 quizObject.onSubmit += ScoreCount;
             }
+
+            roomSceneManager.onRoomStateEvent += ConfirmQuizResult;
         }
     }
 
@@ -57,6 +62,7 @@ public class RoomState_Quiz : RoomState, IPunObservable
         timerObject.SetActive(false);
         if (NetworkManager.User.userType == UserType.Student)
         {
+            roomSceneManager.onRoomStateEvent -= ConfirmQuizResult;
             foreach (InteractableQuizObject quizObject in quizManager.quizObjects)
             {
                 quizObject.onSubmit -= ScoreCount;
@@ -72,10 +78,9 @@ public class RoomState_Quiz : RoomState, IPunObservable
 
             if (time < 0)
             {
-                if (NetworkManager.User.userType == UserType.Student)
-                {
-                    photonView.RPC(nameof(ShowQuizResultRPC), RpcTarget.All);
-                }
+
+                photonView.RPC(nameof(ShowQuizResultRPC), RpcTarget.Others);
+
             }
             if (roomSceneManager.IsReady(playerCount))
             {
@@ -137,6 +142,7 @@ public class RoomState_Quiz : RoomState, IPunObservable
         if (stream.IsReading)
         {
             time = (float)stream.ReceiveNext();
+            timerText.text = ((int)time).ToString();
         }
     }
 }

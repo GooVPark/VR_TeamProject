@@ -1192,6 +1192,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Trigger",
+                    "type": "Button",
+                    "id": "f0eac321-5b49-464f-8875-1a9513f4a83f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -1225,6 +1234,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Stick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a8b9f113-ccae-4aca-8596-3008072932d3",
+                    "path": "<XRController>{RightHand}/trackpadPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Generic XR Controller",
+                    "action": "Trigger",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

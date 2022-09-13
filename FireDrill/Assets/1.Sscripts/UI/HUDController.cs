@@ -20,8 +20,6 @@ public class HUDController : MonoBehaviour
 
     private void Awake()
     {
-        NetworkManager.ChatCallback += UpdateChat;
-
         for (int i = 0; i < chatList.Length; i++)
         {
             chatList[i].text = "";
@@ -47,70 +45,4 @@ public class HUDController : MonoBehaviour
 
     #endregion
 
-    #region Chat
-
-    public delegate void ShowSpeechBubbleEvent(string text);
-    public ShowSpeechBubbleEvent showSpeechBubble;
-
-    public void ShowTextChatWindow()
-    {
-        if(onChatView)
-        {
-            virtualKeyboard.SetActive(false);
-            chatUI.SetActive(false);
-            
-            onChatView = false;
-            LoundgeSceneManager.Instance.Haptic(0.2f, 0.1f);
-        }
-        else
-        {
-            virtualKeyboard.SetActive(true);
-            chatUI.SetActive(true);
-
-            onChatView = true;
-            LoundgeSceneManager.Instance.Haptic(0.5f, 0.1f);
-        }
-    }
-
-    public void SendChatMessage()
-    {
-        NetworkManager.Instance.SendChat(chatInputField.text);
-        ///LoundgeSceneManager.Instance.SendTextChat(chatInputField.text);
-        chatInputField.text = "";
-    }
-
-    public void UpdateChat(string msg)
-    {
-        bool isInput = false;
-
-        for (int i = 0; i < chatList.Length; i++)
-        {
-            if (chatList[i].text == "")
-            {
-                isInput = true;
-                chatList[i].text = msg;
-                break;
-            }
-        }
-
-        if (!isInput)
-        {
-            for (int i = 1; i < chatList.Length; i++)
-            {
-                chatList[i - 1].text = chatList[i].text;
-            }
-
-            chatList[chatList.Length - 1].text = msg;
-        }
-
-        showSpeechBubble?.Invoke(msg);
-    }
-
-    #endregion
-
-    #region Voice Chat
-
-    
-
-    #endregion
 }
