@@ -4,25 +4,22 @@ using UnityEngine;
 
 public class CameraTrackingUICanvas : MonoBehaviour
 {
-    private Transform cameraTransform;
-    public Transform pivot;
-    public float smoothness = 0f;
-    public Vector3 offsetPosition;
-    public Vector3 offsetRotation;
-
-    private void Awake()
-    {
-        cameraTransform = Camera.main.transform;
-    }
-
+    // the target to follow
+    [SerializeField] private Transform followTarget;
+    // local offset to e.g. place the camera behind the target object etc
+    [SerializeField] private Vector3 positionOffset;
+    // how smooth the camera position is updated, smaller value -> slower
+    [SerializeField] private float interpolation = 5f;
 
     private void Update()
     {
-        Vector2 start = new Vector2(pivot.position.x, pivot.position.z);
-        Vector2 end = new Vector2(cameraTransform.position.x, cameraTransform.position.z) / 2f;
-        Vector2 v2 = end - start;
+        // target position taking the targets rotation and the offset into account
+        var targetPosition = followTarget.position + followTarget.forward * positionOffset.z + followTarget.right * positionOffset.x + followTarget.up * positionOffset.y;
 
-        transform.rotation = Quaternion.Euler(offsetRotation) * Quaternion.Euler(0, -Mathf.Atan2(v2.y, v2.x) * Mathf.Rad2Deg - 90, 0);
-        transform.position = Vector3.Slerp(transform.position, pivot.position + offsetPosition, Time.deltaTime * smoothness);
+        // move smooth towards this target position
+        transform.position = Vector3.Lerp(transform.position, targetPosition, interpolation * Time.deltaTime);
+
+        // rotate to look at the target without rotating in Z
+        transform.LookAt(followTarget);
     }
 }

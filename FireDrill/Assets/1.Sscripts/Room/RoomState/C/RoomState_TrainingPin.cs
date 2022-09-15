@@ -27,7 +27,7 @@ public class RoomState_TrainingPin : RoomState
             case UserType.Student:
                 if(user.hasExtingisher)
                 {
-                    currentToast = toast.gameObject;
+                    toast.gameObject.SetActive(true);
                     roomSceneManager.onRoomStateEvent += EventTrigger;
                     pinTrigger = roomSceneManager.player.pinTrigger;
                     pinTrigger.onPinRemoved += OnPinRemove;
@@ -35,13 +35,23 @@ public class RoomState_TrainingPin : RoomState
                 break;
         }
 
-        currentToast.SetActive(true);
+        //currentToast?.SetActive(true);
     }
 
     public override void OnStateExit()
     {
-        roomSceneManager.onRoomStateEvent -= EventTrigger;
-        currentToast.SetActive(false);
+        switch (user.userType)
+        {
+            case UserType.Lecture:
+                break;
+            case UserType.Student:
+                if (user.hasExtingisher)
+                {
+                    toast.gameObject.SetActive(false);
+                    roomSceneManager.onRoomStateEvent -= EventTrigger;
+                }
+                break;
+        }
         base.OnStateExit();
     }
 

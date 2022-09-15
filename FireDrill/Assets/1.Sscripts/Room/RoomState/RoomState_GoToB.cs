@@ -14,10 +14,20 @@ public class RoomState_GoToB : RoomState
 
     [Header("Event Area")]
     public EventArea eventArea;
+    [Space(5)]
+
+    [Header("Class Object")]
+    public GameObject classObject;
+
+    [Header("Quiz Object")]
+    public GameObject quizObject;
 
     public override void OnStateEnter()
     {
         base.OnStateEnter();
+        classObject.SetActive(false);
+        quizObject.SetActive(true);
+        eventArea.gameObject.SetActive(true);
         toast.gameObject.SetActive(true);
         megaphone.ChangeIconState(ButtonState.IconState.Off);
         voiceChat.ChangeIconState(ButtonState.IconState.Off);

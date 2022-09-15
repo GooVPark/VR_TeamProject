@@ -28,7 +28,7 @@ public class ProgressUI : MonoBehaviour
 
         roomNumberText.text = roomData.roomNumber.ToString();
         companyNameText.text = roomData.company;
-        playerCountText.text = $"{roomData.currentPlayerCount}/{roomData.maxPlayerCount}";
+        playerCountText.text = $"{NetworkManager.Instance.GetPlayerCount(roomData.roomNumber)}/{roomData.maxPlayerCount}";
 
         for(int i = 0; i < roomData.progress; i++)
         {

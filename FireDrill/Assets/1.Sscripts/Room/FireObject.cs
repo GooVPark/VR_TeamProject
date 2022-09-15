@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
+using Photon.Realtime;
 
-public class FireObject : MonoBehaviour
+public class FireObject : MonoBehaviourPun
 {
     public delegate void FireObjectDelegate(int fireObjectIndex, int flameIndex, bool state);
     public FireObjectDelegate onFireObjectTriggerd;
@@ -25,25 +27,28 @@ public class FireObject : MonoBehaviour
 
     private void Update()
     {
-        if (flameIndex < 0)
+        if (photonView.IsMine)
         {
-            return;
-        }
-        if (!isExtinguishing)
-        {
-            reviveTime += Time.deltaTime;
-            if (reviveThrashold < reviveTime)
+            if (flameIndex < 0)
             {
-                onFireObjectTriggerd(fireObjectIndex, flameIndex, true);
-                flames[flameIndex].SetActive(true);
-                flameIndex--;
-                flameIndex = Mathf.Clamp(flameIndex, 0, flames.Length);
-
-                reviveTime = 0f;
+                return;
             }
-        }
+            if (!isExtinguishing)
+            {
+                reviveTime += Time.deltaTime;
+                if (reviveThrashold < reviveTime)
+                {
+                    //onFireObjectTriggerd(fireObjectIndex, flameIndex, true);
+                    photonView.RPC(nameof(ControlFire), RpcTarget.All, flameIndex, true);
+                    flameIndex--;
+                    flameIndex = Mathf.Clamp(flameIndex, 0, flames.Length);
 
-        currentDuration = totalDuration - flameIndex;
+                    reviveTime = 0f;
+                }
+            }
+
+            currentDuration = totalDuration - flameIndex;
+        }
     }
 
     private Coroutine extinguishTrigger;
@@ -60,27 +65,37 @@ public class FireObject : MonoBehaviour
 
     private void OnParticleCollision(GameObject other)
     {
-        isExtinguishing = true;
-        killTime += Time.deltaTime;
-        if (extinguishThrashold < killTime)
+        if (photonView.IsMine)
         {
-            onFireObjectTriggerd(fireObjectIndex, flameIndex, false);
-            flames[flameIndex].SetActive(false);
-            flameIndex++;
-            killTime = 0f;
+            isExtinguishing = true;
+            killTime += Time.deltaTime;
+            if (extinguishThrashold < killTime)
+            {
+                //onFireObjectTriggerd(fireObjectIndex, flameIndex, false);
+                photonView.RPC(nameof(ControlFire), RpcTarget.All, flameIndex, false);
+                flameIndex++;
+                killTime = 0f;
 
-            if (flameIndex >= flames.Length)
+                if (flameIndex >= flames.Length)
+                {
+                    StopCoroutine(extinguishTrigger);
+                    gameObject.SetActive(false);
+                }
+            }
+
+            if (extinguishTrigger != null)
             {
                 StopCoroutine(extinguishTrigger);
-                gameObject.SetActive(false);
+                extinguishTrigger = null;
             }
+            extinguishTrigger = StartCoroutine(ExtinguishTrigger());
         }
+    }
 
-        if(extinguishTrigger != null)
-        {
-            StopCoroutine(extinguishTrigger);
-            extinguishTrigger = null;
-        }
-        extinguishTrigger = StartCoroutine(ExtinguishTrigger());
+
+    [PunRPC]
+    public void ControlFire(int index, bool value)
+    {
+        flames[index].SetActive(value);
     }
 }

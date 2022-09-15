@@ -50,6 +50,7 @@ public class RoomSceneManager : GameManager
     private float interval = 1f;
 
     [SerializeField] private RoomData roomData;
+    public int requiredPlayer = 0;
 
     [Header("Event Area")]
     [SerializeField] private EventArea eventAreaA;
@@ -87,12 +88,12 @@ public class RoomSceneManager : GameManager
         Initialize();
         SpawnPlayer();
         NetworkManager.Instance.roomType = NetworkManager.RoomType.Room;
-
         RoomState = roomStateWaitPlayer;
 
         if(photonView.IsMine) DataManager.Instance.UpdateRoomPlayerCount(roomNumber, PhotonNetwork.CurrentRoom.PlayerCount);
         roomData = DataManager.Instance.GetRoomData()[roomNumber];
         DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, NetworkManager.RoomNumber);
+        requiredPlayer = roomData.requirePlayerCount;
     }
 
     private void Update()
@@ -137,11 +138,11 @@ public class RoomSceneManager : GameManager
 
     public bool IsReady()
     {
-        return PhotonNetwork.CurrentRoom.PlayerCount >= roomData.requirePlayerCount;
+        return PhotonNetwork.CurrentRoom.PlayerCount >= requiredPlayer;
     }
     public bool IsReady(int playerCount)
     {
-        return playerCount >= roomData.requirePlayerCount;
+        return playerCount >= requiredPlayer;
     }
 
     public void NextPage()
@@ -157,8 +158,15 @@ public class RoomSceneManager : GameManager
     private void OnApplicationQuit()
     {
         int playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
-        DataManager.Instance.UpdateRoomPlayerCount(NetworkManager.RoomNumber, playerCount - 1);
+        //DataManager.Instance.UpdateRoomPlayerCount(NetworkManager.RoomNumber, playerCount - 1);
         DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, 0);
+
+        PhotonNetwork.LeaveRoom();
+    }
+
+    public override void OnLeftRoom()
+    {
+        DataManager.Instance.UpdateRoomPlayerCount(NetworkManager.RoomNumber, PhotonNetwork.CurrentRoom.PlayerCount);
     }
 
 }

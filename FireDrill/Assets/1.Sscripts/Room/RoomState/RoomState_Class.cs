@@ -73,7 +73,8 @@ public class RoomState_Class : RoomState
         textChat.onButtonEvent += roomSceneManager.ToggleTextChat;
 
         if (NetworkManager.User.userType == UserType.Lecture)
-        { 
+        {
+            //roomSceneManager.MegaphoneOff();
             //megaphone.ChangeIconState(ButtonState.IconState.Off);
         }
         if (NetworkManager.User.userType == UserType.Student)

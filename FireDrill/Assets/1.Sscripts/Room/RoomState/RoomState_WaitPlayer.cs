@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Photon.Pun;
 /// <summary>
 /// 룸에 처음 들어온 상태
 /// 보이스, 택스트쳇 사용가능
@@ -11,6 +11,8 @@ public class RoomState_WaitPlayer : RoomState
 {
     public RoomState_GoToA roomStateGoToA;
 
+    public ToastOneButton forceStartToast;
+
     public override void OnStateEnter()
     {
         base.OnStateEnter();
@@ -19,10 +21,18 @@ public class RoomState_WaitPlayer : RoomState
 
         textChat.ChangeIconState(ButtonState.IconState.Off);
         textChat.onButtonEvent += roomSceneManager.ToggleTextChat;
+
+        if(user.userType == UserType.Lecture)
+        {
+            forceStartToast.gameObject.SetActive(true);
+            roomSceneManager.onRoomStateEvent += ForceStart;
+        }
     }
 
     public override void OnStateExit()
     {
+        forceStartToast.gameObject.SetActive(false);
+        roomSceneManager.onRoomStateEvent -= ForceStart;
         base.OnStateExit();
     }
 
@@ -32,5 +42,16 @@ public class RoomState_WaitPlayer : RoomState
         {
             roomSceneManager.RoomState = roomStateGoToA;
         }
+    }
+
+    public void ForceStart()
+    {
+        photonView.RPC(nameof(ForceStartRPC), RpcTarget.All);
+    }
+
+    [PunRPC]
+    public void ForceStartRPC()
+    {
+        roomSceneManager.requiredPlayer = PhotonNetwork.CurrentRoom.PlayerCount;
     }
 }

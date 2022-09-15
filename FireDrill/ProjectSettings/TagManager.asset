@@ -20,6 +20,10 @@ TagManager:
   - Ground
   - Postprocessing
   - FireObject
+  - QuizObject
+  - 
+  - 
+  - Teleportable
   - 
   - 
   - 
@@ -35,15 +39,17 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Head
   m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Screen
+    uniqueID: 1171530435
+    locked: 0
   - name: Fire
     uniqueID: 3804908061
     locked: 0
-  - name: Default
-    uniqueID: 0
+  - name: CameraUI
+    uniqueID: 4255636489
     locked: 0

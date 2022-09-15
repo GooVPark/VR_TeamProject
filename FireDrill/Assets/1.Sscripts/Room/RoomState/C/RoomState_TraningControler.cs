@@ -23,19 +23,25 @@ public class RoomState_TraningControler : RoomState
             case UserType.Student:
                 if(user.hasExtingisher)
                 {
-                    currentToast = toast.gameObject;
+                    toast.gameObject.SetActive(true);
                     roomSceneManager.onRoomStateEvent += EventTrigger;
+                    
                 }
                 break;
         }
-
-        currentToast.SetActive(true);
     }
 
     public override void OnStateExit()
     {
-        roomSceneManager.onRoomStateEvent -= EventTrigger;
-        currentToast.SetActive(false);
+        switch (user.userType)
+        {
+            case UserType.Lecture:
+                break;
+            case UserType.Student:
+                toast.gameObject.SetActive(false);
+                roomSceneManager.onRoomStateEvent -= EventTrigger;
+                break;
+        }
         base.OnStateExit();
     }
 

@@ -152,6 +152,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
 
     public Button requestVoiceChatButton;
     private PhotonVoiceView voiceView;
+    public GameObject headModel;
 
     [Header("Extinguisher")]
     public PinTrigger pinTrigger;
@@ -180,6 +181,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         voiceView = GetComponent<PhotonVoiceView>();
         voiceView.SpeakerInUse = micSpeaker;
 
+        
         Initialize();
     }
 
@@ -229,7 +231,15 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     [PunRPC]
     public void SpreadRPC(bool value)
     {
-        hoseWater.gameObject.SetActive(value);
+        if(value)
+        {
+            hoseWater.Play();
+        }
+        else
+        {
+            hoseWater.Stop();
+        }
+        Debug.Log("Spread Value: " + value);
     }
 
     public void Initialize()
@@ -242,6 +252,8 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
             HasExtinguisher = NetworkManager.User.hasExtingisher;
 
             userInfoUI.SetActive(false);
+
+            headModel.layer = 31;
         }
 
         requestVoiceChatButton.onClick.AddListener(() => LoundgeSceneManager.Instance.RequsetVoiceChat(NetworkManager.User.id, UserID));
@@ -349,15 +361,39 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
 
     public void VoiceOn()
     {
+        if(photonView.IsMine)
+        {
+            photonView.RPC(nameof(VoiceOnRPC), RpcTarget.All);
+        }
+    }
+
+    [PunRPC]
+    public void VoiceOnRPC()
+    {
         audioSource.enabled = true;
     }
 
     public void VoiceOff()
     {
+        if (photonView.IsMine)
+        {
+            photonView.RPC(nameof(VoiceOffRPC), RpcTarget.All);
+        }
+    }
+
+    [PunRPC]
+    public void VoiceOffRPC()
+    {
         audioSource.enabled = false;
     }
     
     public void MegaphoneOn()
+    {
+        photonView.RPC(nameof(MegaphoneOnRPC), RpcTarget.All);
+    }
+
+    [PunRPC]
+    public void MegaphoneOnRPC()
     {
         megaphone.enabled = true;
         audioSource.enabled = false;
@@ -365,12 +401,18 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         voiceView.SpeakerInUse = megaphoneSpeaker;
     }
 
-    public void MegaPhoneOff()
+    public void MegaphoneOff()
     {
-        megaphone.enabled = false;
+        photonView.RPC(nameof(MegaphoneOffRPC), RpcTarget.All);
+    }
+
+    [PunRPC]
+    public void MegaphoneOffRPC()
+    {
+        megaphone.enabled = true;
         audioSource.enabled = false;
 
-        voiceView.SpeakerInUse = micSpeaker;
+        voiceView.SpeakerInUse = megaphoneSpeaker;
     }
 
     #endregion

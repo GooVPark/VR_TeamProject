@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using TMPro;
-public class RoomState_StartQuiz : RoomState, IPunObservable
+public class RoomState_StartQuiz : RoomState
 {
     [Header("Room State")]
     public RoomState_Quiz roomStateQuiz;
@@ -33,7 +33,7 @@ public class RoomState_StartQuiz : RoomState, IPunObservable
 
         if (NetworkManager.User.userType == UserType.Lecture)
         {
-            time -= Time.deltaTime;
+            photonView.RPC(nameof(Timer), RpcTarget.All, time);
 
             if(time < 0)
             {
@@ -48,22 +48,9 @@ public class RoomState_StartQuiz : RoomState, IPunObservable
         roomSceneManager.RoomState = roomStateQuiz;
     }
 
-    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    [PunRPC]
+    public void Timer(float time)
     {
-        if(NetworkManager.User.userType == UserType.Lecture)
-        {
-            if(stream.IsWriting)
-            {
-                stream.SendNext(time);
-            }
-        }
-        else
-        {
-            if(stream.IsReading)
-            {
-                time = (float)stream.ReceiveNext();
-            }
-        }
-
+        this.time = time -= Time.deltaTime;
     }
 }

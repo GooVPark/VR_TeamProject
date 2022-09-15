@@ -15,14 +15,23 @@ public class RoomState_InTraning : RoomState
     public Toast toastMR;
     private GameObject currentToast;
 
+    [Header("Event Area")]
+    public EventArea eventArea;
+    public EventAreaMR eventAreaMR;
+
     public override void OnStateEnter()
     {
         base.OnStateEnter();
+
+        eventArea.gameObject.SetActive(false);
+        eventAreaMR.gameObject.SetActive(false);
+
         switch (user.userType)
         {
             case UserType.Lecture:
                 currentToast = toastLecture.gameObject;
                 roomSceneManager.onRoomStateEvent += StartTraining;
+                DataManager.Instance.UpdateRoomProgress(roomSceneManager.roomNumber, 4);
                 break;
             case UserType.Student:
                 if(user.hasExtingisher)

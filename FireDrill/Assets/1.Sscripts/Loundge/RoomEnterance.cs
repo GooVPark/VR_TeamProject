@@ -22,7 +22,7 @@ public class RoomEnterance : MonoBehaviour
 
     private void Update()
     {
-        roomInfo.text = $"참여 인원 ({NetworkManager.Instance.GetPlayerCount(roomNumber)} / 11)";
+        roomInfo.text = $"참여 인원 ({NetworkManager.Instance.GetPlayerCount(roomNumber)} / 16)";
     }
 
     private void OnTriggerEnter(Collider other)

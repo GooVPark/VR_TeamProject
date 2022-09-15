@@ -51,14 +51,26 @@ public class RoomState_TrainingExtinguish : RoomState
             InputManager.rightTriggerButton -= OnExtinguisher;
         }
         trainingManager.GetTrainingProgress -= GetProgress;
-        progressUIObject.SetActive(false);
+        //progressUIObject?.SetActive(false);
         base.OnStateExit();
     }
 
     public override void OnUpdate()
     {
-        
+        if(progressUI.fillAmount == 0)
+        {
+            photonView.RPC(nameof(NextStateRPC), RpcTarget.All);
+        }
     }
+
+    [PunRPC]
+    public void NextStateRPC()
+    {
+        roomSceneManager.RoomState = roomStateEndTraining;
+        roomSceneManager.player.Spread(false);
+    }
+    
+    
 
     public void GetProgress(float progress)
     {

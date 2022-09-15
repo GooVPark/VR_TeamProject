@@ -12,14 +12,25 @@ public class RoomState_InQuiz : RoomState
     [Header("Toast")]
     public ToastOneButton lectureToast;
     public Toast studnetToast;
+    [Space(5)]
+
+    [Header("EventArea")]
+    public EventArea eventArea;
+    [Space(5)]
+
+    [Header("QuizObject")]
+    public GameObject quizObject;
 
     public override void OnStateEnter()
     {
         base.OnStateEnter();
+        eventArea.gameObject.SetActive(false);
+        quizObject.SetActive(true);
         roomSceneManager.onRoomStateEvent += OnQuizStart;
         if(NetworkManager.User.userType == UserType.Lecture)
         {
             lectureToast.gameObject.SetActive(true);
+            DataManager.Instance.UpdateRoomProgress(roomSceneManager.roomNumber, 2);
         }
         else
         {

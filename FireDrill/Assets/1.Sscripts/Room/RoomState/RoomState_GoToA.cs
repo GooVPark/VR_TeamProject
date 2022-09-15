@@ -25,10 +25,17 @@ public class RoomState_GoToA : RoomState
 
     [Header("Toast")]
     public Toast toast;
+    [Space(5)]
+
+    [Header("Class Object")]
+    public GameObject classObject;
 
     public override void OnStateEnter()
     {
         base.OnStateEnter();
+        eventArea.gameObject.SetActive(true);
+        classObject.SetActive(true);
+
         toast.gameObject.SetActive(true);
     }
 

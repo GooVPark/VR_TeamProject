@@ -12,30 +12,33 @@ public class TrainingManager : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField] private float totalProgress;
     [SerializeField] private float currentProgress;
 
-    public Image testImage;
+    public Image progressBar;
 
-    [SerializeField] private FireObject[] fireObjects;
+    [SerializeField] private List<FireObject> fireObjects;
+    [SerializeField] private Transform[] fireSpot;
     private bool isEnd = false;
 
     private void Start()
     {
-        for(int i = 0; i < fireObjects.Length; i++)
-        {
-            fireObjects[i].fireObjectIndex = i;
-            fireObjects[i].onFireObjectTriggerd += SyncFireObject;
-        }
-        totalProgress = GetTotalProgress();
+
     }
 
     private void Update()
     {
         currentProgress = GetCurrentProgress();
-        GetTrainingProgress?.Invoke(currentProgress / totalProgress);
 
-        if(currentProgress == 0)
+        if (NetworkManager.User.hasExtingisher)
         {
-
+            photonView.RPC(nameof(SetProgressGaugeRPC), RpcTarget.All, currentProgress / totalProgress);
         }
+
+        GetTrainingProgress?.Invoke(currentProgress / totalProgress);
+    }
+
+    [PunRPC]
+    private void SetProgressGaugeRPC(float value)
+    {
+        progressBar.fillAmount = value;
     }
 
     private float GetTotalProgress()
@@ -63,17 +66,6 @@ public class TrainingManager : MonoBehaviourPunCallbacks, IPunObservable
         return current;
     }
 
-    public void SyncFireObject(int fireObjectIndex, int flameIndex, bool state)
-    {
-        photonView.RPC(nameof(SyncFireObjectRPC), RpcTarget.Others, fireObjectIndex, flameIndex, state);
-    }
-
-    [PunRPC]
-    public void SyncFireObjectRPC(int fireObjectIndex, int flameIndex, bool state)
-    {
-        fireObjects[fireObjectIndex].flames[flameIndex].gameObject.SetActive(state);
-    }
-
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.IsWriting)
@@ -84,5 +76,23 @@ public class TrainingManager : MonoBehaviourPunCallbacks, IPunObservable
         {
             currentProgress = (float)stream.ReceiveNext();
         }
+    }
+
+    public void SpawnFire()
+    {
+        for (int i = 0; i < fireSpot.Length; i++)
+        {
+            GameObject firePrefab = PhotonNetwork.Instantiate("FireObject", fireSpot[i].position, Quaternion.identity);
+            FireObject fire = firePrefab.GetComponent<FireObject>();
+
+            fireObjects.Add(fire);
+        }
+
+                for(int i = 0; i < fireObjects.Count; i++)
+        {
+            fireObjects[i].fireObjectIndex = i;
+            //fireObjects[i].onFireObjectTriggerd += SyncFireObject;
+        }
+        totalProgress = GetTotalProgress();
     }
 }

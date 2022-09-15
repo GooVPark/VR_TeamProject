@@ -16,10 +16,22 @@ public class RoomState_GoToC : RoomState
     [Header("Event Area")]
     public EventArea eventAreaMR;
     public EventArea eventArea;
+    [Space(5)]
+
+    [Header("QuizObject")]
+    public GameObject quizObject;
+
+    [Header("Training Object")]
+    public GameObject trainingObject;
+
 
     public override void OnStateEnter()
     {
         base.OnStateEnter();
+        quizObject.SetActive(false);
+        trainingObject.SetActive(true);
+        eventArea.gameObject.SetActive(true);
+        eventAreaMR.gameObject.SetActive(true);
         toast.gameObject.SetActive(true);
     }
 

@@ -23,6 +23,11 @@ public class RoomState_ClassEnd : RoomState
     {
         base.OnStateEnter();
         classEndToast.Activate(2f);
+
+        if(user.userType == UserType.Lecture)
+        {
+            DataManager.Instance.UpdateRoomProgress(roomSceneManager.roomNumber, 1);
+        }
     }
 
     public override void OnStateExit()

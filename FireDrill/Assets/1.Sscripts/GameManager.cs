@@ -62,13 +62,18 @@ public class GameManager : MonoBehaviourPunCallbacks
     public void MegaphoneOn()
     {
         onMegaphone = true;
+        if(localRecoder.TransmitEnabled)
+        {
+            localRecoder.TransmitEnabled = false;
+        }
+
         player.MegaphoneOn();
     }
 
     public void MegaphoneOff()
     {
         onMegaphone = false;
-        player.MegaPhoneOff();
+        player.MegaphoneOff();
     }
 
     public void MegaphoneToggle()

@@ -221,7 +221,7 @@ public class LoundgeSceneManager : GameManager
     }
     private void UpdateLobbyPlayerCount()
     {
-        playerCountText.text = PhotonNetwork.CountOfPlayers.ToString();
+        playerCountText.text = (PhotonNetwork.CountOfPlayers - NetworkManager.Instance.GetPlayerCountOnRooms()).ToString();
     }
 
 

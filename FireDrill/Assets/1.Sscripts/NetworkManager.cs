@@ -15,6 +15,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public static NetworkManager Instance;
     public Dictionary<string, RoomInfo> roomsByName = new Dictionary<string, RoomInfo>();
     public List<RoomInfo> roomList = new List<RoomInfo>();
+    public Dictionary<string, RoomInfo> cachedRoomList = new Dictionary<string, RoomInfo>();
 
     private static User user;
     public static User User => user;
@@ -57,20 +58,40 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     }
 
     #region Lobby
+    public override void OnJoinedLobby()
+    {
+        cachedRoomList.Clear();
+    }
+    public override void OnLeftLobby()
+    {
+        cachedRoomList.Clear();
+    }
 
     #endregion
 
     #region Room
 
+    public int GetPlayerCountOnRooms()
+    {
+        int playerCount = 0;
+        foreach(string key in cachedRoomList.Keys)
+        {
+            playerCount += cachedRoomList[key].PlayerCount;
+        }
+
+        return playerCount;
+    }
+
     public int GetPlayerCount(int roomNumber)
     {
-        if(roomList.Count <= roomNumber)
+        string roomName = roomNumber.ToString();
+        if (cachedRoomList.ContainsKey(roomName))
         {
-            return 0;
+            return cachedRoomList[roomName].PlayerCount;
         }
         else
         {
-            return roomList[roomNumber].PlayerCount;
+            return 0;
         }
     }
 
@@ -91,13 +112,39 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-
         PhotonNetwork.LoadLevel("Room");
+    }
+
+    public override void OnLeftRoom()
+    {
+        PhotonNetwork.LoadLevel("Loundge");
+        PhotonNetwork.JoinLobby();
     }
 
     public override void OnCreatedRoom()
     {
         Debug.Log("NetworkManager : OnCreateRoom");
+    }
+
+    private void UpdateRoomList(List<RoomInfo> roomList)
+    {
+        for (int i = 0; i < roomList.Count; i++)
+        {
+            RoomInfo info = roomList[i];
+            if (info.RemovedFromList)
+            {
+                cachedRoomList.Remove(info.Name);
+            }
+            else
+            {
+                cachedRoomList[info.Name] = info;
+            }
+        }
+    }
+
+    public override void OnRoomListUpdate(List<RoomInfo> roomList)
+    {
+        UpdateRoomList(roomList);
     }
 
     #endregion
@@ -160,6 +207,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnDisconnected(DisconnectCause cause)
     {
         DataManager.Instance.SetOffline(User.email);
+        cachedRoomList.Clear();
     }
 
     private void OnApplicationQuit()

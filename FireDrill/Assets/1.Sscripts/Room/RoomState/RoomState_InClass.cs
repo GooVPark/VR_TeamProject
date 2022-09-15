@@ -25,16 +25,24 @@ public class RoomState_InClass : RoomState
     public Toast studentToast;
     public Toast disMicToast;
     private GameObject currentToast;
+    [Space(5)]
+
+    [Header("EventArea")]
+    public EventArea eventArea;
 
     public override void OnStateEnter()
     {
         base.OnStateEnter();
+        eventArea.gameObject.SetActive(false);
+
         if (NetworkManager.User.userType == UserType.Lecture)
         {
             lectureToast.gameObject.SetActive(true);
             currentToast = lectureToast.gameObject;
 
             roomSceneManager.onRoomStateEvent += OnClassStart;
+
+            DataManager.Instance.UpdateRoomProgress(roomSceneManager.roomNumber, 0);
         }
         if (NetworkManager.User.userType == UserType.Student)
         {

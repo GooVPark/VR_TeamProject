@@ -17,6 +17,7 @@ public class RoomState_EndQuiz : RoomState
         base.OnStateEnter();
         if(NetworkManager.User.userType == UserType.Lecture)
         {
+            DataManager.Instance.UpdateRoomProgress(roomSceneManager.roomNumber, 3);
             toast.gameObject.SetActive(true);
             Invoke(nameof(SetState), 2f);
         }
