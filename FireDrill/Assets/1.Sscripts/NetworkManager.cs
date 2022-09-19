@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
+using Photon.Voice;
+using Photon.Voice.PUN;
+using Photon.Chat.UtilityScripts;
 using TMPro;
 using HashTable = ExitGames.Client.Photon.Hashtable;
 
@@ -39,6 +42,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
                 Destroy(this.gameObject);
             }
         }
+
+        
     }
     float elapsedTime = 0f;
 
@@ -78,7 +83,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         {
             playerCount += cachedRoomList[key].PlayerCount;
         }
-
+        
         return playerCount;
     }
 
@@ -94,6 +99,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             return 0;
         }
     }
+
+    
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {

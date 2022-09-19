@@ -5,6 +5,8 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 public class XROffsetGrabInteractable : XRGrabInteractable
 {
+    public bool userOffset;
+
     private Vector3 initialAttachLocalPosition;
     private Quaternion initialAttachLocalRotation;
 
@@ -23,17 +25,19 @@ public class XROffsetGrabInteractable : XRGrabInteractable
 
     protected override void OnSelectEntered(SelectEnterEventArgs args)
     {
-        if(args.interactorObject is XRDirectInteractor)
+        if (userOffset)
         {
-            attachTransform.position = args.interactorObject.transform.position;
-            attachTransform.rotation = args.interactorObject.transform.rotation;
+            if (args.interactorObject is XRDirectInteractor)
+            {
+                attachTransform.position = args.interactorObject.transform.position;
+                attachTransform.rotation = args.interactorObject.transform.rotation;
+            }
+            else
+            {
+                attachTransform.localPosition = initialAttachLocalPosition;
+                attachTransform.localRotation = initialAttachLocalRotation;
+            }
         }
-        else
-        {
-            attachTransform.localPosition = initialAttachLocalPosition;
-            attachTransform.localRotation = initialAttachLocalRotation;
-        }
-
         base.OnSelectEntered(args);
     }
 }
