@@ -606,6 +606,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "ThumbsUp",
+                    "type": "Value",
+                    "id": "fca979ba-0fb8-48fa-afc4-98bcb78ff773",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -650,6 +659,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Stick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bbd8223b-acb2-4731-b880-286722bcef5d",
+                    "path": "<XRController>{LeftHand}/thumbstickTouched",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ThumbsUp",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -1201,6 +1221,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "ThumbsUp",
+                    "type": "Value",
+                    "id": "fcc8ea25-952f-4890-a27b-c7bbb5af0b85",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "TriggerTouched",
+                    "type": "Value",
+                    "id": "404b8855-e563-4938-b50c-44a5ba27e184",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -1245,6 +1283,50 @@
                     "processors": "",
                     "groups": "Generic XR Controller",
                     "action": "Trigger",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b8337c2e-d51f-4d75-b265-75d5aaa49015",
+                    "path": "<XRController>{RightHand}/thumbstickTouched",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ThumbsUp",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6bd359e0-5c8f-4b22-8f69-ac4d3ebef8c0",
+                    "path": "<XRController>{RightHand}/primaryTouched",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ThumbsUp",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "fed144dd-b918-43de-a494-9e71828638dd",
+                    "path": "<XRController>{RightHand}/secondaryTouched",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ThumbsUp",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "45c59916-8659-4a38-adbb-b16634e840bc",
+                    "path": "<XRController>{RightHand}/triggerTouched",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TriggerTouched",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

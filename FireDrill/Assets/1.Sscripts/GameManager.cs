@@ -53,6 +53,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     public ButtonState scoreBoardButton;
     public ButtonState voiceChatButton;
     public ButtonState textChatButton;
+
+    public Button joinRoomButton;
     #endregion
 
     #region Megaphone

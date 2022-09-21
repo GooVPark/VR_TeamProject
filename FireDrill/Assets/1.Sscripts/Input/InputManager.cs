@@ -15,12 +15,29 @@ public class InputManager : MonoBehaviour
     public delegate void RightTriggerButtonEvent(bool value);
     public static RightTriggerButtonEvent rightTriggerButton;
 
+    public delegate void BoolEvent(bool value);
+
+    public delegate void FloatEvent(float value);
+    public static FloatEvent onRightTriggerValue;
+    public static FloatEvent onRightTriggerTouched;
+    public static FloatEvent onRightThumbsValue;
+    public static FloatEvent onRightGrabValue;
+
+    public static FloatEvent onLeftTriggerValue;
+    public static FloatEvent onLeftThumbsValue;
+    public static FloatEvent onLeftGrabValue;
+
     public static InputManager Instance;
 
     [Header("Left Hand Button Input")]
     public InputActionReference leftStart = null;
     public InputActionReference leftPrimary = null;
     public InputActionReference leftSecondary = null;
+
+    public InputActionReference leftTriggerValue = null;
+    public InputActionReference leftTriggerTouched = null;
+    public InputActionReference leftGrabVAlue = null;
+    public InputActionReference leftAirTab = null;
 
     public InputActionReference leftStick = null;
 
@@ -33,6 +50,10 @@ public class InputManager : MonoBehaviour
     public InputActionReference rightSecondary = null;
 
     public InputActionReference rightTrigger = null;
+    public InputActionReference rightTriggerValue = null;
+    public InputActionReference rightTriggerTouched = null;
+    public InputActionReference rightGrabValue = null;
+    public InputActionReference rightAirTab = null;
 
     public InputActionReference rightStick = null;
 
@@ -105,6 +126,25 @@ public class InputManager : MonoBehaviour
 
         rightTrigger.action.started += OnRightTriggerStarted;
         rightTrigger.action.canceled += OnRightTriggerCanceled;
+
+        //Point
+        rightTriggerValue.action.performed += OnRightTriggerValuePerformed;
+        leftTriggerValue.action.performed += OnLeftTriggerValuePerformed;
+        
+
+        //ThumsUp
+        rightAirTab.action.started += OnRightThumbsUpStarted;
+        rightAirTab.action.canceled += OnRightThumbsUpCanceled;
+        leftAirTab.action.started += OnLeftThumbsUpStarted;
+        leftAirTab.action.canceled += OnLeftThumbsUpCanceled;
+
+        //Flex
+        rightGrabValue.action.performed += OnRightGrabPerformed;
+        leftGrabVAlue.action.performed += OnLeftGrabValuePerformed;
+
+        //TriggerTouched
+        rightTriggerTouched.action.started += OnRightTriggerTouchedStarted;
+        rightTriggerTouched.action.canceled += OnRightTriggerTouchedCanceled;
     }
 
     private void Start()
@@ -179,6 +219,26 @@ public class InputManager : MonoBehaviour
     {
         
     }
+
+    private void OnLeftTriggerValuePerformed(InputAction.CallbackContext context)
+    {
+        onLeftTriggerValue?.Invoke(1 - context.ReadValue<float>());
+    }
+
+    private void OnLeftGrabValuePerformed(InputAction.CallbackContext context)
+    {
+        onLeftGrabValue?.Invoke(context.ReadValue<float>());
+    }
+
+    private void OnLeftThumbsUpStarted(InputAction.CallbackContext context)
+    {
+        onLeftThumbsValue?.Invoke(0f);
+    }
+
+    private void OnLeftThumbsUpCanceled(InputAction.CallbackContext context)
+    {
+        onLeftThumbsValue?.Invoke(1f);
+    }
     #endregion
 
 
@@ -236,6 +296,36 @@ public class InputManager : MonoBehaviour
         Debug.Log("Cancel");
         rightTriggerButton?.Invoke(false);
     }    
+
+    private void OnRightTriggerValuePerformed(InputAction.CallbackContext context)
+    {
+        onRightTriggerValue?.Invoke(1 - context.ReadValue<float>());
+    }
+
+    private void OnRightTriggerTouchedStarted(InputAction.CallbackContext context)
+    {
+        onRightTriggerTouched?.Invoke(0);
+    }
+
+    private void OnRightTriggerTouchedCanceled(InputAction.CallbackContext context)
+    {
+        onRightTriggerTouched?.Invoke(1);
+    }
+
+    private void OnRightThumbsUpStarted(InputAction.CallbackContext context)
+    {
+        onRightThumbsValue?.Invoke(0f);
+    }
+
+    private void OnRightThumbsUpCanceled(InputAction.CallbackContext context)
+    {
+        onRightThumbsValue?.Invoke(1f);
+    }
+
+    private void OnRightGrabPerformed(InputAction.CallbackContext context)
+    {
+        onRightGrabValue?.Invoke(context.ReadValue<float>());
+    }
     #endregion
 
     #region Input Timer

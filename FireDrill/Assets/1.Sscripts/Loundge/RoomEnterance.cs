@@ -15,6 +15,8 @@ public class RoomEnterance : MonoBehaviour
 
     [SerializeField] private TMP_Text roomInfo;
 
+    [SerializeField] private LoundgeSceneManager loundgeSceneManager;
+
     private void Awake()
     {
         enteranceCollider = GetComponent<BoxCollider>();
@@ -30,6 +32,7 @@ public class RoomEnterance : MonoBehaviour
         if(other.CompareTag(targetTag))
         {
             joinRoomButton.gameObject.SetActive(true);
+            joinRoomButton.onClick.AddListener(() => loundgeSceneManager.JoinRoom(roomNumber));
         }
     }
 
@@ -37,6 +40,7 @@ public class RoomEnterance : MonoBehaviour
     {
         if(other.CompareTag(targetTag))
         {
+            joinRoomButton.onClick.RemoveAllListeners();
             joinRoomButton.gameObject.SetActive(false);
         }
     }
