@@ -12,6 +12,8 @@ public class RoomState_StartTraining : RoomState
     [Header("Toast")]
     public ToastOneButton toast;
 
+    [Header("Extinguish pivot")]
+    public Transform pivot;
 
     public override void OnStateEnter()
     {
@@ -23,7 +25,7 @@ public class RoomState_StartTraining : RoomState
                 {
                     toast.gameObject.SetActive(true);
                     roomSceneManager.onRoomStateEvent += EventTrigger;
-                    roomSceneManager.player.OnExtinguisher();
+                    roomSceneManager.player.OnExtinguisher(pivot.position);
                 }
                 break;
         }

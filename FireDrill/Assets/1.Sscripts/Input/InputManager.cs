@@ -24,6 +24,7 @@ public class InputManager : MonoBehaviour
     public static FloatEvent onRightGrabValue;
 
     public static FloatEvent onLeftTriggerValue;
+    public static FloatEvent onLeftTriggerTouched;
     public static FloatEvent onLeftThumbsValue;
     public static FloatEvent onLeftGrabValue;
 
@@ -145,6 +146,9 @@ public class InputManager : MonoBehaviour
         //TriggerTouched
         rightTriggerTouched.action.started += OnRightTriggerTouchedStarted;
         rightTriggerTouched.action.canceled += OnRightTriggerTouchedCanceled;
+
+        leftTriggerTouched.action.started += OnLeftTriggerTouchedStarted;
+        leftTriggerTouched.action.canceled += OnLeftTriggerTouchedCanceled;
     }
 
     private void Start()
@@ -225,6 +229,15 @@ public class InputManager : MonoBehaviour
         onLeftTriggerValue?.Invoke(1 - context.ReadValue<float>());
     }
 
+    private void OnLeftTriggerTouchedStarted(InputAction.CallbackContext context)
+    {
+        onLeftTriggerTouched?.Invoke(0);   
+    }
+
+    private void OnLeftTriggerTouchedCanceled(InputAction.CallbackContext context)
+    {
+        onLeftTriggerTouched?.Invoke(1);
+    }
     private void OnLeftGrabValuePerformed(InputAction.CallbackContext context)
     {
         onLeftGrabValue?.Invoke(context.ReadValue<float>());

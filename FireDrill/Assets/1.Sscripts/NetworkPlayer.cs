@@ -148,6 +148,19 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
 
     [SerializeField] private ActionBasedController leftController;
     [SerializeField] private ActionBasedController rightController;
+
+    [SerializeField] private Transform leftWrist;
+    [SerializeField] private Transform rightWrist;
+    private Quaternion leftWristOrigin;
+    private Quaternion rightWristOrigin;
+
+
+    [SerializeField] private HandAnimationController leftHandAnimation;
+    [SerializeField] private HandAnimationController rightHandAnimation;
+
+    [SerializeField] private Animator leftHandAnimator;
+    [SerializeField] private Animator rightHandAnimator;
+
     private Camera headset;
 
     public Button requestVoiceChatButton;
@@ -176,6 +189,12 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         leftController = GameObject.Find("LeftHand Controller").GetComponent<ActionBasedController>();
         rightController = GameObject.Find("RightHand Controller").GetComponent<ActionBasedController>();
 
+        leftHandAnimation = GameObject.Find("Left Direct Interactor").GetComponent<HandAnimationController>();
+        rightHandAnimation = GameObject.Find("Right Direct Interactor").GetComponent<HandAnimationController>();
+
+        leftWristOrigin = leftWrist.localRotation;
+        rightWristOrigin = rightWrist.localRotation;
+
         onVoiceChat = false;
 
         voiceView = GetComponent<PhotonVoiceView>();
@@ -195,17 +214,20 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
             rightHand.gameObject.SetActive(false);
 
             MapPosition();
+            SyncAnimation();
         }
     }
 
-    public void OnExtinguisher()
+    public void OnExtinguisher(Vector3 position)
     {
-        Debug.Log("OnExtinguisher");
-        if (photonView.IsMine)
-        {
-            Debug.Log("OnExtinguisher Is Mine");
-            photonView.RPC(nameof(OnExtinguisherRPC), RpcTarget.All);
-        }
+        //Debug.Log("OnExtinguisher");
+        //if (photonView.IsMine)
+        //{
+        //    Debug.Log("OnExtinguisher Is Mine");
+        //    photonView.RPC(nameof(OnExtinguisherRPC), RpcTarget.All);
+        //}
+
+        PhotonNetwork.Instantiate("Extinguisher", position, Quaternion.identity);
     }
     [PunRPC]
     public void OnExtinguisherRPC()
@@ -289,6 +311,29 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
 
         rightHand.position = rightPosition;
         rightHand.rotation = rightRotation;
+    }
+
+    private void SyncAnimation()
+    {
+        if (rightHandAnimation.animator.GetInteger("Pose") == 0)
+        {
+            rightHandAnimator.SetFloat("Flex", rightHandAnimation.flex);
+            rightHandAnimator.SetLayerWeight(2, rightHandAnimation.animator.GetLayerWeight(2));
+            rightHandAnimator.SetLayerWeight(1, rightHandAnimation.animator.GetLayerWeight(1));
+
+  //          Quaternion rightWristRotation = rightHandAnimation.transform.rotation;
+//            rightWrist.localRotation = rightWristRotation;
+        }
+
+        if (leftHandAnimation.animator.GetInteger("Pose") == 0)
+        {
+            leftHandAnimator.SetFloat("Flex", leftHandAnimation.flex);
+            leftHandAnimator.SetLayerWeight(2, leftHandAnimation.animator.GetLayerWeight(2));
+            leftHandAnimator.SetLayerWeight(1, leftHandAnimation.animator.GetLayerWeight(1));
+
+
+           
+        }
     }
 
     public void InteractionTest()

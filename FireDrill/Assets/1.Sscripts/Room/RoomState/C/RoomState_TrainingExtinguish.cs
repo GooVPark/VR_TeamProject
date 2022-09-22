@@ -28,6 +28,9 @@ public class RoomState_TrainingExtinguish : RoomState
     [Header("Controller")]
     public XRDirectInteractor controller;
 
+    [Header("Extinguisher Pivot")]
+    public Transform extinguisherSpawnPoint;
+
     public override void OnStateEnter()
     {
         base.OnStateEnter();

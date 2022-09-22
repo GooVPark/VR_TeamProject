@@ -6,13 +6,13 @@ public class HandAnimationController : MonoBehaviour
 {
     private enum Hand { Right, Left };
     [SerializeField] private Hand hand;
-    [SerializeField] private Animator animator;
+    public Animator animator;
 
-    [SerializeField] private int poseIndex = 0;
-    [SerializeField] private float flex;
-    [SerializeField] private float point;
-    [SerializeField] private float triggerTouched;
-    [SerializeField] private float thumbsUp;
+    public int poseIndex = 0;
+    public float flex;
+    public float point;
+    public float triggerTouched;
+    public float thumbsUp;
     
     private void Start()
     {
@@ -31,6 +31,7 @@ public class HandAnimationController : MonoBehaviour
                 InputManager.onLeftTriggerValue += GetPoint;
                 InputManager.onLeftThumbsValue += GetThumsUp;
                 InputManager.onLeftGrabValue += GetFlex;
+                InputManager.onLeftTriggerTouched += GetTriggerTouched;
 
                 break;
         }
