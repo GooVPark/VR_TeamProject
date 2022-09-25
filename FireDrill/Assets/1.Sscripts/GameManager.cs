@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public NetworkPlayer player;
 
     public VoiceChatRequestToast voiceChatRequestToast;
+    public TextChatManager textChatManager;
 
     [SerializeField] private ActionBasedController hapticTargetController;
 
@@ -64,17 +65,16 @@ public class GameManager : MonoBehaviourPunCallbacks
     public void MegaphoneOn()
     {
         onMegaphone = true;
-        if(localRecoder.TransmitEnabled)
-        {
-            localRecoder.TransmitEnabled = false;
-        }
-
+        localRecoder.TransmitEnabled = true;
+        
         player.MegaphoneOn();
     }
 
     public void MegaphoneOff()
     {
         onMegaphone = false;
+        localRecoder.TransmitEnabled = false;
+
         player.MegaphoneOff();
     }
 
@@ -108,7 +108,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void DisableVoiceChat()
     {
-        localRecoder.TransmitEnabled = true;
+        localRecoder.TransmitEnabled = false;
     }
 
     public void RequsetVoiceChat(int receiverID, int senderID)
@@ -337,6 +337,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void JoinRoom(int roomNumber)
     {
+        textChatManager.DisconnectChat();
         NetworkManager.Instance.SetRoomNumber(roomNumber);
 
         this.roomNumber = roomNumber;

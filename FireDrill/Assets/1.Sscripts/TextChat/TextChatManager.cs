@@ -10,51 +10,97 @@ using ExitGames.Client.Photon;
 
 public class TextChatManager : MonoBehaviour, IChatClientListener
 {
-    private string worldChat;
+    [SerializeField] private string worldChat;
+    
     public ChatClient chatClient;
+
+    public TMP_Text[] chatList;
 
     private void Start()
     {
         Connect();
     }
 
-    public void DebugReturn(DebugLevel level, string message)
+    private void Update()
     {
-        throw new System.NotImplementedException();
+        chatClient.Service();
+    }
+    public void DebugReturn(ExitGames.Client.Photon.DebugLevel level, string message)
+    {
+        if (level == ExitGames.Client.Photon.DebugLevel.ERROR)
+        {
+            Debug.LogError(message);
+        }
+        else if (level == ExitGames.Client.Photon.DebugLevel.WARNING)
+        {
+            Debug.LogWarning(message);
+        }
+        else
+        {
+            Debug.Log(message);
+        }
     }
 
     public void OnChatStateChange(ChatState state)
     {
-        throw new System.NotImplementedException();
+        Debug.Log(state);
     }
 
     public void Connect()
     {
-        worldChat = "WORLD_CHAT";
+        Application.runInBackground = true;
 
-        chatClient = new ChatClient(this);
-        bool isConnected = chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, "0.0.1", new Photon.Chat.AuthenticationValues(NetworkManager.User.email));
-        Debug.Log(isConnected);
+        chatClient = new ChatClient(this)
+        {
+            UseBackgroundWorkerForSending = true
+        };
+
+        string email = NetworkManager.User.email;
+
+        Debug.Log(email);
+
+        chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, PhotonNetwork.AppVersion, new Photon.Chat.AuthenticationValues(email));
     }
     public void OnConnected()
     {
+        Debug.Log("Connected to Chat");
         chatClient.Subscribe(new string[] { worldChat });
         chatClient.SetOnlineStatus(ChatUserStatus.Online);
+    }
 
-        chatClient.PublishMessage(worldChat, "test Chat server");
-        Debug.Log("Connected to Chat");
+    public void SendChatMessage(InputField inputField)
+    {
+        if(string.IsNullOrEmpty(inputField.text))
+        {
+            return;
+        }
+
+        chatClient.PublishMessage(worldChat, inputField.text);
+    }
+
+    public void DisconnectChat()
+    {
+        //chatClient.Disconnect();
     }
 
     public void OnDisconnected()
     {
-        
+        Debug.Log("Disconnected to Chat server");
     }
 
     public void OnGetMessages(string channelName, string[] senders, object[] messages)
     {
-        for(int i = 0; i < senders.Length; i++)
+        if (channelName.Equals(worldChat))
         {
-            Debug.Log(messages[i]);
+            ChatChannel channel = null;
+            bool isFound = chatClient.TryGetChannel(worldChat, out channel);
+            if (!isFound)
+            {
+                Debug.Log("Channel not found");
+                return;
+            }
+
+            chatList[0].text = channel.ToStringMessages();
         }
     }
 
@@ -67,6 +113,8 @@ public class TextChatManager : MonoBehaviour, IChatClientListener
     {
         throw new System.NotImplementedException();
     }
+
+    
 
     public void OnSubscribed(string[] channels, bool[] results)
     {
@@ -87,4 +135,6 @@ public class TextChatManager : MonoBehaviour, IChatClientListener
     {
         throw new System.NotImplementedException();
     }
+
+
 }

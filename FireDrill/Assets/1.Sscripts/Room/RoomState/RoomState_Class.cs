@@ -50,8 +50,8 @@ public class RoomState_Class : RoomState
         if (NetworkManager.User.userType == UserType.Lecture)
         {
             currentToast = lectureToast.gameObject;
-
             roomSceneManager.MegaphoneOn();
+
             megaphone.ChangeIconState(ButtonState.IconState.On);
             megaphone.onButtonEvent += roomSceneManager.MegaphoneToggle;
         }

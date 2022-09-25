@@ -14,7 +14,7 @@ public class PostUI : MonoBehaviour
 
     public void UpdatePost(Post post)
     {
-        Debug.Log("UpdatePost");
+        //Debug.Log("UpdatePost");
 
         button.onClick.RemoveAllListeners();
 

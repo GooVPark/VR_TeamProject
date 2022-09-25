@@ -115,7 +115,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     [SerializeField] private AudioSource megaphone;
 
     [SerializeField] private Speaker micSpeaker;
-    [SerializeField] private Speaker megaphoneSpeaker;
+    //[SerializeField] private Speaker megaphoneSpeaker;
 
     [Header("Player UI")]
     public GameObject userInfoUI;
@@ -172,12 +172,15 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     public GameObject extinguisher;
     public ParticleSystem hoseWater;
     public GameObject hose;
-    
+
+    private Dictionary<string, float[]> micSettings = new Dictionary<string, float[]>();
 
     // Start is called before the first frame update
     void Start()
     {
-         
+        micSettings.Add("Megaphone", new float[] { 499f, 500f });
+        micSettings.Add("Voice", new float[] { 1f, 5f });
+
         Transform parent = GameObject.Find("Players").transform;
         transform.SetParent(parent);
         photonView = GetComponent<PhotonView>();
@@ -435,15 +438,14 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     public void MegaphoneOn()
     {
         photonView.RPC(nameof(MegaphoneOnRPC), RpcTarget.All);
+
     }
 
     [PunRPC]
     public void MegaphoneOnRPC()
     {
-        megaphone.enabled = true;
-        audioSource.enabled = false;
-
-        voiceView.SpeakerInUse = megaphoneSpeaker;
+        audioSource.minDistance = micSettings["Megaphone"][0];
+        audioSource.maxDistance = micSettings["Megaphone"][1];
     }
 
     public void MegaphoneOff()
@@ -454,10 +456,10 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     [PunRPC]
     public void MegaphoneOffRPC()
     {
-        megaphone.enabled = true;
-        audioSource.enabled = false;
+        audioSource.minDistance = micSettings["Voice"][0];
+        audioSource.maxDistance = micSettings["Voice"][1];
 
-        voiceView.SpeakerInUse = megaphoneSpeaker;
+
     }
 
     #endregion
