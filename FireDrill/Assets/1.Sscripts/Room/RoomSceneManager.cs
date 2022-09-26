@@ -157,16 +157,24 @@ public class RoomSceneManager : GameManager
 
     private void OnApplicationQuit()
     {
-        int playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
         //DataManager.Instance.UpdateRoomPlayerCount(NetworkManager.RoomNumber, playerCount - 1);
         DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, 0);
 
-        PhotonNetwork.LeaveRoom();
+        PhotonNetwork.Disconnect();
+        DataManager.Instance.UpdateRoomPlayerCount(NetworkManager.RoomNumber, PhotonNetwork.CurrentRoom.PlayerCount - 1);
+        Debug.Log(PhotonNetwork.CurrentRoom.PlayerCount);
+        PhotonNetwork.SendAllOutgoingCommands();
     }
 
     public override void OnLeftRoom()
     {
-        DataManager.Instance.UpdateRoomPlayerCount(NetworkManager.RoomNumber, PhotonNetwork.CurrentRoom.PlayerCount);
+
+        PhotonNetwork.SendAllOutgoingCommands();
+    }
+
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+
     }
 
 }

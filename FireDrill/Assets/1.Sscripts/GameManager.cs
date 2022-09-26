@@ -295,9 +295,9 @@ public class GameManager : MonoBehaviourPunCallbacks
         onChatView = false;
     }
 
-    public void SendChatMessage()
+    public void SendChatMessage(InputField input)
     {
-        NetworkManager.Instance.SendChat(chatInputField.text);
+        showSpeechBubble(input.text);
         ///LoundgeSceneManager.Instance.SendTextChat(chatInputField.text);
         chatInputField.text = "";
     }
