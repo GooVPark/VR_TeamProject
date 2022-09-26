@@ -62,7 +62,7 @@ public class RoomState_StartTraining : RoomState
     public void ShowExtinguisherRPC()
     {
         roomSceneManager.player.hose.SetActive(true);
-        roomSceneManager.player.extinguisher.SetActive(true);
+        roomSceneManager.player.extinguisher.gameObject.SetActive(true);
         roomSceneManager.onRoomStateEvent += EventTrigger;
     }
 }

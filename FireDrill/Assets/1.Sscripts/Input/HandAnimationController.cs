@@ -69,7 +69,7 @@ public class HandAnimationController : MonoBehaviour
 
     public void SetHandPose(int poseIndex)
     {
-        Debug.Log("Set Hand Pose: " + poseIndex);
+        //Debug.Log("Set Hand Pose: " + poseIndex);
         animator.SetLayerWeight(2, 0);
         animator.SetLayerWeight(1, 0);
 

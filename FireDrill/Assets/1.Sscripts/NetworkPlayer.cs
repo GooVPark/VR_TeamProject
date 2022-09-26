@@ -169,17 +169,19 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
 
     [Header("Extinguisher")]
     public PinTrigger pinTrigger;
-    public GameObject extinguisher;
+    public Extinguisher extinguisher;
     public ParticleSystem hoseWater;
     public GameObject hose;
 
     private Dictionary<string, float[]> micSettings = new Dictionary<string, float[]>();
 
+    [SerializeField] private AnimationCurve voiceAudioCurve;
+    [SerializeField] private AnimationCurve megaphoneAudioCurve;
+
     // Start is called before the first frame update
     void Start()
     {
-        micSettings.Add("Megaphone", new float[] { 499f, 500f });
-        micSettings.Add("Voice", new float[] { 1f, 5f });
+        voiceAudioCurve = audioSource.GetCustomCurve(AudioSourceCurveType.CustomRolloff);
 
         Transform parent = GameObject.Find("Players").transform;
         transform.SetParent(parent);
@@ -189,8 +191,8 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         gameManager.showSpeechBubble += OnSendChatMessage;
 
         headset = Camera.main;
-        leftController = GameObject.Find("LeftHand Controller").GetComponent<ActionBasedController>();
-        rightController = GameObject.Find("RightHand Controller").GetComponent<ActionBasedController>();
+        leftController = GameObject.Find("Left Direct Interactor").GetComponent<ActionBasedController>();
+        rightController = GameObject.Find("Right Direct Interactor").GetComponent<ActionBasedController>();
 
         leftHandAnimation = GameObject.Find("Left Direct Interactor").GetComponent<HandAnimationController>();
         rightHandAnimation = GameObject.Find("Right Direct Interactor").GetComponent<HandAnimationController>();
@@ -213,8 +215,8 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         if (photonView.IsMine)
         {
             head.gameObject.SetActive(false);
-            leftHand.gameObject.SetActive(false);
-            rightHand.gameObject.SetActive(false);
+           // leftHand.gameObject.SetActive(false);
+            //rightHand.gameObject.SetActive(false);
 
             MapPosition();
             SyncAnimation();
@@ -223,26 +225,32 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
 
     public void OnExtinguisher(Vector3 position)
     {
-        //Debug.Log("OnExtinguisher");
-        //if (photonView.IsMine)
-        //{
-        //    Debug.Log("OnExtinguisher Is Mine");
-        //    photonView.RPC(nameof(OnExtinguisherRPC), RpcTarget.All);
-        //}
+        Debug.Log("OnExtinguisher");
+        if (photonView.IsMine)
+        {
+            Debug.Log("OnExtinguisher Is Mine");
 
-        PhotonNetwork.Instantiate("Extinguisher", position, Quaternion.identity);
+            GameObject extinguisherObject = PhotonNetwork.Instantiate("Extinguisher", position, Quaternion.identity);
+            extinguisher = extinguisherObject.GetComponent<Extinguisher>();
+
+            photonView.RPC(nameof(OnExtinguisherRPC), RpcTarget.All);
+        }
     }
     [PunRPC]
     public void OnExtinguisherRPC()
     {
+        pinTrigger = extinguisher.pinTrigger;
+        hose = extinguisher.hose;
+        hoseWater = extinguisher.hoseWater;
+
         hose.SetActive(true);
-        extinguisher.SetActive(true);
+        extinguisher.gameObject.SetActive(true);
     }
 
     public void OffExtinguisher()
     {
         hose.SetActive(false);
-        extinguisher.SetActive(false);
+        extinguisher.gameObject.SetActive(false);
     }
 
     public void Spread(bool value)
@@ -279,6 +287,8 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
             userInfoUI.SetActive(false);
 
             headModel.layer = 31;
+            leftHand.gameObject.layer = 31;
+            rightHand.gameObject.layer = 31;
         }
 
         requestVoiceChatButton.onClick.AddListener(() => LoundgeSceneManager.Instance.RequsetVoiceChat(NetworkManager.User.id, UserID));
@@ -303,14 +313,14 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         head.position = headsetPosition;
         head.rotation = headsetRotation;
 
-        Vector3 leftPosition = leftController.transform.position;
-        Quaternion leftRotation = leftController.transform.rotation;
+        Vector3 leftPosition = leftController.transform.GetChild(0).GetChild(0).position;
+        Quaternion leftRotation = leftController.transform.GetChild(0).GetChild(0).rotation;
 
         leftHand.position = leftPosition;
         leftHand.rotation = leftRotation;
 
-        Vector3 rightPosition = rightController.transform.position;
-        Quaternion rightRotation = rightController.transform.rotation;
+        Vector3 rightPosition = rightController.transform.GetChild(0).GetChild(0).position;
+        Quaternion rightRotation = rightController.transform.GetChild(0).GetChild(0).rotation;
 
         rightHand.position = rightPosition;
         rightHand.rotation = rightRotation;
@@ -333,9 +343,6 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
             leftHandAnimator.SetFloat("Flex", leftHandAnimation.flex);
             leftHandAnimator.SetLayerWeight(2, leftHandAnimation.animator.GetLayerWeight(2));
             leftHandAnimator.SetLayerWeight(1, leftHandAnimation.animator.GetLayerWeight(1));
-
-
-           
         }
     }
 
@@ -444,8 +451,8 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     [PunRPC]
     public void MegaphoneOnRPC()
     {
-        audioSource.minDistance = micSettings["Megaphone"][0];
-        audioSource.maxDistance = micSettings["Megaphone"][1];
+        audioSource.maxDistance = 500f;
+        audioSource.SetCustomCurve(AudioSourceCurveType.CustomRolloff, megaphoneAudioCurve);
     }
 
     public void MegaphoneOff()
@@ -456,10 +463,8 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     [PunRPC]
     public void MegaphoneOffRPC()
     {
-        audioSource.minDistance = micSettings["Voice"][0];
-        audioSource.maxDistance = micSettings["Voice"][1];
-
-
+        audioSource.maxDistance = 5f;
+        audioSource.SetCustomCurve(AudioSourceCurveType.CustomRolloff, voiceAudioCurve);
     }
 
     #endregion

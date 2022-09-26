@@ -50,7 +50,7 @@ public class RoomState_TrainingExtinguish : RoomState
         if(user.hasExtingisher)
         {
             roomSceneManager.player.hose.SetActive(false);
-            roomSceneManager.player.extinguisher.SetActive(false);
+            roomSceneManager.player.extinguisher.gameObject.SetActive(false);
             InputManager.rightTriggerButton -= OnExtinguisher;
         }
         trainingManager.GetTrainingProgress -= GetProgress;
