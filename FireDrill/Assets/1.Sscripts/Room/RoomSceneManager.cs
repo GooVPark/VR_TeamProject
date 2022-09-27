@@ -111,6 +111,11 @@ public class RoomSceneManager : GameManager
         return DataManager.Instance.GetUsersListInRoom(number);
     }
 
+    public RoomData GetRoomData()
+    {
+        return roomData;
+    }
+
     public void ShowScoreBoard()
     {
         if (scoreBoardUI.activeSelf)

@@ -104,7 +104,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        photonView.RPC(nameof(ChatRPC), RpcTarget.All, "<color=yellow>" + newPlayer.NickName + "님이 참가 하셨습니다</color>");
+        //photonView.RPC(nameof(ChatRPC), RpcTarget.All, "<color=yellow>" + newPlayer.NickName + "님이 참가 하셨습니다</color>");
 
         if (newPlayer != PhotonNetwork.LocalPlayer)
         {

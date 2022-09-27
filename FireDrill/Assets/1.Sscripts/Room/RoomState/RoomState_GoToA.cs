@@ -37,6 +37,11 @@ public class RoomState_GoToA : RoomState
         classObject.SetActive(true);
 
         toast.gameObject.SetActive(true);
+
+        if (NetworkManager.User.userType == UserType.Lecture)
+        {
+            DataManager.Instance.UpdateRoomState(roomSceneManager.roomNumber, true);
+        }
     }
 
     public override void OnStateExit()

@@ -30,14 +30,24 @@ public class ProgressUI : MonoBehaviour
         companyNameText.text = roomData.company;
         playerCountText.text = $"{NetworkManager.Instance.GetPlayerCount(roomData.roomNumber)}/{roomData.maxPlayerCount}";
 
-        for(int i = 0; i < roomData.progress; i++)
+        if (roomData.isStarted)
         {
-            progressMarks[i].SetActive(true);
-        }
+            for (int i = 0; i < roomData.progress; i++)
+            {
+                progressMarks[i].SetActive(true);
+            }
 
-        for (int i = roomData.progress; i < 6; i++)
+            for (int i = roomData.progress; i < 6; i++)
+            {
+                progressMarks[i].SetActive(false);
+            }
+        }
+        else
         {
-            progressMarks[i].SetActive(false);
+            for (int i = 0; i < 6; i++)
+            {
+                progressMarks[i].SetActive(false);
+            }
         }
     }
 }

@@ -19,4 +19,6 @@ public class RoomData
     public int requirePlayerCount;
 
     public string company;
+
+    public bool isStarted;
 }

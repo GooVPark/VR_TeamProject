@@ -237,6 +237,26 @@ public class DataManager : MonoBehaviour
 
     #endregion
 
+    #region Room
+
+    public void UpdateRoomState(int roomNumber, bool value)
+    {
+        var filter = Builders<RoomData>.Filter.Eq("roomNumber", roomNumber);
+        var update = Builders<RoomData>.Update.Set("isStarted", value);
+    }
+
+    public bool GetRoomProgressState(int roomNumber)
+    {
+        List<RoomData> roomDatas = new List<RoomData>();
+
+        BsonDocument bson = new BsonDocument { { "roomNumber", roomNumber } };
+        roomDatas = roomCollection.Find(bson).ToList();
+
+        return roomDatas[0].isStarted;
+    }
+
+    #endregion
+
     #region Quiz
 
     public Dictionary<int, QuizJson> quizsByCode = new Dictionary<int, QuizJson>();

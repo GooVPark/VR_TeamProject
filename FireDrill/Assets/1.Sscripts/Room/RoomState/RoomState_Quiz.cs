@@ -88,7 +88,7 @@ public class RoomState_Quiz : RoomState, IPunObservable
             }
         }
 
-        timerText.text = ((int)time).ToString();
+        timerText.text = $"{(int)time / 60} : {(int)time % 60}";
         scoreText.text = $"{scoreCount}/{solveCount}";
 
         if (solveCount >= quizManager.quizObjects.Length)
@@ -111,7 +111,7 @@ public class RoomState_Quiz : RoomState, IPunObservable
 
         timerObject.SetActive(false);
         toast.gameObject.SetActive(true);
-        toast.text.text = $"{scoreCount * 10} / 100";
+        toast.text.text = $"{scoreCount * 10} / 30";
     }
 
     [PunRPC]

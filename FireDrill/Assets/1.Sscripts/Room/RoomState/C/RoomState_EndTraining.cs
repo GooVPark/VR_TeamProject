@@ -37,6 +37,7 @@ public class RoomState_EndTraining : RoomState
     {
         DataManager.Instance.UpdateRoomPlayerCount(NetworkManager.RoomNumber, PhotonNetwork.CurrentRoom.PlayerCount - 1);
         DataManager.Instance.SetOffline(NetworkManager.User.email);
+        DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, 0);
 
         photonView.RPC(nameof(LeaveRoomRPC), RpcTarget.All);
     }

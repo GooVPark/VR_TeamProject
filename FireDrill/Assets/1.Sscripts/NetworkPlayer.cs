@@ -60,8 +60,8 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         else
         {
             extinguisherDisabled.SetActive(false);
-            var collision = hoseWater.collision;
-            collision.enabled = false;
+            //var collision = hoseWater.collision;
+            //collision.enabled = false;
         }
     }
 
@@ -80,11 +80,11 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     {
         if(value)
         {
-            megaphotnEnabled.SetActive(true);
+            megaphoneEnabled.SetActive(true);
         }
         else
         {
-            megaphotnEnabled.SetActive(false);
+            megaphoneEnabled.SetActive(false);
         }
     }
 
@@ -143,7 +143,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     [Space(5)]
 
     [Header("Megaphotn Icon")]
-    public GameObject megaphotnEnabled;
+    public GameObject megaphoneEnabled;
     [Space(5)]
 
     [SerializeField] private ActionBasedController leftController;
@@ -172,6 +172,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     public Extinguisher extinguisher;
     public ParticleSystem hoseWater;
     public GameObject hose;
+    private GameObject extinguisherObject;
 
     private Dictionary<string, float[]> micSettings = new Dictionary<string, float[]>();
 
@@ -230,15 +231,15 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         {
             Debug.Log("OnExtinguisher Is Mine");
 
-            GameObject extinguisherObject = PhotonNetwork.Instantiate("Extinguisher", position, Quaternion.identity);
-            extinguisher = extinguisherObject.GetComponent<Extinguisher>();
+            extinguisherObject = PhotonNetwork.Instantiate("Extinguisher", position, Quaternion.identity);
 
-            photonView.RPC(nameof(OnExtinguisherRPC), RpcTarget.All);
+            photonView.RPC(nameof(OnExtinguisherRPC), RpcTarget.All, extinguisherObject.name);
         }
     }
     [PunRPC]
-    public void OnExtinguisherRPC()
+    public void OnExtinguisherRPC(string name)
     {
+        extinguisher = GameObject.Find(name).GetComponent<Extinguisher>();
         pinTrigger = extinguisher.pinTrigger;
         hose = extinguisher.hose;
         hoseWater = extinguisher.hoseWater;
@@ -444,8 +445,10 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     
     public void MegaphoneOn()
     {
-        photonView.RPC(nameof(MegaphoneOnRPC), RpcTarget.All);
-
+        if (photonView.IsMine)
+        {
+            photonView.RPC(nameof(MegaphoneOnRPC), RpcTarget.All);
+        }
     }
 
     [PunRPC]
@@ -453,11 +456,16 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     {
         audioSource.maxDistance = 500f;
         audioSource.SetCustomCurve(AudioSourceCurveType.CustomRolloff, megaphoneAudioCurve);
+
+        megaphoneEnabled.SetActive(true);
     }
 
     public void MegaphoneOff()
     {
-        photonView.RPC(nameof(MegaphoneOffRPC), RpcTarget.All);
+        if (photonView.IsMine)
+        {
+            photonView.RPC(nameof(MegaphoneOffRPC), RpcTarget.All);
+        }
     }
 
     [PunRPC]
@@ -465,6 +473,8 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     {
         audioSource.maxDistance = 5f;
         audioSource.SetCustomCurve(AudioSourceCurveType.CustomRolloff, voiceAudioCurve);
+
+        megaphoneEnabled.SetActive(false);
     }
 
     #endregion
