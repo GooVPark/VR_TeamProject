@@ -13,6 +13,7 @@ public class LoundgeSceneManager : GameManager
     public static LoundgeSceneManager Instance;
 
     public NPCManager npcManager;
+    public SpawnPosition spawnPosition;
     private Dictionary<string, User> usersByEmail = new Dictionary<string, User>(); 
 
     private void Awake()
@@ -245,7 +246,9 @@ public class LoundgeSceneManager : GameManager
         Debug.Log("Loundge: OnJoinedRoom");
         NetworkManager.Instance.SetRoomNumber(roomNumber);
 
-        GameObject npcObject = PhotonNetwork.Instantiate("NPC", Vector3.zero, Quaternion.identity);
+        Vector3 position = spawnPosition.GetPosition(PhotonNetwork.LocalPlayer.ActorNumber);
+        
+        GameObject npcObject = PhotonNetwork.Instantiate("NPC", position, Quaternion.identity);
         npcObject.GetComponent<NPCController>().Initialize(NetworkManager.User);
         //List<User> users = DataManager.Instance.GetUsersInRoom(roomNumber);
 
@@ -263,6 +266,11 @@ public class LoundgeSceneManager : GameManager
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
+        if (newPlayer != PhotonNetwork.LocalPlayer)
+        {
+            ((GameObject)PhotonNetwork.LocalPlayer.TagObject).GetComponent<NPCController>().InvokeProperties();
+        }
+
         //List<User> users = DataManager.Instance.GetUsersInRoom(roomNumber);
 
         //Debug.Log(users.Count);

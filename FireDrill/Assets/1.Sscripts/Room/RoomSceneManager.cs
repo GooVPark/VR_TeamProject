@@ -182,4 +182,12 @@ public class RoomSceneManager : GameManager
 
     }
 
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        if (newPlayer != PhotonNetwork.LocalPlayer)
+        {
+            ((GameObject)PhotonNetwork.LocalPlayer.TagObject).GetComponent<NetworkPlayer>().InvokeProperties();
+        }
+    }
+
 }

@@ -106,17 +106,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         //photonView.RPC(nameof(ChatRPC), RpcTarget.All, "<color=yellow>" + newPlayer.NickName + "´ÔÀÌ Âü°¡ ÇÏ¼Ì½À´Ï´Ù</color>");
-        if(RoomNumber == 999)
-        {
-            if(newPlayer != PhotonNetwork.LocalPlayer)
-            {
-                ((GameObject)PhotonNetwork.LocalPlayer.TagObject).GetComponent<NPCController>().InvokeProperties();
-            }
-        }
-        else if (newPlayer != PhotonNetwork.LocalPlayer)
-        {
-            ((GameObject)PhotonNetwork.LocalPlayer.TagObject).GetComponent<NetworkPlayer>().InvokeProperties();
-        }
+
+
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)

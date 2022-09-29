@@ -10,7 +10,6 @@ public class NPCManager : MonoBehaviour
     {
         GameObject npcObject = Instantiate(npcCharacterPrefab);
         NPCController npcControlelr = npcObject.GetComponent<NPCController>();
-
         npcControlelr.Initialize(userData);
     }
 }
