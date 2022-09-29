@@ -123,6 +123,8 @@ public class User
     public UserType userType;
     public string company;
 
+    public int characterNumber;
+
     public bool isOnline;
 
     public int trainingProgress = 0;

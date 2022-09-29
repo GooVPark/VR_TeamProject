@@ -60,6 +60,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public void SetRoomNumber(int _roomNumber)
     {
         roomNumber = _roomNumber;
+        DataManager.Instance.UpdateCurrentRoom(user.email, _roomNumber);
     }
 
     #region Lobby
@@ -105,8 +106,14 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         //photonView.RPC(nameof(ChatRPC), RpcTarget.All, "<color=yellow>" + newPlayer.NickName + "´ÔÀÌ Âü°¡ ÇÏ¼Ì½À´Ï´Ù</color>");
-
-        if (newPlayer != PhotonNetwork.LocalPlayer)
+        if(RoomNumber == 999)
+        {
+            if(newPlayer != PhotonNetwork.LocalPlayer)
+            {
+                ((GameObject)PhotonNetwork.LocalPlayer.TagObject).GetComponent<NPCController>().InvokeProperties();
+            }
+        }
+        else if (newPlayer != PhotonNetwork.LocalPlayer)
         {
             ((GameObject)PhotonNetwork.LocalPlayer.TagObject).GetComponent<NetworkPlayer>().InvokeProperties();
         }
@@ -119,7 +126,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        PhotonNetwork.LoadLevel("Room");
+    //    PhotonNetwork.LoadLevel("Room");
     }
 
     public override void OnLeftRoom()

@@ -12,6 +12,9 @@ public class LoundgeSceneManager : GameManager
 {
     public static LoundgeSceneManager Instance;
 
+    public NPCManager npcManager;
+    private Dictionary<string, User> usersByEmail = new Dictionary<string, User>(); 
+
     private void Awake()
     {
         if(Instance == null)
@@ -230,10 +233,48 @@ public class LoundgeSceneManager : GameManager
 
     #region Photon Callbacks
 
+    //로비에서 다른 방으로 이동할때 호출
     public override void OnJoinedLobby()
     {
-        
+        Debug.Log("Loundge Scene Manager: OnJoinedLobby");
     }
 
+
+    public override void OnJoinedRoom()
+    {
+        Debug.Log("Loundge: OnJoinedRoom");
+        NetworkManager.Instance.SetRoomNumber(roomNumber);
+
+        GameObject npcObject = PhotonNetwork.Instantiate("NPC", Vector3.zero, Quaternion.identity);
+        npcObject.GetComponent<NPCController>().Initialize(NetworkManager.User);
+        //List<User> users = DataManager.Instance.GetUsersInRoom(roomNumber);
+
+        //Debug.Log(users.Count);
+
+        //foreach(User user in users)
+        //{
+        //    if(!usersByEmail.ContainsKey(user.email))
+        //    {
+        //        usersByEmail.Add(user.email, user);
+        //        npcManager.SpawnNPC(user);
+        //    }
+        //}
+    }
+
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        //List<User> users = DataManager.Instance.GetUsersInRoom(roomNumber);
+
+        //Debug.Log(users.Count);
+
+        //foreach (User user in users)
+        //{
+        //    if (!usersByEmail.ContainsKey(user.email))
+        //    {
+        //        usersByEmail.Add(user.email, user);
+        //        npcManager.SpawnNPC(user);
+        //    }
+        //}
+    }
     #endregion
 }

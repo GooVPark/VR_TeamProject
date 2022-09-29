@@ -83,7 +83,7 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
 
     private void Awake()
     {
-
+        CharacterSelectManager.onCharacterSelect += SelectCharacter;
     }
 
     private void Start()
@@ -146,12 +146,20 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
 
     public void ShowCharacterSelectWindow()
     {
+        CharacterSelectWindow.SetActive(true);
+    }
 
+    public void ShowExstinguisherSelect()
+    {
+        CurrentWindow = extingusherSelectWindow;
     }
 
     public void SelectCharacter(int index)
     {
-        
+        NetworkManager.User.characterNumber = index;
+        DataManager.Instance.UpdateUserData("email", NetworkManager.User.email, "characterNumber", index);
+
+        CurrentWindow = extingusherSelectWindow;
     }
 
     public void SelectExtingusher(bool isSelected)
@@ -238,22 +246,22 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         Debug.Log("LoginManager : OnConnectedToMaster");
-        CurrentWindow = extingusherSelectWindow;
+        CurrentWindow = CharacterSelectWindow;
     }
 
     public override void OnJoinedLobby()
     {
-        //Debug.Log("LoginManager : OnJoinedLobby");
-        //string roomName = $"Loundge";
+        Debug.Log("LoginManager : OnJoinedLobby");
+        string roomName = $"Loundge";
 
-        ////NetworkManager.Instance.roomType = NetworkManager.RoomType.Loundge;
+        //NetworkManager.Instance.roomType = NetworkManager.RoomType.Loundge;
 
-        //RoomOptions roomOptions = new RoomOptions();
-        //roomOptions.IsOpen = true;
-        //roomOptions.IsVisible = true;
-        //roomOptions.MaxPlayers = 0;
+        RoomOptions roomOptions = new RoomOptions();
+        roomOptions.IsOpen = true;
+        roomOptions.IsVisible = true;
+        roomOptions.MaxPlayers = 0;
 
-        //PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, null);
+        PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, null);
 
         PhotonNetwork.LoadLevel("Loundge");
     }

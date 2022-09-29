@@ -322,6 +322,29 @@ public class DataManager : MonoBehaviour
         accountCollection.UpdateOne(filter, update);
     }
 
+    public void UpdateUserCharacter(string email, int value)
+    {
+        var filter = Builders<User>.Filter.Eq("email", email);
+        var update = Builders<User>.Update.Set("characterNumber", value);
+    }
+
+    public void UpdateUserData(string filterField, object filterValue, string updateField, object updateValue)
+    {
+        var filter = Builders<User>.Filter.Eq(filterField, filterValue);
+        var update = Builders<User>.Update.Set(updateField, updateValue);
+
+        accountCollection.UpdateOne(filter, update);
+    }
+
+    public List<User> GetUsersInRoom(int roomNumber)
+    {
+        var filter = Builders<User>.Filter.Eq("currentRoom", roomNumber);
+
+        List<User> users = accountCollection.Find(filter).ToList();
+
+        return users;
+    }
+
     #endregion
 
     ///
