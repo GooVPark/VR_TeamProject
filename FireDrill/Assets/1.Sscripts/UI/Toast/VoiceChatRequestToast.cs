@@ -7,6 +7,4 @@ public class VoiceChatRequestToast : Toast
 {
     public Button accept;
     public Button deaccept;
-
-
 }

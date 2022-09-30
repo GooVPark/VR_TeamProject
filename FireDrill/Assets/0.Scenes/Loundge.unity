@@ -4653,7 +4653,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 482891670}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1559390611}
+        m_TargetAssemblyTypeName: VoiceManager, Assembly-CSharp
+        m_MethodName: AcceptVoiceChat
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &482891670
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7890,7 +7902,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 799321854}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1559390611}
+        m_TargetAssemblyTypeName: VoiceManager, Assembly-CSharp
+        m_MethodName: DeaccpetVoiceChat
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &799321854
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15800,7 +15824,7 @@ MonoBehaviour:
   debugEchoMode: 0
   reliableMode: 0
   encrypt: 0
-  transmitEnabled: 0
+  transmitEnabled: 1
   samplingRate: 24000
   frameDuration: 20000
   bitrate: 30000
@@ -15854,6 +15878,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e28948b6825df04fbcdb7d5e22e348c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  voiceChatRequestToast: {fileID: 1806084302}
+  acceptVoiceChatToast: {fileID: 2018209821}
+  deacceptVoiceChatToastSender: {fileID: 127570160}
+  deacceptVoiceChatToastReciever: {fileID: 484527424}
   playersTransform: {fileID: 162511461}
 --- !u!114 &1559390612
 MonoBehaviour:
@@ -23340,7 +23368,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_InteractionLayers:
-    m_Bits: 512
+    m_Bits: 4294967295
   m_AttachTransform: {fileID: 0}
   m_KeepSelectedTargetValid: 1
   m_StartingSelectedInteractable: {fileID: 0}
@@ -23419,7 +23447,7 @@ MonoBehaviour:
   m_SphereCastRadius: 0.1
   m_RaycastMask:
     serializedVersion: 2
-    m_Bits: 32
+    m_Bits: 2147483647
   m_RaycastTriggerInteraction: 1
   m_HitClosestOnly: 0
   m_HoverToSelect: 0

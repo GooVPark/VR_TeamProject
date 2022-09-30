@@ -260,6 +260,7 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
         roomOptions.IsOpen = true;
         roomOptions.IsVisible = true;
         roomOptions.MaxPlayers = 0;
+        roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable();
 
         PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, null);
 

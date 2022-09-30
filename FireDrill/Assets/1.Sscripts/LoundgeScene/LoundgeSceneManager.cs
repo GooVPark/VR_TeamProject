@@ -7,6 +7,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using Photon.Voice.Unity;
 using TMPro;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class LoundgeSceneManager : GameManager
 {
@@ -270,7 +271,6 @@ public class LoundgeSceneManager : GameManager
         {
             ((GameObject)PhotonNetwork.LocalPlayer.TagObject).GetComponent<NPCController>().InvokeProperties();
         }
-
         //List<User> users = DataManager.Instance.GetUsersInRoom(roomNumber);
 
         //Debug.Log(users.Count);

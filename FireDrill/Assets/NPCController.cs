@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class NPCController : MonoBehaviourPun, IPunInstantiateMagicCallback
 {
@@ -17,6 +18,20 @@ public class NPCController : MonoBehaviourPun, IPunInstantiateMagicCallback
         characterNumber = value;
         models[characterNumber].gameObject.SetActive(true);
     }
+
+    //[SerializeField] private VoiceChatState voiceChatState;
+    //public VoiceChatState VoiceChatState
+    //{
+    //    get => voiceChatState;
+    //    set => ActionRPC(nameof(voiceChatState), value);
+    //}
+    //[PunRPC]
+    //private void SetVoiceChatState(VoiceChatState value)
+    //{
+    //    voiceChatState = value;
+    //}
+
+
     private void ActionRPC(string functionName, object value)
     {
         photonView.RPC(functionName, RpcTarget.All, value);
@@ -27,7 +42,21 @@ public class NPCController : MonoBehaviourPun, IPunInstantiateMagicCallback
 
     private void Start()
     {
-        
+        Transform parent = GameObject.Find("Players").transform;
+        transform.SetParent(parent);
+
+        if (photonView.IsMine)
+        {
+            FindObjectOfType<VoiceManager>().Initialize(photonView.ViewID);
+            string key = photonView.ViewID.ToString();
+
+            string user = NetworkManager.User.email;
+
+            Hashtable setValue = new Hashtable();
+            setValue.Add(key, user);
+
+            PhotonNetwork.CurrentRoom.SetCustomProperties(setValue);
+        }
     }
 
 
@@ -40,6 +69,7 @@ public class NPCController : MonoBehaviourPun, IPunInstantiateMagicCallback
     public void Initialize(User userData)
     {
         CharacterNumber = userData.characterNumber;
+        //VoiceChatState = VoiceChatState.Off;
     }
 
     public void OnPhotonInstantiate(PhotonMessageInfo info)
