@@ -215,7 +215,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     {
         if (photonView.IsMine)
         {
-            head.gameObject.SetActive(false);
+            //head.gameObject.SetActive(false);
            // leftHand.gameObject.SetActive(false);
             //rightHand.gameObject.SetActive(false);
 
@@ -442,13 +442,12 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     {
         audioSource.enabled = false;
     }
-    
+
     public void MegaphoneOn()
     {
-        if (photonView.IsMine)
-        {
-            photonView.RPC(nameof(MegaphoneOnRPC), RpcTarget.All);
-        }
+
+        photonView.RPC(nameof(MegaphoneOnRPC), RpcTarget.All);
+
     }
 
     [PunRPC]
@@ -458,14 +457,12 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         audioSource.SetCustomCurve(AudioSourceCurveType.CustomRolloff, megaphoneAudioCurve);
 
         megaphoneEnabled.SetActive(true);
+
     }
 
     public void MegaphoneOff()
     {
-        if (photonView.IsMine)
-        {
-            photonView.RPC(nameof(MegaphoneOffRPC), RpcTarget.All);
-        }
+        photonView.RPC(nameof(MegaphoneOffRPC), RpcTarget.All);
     }
 
     [PunRPC]

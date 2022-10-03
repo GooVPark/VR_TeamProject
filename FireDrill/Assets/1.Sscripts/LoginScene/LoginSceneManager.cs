@@ -33,6 +33,7 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
     [Space(5)]
 
     [Header("Character Select UI")]
+    [SerializeField] private GameObject characterObjects;
     [SerializeField] private GameObject CharacterSelectWindow;
     [SerializeField] private Button nextButton;
     [SerializeField] private Button previewButton;
@@ -146,11 +147,13 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
 
     public void ShowCharacterSelectWindow()
     {
-        CharacterSelectWindow.SetActive(true);
+        CurrentWindow = CharacterSelectWindow;
+        characterObjects.SetActive(true);
     }
 
     public void ShowExstinguisherSelect()
     {
+        characterObjects.SetActive(false);
         CurrentWindow = extingusherSelectWindow;
     }
 
@@ -164,7 +167,6 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
 
     public void SelectExtingusher(bool isSelected)
     {
-        
         Debug.Log("LoginManager : SelectExtingusher");
         NetworkManager.User.hasExtingisher = isSelected;
         PhotonNetwork.JoinLobby();
@@ -247,6 +249,7 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("LoginManager : OnConnectedToMaster");
         CurrentWindow = CharacterSelectWindow;
+        DataManager.Instance.SetOnline(NetworkManager.User.email);
     }
 
     public override void OnJoinedLobby()

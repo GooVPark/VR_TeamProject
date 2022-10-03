@@ -28,6 +28,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     private string gameVersion = "1.0";
 
+    private bool onChangeRoom = false;
+
     private void Awake()
     {
         if (Instance == null)
@@ -101,36 +103,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         }
     }
 
-    
-
-    public override void OnPlayerEnteredRoom(Player newPlayer)
-    {
-        //photonView.RPC(nameof(ChatRPC), RpcTarget.All, "<color=yellow>" + newPlayer.NickName + "´ÔÀÌ Âü°¡ ÇÏ¼Ì½À´Ï´Ù</color>");
-
-
-    }
-
-    public override void OnPlayerLeftRoom(Player otherPlayer)
-    {
-
-    }
-
-    public override void OnJoinedRoom()
-    {
-    //    PhotonNetwork.LoadLevel("Room");
-    }
-
-    public override void OnLeftRoom()
-    {
-        PhotonNetwork.LoadLevel("Loundge");
-        PhotonNetwork.JoinLobby();
-    }
-
-    public override void OnCreatedRoom()
-    {
-        Debug.Log("NetworkManager : OnCreateRoom");
-    }
-
     private void UpdateRoomList(List<RoomInfo> roomList)
     {
         for (int i = 0; i < roomList.Count; i++)
@@ -202,11 +174,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
                 Destroy(roomPoller);
             }
         );
-    }
-
-    public override void OnConnectedToMaster()
-    {
-        DataManager.Instance.SetOnline(User.email);
     }
 
     public override void OnDisconnected(DisconnectCause cause)

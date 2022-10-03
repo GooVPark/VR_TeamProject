@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.XR.Interaction.Toolkit;
 using Photon.Pun;
 using Photon.Realtime;
-using Photon.Voice.Unity;
+using Photon.Voice.PUN;
 using TMPro;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
@@ -36,6 +36,11 @@ public class LoundgeSceneManager : GameManager
         NetworkManager.Instance.PullRoomList();
         LoadFirstPage();
         UpdateProgressBoard();
+    }
+
+    private void Update()
+    {
+        Debug.Log(PhotonVoiceNetwork.Instance.ClientState);
     }
 
     private void FixedUpdate()
@@ -235,12 +240,39 @@ public class LoundgeSceneManager : GameManager
 
     #region Photon Callbacks
 
+    public override void OnConnectedToMaster()
+    {
+        PhotonNetwork.JoinLobby();
+    }
+
     //로비에서 다른 방으로 이동할때 호출
     public override void OnJoinedLobby()
     {
-        Debug.Log("Loundge Scene Manager: OnJoinedLobby");
+        Debug.Log("JoinLobby");
+        PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, TypedLobby.Default);
+        PhotonNetwork.LoadLevel("Room");
     }
 
+    public int roomNumber;
+    private string roomName;
+    private RoomOptions roomOptions;
+    public void JoinRoom(int roomNumber)
+    {
+        Debug.Log("Join Room: " + roomNumber);
+        textChatManager.DisconnectChat();
+        NetworkManager.Instance.SetRoomNumber(roomNumber);
+        roomName = roomNumber.ToString();
+
+        //NetworkManager.Instance.roomType = NetworkManager.RoomType.Room;
+
+        roomOptions = new RoomOptions();
+        roomOptions.IsOpen = true;
+        roomOptions.IsVisible = true;
+        roomOptions.MaxPlayers = 0;
+
+        //PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, TypedLobby.Default);
+        PhotonNetwork.LeaveRoom();
+    }
 
     public override void OnJoinedRoom()
     {
@@ -264,6 +296,7 @@ public class LoundgeSceneManager : GameManager
         //    }
         //}
     }
+
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {

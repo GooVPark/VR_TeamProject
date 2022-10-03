@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using SelectedEffectOutline;
 
 public class PlayerDetector : MonoBehaviour
 {
@@ -17,19 +18,29 @@ public class PlayerDetector : MonoBehaviour
 
     }
 
-    private void OnTriggerStay(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag(detectableTag))
+        if(other.CompareTag("NPC"))
         {
-            other.GetComponentInParent<NetworkPlayer>()?.ShowSpeachBubble();
+            other.GetComponentInChildren<Outline>().OutlineEnable();
+
+            NPCController npc = other.GetComponent<NPCController>();
+            VoiceContorller voiceContorller = other.GetComponent<VoiceContorller>();
+
+            voiceContorller.isVoiceChatReady = true;
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag(detectableTag))
+        if(other.CompareTag("NPC"))
         {
-            other.GetComponentInParent<NetworkPlayer>()?.HideSpeachBubble();
+            other.GetComponentInChildren<Outline>().OutlineDisable();
+
+            NPCController npc = other.GetComponent<NPCController>();
+            VoiceContorller voiceContorller = other.GetComponent<VoiceContorller>();
+
+            voiceContorller.isVoiceChatReady = false;
         }
     }
 }

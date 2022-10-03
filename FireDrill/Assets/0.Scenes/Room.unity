@@ -4091,7 +4091,6 @@ MonoBehaviour:
   - {fileID: 6513619950671480066}
   - {fileID: 6513619950965811448}
   - {fileID: 6513619950618686015}
-  roomNumber: 0
   roomStateWaitPlayer: {fileID: 451377047}
   pdfViewr: {fileID: 1263127889}
   nextPage: {fileID: 0}
@@ -4126,6 +4125,7 @@ MonoBehaviour:
   eventAreaB: {fileID: 0}
   eventAreaC: {fileID: 0}
   toasts: {fileID: 0}
+  roomNumber: 0
 --- !u!4 &335426634
 Transform:
   m_ObjectHideFlags: 0
@@ -5983,7 +5983,8 @@ MonoBehaviour:
   chatUI: {fileID: 0}
   chatInputField: {fileID: 0}
   chatList: []
-  roomNumber: 0
+  npcManager: {fileID: 0}
+  spawnPosition: {fileID: 0}
   posts: []
   currentPage: 0
   totalPage: 0
@@ -6004,6 +6005,7 @@ MonoBehaviour:
   cancleCancleButton: {fileID: 0}
   progresses: []
   playerCountText: {fileID: 0}
+  roomNumber: 0
 --- !u!4 &442421933
 Transform:
   m_ObjectHideFlags: 0
@@ -48453,6 +48455,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1009705128}
     m_Modifications:
+    - target: {fileID: 3732113780685603465, guid: b43dfa5b85a03924b89c234bb71cf6d4,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5083312378995099687, guid: b43dfa5b85a03924b89c234bb71cf6d4,
         type: 3}
       propertyPath: m_RootOrder

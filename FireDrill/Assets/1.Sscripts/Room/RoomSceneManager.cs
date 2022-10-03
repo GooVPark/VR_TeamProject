@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.XR.Interaction.Toolkit;
 using Photon.Pun;
 using Photon.Realtime;
-using Photon.Voice.Unity;
+using Photon.Voice.PUN;
 using TMPro;
 using Paroxe.PdfRenderer;
 
@@ -60,6 +60,9 @@ public class RoomSceneManager : GameManager
 
     [Header("Toast")]
     [SerializeField] private ToastTypeAndMessage toasts;
+
+    public int roomNumber;
+
     private int currentProcess;
     public int CurrentProcess
     {
@@ -85,20 +88,13 @@ public class RoomSceneManager : GameManager
 
     private void Start()
     {
-        Initialize();
-        SpawnPlayer();
-        NetworkManager.Instance.roomType = NetworkManager.RoomType.Room;
-        RoomState = roomStateWaitPlayer;
 
-        if(photonView.IsMine) DataManager.Instance.UpdateRoomPlayerCount(roomNumber, PhotonNetwork.CurrentRoom.PlayerCount);
-        roomData = DataManager.Instance.GetRoomData()[roomNumber];
-        DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, NetworkManager.RoomNumber);
-        requiredPlayer = roomData.requirePlayerCount;
     }
 
     private void Update()
     {
-        RoomState.OnUpdate();
+        RoomState?.OnUpdate();
+        
     }
 
     public void PhaseShift(int progress)
@@ -169,6 +165,35 @@ public class RoomSceneManager : GameManager
         DataManager.Instance.UpdateRoomPlayerCount(NetworkManager.RoomNumber, PhotonNetwork.CurrentRoom.PlayerCount - 1);
         Debug.Log(PhotonNetwork.CurrentRoom.PlayerCount);
         PhotonNetwork.SendAllOutgoingCommands();
+    }
+
+    public override void OnJoinedRoom()
+    {
+        Initialize();
+        SpawnPlayer();
+        NetworkManager.Instance.roomType = NetworkManager.RoomType.Room;
+        RoomState = roomStateWaitPlayer;
+
+        if (photonView.IsMine) DataManager.Instance.UpdateRoomPlayerCount(roomNumber, PhotonNetwork.CurrentRoom.PlayerCount);
+        roomData = DataManager.Instance.GetRoomData()[roomNumber];
+        DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, NetworkManager.RoomNumber);
+        requiredPlayer = roomData.requirePlayerCount;
+
+        StartCoroutine(JoinVoice());
+    }
+
+    private IEnumerator JoinVoice()
+    {
+        while(true)
+        {
+            if(PhotonVoiceNetwork.Instance.ClientState == ClientState.Joined)
+            {
+                PhotonVoiceNetwork.Instance.Client.OpChangeGroups(new byte[0], new byte[0]);
+                PhotonVoiceNetwork.Instance.PrimaryRecorder.InterestGroup = 0;
+                break;
+            }
+            yield return null;
+        }
     }
 
     public override void OnLeftRoom()

@@ -333,27 +333,6 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
     #region Enter Room
-    public int roomNumber;
-
-    public void JoinRoom(int roomNumber)
-    {
-        textChatManager.DisconnectChat();
-        NetworkManager.Instance.SetRoomNumber(roomNumber);
-
-        this.roomNumber = roomNumber;
-        string roomName = roomNumber.ToString();
-
-        //NetworkManager.Instance.roomType = NetworkManager.RoomType.Room;
-
-        RoomOptions roomOptions = new RoomOptions();
-        roomOptions.IsOpen = true;
-        roomOptions.IsVisible = true;
-        roomOptions.MaxPlayers = 0;
-
-        PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, TypedLobby.Default);
-    }
-
-
 
     #endregion
 

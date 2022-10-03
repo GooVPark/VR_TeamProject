@@ -1,30 +1,41 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using SelectedEffectOutline;
 
 public class OutlineHandler : MonoBehaviour
 {
-    [SerializeField] private GameObject outlineHoverObject;
-    [SerializeField] private GameObject outlineSelectObject;
-    
+    private Outline outline;
+
+    public Color hoverColor;
+    public Color selectColor;
+
+    private Color origin;
+
+    private void Start()
+    {
+        outline = GetComponent<Outline>();
+    }
 
     public void OnHoverEntered()
-    {    
-        outlineHoverObject?.SetActive(true);
+    {
+        outline.OutlineEnable();
     }
 
     public void OnHoverExited()
     {
-        outlineHoverObject?.SetActive(false);
+        outline.OutlineDisable();
     }
 
     public void OnSelectEntered()
     {
-        outlineSelectObject?.SetActive(true);
+        outline.m_OutlineColor= selectColor;
+        outline.SetOutLine();
     }
 
     public void OnSelectExit()
     {
-        outlineSelectObject.SetActive(false);
+        outline.m_OutlineColor = hoverColor;
+        outline.SetOutLine();
     }
 }

@@ -21,10 +21,10 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: OutLineSelect
-  m_Shader: {fileID: 4800000, guid: 80c692a005c62b44b9015252d455e67a, type: 3}
-  m_ValidKeywords:
-  - USE_PRECALCULATED_OUTLINE_NORMALS
-  m_InvalidKeywords: []
+  m_Shader: {fileID: 4800000, guid: dadb2822bb9b02a4aa20fa234208adab, type: 3}
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - _OUTLINEWRITEZ_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -109,10 +109,14 @@ Material:
     - _GlossyReflections: 0
     - _Metallic: 0
     - _OcclusionStrength: 1
+    - _OutlineFactor: 1
+    - _OutlineWidth: 0.1
+    - _OutlineWriteZ: 1
     - _Parallax: 0.005
     - _PrecalculateNormals: 1
     - _QueueOffset: 0
     - _ReceiveShadows: 1
+    - _RimPower: 3
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
@@ -123,7 +127,10 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Color: {r: 1, g: 0.611645, b: 0, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _InnerColor: {r: 1, g: 1, b: 1, a: 1}
+    - _OutlineColor: {r: 0, g: 1, b: 0, a: 0}
+    - _RimColor: {r: 0.25999996, g: 0.18999997, b: 0.15999997, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
