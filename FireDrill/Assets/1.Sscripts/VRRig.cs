@@ -30,13 +30,14 @@ public class VRRig : MonoBehaviour
 
     void Start()
     {
-        headBodyOffset = transform.position - headConstraint.position;    
+        headBodyOffset = transform.position - headConstraint.position;
+        transform.rotation *= Quaternion.Euler(new Vector3(0, 90, 0));
     }
 
     void FixedUpdate()
     {
         transform.position = headConstraint.position + headBodyOffset;
-        transform.forward = Vector3.Lerp(transform.forward, Vector3.ProjectOnPlane(headConstraint.forward, Vector3.up).normalized, Time.deltaTime * turnSmoothness);
+        transform.forward = Vector3.Lerp(transform.forward, Vector3.ProjectOnPlane(headConstraint.up, Vector3.up).normalized, Time.deltaTime * turnSmoothness);
 
         head.Map();
         leftHand.Map();

@@ -216,7 +216,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         if (photonView.IsMine)
         {
             //head.gameObject.SetActive(false);
-           // leftHand.gameObject.SetActive(false);
+            //leftHand.gameObject.SetActive(false);
             //rightHand.gameObject.SetActive(false);
 
             MapPosition();

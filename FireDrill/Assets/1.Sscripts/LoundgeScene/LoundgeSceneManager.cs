@@ -40,7 +40,6 @@ public class LoundgeSceneManager : GameManager
 
     private void Update()
     {
-        Debug.Log(PhotonVoiceNetwork.Instance.ClientState);
     }
 
     private void FixedUpdate()
