@@ -67,7 +67,8 @@ public class TextChatManager : MonoBehaviour, IChatClientListener
         chatClient.Subscribe(new string[] { worldChat });
         chatClient.SetOnlineStatus(ChatUserStatus.Online);
     }
-
+    public delegate void SendChatMessageEvent(string message);
+    public static SendChatMessageEvent sendChatMessage;
     public void SendChatMessage(InputField inputField)
     {
         if(string.IsNullOrEmpty(inputField.text))
@@ -76,7 +77,9 @@ public class TextChatManager : MonoBehaviour, IChatClientListener
         }
 
         chatClient.PublishMessage(worldChat, inputField.text);
+        sendChatMessage?.Invoke(inputField.text);
     }
+
 
     public void DisconnectChat()
     {

@@ -100,13 +100,13 @@ public class NPCController : MonoBehaviourPun, IPunInstantiateMagicCallback
     public void OnHoverEnter()
     {
         Debug.Log("Hover Enter");
-        outline.m_OverlayFlash = true;
+        //outline.m_OverlayFlash = true;
     }
 
     public void OnHoverExit()
     {
         Debug.Log("Hover Exit");
-        outline.m_OverlayFlash = false;
+        //outline.m_OverlayFlash = false;
     }
 
 

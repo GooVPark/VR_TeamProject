@@ -189,7 +189,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         photonView = GetComponent<PhotonView>();
 
         GameManager gameManager = FindObjectOfType<GameManager>();
-        gameManager.showSpeechBubble += OnSendChatMessage;
+        //gameManager.showSpeechBubble += OnSendChatMessage;
 
         headset = Camera.main;
         leftController = GameObject.Find("Left Direct Interactor").GetComponent<ActionBasedController>();
@@ -290,6 +290,8 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
             headModel.layer = 31;
             leftHand.gameObject.layer = 31;
             rightHand.gameObject.layer = 31;
+
+            TextChatManager.sendChatMessage += OnSendChatMessage;
         }
 
         requestVoiceChatButton.onClick.AddListener(() => LoundgeSceneManager.Instance.RequsetVoiceChat(NetworkManager.User.id, UserID));
@@ -375,16 +377,19 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
 
     public void OnSendChatMessage(string message)
     {
-        if(photonView.IsMine) photonView.RPC(nameof(OnSendChatMessageRPC), RpcTarget.All, message);
+        photonView.RPC(nameof(OnSendChatMessageRPC), RpcTarget.All, message);
     }
 
-    [PunRPC] public void OnSendChatMessageRPC(string message)
+    [PunRPC]
+    public void OnSendChatMessageRPC(string message)
     {
-        if(popChat != null)
+
+        if (popChat != null)
         {
             StopCoroutine(popChat);
         }
         popChat = StartCoroutine(PopChat(message));
+
     }
 
     public void UpdateSpeechBuble(float distance)

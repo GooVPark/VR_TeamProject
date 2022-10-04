@@ -161,7 +161,7 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
     {
         NetworkManager.User.characterNumber = index;
         DataManager.Instance.UpdateUserData("email", NetworkManager.User.email, "characterNumber", index);
-
+        characterObjects.SetActive(false);
         CurrentWindow = extingusherSelectWindow;
     }
 
@@ -248,7 +248,7 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         Debug.Log("LoginManager : OnConnectedToMaster");
-        CurrentWindow = CharacterSelectWindow;
+        ShowCharacterSelectWindow();
         DataManager.Instance.SetOnline(NetworkManager.User.email);
     }
 
