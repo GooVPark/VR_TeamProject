@@ -68,6 +68,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         localRecoder.TransmitEnabled = true;
         
         player.MegaphoneOn();
+
+        Haptic(0.5f, 0.1f);
     }
 
     public void MegaphoneOff()
@@ -76,6 +78,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         localRecoder.TransmitEnabled = false;
 
         player.MegaphoneOff();
+
+        Haptic(0.5f, 0.1f);
     }
 
     public void MegaphoneToggle()
@@ -270,6 +274,9 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void ToggleTextChat()
     {
+
+        Haptic(0.5f, 0.1f);
+
         if (onChatView)
         {
             virtualKeyboard.SetActive(false);

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,7 +19,11 @@ public class NPCController : MonoBehaviourPun, IPunInstantiateMagicCallback
     private void SetCharacterNumber(int value)
     {
         characterNumber = value;
-        models[characterNumber].gameObject.SetActive(true);
+        if (!photonView.IsMine)
+        {
+            models[characterNumber].gameObject.SetActive(true);
+        }
+        
     }
 
     [SerializeField] private VoiceChatState voiceChatState;
@@ -30,6 +35,7 @@ public class NPCController : MonoBehaviourPun, IPunInstantiateMagicCallback
     [PunRPC]
     private void SetVoiceChatState(VoiceChatState value)
     {
+        Debug.Log("Character State: " + value);
         voiceChatState = value;
     }
 
@@ -43,6 +49,7 @@ public class NPCController : MonoBehaviourPun, IPunInstantiateMagicCallback
     public GameObject selectTest;
 
     public Outline outline;
+    private Dictionary<int, OutlineNormalsCalculator[]> outlines = new Dictionary<int, OutlineNormalsCalculator[]>();
 
     public bool isVoiceChatReady = false;
 
@@ -51,6 +58,12 @@ public class NPCController : MonoBehaviourPun, IPunInstantiateMagicCallback
         Transform parent = GameObject.Find("Players").transform;
         transform.SetParent(parent);
         outline = GetComponentInChildren<Outline>();
+
+        for(int i = 0; i < models.Length; i++)
+        {
+            OutlineNormalsCalculator[] oncs = models[i].GetComponentsInChildren<OutlineNormalsCalculator>(true);
+            outlines.Add(i, oncs);
+        }
 
         if (photonView.IsMine)
         {
@@ -122,6 +135,22 @@ public class NPCController : MonoBehaviourPun, IPunInstantiateMagicCallback
         if(photonView.IsMine)
         {
             selectTest.SetActive(true);
+        }
+    }
+
+    public void OutlineEnable()
+    {
+        foreach(OutlineNormalsCalculator outline in outlines[characterNumber])
+        {
+            outline.gameObject.SetActive(true);
+        }
+    }
+
+    public void OutlineDisable()
+    {
+        foreach (OutlineNormalsCalculator outline in outlines[characterNumber])
+        {
+            outline.gameObject.SetActive(false);
         }
     }
 }

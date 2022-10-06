@@ -126,6 +126,7 @@ public class InputManager : MonoBehaviour
         rightStick.action.canceled += OnRightStickCanceled;
 
         rightTrigger.action.started += OnRightTriggerStarted;
+        rightTrigger.action.performed += OnRightTriggerPerformed;
         rightTrigger.action.canceled += OnRightTriggerCanceled;
 
         //Point
@@ -301,6 +302,11 @@ public class InputManager : MonoBehaviour
     private void OnRightTriggerStarted(InputAction.CallbackContext context)
     {
         Debug.Log("Start");
+        rightTriggerButton?.Invoke(true);
+    }
+
+    private void OnRightTriggerPerformed(InputAction.CallbackContext context)
+    {
         rightTriggerButton?.Invoke(true);
     }
 

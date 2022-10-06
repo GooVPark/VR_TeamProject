@@ -114,6 +114,8 @@ public class RoomSceneManager : GameManager
 
     public void ShowScoreBoard()
     {
+        Haptic(0.5f, 0.1f);
+
         if (scoreBoardUI.activeSelf)
         {
             scoreBoardUI.SetActive(false);

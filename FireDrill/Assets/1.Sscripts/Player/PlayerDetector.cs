@@ -22,11 +22,12 @@ public class PlayerDetector : MonoBehaviour
     {
         if(other.CompareTag("NPC"))
         {
-            other.GetComponentInChildren<Outline>().OutlineEnable();
+            //other.GetComponentInChildren<Outline>().OutlineEnable();
 
             NPCController npc = other.GetComponent<NPCController>();
             VoiceContorller voiceContorller = other.GetComponent<VoiceContorller>();
 
+            npc.OutlineEnable();
             voiceContorller.isVoiceChatReady = true;
         }
     }
@@ -35,11 +36,12 @@ public class PlayerDetector : MonoBehaviour
     {
         if(other.CompareTag("NPC"))
         {
-            other.GetComponentInChildren<Outline>().OutlineDisable();
+            //other.GetComponentInChildren<Outline>().OutlineDisable();
 
             NPCController npc = other.GetComponent<NPCController>();
             VoiceContorller voiceContorller = other.GetComponent<VoiceContorller>();
 
+            npc.OutlineDisable();
             voiceContorller.isVoiceChatReady = false;
         }
     }
