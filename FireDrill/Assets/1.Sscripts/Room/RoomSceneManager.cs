@@ -61,6 +61,7 @@ public class RoomSceneManager : GameManager
     [Header("Toast")]
     [SerializeField] private ToastTypeAndMessage toasts;
 
+    public Transform spawnPivot;
     public int roomNumber;
 
     private int currentProcess;
@@ -94,7 +95,6 @@ public class RoomSceneManager : GameManager
     private void Update()
     {
         RoomState?.OnUpdate();
-        
     }
 
     public void PhaseShift(int progress)
@@ -172,7 +172,7 @@ public class RoomSceneManager : GameManager
     public override void OnJoinedRoom()
     {
         Initialize();
-        SpawnPlayer();
+        SpawnPlayer(spawnPivot.position);
         NetworkManager.Instance.roomType = NetworkManager.RoomType.Room;
         RoomState = roomStateWaitPlayer;
 

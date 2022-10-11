@@ -27,6 +27,9 @@ public class DataManager : MonoBehaviour
     IMongoDatabase quizDatabase;
     IMongoCollection<QuizJson> selectionQuizCollection;
 
+    IMongoDatabase lobbyDatabase;
+    IMongoCollection<LoundgeUser> loundgeUsercollection;
+
     private static UserTable userTable;
     public static UserTable UserTable { get => userTable; }
 
@@ -65,6 +68,9 @@ public class DataManager : MonoBehaviour
 
         quizDatabase = client.GetDatabase("QuizDatabase");
         selectionQuizCollection = quizDatabase.GetCollection<QuizJson>("Selection");
+
+        lobbyDatabase = client.GetDatabase("LobbyData");
+        loundgeUsercollection = lobbyDatabase.GetCollection<LoundgeUser>("MainLoundge");
 
         GetAllToast();
         GetQuizDatabase();
@@ -361,6 +367,42 @@ public class DataManager : MonoBehaviour
     /// 
     /// var result = collection.Find(filter).ToList(); 필터로 가져오기
     ///
+
+    #region Lobby
+
+    public void InsertLobbyUser(User user)
+    {
+        LoundgeUser loundgeUser = new LoundgeUser(user);
+        loundgeUsercollection.InsertOne(loundgeUser);
+    }
+
+    public void DeleteLobbyUser(User user)
+    {
+        var filter = Builders<LoundgeUser>.Filter.Eq("email", user.email);
+
+        loundgeUsercollection.DeleteOne(filter);
+    }
+
+    public bool FindLobbyUser(User user)
+    {
+        var filter = Builders<LoundgeUser>.Filter.Eq("email", user.email);
+        List<LoundgeUser> loundgeUsers = loundgeUsercollection.Find(filter).ToList();
+        
+        if(loundgeUsers.Count > 0)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public List<LoundgeUser> GetLoundgeUsers()
+    {
+        var filter = Builders<LoundgeUser>.Filter.Empty;
+        List<LoundgeUser> loundgeUsers = loundgeUsercollection.Find(filter).ToList();
+        return loundgeUsers;
+    }
+
+    #endregion
 }
 
 public class UserInRoom

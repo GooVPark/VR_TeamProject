@@ -15366,7 +15366,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fb53f62601670c449a306cd99f3df8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldChat: 
+  worldChat: LobbyChat
   chatList:
   - {fileID: 6513619951638104469}
   - {fileID: 6513619951008002594}
@@ -43213,13 +43213,28 @@ PrefabInstance:
     - target: {fileID: 7675696175394654695, guid: f9412a5d9ae21e84b8f98064eb6b0e5c,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7675696175394654695, guid: f9412a5d9ae21e84b8f98064eb6b0e5c,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 779158801010333416}
+      objectReference: {fileID: 442421932}
+    - target: {fileID: 7675696175394654695, guid: f9412a5d9ae21e84b8f98064eb6b0e5c,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ToggleTextChat
+      objectReference: {fileID: 0}
+    - target: {fileID: 7675696175394654695, guid: f9412a5d9ae21e84b8f98064eb6b0e5c,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: GameManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 7675696175394654695, guid: f9412a5d9ae21e84b8f98064eb6b0e5c,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 7675696175394654698, guid: f9412a5d9ae21e84b8f98064eb6b0e5c,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -43344,6 +43359,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7675696176441277542, guid: f9412a5d9ae21e84b8f98064eb6b0e5c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7675696176504796612, guid: f9412a5d9ae21e84b8f98064eb6b0e5c,
         type: 3}

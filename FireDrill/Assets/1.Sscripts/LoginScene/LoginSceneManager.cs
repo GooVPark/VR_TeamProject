@@ -106,7 +106,7 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
 
     public void Login()
     {
-        User userData;
+        //User userData;
         bool isContain = DataManager.Instance.IsExistAccount(emailInputField.text, passwordInputField.text, out userData);
 
         if (isContain)
@@ -254,18 +254,18 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedLobby()
     {
-        Debug.Log("LoginManager : OnJoinedLobby");
-        string roomName = $"Loundge";
+        //Debug.Log("LoginManager : OnJoinedLobby");
+        //string roomName = $"Loundge";
 
-        //NetworkManager.Instance.roomType = NetworkManager.RoomType.Loundge;
+        ////NetworkManager.Instance.roomType = NetworkManager.RoomType.Loundge;
 
-        RoomOptions roomOptions = new RoomOptions();
-        roomOptions.IsOpen = true;
-        roomOptions.IsVisible = true;
-        roomOptions.MaxPlayers = 0;
-        roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable();
+        //RoomOptions roomOptions = new RoomOptions();
+        //roomOptions.IsOpen = true;
+        //roomOptions.IsVisible = true;
+        //roomOptions.MaxPlayers = 0;
+        //roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable();
 
-        PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, null);
+        //PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, null);
 
         PhotonNetwork.LoadLevel("Loundge");
     }

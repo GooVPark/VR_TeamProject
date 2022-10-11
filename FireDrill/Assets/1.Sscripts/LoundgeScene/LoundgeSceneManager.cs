@@ -15,7 +15,9 @@ public class LoundgeSceneManager : GameManager
 
     public NPCManager npcManager;
     public SpawnPosition spawnPosition;
-    private Dictionary<string, User> usersByEmail = new Dictionary<string, User>(); 
+    private Dictionary<string, User> usersByEmail = new Dictionary<string, User>();
+
+    private bool isOnline = false;
 
     private void Awake()
     {
@@ -33,9 +35,14 @@ public class LoundgeSceneManager : GameManager
     {
         Initialize();
         NetworkManager.Instance.roomType = NetworkManager.RoomType.Loundge;
-        NetworkManager.Instance.PullRoomList();
+
+        InsertUserData();
+
+        //NetworkManager.Instance.PullRoomList();
         LoadFirstPage();
         UpdateProgressBoard();
+
+        initializer = StartCoroutine(Initializer());
     }
 
     private void Update()
@@ -60,6 +67,36 @@ public class LoundgeSceneManager : GameManager
 
         UpdateLobbyPlayerCount();
     }
+
+    private Coroutine initializer;
+    private IEnumerator Initializer()
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(0.3f);
+        while (!isOnline)
+        {
+            Debug.Log("Finding User");
+            isOnline = DataManager.Instance.FindLobbyUser(NetworkManager.User);
+            yield return waitForSeconds;
+        }
+
+        Debug.Log("Instantiate User Object");
+        StopCoroutine(initializer);
+    }
+
+    #region Database
+
+    private void InsertUserData()
+    {
+        DataManager.Instance.InsertLobbyUser(NetworkManager.User);
+    }
+    
+    private void DeleteUserData()
+    {
+
+    }
+
+    #endregion
+
 
     #region Notice Board
 
@@ -239,19 +276,6 @@ public class LoundgeSceneManager : GameManager
 
     #region Photon Callbacks
 
-    public override void OnConnectedToMaster()
-    {
-        PhotonNetwork.JoinLobby();
-    }
-
-    //로비에서 다른 방으로 이동할때 호출
-    public override void OnJoinedLobby()
-    {
-        Debug.Log("JoinLobby");
-        PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, TypedLobby.Default);
-        PhotonNetwork.LoadLevel("Room");
-    }
-
     public int roomNumber;
     private string roomName;
     private RoomOptions roomOptions;
@@ -317,4 +341,9 @@ public class LoundgeSceneManager : GameManager
         //}
     }
     #endregion
+
+    private void OnApplicationQuit()
+    {
+        DataManager.Instance.DeleteLobbyUser(NetworkManager.User);
+    }
 }

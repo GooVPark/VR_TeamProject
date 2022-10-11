@@ -149,6 +149,20 @@ public class User
     }
 }
 
+[System.Serializable]
+public class LoundgeUser
+{
+    public ObjectId id;
+    public string email;
+    public string name;
+
+    public LoundgeUser(User user)
+    {
+        email = user.email;
+        name = user.name;
+    }
+}
+
 public static class DataBbaseSystem
 {
     private static string SAVE_PATH => Application.persistentDataPath + "/datas/";
