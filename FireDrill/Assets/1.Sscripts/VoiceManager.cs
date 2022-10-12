@@ -12,6 +12,9 @@ public class VoiceManager : MonoBehaviourPunCallbacks
 {
     public static VoiceManager Instance;
 
+    public delegate void EventMessage(string message);
+    public static EventMessage eventMessage;
+
     [Header("Voice Chat UI")]
     public VoiceChatRequestToast voiceChatRequestToast;
     public Toast acceptVoiceChatToast;
@@ -49,6 +52,9 @@ public class VoiceManager : MonoBehaviourPunCallbacks
     private int senderID;
     private int recieverID;
 
+    private LoundgeUser sender;
+    private LoundgeUser reciever;
+
     private VoiceContorller target;
     public NPCController localPlayer;
 
@@ -84,49 +90,59 @@ public class VoiceManager : MonoBehaviourPunCallbacks
         //recorder.InterestGroup = (byte)viewID;
     }
 
-    public void OnVoiceChatSendEvent(int senderID, int recieverID)
+    public void OnVoiceChatSendEvent(LoundgeUser sender, LoundgeUser reciever)
     {
-        localPlayer.SetVoiceState(VoiceChatState.Send);
+        //localPlayer.SetVoiceState(VoiceChatState.Send);
+        Debug.Log($"OnVoiceChatSendEvent - Sender: {sender.email}, Reciever: {reciever.email}");
 
         CurrentToast = cancelVoiceChatToast.gameObject;
-        string email = PhotonNetwork.CurrentRoom.CustomProperties[recieverID.ToString()].ToString();
-        cancelVoiceChatToast.message.text = $"{email}님에게 1:1 대화 요청";
-        this.senderID = senderID;
-        this.recieverID = recieverID;
+        string userName = reciever.name;
+        cancelVoiceChatToast.message.text = $"{userName}님에게 1:1 대화 요청";
+
+        this.sender = sender;
+        this.reciever = reciever;
     }
 
-    public void OnVoiceChatRecieveEvent(int senderID, int recieverID)
+    public void OnVoiceChatRecieveEvent(LoundgeUser sender, LoundgeUser reciever)
     {
-        localPlayer.SetVoiceState(VoiceChatState.Recieve);
+        //localPlayer.SetVoiceState(VoiceChatState.Recieve);
+        Debug.Log($"OnVoiceChatRecieveEvent - Sender: {sender.email}, Reciever: {reciever.email}");
 
         CurrentToast = voiceChatRequestToast.gameObject;
-        string email = PhotonNetwork.CurrentRoom.CustomProperties[senderID.ToString()].ToString();
-        voiceChatRequestToast.message.text = $"{email}님의 1:1 대화 요청";
-        this.senderID = senderID;
-        this.recieverID = recieverID;
+        string userName = sender.name;
+        voiceChatRequestToast.message.text = $"{userName}님의 1:1 대화 요청";
+
+        this.sender = sender;
+        this.reciever = reciever;
     }
 
-    public void OnVoiceChatCancelEvent(int viewID)
+    public void OnVoiceChatCancelEvent(LoundgeUser user)
     {
-        localPlayer.SetVoiceState(VoiceChatState.Off);
+        //localPlayer.SetVoiceState(VoiceChatState.Off);
+        Debug.Log($"OnVoiceChatCancleEvent - Sender: {sender.email}, Reciever: {reciever.email}");
 
         CurrentToast = voiceChatCanceledToast.gameObject;
-        string email = PhotonNetwork.CurrentRoom.CustomProperties[viewID.ToString()].ToString();
-        voiceChatCanceledToast.message.text = $"{email}님과의 대화가 취소되었습니다";
+        string userName = user.name;
+        voiceChatCanceledToast.message.text = $"{userName}님과의 대화가 취소되었습니다";
+
+        sender = null;
+        reciever = null;
 
         Invoke(nameof(CloseToast), 3f);
     }
 
     public void CancelVoiceChat()
     {
-        GetVoiceController(senderID).CancelVoiceChat(recieverID);
-        GetVoiceController(recieverID).CancelVoiceChat(senderID);
+        Debug.Log($"CancelVoiceChat - Sender: {sender.email}, Reciever: {reciever.email}");
+
+        string message = $"{EventMessageType.VOICECHAT}_{VoiceEventType.CANCEL}_{sender.email}_{reciever.email}";
+        eventMessage?.Invoke(message);
     }
 
     public void OnVoiceChatDisconnectEvent(int viewID)
     {
         Debug.Log("Disconnect Voice Chat");
-        localPlayer.SetVoiceState(VoiceChatState.Off);
+        //localPlayer.SetVoiceState(VoiceChatState.Off);
         recorder.TransmitEnabled = false;
 
         CurrentToast = voiceChatDisconnectToast.gameObject;
@@ -150,13 +166,39 @@ public class VoiceManager : MonoBehaviourPunCallbacks
 
     public void AcceptVoiceChat()
     {
-        ResponeVoiceChat(true);
+        string message = $"{EventMessageType.VOICECHAT}_{VoiceEventType.ACCEPT}_{sender.email}_{reciever.email}";
+        eventMessage?.Invoke(message);
     }
 
     public void DeaccpetVoiceChat()
     {
-        ResponeVoiceChat(false);
+        string message = $"{EventMessageType.VOICECHAT}_{VoiceEventType.DEACCEPT}_{sender.email}_{reciever.email}";
+        eventMessage?.Invoke(message);
     }
+
+    public void OnAcceptVoiceChatEventSender(LoundgeUser sender, LoundgeUser reciever)
+    {
+        CurrentToast = acceptVoiceChatToast.gameObject;
+        acceptVoiceChatToast.message.text = $"{reciever.name}님과의 1:1 대화가 수락 되었습니다.";
+    }
+    public void OnAcceptVoiceChatEventReciever(LoundgeUser sender, LoundgeUser reciever)
+    {
+        CurrentToast = acceptVoiceChatToast.gameObject;
+        acceptVoiceChatToast.message.text = $"{sender.name}님과의 1:1 대화가 수락 되었습니다.";
+    }
+
+    public void OnDeacceptVoiceChatEventSender(LoundgeUser sender, LoundgeUser reciever)
+    {
+        CurrentToast = deacceptVoiceChatToastSender.gameObject;
+        deacceptVoiceChatToastSender.message.text = $"{reciever.name}님과의 1:1 대화가 수락 되었습니다.";
+    }
+    public void OnDeacceptVoiceChatEventReciever(LoundgeUser sender, LoundgeUser reciever)
+    {
+        CurrentToast = deacceptVoiceChatToastReciever.gameObject;
+        deacceptVoiceChatToastReciever.message.text = $"{sender.name}님과의 1:1 대화가 수락 되었습니다.";
+    }
+
+
 
     public void ResponeVoiceChat(bool value)
     {
@@ -173,7 +215,7 @@ public class VoiceManager : MonoBehaviourPunCallbacks
          CurrentToast = acceptVoiceChatToast.gameObject;
         if(value)
         {
-            localPlayer.SetVoiceState(VoiceChatState.On);
+            //localPlayer.SetVoiceState(VoiceChatState.On);
 
             acceptVoiceChatToast.message.text = $"{senderID}님과의 1 : 1 대화 수락";
             PhotonVoiceNetwork.Instance.Client.OpChangeGroups(new byte[] { }, new byte[] { (byte)senderID });
@@ -186,7 +228,7 @@ public class VoiceManager : MonoBehaviourPunCallbacks
         }
         else
         {
-            localPlayer.SetVoiceState(VoiceChatState.Off);
+            //localPlayer.SetVoiceState(VoiceChatState.Off);
             acceptVoiceChatToast.message.text = $"{senderID}님과의 1 : 1 대화 거절";
         }
 
@@ -198,7 +240,7 @@ public class VoiceManager : MonoBehaviourPunCallbacks
         CurrentToast = acceptVoiceChatToast.gameObject;
         if (value)
         {
-            localPlayer.SetVoiceState(VoiceChatState.On);
+            //localPlayer.SetVoiceState(VoiceChatState.On);
 
             
 
@@ -212,7 +254,7 @@ public class VoiceManager : MonoBehaviourPunCallbacks
         }
         else
         {
-            localPlayer.SetVoiceState(VoiceChatState.Off);
+            //localPlayer.SetVoiceState(VoiceChatState.Off);
             acceptVoiceChatToast.message.text = $"{recieverID}님이 1 : 1 대화 거절";
         }
 

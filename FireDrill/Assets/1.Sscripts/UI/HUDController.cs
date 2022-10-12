@@ -16,7 +16,7 @@ public class HUDController : MonoBehaviour
     public InputField chatInputField;
     public TMP_Text[] chatList;
 
-    public ButtonState[] cameraUIIcons;
+    public ButtonStateManager[] cameraUIIcons;
 
     private void Awake()
     {

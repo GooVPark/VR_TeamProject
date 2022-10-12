@@ -30,12 +30,12 @@ public class GameManager : MonoBehaviourPunCallbacks
         switch (NetworkManager.User.userType)
         {
             case UserType.Lecture:
-                megaPhoneButton.gameObject.SetActive(true);
-                scoreBoardButton.gameObject.SetActive(true);
+                megaphoneButton.gameObject.SetActive(true);
+                scoreboardButton.gameObject.SetActive(true);
                 break;
             case UserType.Student:
-                megaPhoneButton.gameObject.SetActive(false);
-                scoreBoardButton.gameObject.SetActive(false);
+                megaphoneButton.gameObject.SetActive(false);
+                scoreboardButton.gameObject.SetActive(false);
                 break;
         }
 
@@ -52,10 +52,10 @@ public class GameManager : MonoBehaviourPunCallbacks
     #region Camera UI
 
     [Header("Camera UI")]
-    public ButtonState megaPhoneButton;
-    public ButtonState scoreBoardButton;
-    public ButtonState voiceChatButton;
-    public ButtonState textChatButton;
+    public ButtonStateHandler megaphoneButton;
+    public ButtonStateHandler scoreboardButton;
+    public ButtonStateHandler voiceChatButton;
+    public ButtonStateHandler textChatButton;
 
     public Button joinRoomButton;
     #endregion
@@ -63,6 +63,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     #region Megaphone
 
     private bool onMegaphone = false;
+    private bool onVoice = false;
 
     public void MegaphoneOn()
     {
@@ -70,6 +71,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         localRecoder.TransmitEnabled = true;
         
         player.MegaphoneOn();
+
+        megaphoneButton.UpdateState(ButtonState.Activate);
 
         Haptic(0.5f, 0.1f);
     }
@@ -81,11 +84,17 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         player.MegaphoneOff();
 
+        megaphoneButton.UpdateState(ButtonState.Deactivate);
+
         Haptic(0.5f, 0.1f);
     }
 
     public void MegaphoneToggle()
     {
+        if(onVoice)
+        {
+            DeactivateVoiceChat();
+        }
         if(onMegaphone)
         {
             MegaphoneOff();
@@ -108,13 +117,33 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void ToggleVoiceChat()
     {
-        localRecoder.TransmitEnabled = !localRecoder.TransmitEnabled;
+        if(onMegaphone)
+        {
+            MegaphoneOff();
+        }
+        if(onVoice)
+        {
+            DeactivateVoiceChat();
+        }
+        else
+        {
+            ActivateVoiceChat();
+        }
         Haptic(0.5f, 0.1f);
     }
 
-    public void DisableVoiceChat()
+    public void ActivateVoiceChat()
     {
+        onVoice = true;
+        localRecoder.TransmitEnabled = true;
+        voiceChatButton.UpdateState(ButtonState.Activate);
+    }
+
+    public void DeactivateVoiceChat()
+    {
+        onVoice = false;
         localRecoder.TransmitEnabled = false;
+        voiceChatButton.UpdateState(ButtonState.Deactivate);
     }
 
     public void RequsetVoiceChat(int receiverID, int senderID)

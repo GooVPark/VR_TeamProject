@@ -80,6 +80,11 @@ public class TextChatManager : MonoBehaviour, IChatClientListener
         sendChatMessage?.Invoke(inputField.text);
     }
 
+    public void OnSpawnNPC()
+    {
+
+    }
+
 
     public void DisconnectChat()
     {
@@ -109,12 +114,12 @@ public class TextChatManager : MonoBehaviour, IChatClientListener
 
     public void OnPrivateMessage(string sender, object message, string channelName)
     {
-        throw new System.NotImplementedException();
+
     }
 
     public void OnStatusUpdate(string user, int status, bool gotMessage, object message)
     {
-        throw new System.NotImplementedException();
+
     }
 
     
@@ -126,17 +131,17 @@ public class TextChatManager : MonoBehaviour, IChatClientListener
 
     public void OnUnsubscribed(string[] channels)
     {
-        throw new System.NotImplementedException();
+     
     }
 
     public void OnUserSubscribed(string channel, string user)
     {
-        throw new System.NotImplementedException();
+      
     }
 
     public void OnUserUnsubscribed(string channel, string user)
     {
-        throw new System.NotImplementedException();
+    
     }
 
 

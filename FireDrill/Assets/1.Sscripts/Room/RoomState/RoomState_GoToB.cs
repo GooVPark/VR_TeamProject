@@ -29,8 +29,6 @@ public class RoomState_GoToB : RoomState
         quizObject.SetActive(true);
         eventArea.gameObject.SetActive(true);
         toast.gameObject.SetActive(true);
-        megaphone.ChangeIconState(ButtonState.IconState.Off);
-        voiceChat.ChangeIconState(ButtonState.IconState.Off);
     }
 
     public override void OnStateExit()

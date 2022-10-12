@@ -6,9 +6,9 @@ using Photon.Voice.PUN;
 
 public enum VoiceChatState { On, Off, Send, Recieve }
 
-public class VoiceContorller : MonoBehaviourPun
+public class VoiceContorller : MonoBehaviour
 {
-    public delegate void PrivateVoiceChatRequestEvent(int senderID, int recieverID);
+    public delegate void PrivateVoiceChatRequestEvent(LoundgeUser sender, LoundgeUser reciever);
     public PrivateVoiceChatRequestEvent voiceChatSendEvent;
     public PrivateVoiceChatRequestEvent voiceChatRecieveEvent;
 
@@ -21,6 +21,8 @@ public class VoiceContorller : MonoBehaviourPun
     public delegate void PrivateVoiceChatDisconnectEvent(int viewID);
     public PrivateVoiceChatDisconnectEvent voiceChatDisconnectEvent;
 
+    public delegate void EventMessage(string message);
+    public static EventMessage eventMessage;
 
     private NPCController npcController;
 
@@ -33,78 +35,28 @@ public class VoiceContorller : MonoBehaviourPun
         voiceChatRecieveEvent += VoiceManager.Instance.OnVoiceChatRecieveEvent;
         voiceChatSendEvent += VoiceManager.Instance.OnVoiceChatSendEvent;
         voiceChatResponeEvent += VoiceManager.Instance.OnPrivateVoiceChatRespone;
-        voiceChatCancelEvent += VoiceManager.Instance.OnVoiceChatCancelEvent;
+        
         voiceChatDisconnectEvent += VoiceManager.Instance.OnVoiceChatDisconnectEvent;
     }
 
     public void OnRequestPrivateVoiceChat()
     {
-        if(!isVoiceChatReady || npcController.VoiceChatState != VoiceChatState.Off)
-        {
-            return;
-        }
-        //if(npcController.VoiceChatState != VoiceChatState.Off)
-        //{
-        //    return;
-        //}
-
-        //npcController.VoiceChatState = VoiceChatState.Recieve;
-
-        int senderID = VoiceManager.Instance.GetSenderID();
-        int recieverID = photonView.ViewID;
-
-        voiceChatSendEvent?.Invoke(senderID, recieverID);
-        photonView.RPC(nameof(OnRequestPrivateVoiceChatRPC), RpcTarget.All, senderID, recieverID);
-    }
-
-    [PunRPC]
-    private void OnRequestPrivateVoiceChatRPC(int senderID, int receverID)
-    {
-        if(photonView.IsMine)
-        {
-            voiceChatRecieveEvent?.Invoke(senderID, receverID);
-        }
+        string message = $"{EventMessageType.VOICECHAT}_{NetworkManager.User.email}_{npcController.user.email}";
+        eventMessage?.Invoke(message);
     }
 
     public void OnResponePrivateVoiceChat(int senderID, int recieverID, bool value)
     {
-        photonView.RPC(nameof(OnResponePrivateVoiceChatRPC), RpcTarget.All, senderID, recieverID, value);
-    }
-
-    [PunRPC]
-    private void OnResponePrivateVoiceChatRPC(int senderID, int recieverID, bool value)
-    {
-        if(photonView.IsMine)
-        {
-            voiceChatResponeEvent?.Invoke(senderID, recieverID, value);
-        }
+     
     }
 
     public void CancelVoiceChat(int targetID)
     {
-        photonView.RPC(nameof(CancelVoiceChatRPC), RpcTarget.All, targetID);
-    }
-
-    [PunRPC]
-    private void CancelVoiceChatRPC(int targetID)
-    {
-        if(photonView.IsMine)
-        {
-            voiceChatCancelEvent?.Invoke(targetID);
-        }
+      
     }
 
     public void DisconnectVoiceChat(int targetID)
     {
-        photonView.RPC(nameof(DisconnectVoiceChatRPC), RpcTarget.All, targetID);
-    }
-
-    [PunRPC]
-    private void DisconnectVoiceChatRPC(int targetID)
-    {
-        if(photonView.IsMine)
-        {
-            voiceChatDisconnectEvent?.Invoke(targetID);
-        }
+        
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ButtonState : MonoBehaviour
+public class ButtonStateManager : MonoBehaviour
 {
     public delegate void OnButtonEvent();
     public OnButtonEvent onButtonEvent;

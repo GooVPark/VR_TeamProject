@@ -9,10 +9,10 @@ public abstract class RoomState : MonoBehaviourPun
     protected User user;
 
     [Header("UI")]
-    [SerializeField] protected ButtonState megaphone;
-    [SerializeField] protected ButtonState scoreBoard;
-    [SerializeField] protected ButtonState voiceChat;
-    [SerializeField] protected ButtonState textChat;
+    [SerializeField] protected ButtonStateHandler megaphone;
+    [SerializeField] protected ButtonStateHandler scoreBoard;
+    [SerializeField] protected ButtonStateHandler voiceChat;
+    [SerializeField] protected ButtonStateHandler textChat;
 
     private void Awake()
     {
@@ -24,8 +24,8 @@ public abstract class RoomState : MonoBehaviourPun
 
         roomSceneManager = FindObjectOfType<RoomSceneManager>();
 
-        megaphone = roomSceneManager.megaPhoneButton;
-        scoreBoard = roomSceneManager.scoreBoardButton;
+        megaphone = roomSceneManager.megaphoneButton;
+        scoreBoard = roomSceneManager.scoreboardButton;
         voiceChat = roomSceneManager.voiceChatButton;
         textChat = roomSceneManager.textChatButton;
 

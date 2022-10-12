@@ -16,11 +16,11 @@ public class RoomState_WaitPlayer : RoomState
     public override void OnStateEnter()
     {
         base.OnStateEnter();
-        voiceChat.ChangeIconState(ButtonState.IconState.Off);
-        voiceChat.onButtonEvent += roomSceneManager.ToggleVoiceChat;
+        voiceChat.UpdateState(ButtonState.Deactivate);
+        voiceChat.button.onClick += roomSceneManager.ToggleVoiceChat;
 
-        textChat.ChangeIconState(ButtonState.IconState.Off);
-        textChat.onButtonEvent += roomSceneManager.ToggleTextChat;
+        textChat.UpdateState(ButtonState.Deactivate);
+        textChat.button.onClick += roomSceneManager.ToggleTextChat;
 
         if(user.userType == UserType.Lecture)
         {

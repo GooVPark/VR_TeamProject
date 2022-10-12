@@ -155,11 +155,13 @@ public class LoundgeUser
     public ObjectId id;
     public string email;
     public string name;
+    public int characterNumber;
 
     public LoundgeUser(User user)
     {
         email = user.email;
         name = user.name;
+        characterNumber = user.characterNumber;
     }
 }
 

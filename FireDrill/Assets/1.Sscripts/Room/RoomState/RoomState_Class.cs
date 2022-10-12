@@ -35,25 +35,19 @@ public class RoomState_Class : RoomState
         base.OnStateEnter();
 
         //모든 유저의 보이스챗과 텍스트 챗을 사용 불가로
-        voiceChat.ChangeIconState(ButtonState.IconState.Disable);
-        voiceChat.onButtonEvent -= roomSceneManager.ToggleVoiceChat;
-        voiceChat.onButtonEvent += MicDisabled;
+        voiceChat.button.onClick -= roomSceneManager.ToggleVoiceChat;
+        voiceChat.button.onClick += MicDisabled;
 
-        textChat.ChangeIconState(ButtonState.IconState.Disable);
-        textChat.onButtonEvent -= roomSceneManager.ToggleTextChat;
+        //textChat.button.onClick -= roomSceneManager.ToggleTextChat;
 
-        roomSceneManager.DisableVoiceChat();
-        roomSceneManager.DisableTextChat();
-
-        textChat.ChangeIconState(ButtonState.IconState.Disable);
+        roomSceneManager.DeactivateVoiceChat();
+        //roomSceneManager.DisableTextChat();
 
         if (NetworkManager.User.userType == UserType.Lecture)
         {
             currentToast = lectureToast.gameObject;
             roomSceneManager.MegaphoneOn();
-
-            megaphone.ChangeIconState(ButtonState.IconState.On);
-            megaphone.onButtonEvent += roomSceneManager.MegaphoneToggle;
+            megaphone.button.onClick += roomSceneManager.MegaphoneToggle;
         }
         if(NetworkManager.User.userType == UserType.Student)
         {
@@ -65,12 +59,12 @@ public class RoomState_Class : RoomState
 
     public override void OnStateExit()
     {
-        voiceChat.ChangeIconState(ButtonState.IconState.Off);
-        voiceChat.onButtonEvent += roomSceneManager.ToggleVoiceChat;
-        voiceChat.onButtonEvent -= MicDisabled;
+        voiceChat.UpdateState(ButtonState.Deactivate);
+        voiceChat.button.onClick += roomSceneManager.ToggleVoiceChat;
+        voiceChat.button.onClick -= MicDisabled;
 
-        textChat.ChangeIconState(ButtonState.IconState.Off);
-        textChat.onButtonEvent += roomSceneManager.ToggleTextChat;
+        //textChat.UpdateState(ButtonState.Deactivate);
+        //textChat.button.onClick += roomSceneManager.ToggleTextChat;
 
         if (NetworkManager.User.userType == UserType.Lecture)
         {
