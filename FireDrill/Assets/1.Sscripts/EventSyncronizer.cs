@@ -5,7 +5,7 @@ using Photon.Pun;
 using Photon.Chat;
 using ExitGames.Client.Photon;
 
-public enum EventMessageType { MOVE, VOICECHAT, SPAWN }
+public enum EventMessageType { MOVE, VOICECHAT, SPAWN, NOTICE }
 public enum VoiceEventType { REQUEST, CANCEL, ACCEPT, DEACCEPT, DISCONNECT }
 
 public class EventSyncronizer : MonoBehaviour, IChatClientListener
@@ -95,6 +95,10 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
 
             Debug.Log(message);
 
+            if(type.Equals(EventMessageType.NOTICE.ToString()))
+            {
+
+            }
             if (type.Equals(EventMessageType.SPAWN.ToString()))
             {
                 LoundgeSceneManager.Instance.SpawnNPC();

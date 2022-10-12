@@ -402,6 +402,20 @@ public class DataManager : MonoBehaviour
         return loundgeUsers;
     }
 
+    public void UpdateLobbyUser(LoundgeUser user)
+    {
+        var filter = Builders<LoundgeUser>.Filter.Eq("email", user.email);
+        var update = Builders<LoundgeUser>.Update.Set("onVoiceChat", user.onVoiceChat);
+        loundgeUsercollection.UpdateOne(filter, update);
+    }
+
+    public LoundgeUser GetUser(string email)
+    {
+        var filter = Builders<LoundgeUser>.Filter.Eq("email", email);
+
+        return loundgeUsercollection.Find(filter).ToList()[0];
+    }
+
     #endregion
 }
 

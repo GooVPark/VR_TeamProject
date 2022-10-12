@@ -294,7 +294,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
             TextChatManager.sendChatMessage += OnSendChatMessage;
         }
 
-        requestVoiceChatButton.onClick.AddListener(() => LoundgeSceneManager.Instance.RequsetVoiceChat(NetworkManager.User.id, UserID));
+        //requestVoiceChatButton.onClick.AddListener(() => LoundgeSceneManager.Instance.RequsetVoiceChat(NetworkManager.User.id, UserID));
     }
 
     [PunRPC]

@@ -156,12 +156,14 @@ public class LoundgeUser
     public string email;
     public string name;
     public int characterNumber;
+    public bool onVoiceChat;
 
     public LoundgeUser(User user)
     {
         email = user.email;
         name = user.name;
         characterNumber = user.characterNumber;
+        onVoiceChat = false;
     }
 }
 

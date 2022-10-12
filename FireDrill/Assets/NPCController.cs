@@ -110,6 +110,7 @@ public class NPCController : MonoBehaviourPun //, IPunInstantiateMagicCallback
         string message = $"{EventMessageType.VOICECHAT}_{VoiceEventType.REQUEST}_{NetworkManager.User.email}_{user.email}";
         eventMessage?.Invoke(message);
     }
+
     public void OnHoverEnter()
     {
 

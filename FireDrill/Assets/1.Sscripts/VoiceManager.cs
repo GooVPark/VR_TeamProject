@@ -49,6 +49,8 @@ public class VoiceManager : MonoBehaviourPunCallbacks
 
     [SerializeField] private Recorder recorder;
 
+    [SerializeField] private LoundgeSceneManager loundgeSceneManager;
+
     private int senderID;
     private int recieverID;
 
@@ -180,22 +182,30 @@ public class VoiceManager : MonoBehaviourPunCallbacks
     {
         CurrentToast = acceptVoiceChatToast.gameObject;
         acceptVoiceChatToast.message.text = $"{reciever.name}님과의 1:1 대화가 수락 되었습니다.";
+        loundgeSceneManager.JoinVoiceChatRoom(sender.email);
+        DataManager.Instance.UpdateLobbyUser(sender);
+
+        string message = $"";
+        eventMessage?.Invoke(message);
     }
     public void OnAcceptVoiceChatEventReciever(LoundgeUser sender, LoundgeUser reciever)
     {
         CurrentToast = acceptVoiceChatToast.gameObject;
         acceptVoiceChatToast.message.text = $"{sender.name}님과의 1:1 대화가 수락 되었습니다.";
+        loundgeSceneManager.JoinVoiceChatRoom(sender.email);
+        reciever.onVoiceChat = true;
+        DataManager.Instance.UpdateLobbyUser(reciever);
     }
 
     public void OnDeacceptVoiceChatEventSender(LoundgeUser sender, LoundgeUser reciever)
     {
         CurrentToast = deacceptVoiceChatToastSender.gameObject;
-        deacceptVoiceChatToastSender.message.text = $"{reciever.name}님과의 1:1 대화가 수락 되었습니다.";
+        deacceptVoiceChatToastSender.message.text = $"{reciever.name}님과의 1:1 대화가 거절 되었습니다.";
     }
     public void OnDeacceptVoiceChatEventReciever(LoundgeUser sender, LoundgeUser reciever)
     {
         CurrentToast = deacceptVoiceChatToastReciever.gameObject;
-        deacceptVoiceChatToastReciever.message.text = $"{sender.name}님과의 1:1 대화가 수락 되었습니다.";
+        deacceptVoiceChatToastReciever.message.text = $"{sender.name}님과의 1:1 대화가 거절 되었습니다.";
     }
 
 

@@ -120,6 +120,20 @@ public class LoundgeSceneManager : GameManager
         }
     }
 
+    public void JoinVoiceChatRoom(string userID)
+    {
+        Debug.Log("LoundgeManager: JoinVoiceChatRoom");
+        string roomName = $"VoiceChatRoom_{userID}";
+
+        RoomOptions roomOptions = new RoomOptions();
+        roomOptions.IsOpen = true;
+        roomOptions.IsVisible = false;
+        roomOptions.MaxPlayers = 2;
+        //roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable();
+
+        PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, null);
+    }
+
     public LoundgeUser GetLoundgeUser(string email)
     {
         if(spawnedNPC.ContainsKey(email))
@@ -366,8 +380,6 @@ public class LoundgeSceneManager : GameManager
         //        npcManager.SpawnNPC(user);
         //    }
         //}
-
-        PhotonNetwork.LoadLevel("Room");
     }
 
 
