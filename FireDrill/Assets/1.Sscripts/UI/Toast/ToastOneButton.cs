@@ -5,5 +5,5 @@ using UnityEngine.UI;
 
 public class ToastOneButton : Toast
 {
-    public Button button;
+    public ButtonInteractor button;
 }

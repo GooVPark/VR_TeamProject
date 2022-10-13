@@ -12,6 +12,9 @@ public class InputManager : MonoBehaviour
     public delegate void LeftSecondaryButtonEvent();
     public static LeftSecondaryButtonEvent leftSecondaryButton;
 
+    public delegate void LeftTriggerButtonEvent(bool value);
+    public static LeftTriggerButtonEvent leftTriggerButton;
+
     public delegate void RightTriggerButtonEvent(bool value);
     public static RightTriggerButtonEvent rightTriggerButton;
 
@@ -35,6 +38,7 @@ public class InputManager : MonoBehaviour
     public InputActionReference leftPrimary = null;
     public InputActionReference leftSecondary = null;
 
+    public InputActionReference leftTrigger = null;
     public InputActionReference leftTriggerValue = null;
     public InputActionReference leftTriggerTouched = null;
     public InputActionReference leftGrabVAlue = null;
@@ -98,10 +102,7 @@ public class InputManager : MonoBehaviour
         if(Instance == null)
         {
             Instance = this;
-        }
-        else
-        {
-            Destroy(Instance.gameObject);
+            DontDestroyOnLoad(gameObject);
         }
 
         leftStart.action.started += LeftStart;
@@ -111,6 +112,10 @@ public class InputManager : MonoBehaviour
         leftStick.action.started += OnLeftStickStarted;
         leftStick.action.performed += OnLeftStickPerformed;
         leftStick.action.canceled += OnLeftStickCanceled;
+
+        leftTrigger.action.started += OnLeftTriggerStarted;
+        leftTrigger.action.performed += OnLeftTriggerPerformed;
+        leftTrigger.action.canceled += OnLeftTriggerCanceled;
 
         leftControllerPosition.action.performed += OnLeftControllerPosition;
         leftControllerDeviceRotation.action.performed += OnLeftHandDeviceRotate;
@@ -239,6 +244,23 @@ public class InputManager : MonoBehaviour
     {
         onLeftTriggerTouched?.Invoke(1);
     }
+    private void OnLeftTriggerStarted(InputAction.CallbackContext context)
+    {
+        Debug.Log("Start");
+        leftTriggerButton?.Invoke(true);
+    }
+
+    private void OnLeftTriggerPerformed(InputAction.CallbackContext context)
+    {
+        leftTriggerButton?.Invoke(true);
+    }
+
+    private void OnLeftTriggerCanceled(InputAction.CallbackContext context)
+    {
+        Debug.Log("Cancel");
+        leftTriggerButton?.Invoke(false);
+    }
+
     private void OnLeftGrabValuePerformed(InputAction.CallbackContext context)
     {
         onLeftGrabValue?.Invoke(context.ReadValue<float>());

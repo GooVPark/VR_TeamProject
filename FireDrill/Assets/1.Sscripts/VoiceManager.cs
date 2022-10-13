@@ -24,6 +24,11 @@ public class VoiceManager : MonoBehaviourPunCallbacks
     public Toast voiceChatCanceledToast;
     public Toast voiceChatDisconnectToast;
 
+    public ButtonInteractor acceptVoiceChatButton;
+    public ButtonInteractor deacceptVoiceChatButton;
+
+    public ButtonInteractor cancelVoiceChatButton;
+
     public TMP_Text groupText;
 
     public Button voiceChatToggleButton;
@@ -82,6 +87,10 @@ public class VoiceManager : MonoBehaviourPunCallbacks
     private void Start()
     {
         groupText.text = recorder.InterestGroup.ToString();
+
+        acceptVoiceChatButton.onClick += AcceptVoiceChat;
+        deacceptVoiceChatButton.onClick += DeaccpetVoiceChat;
+        cancelVoiceChatButton.onClick += CancelVoiceChat;
     }
 
     public void Initialize(int viewID)

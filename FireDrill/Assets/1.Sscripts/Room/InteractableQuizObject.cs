@@ -63,10 +63,17 @@ public class InteractableQuizObject : MonoBehaviour
     [Header("Parameters")]
     QuizJson quiz;
     private bool isSolved = false;
+    private bool isHovered;
+
     [SerializeField] private Transform userTransform; // 로컬 플레이어의 transform을 가져옴
     
     public void OnSelected()
     { 
+        if(!isHovered)
+        {
+            return;
+        }
+
         quizUI.SetActive(true);
         if (isSolved) return;
 
@@ -110,9 +117,14 @@ public class InteractableQuizObject : MonoBehaviour
         DistanceCheck();
     }
 
-    public void OnHovered()
+    public void OnHoverEntered()
     {
-        //컨트롤러의 Ray가 닿으면 하이라이트 효과 호출
+        isHovered = true;
+    }
+
+    public void OnHoverExited()
+    {
+        isHovered = false;
     }
 
     public void SelectAnswer(int number)

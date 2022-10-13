@@ -5,6 +5,9 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 public class LineVisualizerHandler : MonoBehaviour
 {
+    public enum HandType { Right, Left}
+    public HandType handType;
+
     [SerializeField] private XRInteractorLineVisual lineVisual;
     [SerializeField] private XRRayInteractor rayInteractor;
     private bool isPressed;
@@ -14,7 +17,18 @@ public class LineVisualizerHandler : MonoBehaviour
         Debug.Log("Set Handler");
         lineVisual = GetComponent<XRInteractorLineVisual>();
         rayInteractor = GetComponent<XRRayInteractor>();
-        InputManager.rightTriggerButton += LineVisualize;
+
+        switch (handType)
+        {
+            case HandType.Right:
+                InputManager.rightTriggerButton = null;
+                InputManager.rightTriggerButton += LineVisualize;
+                break;
+            case HandType.Left:
+                InputManager.leftTriggerButton = null;
+                InputManager.leftTriggerButton += LineVisualize;
+                break;
+        }
     }
 
     public void LineVisualize(bool value)

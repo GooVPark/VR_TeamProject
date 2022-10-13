@@ -148,21 +148,21 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void RequsetVoiceChat(int receiverID, int senderID)
     {
-        photonView.RPC(nameof(RequestVoiceChatRPC), RpcTarget.All, receiverID, senderID);
+        //photonView.RPC(nameof(RequestVoiceChatRPC), RpcTarget.All, receiverID, senderID);
     }
 
-    [PunRPC]
-    public void RequestVoiceChatRPC(int senderID, int recieverID)
-    {
-        if (NetworkManager.User.id == recieverID)
-        {
-            voiceChatRequestToast.gameObject.SetActive(true);
-            voiceChatRequestToast.SetToastMessage($"{senderID}의 음성 대화 초대");
+    //[PunRPC]
+    //public void RequestVoiceChatRPC(int senderID, int recieverID)
+    //{
+    //    if (NetworkManager.User.id == recieverID)
+    //    {
+    //        voiceChatRequestToast.gameObject.SetActive(true);
+    //        voiceChatRequestToast.SetToastMessage($"{senderID}의 음성 대화 초대");
 
-            voiceChatRequestToast.accept.onClick.AddListener(() => AcceptVoiceChat(senderID, recieverID));
-            voiceChatRequestToast.deaccept.onClick.AddListener(() => DeacceptVoiceChat(senderID, recieverID));
-        }
-    }
+    //        voiceChatRequestToast.accept.onClick.AddListener(() => AcceptVoiceChat(senderID, recieverID));
+    //        voiceChatRequestToast.deaccept.onClick.AddListener(() => DeacceptVoiceChat(senderID, recieverID));
+    //    }
+    //}
 
     /// <summary>
     /// 로컬에서 1 : 1 음성채팅을 하는 두 사람을 제외한 모든 사람의 AudioSource르 꺼버림
@@ -228,8 +228,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         if (NetworkManager.User.id == targetID)
         {
-            voiceChatRequestToast.accept.onClick.RemoveAllListeners();
-            voiceChatRequestToast.deaccept.onClick.RemoveAllListeners();
+            //voiceChatRequestToast.accept.onClick.RemoveAllListeners();
+            //voiceChatRequestToast.deaccept.onClick.RemoveAllListeners();
         }
     }
 
@@ -305,9 +305,6 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void ToggleTextChat()
     {
-
-        Haptic(0.5f, 0.1f);
-
         if (onChatView)
         {
             virtualKeyboard.SetActive(false);
@@ -324,6 +321,8 @@ public class GameManager : MonoBehaviourPunCallbacks
             onChatView = true;
             //LoundgeSceneManager.Instance.Haptic(0.5f, 0.1f);
         }
+
+        Haptic(0.5f, 0.1f);
     }
 
     public void DisableTextChat()
