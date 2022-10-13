@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,7 +7,8 @@ using Photon.Chat;
 using ExitGames.Client.Photon;
 
 public enum EventMessageType { MOVE, VOICECHAT, SPAWN, NOTICE }
-public enum VoiceEventType { REQUEST, CANCEL, ACCEPT, DEACCEPT, DISCONNECT }
+public enum VoiceEventType { REQUEST, CANCEL, ACCEPT, DEACCEPT, DISCONNECT, CONNECT }
+public enum NoticeEventType { ONVOICE }
 
 public class EventSyncronizer : MonoBehaviour, IChatClientListener
 {
@@ -60,7 +62,6 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
         chatClient.SetOnlineStatus(ChatUserStatus.Online);
         LoundgeSceneManager.Instance.isEventServerConnected = true;
     }
-
     public void OnDisconnected()
     {
      
@@ -93,12 +94,6 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
 
             string type = command[0];
 
-            Debug.Log(message);
-
-            if(type.Equals(EventMessageType.NOTICE.ToString()))
-            {
-
-            }
             if (type.Equals(EventMessageType.SPAWN.ToString()))
             {
                 LoundgeSceneManager.Instance.SpawnNPC();
@@ -156,7 +151,32 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
                         voiceManager.OnDeacceptVoiceChatEventSender(sender, reciever);
                     }
                 }
+                if (voiceEventType.Equals(VoiceEventType.CONNECT.ToString()))
+                {
+                    if (recieverEmail.Equals(NetworkManager.User.email))
+                    {
+                        loundgeManager.JoinVoiceChatRoom(senderEmail);
+                    }
+                    if (senderEmail.Equals(NetworkManager.User.email))
+                    {
+                        loundgeManager.JoinVoiceChatRoom(senderEmail);
+                    }
 
+                    loundgeManager.spawnedNPC[senderEmail].onVoiceChat = true;
+                    loundgeManager.spawnedNPC[recieverEmail].onVoiceChat = true;
+
+                }
+                if (voiceEventType.Equals(VoiceEventType.DISCONNECT.ToString()))
+                {
+                    if (recieverEmail.Equals(NetworkManager.User.email))
+                    {
+                        loundgeManager.LeaveVoiceChatRoom();
+                    }
+                    if (senderEmail.Equals(NetworkManager.User.email))
+                    {
+                        loundgeManager.LeaveVoiceChatRoom();
+                    }
+                }
             }
         }
     }

@@ -57,11 +57,13 @@ public class ButtonStateHandler : MonoBehaviour
                 buttonState = ButtonState.Deactivate;
                 spriteRenderer.sprite = deactivate;
 
+
                 break;
             case ButtonState.Deactivate:
 
                 buttonState = ButtonState.Activate;
                 spriteRenderer.sprite = activate;
+
 
                 break;
         }

@@ -18,17 +18,16 @@ public class PlayerDetector : MonoBehaviour
 
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         if(other.CompareTag("NPC"))
         {
             //other.GetComponentInChildren<Outline>().OutlineEnable();
 
             NPCController npc = other.GetComponent<NPCController>();
-            VoiceContorller voiceContorller = other.GetComponent<VoiceContorller>();
+            //VoiceContorller voiceContorller = other.GetComponent<VoiceContorller>();
 
-            npc.OutlineEnable();
-            voiceContorller.isVoiceChatReady = true;
+            npc.isVoiceChatReady = true;
         }
     }
 
@@ -39,10 +38,10 @@ public class PlayerDetector : MonoBehaviour
             //other.GetComponentInChildren<Outline>().OutlineDisable();
 
             NPCController npc = other.GetComponent<NPCController>();
-            VoiceContorller voiceContorller = other.GetComponent<VoiceContorller>();
+            //VoiceContorller voiceContorller = other.GetComponent<VoiceContorller>();
 
             npc.OutlineDisable();
-            voiceContorller.isVoiceChatReady = false;
+            npc.isVoiceChatReady = false;
         }
     }
 }

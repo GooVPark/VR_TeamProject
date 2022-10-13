@@ -54,8 +54,8 @@ public class VoiceManager : MonoBehaviourPunCallbacks
     private int senderID;
     private int recieverID;
 
-    private LoundgeUser sender;
-    private LoundgeUser reciever;
+    public LoundgeUser sender;
+    public LoundgeUser reciever;
 
     private VoiceContorller target;
     public NPCController localPlayer;
@@ -161,8 +161,8 @@ public class VoiceManager : MonoBehaviourPunCallbacks
 
     public void DisconnectVoiceChat()
     {
-        GetVoiceController(senderID).DisconnectVoiceChat(recieverID);
-        GetVoiceController(recieverID).DisconnectVoiceChat(senderID);
+        string message = $"{EventMessageType.VOICECHAT}_{VoiceEventType.DISCONNECT}_{sender.email}_{reciever.email}";
+        eventMessage?.Invoke(message);
     }
 
 
@@ -182,19 +182,22 @@ public class VoiceManager : MonoBehaviourPunCallbacks
     {
         CurrentToast = acceptVoiceChatToast.gameObject;
         acceptVoiceChatToast.message.text = $"{reciever.name}님과의 1:1 대화가 수락 되었습니다.";
-        loundgeSceneManager.JoinVoiceChatRoom(sender.email);
+
         DataManager.Instance.UpdateLobbyUser(sender);
 
-        string message = $"";
+        string message = $"{EventMessageType.VOICECHAT}_{VoiceEventType.CONNECT}_{sender.email}_{reciever.email}";
         eventMessage?.Invoke(message);
     }
     public void OnAcceptVoiceChatEventReciever(LoundgeUser sender, LoundgeUser reciever)
     {
         CurrentToast = acceptVoiceChatToast.gameObject;
         acceptVoiceChatToast.message.text = $"{sender.name}님과의 1:1 대화가 수락 되었습니다.";
-        loundgeSceneManager.JoinVoiceChatRoom(sender.email);
+
         reciever.onVoiceChat = true;
         DataManager.Instance.UpdateLobbyUser(reciever);
+
+        string message = $"{EventMessageType.VOICECHAT}_{VoiceEventType.CONNECT}_{sender.email}_{reciever.email}";
+        eventMessage?.Invoke(message);
     }
 
     public void OnDeacceptVoiceChatEventSender(LoundgeUser sender, LoundgeUser reciever)

@@ -55,7 +55,7 @@ public class NPCController : MonoBehaviourPun //, IPunInstantiateMagicCallback
     private Dictionary<int, OutlineNormalsCalculator[]> outlines = new Dictionary<int, OutlineNormalsCalculator[]>();
 
     public bool isVoiceChatReady = false;
-
+    private bool isHovered = false;
     public LoundgeUser user;
 
     private void Start()
@@ -107,18 +107,26 @@ public class NPCController : MonoBehaviourPun //, IPunInstantiateMagicCallback
     //}
     public void OnRequestPrivateVoiceChat()
     {
-        string message = $"{EventMessageType.VOICECHAT}_{VoiceEventType.REQUEST}_{NetworkManager.User.email}_{user.email}";
-        eventMessage?.Invoke(message);
+        if (!user.onVoiceChat && isVoiceChatReady && isHovered)
+        {
+            string message = $"{EventMessageType.VOICECHAT}_{VoiceEventType.REQUEST}_{NetworkManager.User.email}_{user.email}";
+            eventMessage?.Invoke(message);
+        }
     }
 
     public void OnHoverEnter()
     {
-
+        isHovered = true;
+        if (!user.onVoiceChat && isVoiceChatReady)
+        {
+            OutlineEnable();
+        }
     }
 
     public void OnHoverExit()
     {
-
+        isHovered = false;
+        OutlineDisable();
     }
 
 
@@ -130,17 +138,17 @@ public class NPCController : MonoBehaviourPun //, IPunInstantiateMagicCallback
 
     public void OutlineEnable()
     {
-        //foreach(OutlineNormalsCalculator outline in outlines[characterNumber])
-        //{
-        //    outline.gameObject.SetActive(true);
-        //}
+        foreach (OutlineNormalsCalculator outline in outlines[user.characterNumber])
+        {
+            outline.gameObject.SetActive(true);
+        }
     }
 
     public void OutlineDisable()
     {
-        //foreach (OutlineNormalsCalculator outline in outlines[characterNumber])
-        //{
-        //    outline.gameObject.SetActive(false);
-        //}
+        foreach (OutlineNormalsCalculator outline in outlines[user.characterNumber])
+        {
+            outline.gameObject.SetActive(false);
+        }
     }
 }

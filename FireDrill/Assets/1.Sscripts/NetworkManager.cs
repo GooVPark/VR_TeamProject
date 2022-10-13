@@ -9,10 +9,10 @@ using Photon.Chat.UtilityScripts;
 using TMPro;
 using HashTable = ExitGames.Client.Photon.Hashtable;
 
+public enum RoomType { Login, Room, VoiceRoom, Loundge }
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
-    public enum RoomType { Login, Room, Loundge }
     public RoomType roomType;
 
     public static NetworkManager Instance;

@@ -173,7 +173,7 @@ public class RoomSceneManager : GameManager
     {
         Initialize();
         SpawnPlayer(spawnPivot.position);
-        NetworkManager.Instance.roomType = NetworkManager.RoomType.Room;
+        NetworkManager.Instance.roomType = RoomType.Room;
         RoomState = roomStateWaitPlayer;
 
         if (photonView.IsMine) DataManager.Instance.UpdateRoomPlayerCount(roomNumber, PhotonNetwork.CurrentRoom.PlayerCount);

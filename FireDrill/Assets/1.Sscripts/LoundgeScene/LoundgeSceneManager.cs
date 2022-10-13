@@ -16,11 +16,15 @@ public class LoundgeSceneManager : GameManager
 
     public static LoundgeSceneManager Instance;
 
+
+    public VoiceManager voiceManager;
     public EventSyncronizer eventSyncronizer;
     public NPCManager npcManager;
+    public Transform NPCTransforms;
     public SpawnPosition spawnPosition;
     private Dictionary<string, User> usersByEmail = new Dictionary<string, User>();
-    private Dictionary<string, LoundgeUser> spawnedNPC = new Dictionary<string, LoundgeUser>();
+    public Dictionary<string, LoundgeUser> spawnedNPC = new Dictionary<string, LoundgeUser>();
+    public Dictionary<string, GameObject> spawnedNPCObject = new Dictionary<string, GameObject>();
 
     [SerializeField] private GameObject npcPrefab;
 
@@ -42,7 +46,7 @@ public class LoundgeSceneManager : GameManager
     private void Start()
     {
         Initialize();
-        NetworkManager.Instance.roomType = NetworkManager.RoomType.Loundge;
+        NetworkManager.Instance.roomType = RoomType.Loundge;
 
         InsertUserData();
 
@@ -104,18 +108,19 @@ public class LoundgeSceneManager : GameManager
             {
                 spawnedNPC.Add(loundgeUser.email, loundgeUser);
 
-                if (loundgeUser.email.Equals(NetworkManager.User.email))
-                {
-                    continue;
-                }
-
                 Vector2 randomValue = Random.insideUnitCircle * 3f;
                 Vector3 spawnPosition = this.spawnPosition.transform.position + new Vector3(randomValue.x, 0, randomValue.y);
 
-                GameObject npcObject = Instantiate(npcPrefab, spawnPosition, Quaternion.identity, playerTransforms);
+                GameObject npcObject = Instantiate(npcPrefab, spawnPosition, Quaternion.identity, NPCTransforms);
+                spawnedNPCObject.Add(loundgeUser.email, npcObject);
                 NPCController npc = npcObject.GetComponent<NPCController>();
                 npc.Initialize(loundgeUser);
                 npc.eventMessage += eventSyncronizer.OnSendMessage;
+
+                if (loundgeUser.email.Equals(NetworkManager.User.email))
+                {
+                    npcObject.SetActive(false);
+                }
             }
         }
     }
@@ -123,15 +128,24 @@ public class LoundgeSceneManager : GameManager
     public void JoinVoiceChatRoom(string userID)
     {
         Debug.Log("LoundgeManager: JoinVoiceChatRoom");
+        
         string roomName = $"VoiceChatRoom_{userID}";
 
         RoomOptions roomOptions = new RoomOptions();
         roomOptions.IsOpen = true;
-        roomOptions.IsVisible = false;
+        roomOptions.IsVisible = true;
         roomOptions.MaxPlayers = 2;
         //roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable();
 
+        NetworkManager.Instance.roomType = RoomType.VoiceRoom;
         PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, null);
+
+
+    }
+
+    public void LeaveVoiceChatRoom()
+    {
+        PhotonNetwork.LeaveRoom();
     }
 
     public LoundgeUser GetLoundgeUser(string email)
@@ -145,6 +159,7 @@ public class LoundgeSceneManager : GameManager
             return null;
         }
     }
+
 
     #region Database
 
@@ -357,31 +372,54 @@ public class LoundgeSceneManager : GameManager
         roomOptions.MaxPlayers = 0;
 
         PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, TypedLobby.Default);
+        PhotonNetwork.LoadLevel("Room");
     }
 
     public override void OnJoinedRoom()
     {
         Debug.Log("Loundge: OnJoinedRoom");
-        //NetworkManager.Instance.SetRoomNumber(roomNumber);
 
-        //Vector3 position = spawnPosition.GetPosition(PhotonNetwork.LocalPlayer.ActorNumber);
+        switch (NetworkManager.Instance.roomType)
+        {
+            case RoomType.Room:
+                break;
+            case RoomType.VoiceRoom:
 
-        //GameObject npcObject = PhotonNetwork.Instantiate("NPC", position, Quaternion.identity);
-        //npcObject.GetComponent<NPCController>().Initialize(NetworkManager.User);
-        //List<User> users = DataManager.Instance.GetUsersInRoom(roomNumber);
+                spawnedNPCObject[voiceManager.sender.email].SetActive(false);
+                spawnedNPCObject[voiceManager.reciever.email].SetActive(false);
 
-        //Debug.Log(users.Count);
+                voiceChatButton.button.onClick += voiceManager.DisconnectVoiceChat;
+                voiceChatButton.UpdateState(ButtonState.Activate);
 
-        //foreach(User user in users)
-        //{
-        //    if(!usersByEmail.ContainsKey(user.email))
-        //    {
-        //        usersByEmail.Add(user.email, user);
-        //        npcManager.SpawnNPC(user);
-        //    }
-        //}
+                break;
+            case RoomType.Loundge:
+                break;
+        }
+
+        PhotonNetwork.Instantiate("Player", Vector3.one, Quaternion.identity);
     }
 
+    public override void OnLeftRoom()
+    {
+        switch (NetworkManager.Instance.roomType)
+        {
+            case RoomType.Room:
+                break;
+            case RoomType.VoiceRoom:
+                Debug.Log("OnLeftRoom");
+
+                spawnedNPCObject[voiceManager.sender.email].SetActive(true);
+                spawnedNPCObject[voiceManager.reciever.email].SetActive(true);
+
+                NetworkManager.Instance.roomType = RoomType.Loundge;
+                voiceChatButton.UpdateState(ButtonState.Disable);
+                voiceChatButton.button.onClick -= voiceManager.DisconnectVoiceChat;
+
+                break;
+            case RoomType.Loundge:
+                break;
+        }
+    }
 
     //public override void OnPlayerEnteredRoom(Player newPlayer)
     //{
