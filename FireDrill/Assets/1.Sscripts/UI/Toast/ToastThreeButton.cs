@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class ToastThreeButton : Toast
 {
-    public Button button1;
-    public Button button2;
-    public Button button3;
+    public ButtonInteractor button1;
+    public ButtonInteractor button2;
+    public ButtonInteractor button3;
 }

@@ -271,4 +271,14 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
     }
 
     #endregion
+
+    public void Quit()
+    {
+        Application.Quit();
+    }
+
+    public void Home()
+    {
+        CurrentWindow = logoWindow;
+    }
 }

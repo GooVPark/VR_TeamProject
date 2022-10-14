@@ -6,9 +6,10 @@ using Photon.Pun;
 using Photon.Chat;
 using ExitGames.Client.Photon;
 
-public enum EventMessageType { MOVE, VOICECHAT, SPAWN, NOTICE }
+public enum EventMessageType { MOVE, VOICECHAT, SPAWN, NOTICE, PROGRESS }
 public enum VoiceEventType { REQUEST, CANCEL, ACCEPT, DEACCEPT, DISCONNECT, CONNECT }
 public enum NoticeEventType { ONVOICE }
+public enum ProgressEventType { UPDATE }
 
 public class EventSyncronizer : MonoBehaviour, IChatClientListener
 {
@@ -22,6 +23,11 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
     private void Start()
     {
         Connect();
+
+        DynamicRayVisualizer.eventSyncronizer = null;
+        LoundgeSceneManager.eventMesage = null;
+        VoiceManager.eventMessage = null;
+
         DynamicRayVisualizer.eventSyncronizer += OnSendMessage;
         LoundgeSceneManager.eventMesage += OnSendMessage;
         VoiceManager.eventMessage += OnSendMessage;
@@ -94,6 +100,16 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
 
             string type = command[0];
 
+            if(type.Equals(EventMessageType.PROGRESS.ToString()))
+            {
+                string progreesEventType = command[1];
+                string roomNumber = command[2];
+
+                if(progreesEventType.Equals(ProgressEventType.UPDATE.ToString()))
+                {
+                    loundgeManager.UpdateProgressBoard();
+                }
+            }
             if (type.Equals(EventMessageType.SPAWN.ToString()))
             {
                 LoundgeSceneManager.Instance.SpawnNPC();

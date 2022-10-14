@@ -24,6 +24,12 @@ public class RoomState_WaitPlayer : RoomState
 
         if(user.userType == UserType.Lecture)
         {
+            DataManager.Instance.UpdateRoomProgress(roomSceneManager.roomNumber, 0);
+            DataManager.Instance.UpdateRoomState(roomSceneManager.roomNumber, true);
+
+            string message = $"{EventMessageType.PROGRESS}_{ProgressEventType.UPDATE}_{roomSceneManager.roomNumber}";
+            SendEventMessage(message);
+
             forceStartToast.gameObject.SetActive(true);
             roomSceneManager.onRoomStateEvent += ForceStart;
         }

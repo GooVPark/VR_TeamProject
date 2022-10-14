@@ -13,6 +13,9 @@ public class RoomSceneManager : GameManager
 {
     #region Events
 
+    public delegate void EventMessage(string message);
+    public static EventMessage eventMessage;
+
     public delegate void RoomStateSimpleEvent();
     public RoomStateSimpleEvent onRoomStateEvent;
     public void OnRoomState() => onRoomStateEvent?.Invoke();
@@ -64,6 +67,8 @@ public class RoomSceneManager : GameManager
     public Transform spawnPivot;
     public int roomNumber;
 
+    public Transform origin;
+
     private int currentProcess;
     public int CurrentProcess
     {
@@ -110,6 +115,11 @@ public class RoomSceneManager : GameManager
     public RoomData GetRoomData()
     {
         return roomData;
+    }
+
+    public void SendEventMessage(string message)
+    {
+        eventMessage?.Invoke(message);
     }
 
     public void ShowScoreBoard()
@@ -172,7 +182,8 @@ public class RoomSceneManager : GameManager
     public override void OnJoinedRoom()
     {
         Initialize();
-        SpawnPlayer(spawnPivot.position);
+        origin.position = SpawnPlayer(spawnPivot.position);
+        localRecoder.TransmitEnabled = false;
         NetworkManager.Instance.roomType = RoomType.Room;
         RoomState = roomStateWaitPlayer;
 

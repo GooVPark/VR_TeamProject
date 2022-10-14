@@ -196,6 +196,8 @@ public class VoiceManager : MonoBehaviourPunCallbacks
 
         string message = $"{EventMessageType.VOICECHAT}_{VoiceEventType.CONNECT}_{sender.email}_{reciever.email}";
         eventMessage?.Invoke(message);
+
+        Invoke(nameof(CloseToast), 3f);
     }
     public void OnAcceptVoiceChatEventReciever(LoundgeUser sender, LoundgeUser reciever)
     {
@@ -207,17 +209,23 @@ public class VoiceManager : MonoBehaviourPunCallbacks
 
         string message = $"{EventMessageType.VOICECHAT}_{VoiceEventType.CONNECT}_{sender.email}_{reciever.email}";
         eventMessage?.Invoke(message);
+
+        Invoke(nameof(CloseToast), 3f);
     }
 
     public void OnDeacceptVoiceChatEventSender(LoundgeUser sender, LoundgeUser reciever)
     {
         CurrentToast = deacceptVoiceChatToastSender.gameObject;
         deacceptVoiceChatToastSender.message.text = $"{reciever.name}님과의 1:1 대화가 거절 되었습니다.";
+
+        Invoke(nameof(CloseToast), 3f);
     }
     public void OnDeacceptVoiceChatEventReciever(LoundgeUser sender, LoundgeUser reciever)
     {
         CurrentToast = deacceptVoiceChatToastReciever.gameObject;
         deacceptVoiceChatToastReciever.message.text = $"{sender.name}님과의 1:1 대화가 거절 되었습니다.";
+
+        Invoke(nameof(CloseToast), 3f);
     }
 
 

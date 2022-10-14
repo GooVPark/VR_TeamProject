@@ -63,21 +63,7 @@ public class LoundgeSceneManager : GameManager
 
     private void FixedUpdate()
     {
-        refreshTimeCount += Time.fixedDeltaTime;
-        if(refreshTimeCount > refreshTime)
-        {
-            refreshTimeCount = 0;
-            RefreshNoticeBoard();
-        }
 
-        progressBoardElapsedTime += Time.fixedDeltaTime;
-        if(progressBoardElapsedTime > progressBoardUpdateInterval)
-        {
-            progressBoardElapsedTime = 0f;
-            UpdateProgressBoard();
-        }
-
-        UpdateLobbyPlayerCount();
     }
 
     private Coroutine initializer;
@@ -329,7 +315,7 @@ public class LoundgeSceneManager : GameManager
     private float progressBoardElapsedTime = 0f;
     private float progressBoardUpdateInterval = 1f;
 
-    private void UpdateProgressBoard()
+    public void UpdateProgressBoard()
     {
         roomDatas = DataManager.Instance.GetRoomData();
 
@@ -359,6 +345,8 @@ public class LoundgeSceneManager : GameManager
     private RoomOptions roomOptions;
     public void JoinRoom(int roomNumber)
     {
+        DataManager.Instance.DeleteLobbyUser(NetworkManager.User);
+
         Debug.Log("Join Room: " + roomNumber);
         textChatManager.DisconnectChat();
         NetworkManager.Instance.SetRoomNumber(roomNumber);
@@ -421,6 +409,10 @@ public class LoundgeSceneManager : GameManager
         }
     }
 
+    public override void OnLeftLobby()
+    {
+
+    }
     //public override void OnPlayerEnteredRoom(Player newPlayer)
     //{
     //    if (newPlayer != PhotonNetwork.LocalPlayer)

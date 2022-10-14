@@ -6,6 +6,7 @@ using Photon.Pun;
 public abstract class RoomState : MonoBehaviourPun
 {
     public RoomSceneManager roomSceneManager;
+    public EventSyncronizerRoom eventSyncronizer;
     protected User user;
 
     [Header("UI")]
@@ -18,11 +19,17 @@ public abstract class RoomState : MonoBehaviourPun
     {
     }
 
+    protected void SendEventMessage(string message)
+    {
+        roomSceneManager.SendEventMessage(message);
+    }
+
     public virtual void OnStateEnter()
     {
         gameObject.SetActive(true);
 
         roomSceneManager = FindObjectOfType<RoomSceneManager>();
+        eventSyncronizer = FindObjectOfType<EventSyncronizerRoom>();
 
         megaphone = roomSceneManager.megaphoneButton;
         scoreBoard = roomSceneManager.scoreboardButton;

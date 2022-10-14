@@ -7,5 +7,5 @@ using TMPro;
 public class ToastTwoTextOneButton : Toast
 {
     public TMP_Text text;
-    public Button button;
+    public ButtonInteractor button;
 }

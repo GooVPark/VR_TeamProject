@@ -41,12 +41,14 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     }
 
-    protected void SpawnPlayer(Vector3 pivot)
+    protected Vector3 SpawnPlayer(Vector3 pivot)
     {
         Vector2 randomPosition = Random.insideUnitCircle * 3f;
         Vector3 spawnPosition = new Vector3(randomPosition.x, 0, randomPosition.y) + pivot;
         GameObject playerObject = PhotonNetwork.Instantiate("Player", spawnPosition, transform.rotation);
         player = playerObject.GetComponent<NetworkPlayer>();
+
+        return spawnPosition;
     }
 
     #region Camera UI

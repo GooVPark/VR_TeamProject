@@ -26,7 +26,7 @@ public class InteractableQuizObject : MonoBehaviour
     [SerializeField] private TMP_Text selectionQuizText;
     [SerializeField] private GameObject selectionQuizUI;
     [SerializeField] private QuizSlot[] selections;
-    [SerializeField] private Button selectionSubmitButton;
+    [SerializeField] private ButtonInteractor selectionSubmitButton;
     [Space(5)]
 
     [Header("Sequence Quiz")]
@@ -34,7 +34,7 @@ public class InteractableQuizObject : MonoBehaviour
     [SerializeField] private GameObject sequenceQuizUI;
     [SerializeField] private QuizSlot[] slots;
     [SerializeField] private QuizSlot[] sequences;
-    [SerializeField] private Button sequenceSubmitButton;
+    [SerializeField] private ButtonInteractor sequenceSubmitButton;
 
     [SerializeField] private int currentSlot = 0;
     [SerializeField] private int currentSequence = 0;
@@ -44,7 +44,7 @@ public class InteractableQuizObject : MonoBehaviour
     [SerializeField] private TMP_Text oxQuizText;
     [SerializeField] private GameObject oxQuizUI;
     [SerializeField] private QuizSlot[] ox;
-    [SerializeField] private Button oxSubmitButton;
+    [SerializeField] private ButtonInteractor oxSubmitButton;
     [Space(5)]
 
     [Header("Feedback")]
@@ -206,9 +206,9 @@ public class InteractableQuizObject : MonoBehaviour
 
         onSubmit?.Invoke(result);
 
-        selectionSubmitButton.interactable = false;
-        selectionSubmitButton.interactable = false;
-        oxSubmitButton.interactable = false;
+        selectionSubmitButton.collider.enabled = false;
+        sequenceSubmitButton.collider.enabled = false;
+        oxSubmitButton.collider.enabled = false;
 
         StartCoroutine(OXFeedback(2f, result));
         DataManager.Instance.SetQuizResult(NetworkManager.User.email, result, code);
