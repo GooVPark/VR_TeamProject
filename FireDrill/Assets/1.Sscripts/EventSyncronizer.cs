@@ -172,26 +172,33 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
                     if (recieverEmail.Equals(NetworkManager.User.email))
                     {
                         loundgeManager.JoinVoiceChatRoom(senderEmail);
+                        voiceManager.OnConnectVoiceManagerEvent(recieverEmail);
                     }
                     if (senderEmail.Equals(NetworkManager.User.email))
                     {
                         loundgeManager.JoinVoiceChatRoom(senderEmail);
+                        voiceManager.OnConnectVoiceManagerEvent(senderEmail);
                     }
 
                     loundgeManager.spawnedNPC[senderEmail].onVoiceChat = true;
                     loundgeManager.spawnedNPC[recieverEmail].onVoiceChat = true;
-
                 }
                 if (voiceEventType.Equals(VoiceEventType.DISCONNECT.ToString()))
                 {
                     if (recieverEmail.Equals(NetworkManager.User.email))
                     {
                         loundgeManager.LeaveVoiceChatRoom();
+                        voiceManager.OnDisconnectVoiceChatEvent(recieverEmail);
                     }
                     if (senderEmail.Equals(NetworkManager.User.email))
                     {
                         loundgeManager.LeaveVoiceChatRoom();
+                        voiceManager.OnDisconnectVoiceChatEvent(senderEmail);
                     }
+
+
+                    loundgeManager.spawnedNPC[senderEmail].onVoiceChat = false;
+                    loundgeManager.spawnedNPC[recieverEmail].onVoiceChat = false;
                 }
             }
         }

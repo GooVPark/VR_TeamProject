@@ -125,8 +125,6 @@ public class LoundgeSceneManager : GameManager
 
         NetworkManager.Instance.roomType = RoomType.VoiceRoom;
         PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, null);
-
-
     }
 
     public void LeaveVoiceChatRoom()
@@ -340,6 +338,16 @@ public class LoundgeSceneManager : GameManager
 
     #region Photon Callbacks
 
+    public override void OnConnectedToMaster()
+    {
+        PhotonNetwork.JoinLobby();
+    }
+
+    public override void OnJoinedLobby()
+    {
+        Debug.Log("Loundge Maanger: Joined Lobby");
+    }
+
     public int roomNumber;
     private string roomName;
     private RoomOptions roomOptions;
@@ -379,6 +387,11 @@ public class LoundgeSceneManager : GameManager
                 voiceChatButton.button.onClick += voiceManager.DisconnectVoiceChat;
                 voiceChatButton.UpdateState(ButtonState.Activate);
 
+                foreach(string key in spawnedNPCObject.Keys)
+                {
+                    spawnedNPCObject[key].GetComponent<NPCController>().SetVoiceChatState(false);
+                }
+
                 break;
             case RoomType.Loundge:
                 break;
@@ -396,13 +409,25 @@ public class LoundgeSceneManager : GameManager
             case RoomType.VoiceRoom:
                 Debug.Log("OnLeftRoom");
 
-                spawnedNPCObject[voiceManager.sender.email].SetActive(true);
-                spawnedNPCObject[voiceManager.reciever.email].SetActive(true);
+                if(voiceManager.sender.email == NetworkManager.User.email)
+                {
+                    spawnedNPCObject[voiceManager.reciever.email].SetActive(true);
+                }
+                if(voiceManager.reciever.email == NetworkManager.User.email)
+                {
+                    spawnedNPCObject[voiceManager.sender.email].SetActive(true);
+                }
 
                 NetworkManager.Instance.roomType = RoomType.Loundge;
                 voiceChatButton.UpdateState(ButtonState.Disable);
                 voiceChatButton.button.onClick -= voiceManager.DisconnectVoiceChat;
 
+                foreach (string key in spawnedNPCObject.Keys)
+                {
+                    spawnedNPCObject[key].GetComponent<NPCController>().SetVoiceChatState(true);
+                }
+
+                Debug.Log(PhotonNetwork.NetworkClientState);
                 break;
             case RoomType.Loundge:
                 break;

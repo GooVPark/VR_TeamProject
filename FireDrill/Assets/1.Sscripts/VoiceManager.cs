@@ -228,68 +228,102 @@ public class VoiceManager : MonoBehaviourPunCallbacks
         Invoke(nameof(CloseToast), 3f);
     }
 
-
-
-    public void ResponeVoiceChat(bool value)
+    public void OnConnectVoiceManagerEvent(string userEmail)
     {
-        CurrentToast = voiceChatRequestToast.gameObject;
-        foreach (Transform player in playersTransform)
+        LoundgeUser user;
+        if (userEmail.Equals(sender.email))
         {
-            PhotonView view = player.GetComponent<PhotonView>();
-            if (view.ViewID == senderID)
-            {
-                player.GetComponent<VoiceContorller>().OnResponePrivateVoiceChat(senderID, recieverID, value);
-            }
+            user = sender;
         }
-
-         CurrentToast = acceptVoiceChatToast.gameObject;
-        if(value)
+        else if (userEmail.Equals(reciever.email))
         {
-            //localPlayer.SetVoiceState(VoiceChatState.On);
-
-            acceptVoiceChatToast.message.text = $"{senderID}님과의 1 : 1 대화 수락";
-            PhotonVoiceNetwork.Instance.Client.OpChangeGroups(new byte[] { }, new byte[] { (byte)senderID });
-            groupText.text = ((byte)senderID).ToString();
-
-            recorder.InterestGroup = (byte)senderID;
-            recorder.TransmitEnabled = true;
-
-            voiceChatToggleButton.onClick.AddListener(() => DisconnectVoiceChat());
+            user = reciever;
         }
-        else
-        {
-            //localPlayer.SetVoiceState(VoiceChatState.Off);
-            acceptVoiceChatToast.message.text = $"{senderID}님과의 1 : 1 대화 거절";
-        }
+        else user = null;
 
-        Invoke(nameof(CloseToast), 3f);
+        user.onVoiceChat = true;
+
+        DataManager.Instance.UpdateLobbyUser(user);
     }
 
-    public void OnPrivateVoiceChatRespone(int senderID, int recieverID, bool value)
+    public void OnDisconnectVoiceChatEvent(string userEmail)
     {
-        CurrentToast = acceptVoiceChatToast.gameObject;
-        if (value)
+        LoundgeUser user;
+        if (userEmail.Equals(sender.email))
         {
-            //localPlayer.SetVoiceState(VoiceChatState.On);
-
-            
-
-            PhotonVoiceNetwork.Instance.Client.OpChangeGroups(new byte[] { }, new byte[] { (byte)senderID });
-            groupText.text = ((byte)senderID).ToString();
-            
-            recorder.TransmitEnabled = true;
-            acceptVoiceChatToast.message.text = $"{recieverID}님이 1 : 1 대화 수락";
-
-            voiceChatToggleButton.onClick.AddListener(() => DisconnectVoiceChat());
+            user = sender;
         }
-        else
+        else if (userEmail.Equals(reciever.email))
         {
-            //localPlayer.SetVoiceState(VoiceChatState.Off);
-            acceptVoiceChatToast.message.text = $"{recieverID}님이 1 : 1 대화 거절";
+            user = reciever;
         }
+        else user = null;
 
-        Invoke(nameof(CloseToast), 3f);
+        user.onVoiceChat = false;
+
+        DataManager.Instance.UpdateLobbyUser(user);
     }
+
+    //public void ResponeVoiceChat(bool value)
+    //{
+    //    CurrentToast = voiceChatRequestToast.gameObject;
+    //    foreach (Transform player in playersTransform)
+    //    {
+    //        PhotonView view = player.GetComponent<PhotonView>();
+    //        if (view.ViewID == senderID)
+    //        {
+    //            player.GetComponent<VoiceContorller>().OnResponePrivateVoiceChat(senderID, recieverID, value);
+    //        }
+    //    }
+
+    //     CurrentToast = acceptVoiceChatToast.gameObject;
+    //    if(value)
+    //    {
+    //        //localPlayer.SetVoiceState(VoiceChatState.On);
+
+    //        acceptVoiceChatToast.message.text = $"{senderID}님과의 1 : 1 대화 수락";
+    //        PhotonVoiceNetwork.Instance.Client.OpChangeGroups(new byte[] { }, new byte[] { (byte)senderID });
+    //        groupText.text = ((byte)senderID).ToString();
+
+    //        recorder.InterestGroup = (byte)senderID;
+    //        recorder.TransmitEnabled = true;
+
+    //        voiceChatToggleButton.onClick.AddListener(() => DisconnectVoiceChat());
+    //    }
+    //    else
+    //    {
+    //        //localPlayer.SetVoiceState(VoiceChatState.Off);
+    //        acceptVoiceChatToast.message.text = $"{senderID}님과의 1 : 1 대화 거절";
+    //    }
+
+    //    Invoke(nameof(CloseToast), 3f);
+    //}
+
+    //public void OnPrivateVoiceChatRespone(int senderID, int recieverID, bool value)
+    //{
+    //    CurrentToast = acceptVoiceChatToast.gameObject;
+    //    if (value)
+    //    {
+    //        //localPlayer.SetVoiceState(VoiceChatState.On);
+
+
+
+    //        PhotonVoiceNetwork.Instance.Client.OpChangeGroups(new byte[] { }, new byte[] { (byte)senderID });
+    //        groupText.text = ((byte)senderID).ToString();
+
+    //        recorder.TransmitEnabled = true;
+    //        acceptVoiceChatToast.message.text = $"{recieverID}님이 1 : 1 대화 수락";
+
+    //        voiceChatToggleButton.onClick.AddListener(() => DisconnectVoiceChat());
+    //    }
+    //    else
+    //    {
+    //        //localPlayer.SetVoiceState(VoiceChatState.Off);
+    //        acceptVoiceChatToast.message.text = $"{recieverID}님이 1 : 1 대화 거절";
+    //    }
+
+    //    Invoke(nameof(CloseToast), 3f);
+    //}
 
 
     public int GetSenderID()

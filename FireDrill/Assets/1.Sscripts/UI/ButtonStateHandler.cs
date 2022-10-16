@@ -1,8 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public enum ButtonState { Disable, Activate, Deactivate }
+using UnityEngine.UI;
 
 public class ButtonStateHandler : MonoBehaviour
 {
@@ -11,6 +10,7 @@ public class ButtonStateHandler : MonoBehaviour
     public Sprite deactivate;
 
     private SpriteRenderer spriteRenderer;
+    public Image image;
 
     [SerializeField]private  ButtonState buttonState;
 
@@ -43,7 +43,7 @@ public class ButtonStateHandler : MonoBehaviour
                 break;
         }
 
-        spriteRenderer.sprite = sprite;
+        image.sprite = sprite;
     }
 
     public void OnSelect()
@@ -55,14 +55,14 @@ public class ButtonStateHandler : MonoBehaviour
             case ButtonState.Activate:
 
                 buttonState = ButtonState.Deactivate;
-                spriteRenderer.sprite = deactivate;
+                image.sprite = deactivate;
 
 
                 break;
             case ButtonState.Deactivate:
 
                 buttonState = ButtonState.Activate;
-                spriteRenderer.sprite = activate;
+                image.sprite = activate;
 
 
                 break;

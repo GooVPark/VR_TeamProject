@@ -34,7 +34,7 @@ public class VoiceContorller : MonoBehaviour
 
         voiceChatRecieveEvent += VoiceManager.Instance.OnVoiceChatRecieveEvent;
         voiceChatSendEvent += VoiceManager.Instance.OnVoiceChatSendEvent;
-        voiceChatResponeEvent += VoiceManager.Instance.OnPrivateVoiceChatRespone;
+        //voiceChatResponeEvent += VoiceManager.Instance.OnPrivateVoiceChatRespone;
         
         voiceChatDisconnectEvent += VoiceManager.Instance.OnVoiceChatDisconnectEvent;
     }

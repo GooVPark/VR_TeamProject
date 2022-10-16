@@ -54,14 +54,13 @@ public class NPCController : MonoBehaviourPun //, IPunInstantiateMagicCallback
     public Outline outline;
     private Dictionary<int, OutlineNormalsCalculator[]> outlines = new Dictionary<int, OutlineNormalsCalculator[]>();
 
+    private bool senderIsOnVoiceChat = false;
     public bool isVoiceChatReady = false;
     private bool isHovered = false;
     public LoundgeUser user;
 
     private void Start()
     {
-        Transform parent = GameObject.Find("Players").transform;
-        transform.SetParent(parent);
         outline = GetComponentInChildren<Outline>();
 
         for(int i = 0; i < models.Length; i++)
@@ -117,6 +116,10 @@ public class NPCController : MonoBehaviourPun //, IPunInstantiateMagicCallback
     public void OnHoverEnter()
     {
         isHovered = true;
+        if(senderIsOnVoiceChat)
+        {
+            return;
+        }
         if (!user.onVoiceChat && isVoiceChatReady)
         {
             OutlineEnable();
@@ -135,6 +138,10 @@ public class NPCController : MonoBehaviourPun //, IPunInstantiateMagicCallback
 
     }
 
+    public void SetVoiceChatState(bool value)
+    {
+        senderIsOnVoiceChat = value;
+    }
 
     public void OutlineEnable()
     {
