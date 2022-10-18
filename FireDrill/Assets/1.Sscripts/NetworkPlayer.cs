@@ -181,7 +181,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     [Header("Outline")]
     public GameObject outlineObject;
     private bool isHovered = false;
-    public bool isHoverActivated = false;;
+    public bool isHoverActivated = false;
 
     private Dictionary<string, float[]> micSettings = new Dictionary<string, float[]>();
 
