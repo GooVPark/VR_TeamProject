@@ -6,7 +6,7 @@ using Photon.Pun;
 public class RoomState_QuizWait : RoomState
 {
     [Header("RoomState")]
-    public RoomState_EndQuiz roomStateQuizEnd;
+    public RoomState_SelectMRPlayer roomStateSelectMRPlayer;
     [Space(5)]
 
     [Header("Toast")]
@@ -37,6 +37,6 @@ public class RoomState_QuizWait : RoomState
     [PunRPC]
     public void SetState()
     {
-        roomSceneManager.RoomState = roomStateQuizEnd;
+        roomSceneManager.RoomState = roomStateSelectMRPlayer;
     }
 }

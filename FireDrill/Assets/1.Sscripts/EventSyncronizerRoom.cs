@@ -15,12 +15,14 @@ public class EventSyncronizerRoom : MonoBehaviour, IChatClientListener
     private ChatClient chatClient;
     [SerializeField] private string eventServer;
 
+    public bool onConnected = false;
+
     private void Start()
     { 
         Connect();
 
         RoomSceneManager.eventMessage = null;
-        RoomSceneManager.eventMessage += SendMessage;
+        RoomSceneManager.eventMessage += OnSendMessage;
     }
 
     private void Update()
@@ -39,6 +41,7 @@ public class EventSyncronizerRoom : MonoBehaviour, IChatClientListener
 
         string email = NetworkManager.User.email;
         chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, PhotonNetwork.AppVersion, new Photon.Chat.AuthenticationValues(email));
+        
     }
 
     public void OnSendMessage(string message)
@@ -65,6 +68,8 @@ public class EventSyncronizerRoom : MonoBehaviour, IChatClientListener
     {
         chatClient.Subscribe(new string[] { eventServer });
         chatClient.SetOnlineStatus(ChatUserStatus.Online);
+
+        roomSceneManager.isEventServerConnected = true;
     }
 
     public void OnDisconnected()
@@ -74,7 +79,26 @@ public class EventSyncronizerRoom : MonoBehaviour, IChatClientListener
 
     public void OnGetMessages(string channelName, string[] senders, object[] messages)
     {
-     
+        //if(channelName.Equals(eventServer))
+        //{
+        //    ChatChannel channel = null;
+        //    bool isFound = chatClient.TryGetChannel(eventServer, out channel);
+        //    if (!isFound)
+        //    {
+        //        Debug.Log("Channel not found");
+        //        return;
+        //    }
+
+        //    string message = messages[^1].ToString();
+        //    string[] command = message.Split('_');
+
+        //    string type = command[0];
+
+        //    if(type.Equals(EventMessageType.NOTICE.ToString()))
+        //    {
+
+        //    }
+        //}
     }
 
     public void OnPrivateMessage(string sender, object message, string channelName)

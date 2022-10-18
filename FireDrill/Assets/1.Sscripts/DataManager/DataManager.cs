@@ -261,6 +261,17 @@ public class DataManager : MonoBehaviour
         return roomDatas[0].isStarted;
     }
 
+    public RoomData GetRoomData(int roomNumber)
+    {
+        List<RoomData> roomDatas = new List<RoomData>();
+
+        var filter = Builders<RoomData>.Filter.Eq("roomNumber", roomNumber);
+
+        roomDatas = roomCollection.Find(filter).ToList();
+        
+        return roomDatas[0];
+    }
+
     #endregion
 
     #region Quiz
@@ -379,6 +390,13 @@ public class DataManager : MonoBehaviour
     public void DeleteLobbyUser(User user)
     {
         var filter = Builders<LoundgeUser>.Filter.Eq("email", user.email);
+
+        loundgeUsercollection.DeleteOne(filter);
+    }
+
+    public void DeleteLobbyUser(string email)
+    {
+        var filter = Builders<LoundgeUser>.Filter.Eq("email", email);
 
         loundgeUsercollection.DeleteOne(filter);
     }

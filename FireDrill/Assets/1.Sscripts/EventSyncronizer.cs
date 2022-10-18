@@ -8,7 +8,7 @@ using ExitGames.Client.Photon;
 
 public enum EventMessageType { MOVE, VOICECHAT, SPAWN, NOTICE, PROGRESS }
 public enum VoiceEventType { REQUEST, CANCEL, ACCEPT, DEACCEPT, DISCONNECT, CONNECT }
-public enum NoticeEventType { ONVOICE }
+public enum NoticeEventType { ONVOICE, JOIN }
 public enum ProgressEventType { UPDATE }
 
 public class EventSyncronizer : MonoBehaviour, IChatClientListener
@@ -68,6 +68,11 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
         chatClient.SetOnlineStatus(ChatUserStatus.Online);
         LoundgeSceneManager.Instance.isEventServerConnected = true;
     }
+
+    public void DisconnectChat()
+    {
+        chatClient.Disconnect();
+    }
     public void OnDisconnected()
     {
      
@@ -100,6 +105,21 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
 
             string type = command[0];
 
+            Debug.Log(message);
+
+            if(type.Equals(EventMessageType.NOTICE.ToString()))
+            {
+                string noticeEventType = command[1];
+
+                if(noticeEventType.Equals(NoticeEventType.JOIN.ToString()))
+                {
+                    int roomNumber = int.Parse(command[2]);
+                    string targetEmail = command[3];
+                    loundgeManager.UpdateRoomPlayerCount(roomNumber);
+
+                    Debug.Log(message);
+                }
+            }
             if(type.Equals(EventMessageType.PROGRESS.ToString()))
             {
                 string progreesEventType = command[1];

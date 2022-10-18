@@ -106,6 +106,9 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
 
     [SerializeField] private float speechBubbleViualizeDistance;
 
+    public delegate void OnPlayerSelectEvent(NetworkPlayer player);
+    public OnPlayerSelectEvent onPlayerSelectEvent;
+
     public Transform head;
     public Transform leftHand;
     public Transform rightHand;
@@ -173,6 +176,12 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     public ParticleSystem hoseWater;
     public GameObject hose;
     private GameObject extinguisherObject;
+    [Space(5)]
+
+    [Header("Outline")]
+    public GameObject outlineObject;
+    private bool isHovered = false;
+    public bool isHoverActivated = false;;
 
     private Dictionary<string, float[]> micSettings = new Dictionary<string, float[]>();
 
@@ -221,6 +230,45 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
 
             MapPosition();
             SyncAnimation();
+        }
+    }
+
+    public void OutlineEnabled()
+    {
+        if (isHoverActivated)
+        {
+            outlineObject.SetActive(true);
+            isHovered = true;
+        }
+    }
+
+    public void OutlineDisabled()
+    {
+        outlineObject.SetActive(false);
+        isHovered = false;
+    }
+
+    public void OnSelectMRPlayer()
+    {
+        if(isHovered)
+        {
+            onPlayerSelectEvent?.Invoke(this);
+        }
+    }
+
+    public void OnSelectedMRPlayer()
+    {
+        photonView.RPC(nameof(OnSelectedMRPlayerRPC), RpcTarget.All);
+    }
+
+    [PunRPC]
+    private void OnSelectedMRPlayerRPC()
+    {
+        if(photonView.IsMine)
+        {
+            HasExtinguisher = true;
+            NetworkManager.User.hasExtingisher = true;
+            Debug.Log("Set Extingusher is true");
         }
     }
 
@@ -290,6 +338,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
             headModel.layer = 31;
             leftHand.gameObject.layer = 31;
             rightHand.gameObject.layer = 31;
+            outlineObject.layer = 31;
 
             TextChatManager.sendChatMessage += OnSendChatMessage;
         }

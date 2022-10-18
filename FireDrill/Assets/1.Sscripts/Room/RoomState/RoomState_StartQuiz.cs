@@ -13,16 +13,27 @@ public class RoomState_StartQuiz : RoomState
     public ToastTwoText toast;
     [Space(5)]
 
+    [Header("Quiz Objects")]
+    public InteractableQuizObject[] quizObjects;
+
     private float time = 3f;
 
     public override void OnStateEnter()
     {
         base.OnStateEnter();
         toast.gameObject.SetActive(true);
+        foreach(var quizObject in quizObjects)
+        {
+            quizObject.Activate();
+        }
     }
 
     public override void OnStateExit()
     {
+        foreach (var quizObject in quizObjects)
+        {
+            quizObject.Deactivate();
+        }
         toast.gameObject.SetActive(false);
         base.OnStateExit();
     }

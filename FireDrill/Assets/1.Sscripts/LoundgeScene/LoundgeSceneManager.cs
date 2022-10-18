@@ -127,6 +127,14 @@ public class LoundgeSceneManager : GameManager
         PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, null);
     }
 
+    public void RemoveNPCObject(string email)
+    {
+        spawnedNPC.Remove(email);
+        spawnedNPCObject.Remove(email);
+
+        DataManager.Instance.DeleteLobbyUser(email);
+    }
+
     public void LeaveVoiceChatRoom()
     {
         PhotonNetwork.LeaveRoom();
@@ -327,11 +335,19 @@ public class LoundgeSceneManager : GameManager
             progresses[i].UpdateProgressUI(null);
         }
     }
-    private void UpdateLobbyPlayerCount()
+    public void UpdateLobbyPlayerCount()
     {
         playerCountText.text = (PhotonNetwork.CountOfPlayers - NetworkManager.Instance.GetPlayerCountOnRooms()).ToString();
     }
+    public void UpdateRoomPlayerCount(int roomNumber)
+    {
+        RoomData roomData = DataManager.Instance.GetRoomData(roomNumber);
 
+        int playerCount = roomData.currentPlayerCount;
+        int maxPlayerCount = roomData.maxPlayerCount;
+
+        progresses[roomNumber].UpdatePlayerCount(playerCount, maxPlayerCount);
+    }
 
 
     #endregion
@@ -357,6 +373,7 @@ public class LoundgeSceneManager : GameManager
 
         Debug.Log("Join Room: " + roomNumber);
         textChatManager.DisconnectChat();
+        eventSyncronizer.DisconnectChat();
         NetworkManager.Instance.SetRoomNumber(roomNumber);
         roomName = roomNumber.ToString();
 

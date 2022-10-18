@@ -80,6 +80,8 @@ public class RoomSceneManager : GameManager
         }
     }
 
+    public bool isEventServerConnected;
+
     private void Awake()
     {
         if (Instance == null)
@@ -94,7 +96,6 @@ public class RoomSceneManager : GameManager
 
     private void Start()
     {
-
     }
 
     private void Update()
@@ -170,12 +171,11 @@ public class RoomSceneManager : GameManager
 
     private void OnApplicationQuit()
     {
-        //DataManager.Instance.UpdateRoomPlayerCount(NetworkManager.RoomNumber, playerCount - 1);
-        DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, 0);
+        RoomData roomData = DataManager.Instance.GetRoomData(roomNumber);
+        int playerCount = roomData.currentPlayerCount - 1;
 
-        PhotonNetwork.Disconnect();
-        DataManager.Instance.UpdateRoomPlayerCount(NetworkManager.RoomNumber, PhotonNetwork.CurrentRoom.PlayerCount - 1);
-        Debug.Log(PhotonNetwork.CurrentRoom.PlayerCount);
+        DataManager.Instance.UpdateRoomPlayerCount(roomNumber, playerCount);
+
         PhotonNetwork.SendAllOutgoingCommands();
     }
 
@@ -197,16 +197,25 @@ public class RoomSceneManager : GameManager
 
     private IEnumerator JoinVoice()
     {
+        Debug.Log("Test Joined");
         while(true)
         {
-            if(PhotonVoiceNetwork.Instance.ClientState == ClientState.Joined)
+            if(isEventServerConnected)
             {
                 PhotonVoiceNetwork.Instance.Client.OpChangeGroups(new byte[0], new byte[0]);
                 PhotonVoiceNetwork.Instance.PrimaryRecorder.InterestGroup = 0;
+
+                DataManager.Instance.UpdateRoomPlayerCount(roomNumber, PhotonNetwork.CurrentRoom.PlayerCount);
+                string message = $"{EventMessageType.NOTICE}_{NoticeEventType.JOIN}_{roomNumber}_{NetworkManager.User.email}";
+                eventMessage?.Invoke(message);
+
+                Debug.Log("Test Join Server");
+
                 break;
             }
             yield return null;
         }
+        Debug.Log("Test Ended");
     }
 
     public override void OnLeftRoom()

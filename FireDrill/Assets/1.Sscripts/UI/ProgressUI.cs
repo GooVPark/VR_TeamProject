@@ -28,7 +28,8 @@ public class ProgressUI : MonoBehaviour
 
         roomNumberText.text = roomData.roomNumber.ToString();
         companyNameText.text = roomData.company;
-        playerCountText.text = $"{NetworkManager.Instance.GetPlayerCount(roomData.roomNumber)}/{roomData.maxPlayerCount}";
+        //playerCountText.text = $"{NetworkManager.Instance.GetPlayerCount(roomData.roomNumber)}/{roomData.maxPlayerCount}";
+        UpdatePlayerCount(roomData.currentPlayerCount, roomData.maxPlayerCount);
 
         if (roomData.isStarted)
         {
@@ -49,5 +50,9 @@ public class ProgressUI : MonoBehaviour
                 progressMarks[i].SetActive(false);
             }
         }
+    }
+    public void UpdatePlayerCount(int playerCount, int maxCount)
+    {
+        playerCountText.text = $"{NetworkManager.Instance.GetPlayerCount(playerCount)}/{maxCount}";
     }
 }

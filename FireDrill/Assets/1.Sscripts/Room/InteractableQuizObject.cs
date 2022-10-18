@@ -64,6 +64,7 @@ public class InteractableQuizObject : MonoBehaviour
     QuizJson quiz;
     private bool isSolved = false;
     private bool isHovered;
+    private bool isActivated;
 
     [SerializeField] private Transform userTransform; // 로컬 플레이어의 transform을 가져옴
     
@@ -119,12 +120,25 @@ public class InteractableQuizObject : MonoBehaviour
 
     public void OnHoverEntered()
     {
-        isHovered = true;
+        if (isActivated)
+        {
+            isHovered = true;
+        }
     }
 
     public void OnHoverExited()
     {
         isHovered = false;
+    }
+
+    public void Activate()
+    {
+        isActivated = true;
+    }
+
+    public void Deactivate()
+    {
+        isActivated = false;
     }
 
     public void SelectAnswer(int number)
