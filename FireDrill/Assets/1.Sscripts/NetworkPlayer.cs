@@ -47,6 +47,15 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         }
     }
 
+    [SerializeField] private int currentCharacter;
+    public int CurrentCharacter { get => currentCharacter; set => ActionRPC(nameof(SetCurrentCharacterRPC), value); }
+    [PunRPC]
+    private void SetCurrentCharacterRPC(int value)
+    {
+        currentCharacter = value;
+        SetCurrentCharacter(value);
+    }
+
     [SerializeField] private bool hasExtinguisher;
     public bool HasExtinguisher { get => hasExtinguisher; set => ActionRPC(nameof(SetHasExtinguisher), value); }
     [PunRPC]
@@ -101,6 +110,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         HasExtinguisher = HasExtinguisher;
         OnMegaPhone = OnMegaPhone;
         OnVoiceChat = OnVoiceChat;
+        CurrentCharacter = CurrentCharacter;
     }
     #endregion
 
@@ -119,6 +129,12 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
 
     [SerializeField] private Speaker micSpeaker;
     //[SerializeField] private Speaker megaphoneSpeaker;
+
+    [Header("Character Model")]
+    public Mesh[] meshs;
+    public Material[] materials;
+    [SerializeField] private SkinnedMeshRenderer skinnedMeshRenderer;
+    [Space(5)]
 
     [Header("Player UI")]
     public GameObject userInfoUI;
@@ -332,6 +348,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
             UserName = NetworkManager.User.name;
             UserLevel = NetworkManager.User.userType;
             HasExtinguisher = NetworkManager.User.hasExtingisher;
+            CurrentCharacter = NetworkManager.User.characterNumber;
 
             userInfoUI.SetActive(false);
 
@@ -401,6 +418,12 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     public void InteractionTest()
     {
      //   Debug.Log("On Cursor Hoverd");
+    }
+
+    private void SetCurrentCharacter(int value)
+    {
+        skinnedMeshRenderer.sharedMaterial = materials[value];
+        skinnedMeshRenderer.sharedMesh = meshs[value];
     }
 
     #region Haptic
