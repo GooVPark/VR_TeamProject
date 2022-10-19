@@ -35,7 +35,7 @@ public class ButtonInteractor : MonoBehaviour
 
     private void Start()
     {
-        collider.size = new Vector2(image.rectTransform.rect.width / 100, image.rectTransform.rect.height / 100);
+        //collider.size = new Vector2(image.rectTransform.rect.width / 100, image.rectTransform.rect.height / 100);
         //SetButtonSprite(defaultState);
     }
 

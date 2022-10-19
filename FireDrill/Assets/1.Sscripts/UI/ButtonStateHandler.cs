@@ -21,7 +21,7 @@ public class ButtonStateHandler : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         button = gameObject.GetComponent<ButtonInteractor>();
-        button.onClick += OnSelect;
+        button.OnClick.AddListener(() => OnSelect());
 
         UpdateState(buttonState);
 

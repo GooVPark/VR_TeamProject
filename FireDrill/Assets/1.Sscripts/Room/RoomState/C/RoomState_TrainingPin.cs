@@ -29,6 +29,7 @@ public class RoomState_TrainingPin : RoomState
                 {
                     toast.gameObject.SetActive(true);
                     roomSceneManager.onRoomStateEvent += EventTrigger;
+
                     pinTrigger = roomSceneManager.player.pinTrigger;
                     pinTrigger.onPinRemoved += OnPinRemove;
                 }

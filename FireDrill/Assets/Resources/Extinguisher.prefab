@@ -1145,8 +1145,12 @@ PrefabInstance:
       value: Fire_Extinguisher_Particle_Effect
       objectReference: {fileID: 0}
     - target: {fileID: 191198, guid: 7edcc7d7e9e78d54899028cc1dd9dd03, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 191198, guid: 7edcc7d7e9e78d54899028cc1dd9dd03, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 491198, guid: 7edcc7d7e9e78d54899028cc1dd9dd03, type: 3}
       propertyPath: m_RootOrder
@@ -1191,6 +1195,14 @@ PrefabInstance:
     - target: {fileID: 491198, guid: 7edcc7d7e9e78d54899028cc1dd9dd03, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 19891198, guid: 7edcc7d7e9e78d54899028cc1dd9dd03, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 19891198, guid: 7edcc7d7e9e78d54899028cc1dd9dd03, type: 3}
+      propertyPath: CollisionModule.collidesWith.m_Bits
+      value: 2048
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7edcc7d7e9e78d54899028cc1dd9dd03, type: 3}

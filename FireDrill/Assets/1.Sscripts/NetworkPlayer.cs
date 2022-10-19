@@ -131,10 +131,11 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     //[SerializeField] private Speaker megaphoneSpeaker;
 
     [Header("Character Model")]
-    public GameObject[] models;
     public Mesh[] meshs;
     public Material[] materials;
-    [SerializeField] private SkinnedMeshRenderer skinnedMeshRenderer;
+    private SkinnedMeshRenderer skinnedMeshRenderer;
+    [SerializeField] private SkinnedMeshRenderer skinnedMeshRendererMale;
+    [SerializeField] private SkinnedMeshRenderer skinnedMeshRendererFemale;
     [Space(5)]
 
     [Header("Player UI")]
@@ -317,8 +318,8 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         {
             Debug.Log("OnExtinguisher Is Mine");
 
-            extinguisherObject = PhotonNetwork.Instantiate("Extinguisher", position, Quaternion.identity);
-
+            extinguisherObject = PhotonNetwork.Instantiate("Extinguisher", extinguisherPivot.position, extinguisherPivot.rotation);
+            onExtinguisher = true;
             photonView.RPC(nameof(OnExtinguisherRPC), RpcTarget.All, extinguisherObject.name);
         }
     }
@@ -448,37 +449,36 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
 
     private void SetCurrentCharacter(int value)
     {
-        foreach(GameObject model in models)
-        {
-            model.SetActive(false);
-        }
-
-        if (value < models.Length / 2)
+        if (value < meshs.Length / 2)
         {
             //male
-            models[0].SetActive(true);
             femaleRig.SetActive(false);
             maleRig.SetActive(true);
 
             outlineObject = outlineMale;
             extinguisherPivot = extinguisherPivotMale;
-
+            
+            skinnedMeshRenderer = skinnedMeshRendererMale;
             leftHandAnimator = maleLeftHandAnimator;
             rightHandAnimator = maleRightHandAnimator;
         }
         else
         {
             //female
-            models[1].SetActive(true);
             maleRig.SetActive(false);
             femaleRig.SetActive(true);
 
             outlineObject = outlineFemale;
             extinguisherPivot = extinguisherPivotFemale;
 
+            skinnedMeshRenderer = skinnedMeshRendererFemale;
             leftHandAnimator = femaleLeftHandAnimator;
             rightHandAnimator = femaleRightHandAnimator;
         }
+
+        skinnedMeshRenderer.sharedMaterial = materials[value];
+        skinnedMeshRenderer.sharedMesh = meshs[value];
+        outlineObject.sharedMesh = meshs[value];
     }
 
     #region Haptic

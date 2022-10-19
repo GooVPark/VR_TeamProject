@@ -39,12 +39,6 @@ public class RoomState_TraningControler : RoomState
             case UserType.Student:
                 toast.gameObject.SetActive(false);
                 roomSceneManager.onRoomStateEvent -= EventTrigger;
-
-                if(user.hasExtingisher)
-                {
-                    roomSceneManager.player.SetExtinguisher();
-                }
-
                 break;
         }
         base.OnStateExit();

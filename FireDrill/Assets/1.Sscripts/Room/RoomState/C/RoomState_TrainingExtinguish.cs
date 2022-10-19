@@ -41,7 +41,7 @@ public class RoomState_TrainingExtinguish : RoomState
 
         if(user.hasExtingisher)
         { 
-            InputManager.rightTriggerButton += OnExtinguisher;
+            InputManager.leftTriggerButton += OnExtinguisher;
             progressUIObject.SetActive(true);
         }
     }
@@ -52,7 +52,7 @@ public class RoomState_TrainingExtinguish : RoomState
         {
             roomSceneManager.player.hose.SetActive(false);
             roomSceneManager.player.extinguisher.gameObject.SetActive(false);
-            InputManager.rightTriggerButton -= OnExtinguisher;
+            InputManager.leftTriggerButton -= OnExtinguisher;
 
             progressUIObject.SetActive(false);
         }
