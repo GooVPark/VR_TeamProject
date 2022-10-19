@@ -131,6 +131,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     //[SerializeField] private Speaker megaphoneSpeaker;
 
     [Header("Character Model")]
+    public GameObject[] models;
     public Mesh[] meshs;
     public Material[] materials;
     [SerializeField] private SkinnedMeshRenderer skinnedMeshRenderer;
@@ -173,12 +174,19 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     private Quaternion leftWristOrigin;
     private Quaternion rightWristOrigin;
 
+    [SerializeField] private GameObject femaleRig;
+    [SerializeField] private GameObject maleRig;
 
     [SerializeField] private HandAnimationController leftHandAnimation;
     [SerializeField] private HandAnimationController rightHandAnimation;
 
-    [SerializeField] private Animator leftHandAnimator;
-    [SerializeField] private Animator rightHandAnimator;
+    private Animator leftHandAnimator;
+    private Animator rightHandAnimator;
+
+    [SerializeField] private Animator femaleLeftHandAnimator;
+    [SerializeField] private Animator femaleRightHandAnimator;
+    [SerializeField] private Animator maleLeftHandAnimator;
+    [SerializeField] private Animator maleRightHandAnimator;
 
     private Camera headset;
 
@@ -192,10 +200,18 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     public ParticleSystem hoseWater;
     public GameObject hose;
     private GameObject extinguisherObject;
+    private Transform extinguisherPivot;
+    [SerializeField] private Transform extinguisherPivotMale;
+    [SerializeField] private Transform extinguisherPivotFemale;
+
+    public bool onExtinguisher = false;
     [Space(5)]
 
     [Header("Outline")]
-    public GameObject outlineObject;
+    private SkinnedMeshRenderer outlineObject;
+    [SerializeField] private SkinnedMeshRenderer outlineMale;
+    [SerializeField] private SkinnedMeshRenderer outlineFemale;
+
     private bool isHovered = false;
     public bool isHoverActivated = false;
 
@@ -246,6 +262,12 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
 
             MapPosition();
             SyncAnimation();
+
+            if (onExtinguisher)
+            {
+                extinguisherObject.transform.position = extinguisherPivot.position;
+                extinguisherObject.transform.rotation = extinguisherPivot.rotation;
+            }
         }
     }
 
@@ -253,14 +275,14 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     {
         if (isHoverActivated)
         {
-            outlineObject.SetActive(true);
+            outlineObject.gameObject.SetActive(true);
             isHovered = true;
         }
     }
 
     public void OutlineDisabled()
     {
-        outlineObject.SetActive(false);
+        outlineObject.gameObject.SetActive(false);
         isHovered = false;
     }
 
@@ -355,7 +377,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
             headModel.layer = 31;
             leftHand.gameObject.layer = 31;
             rightHand.gameObject.layer = 31;
-            outlineObject.layer = 31;
+            //outlineObject.layer = 31;
 
             TextChatManager.sendChatMessage += OnSendChatMessage;
         }
@@ -368,7 +390,11 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     {
         userNameUI.text = NetworkManager.User.name;
     }
-
+    public void SetExtinguisher()
+    {
+        onExtinguisher = true;
+        extinguisherObject = PhotonNetwork.Instantiate("Extinguisher", extinguisherPivot.position, extinguisherPivot.rotation);
+    }
     public void UpdateDistanceUI(float distance)
     {
         distanceUI.text = distance.ToString("0:0.0") + "m";
@@ -422,8 +448,37 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
 
     private void SetCurrentCharacter(int value)
     {
-        skinnedMeshRenderer.sharedMaterial = materials[value];
-        skinnedMeshRenderer.sharedMesh = meshs[value];
+        foreach(GameObject model in models)
+        {
+            model.SetActive(false);
+        }
+
+        if (value < models.Length / 2)
+        {
+            //male
+            models[0].SetActive(true);
+            femaleRig.SetActive(false);
+            maleRig.SetActive(true);
+
+            outlineObject = outlineMale;
+            extinguisherPivot = extinguisherPivotMale;
+
+            leftHandAnimator = maleLeftHandAnimator;
+            rightHandAnimator = maleRightHandAnimator;
+        }
+        else
+        {
+            //female
+            models[1].SetActive(true);
+            maleRig.SetActive(false);
+            femaleRig.SetActive(true);
+
+            outlineObject = outlineFemale;
+            extinguisherPivot = extinguisherPivotFemale;
+
+            leftHandAnimator = femaleLeftHandAnimator;
+            rightHandAnimator = femaleRightHandAnimator;
+        }
     }
 
     #region Haptic

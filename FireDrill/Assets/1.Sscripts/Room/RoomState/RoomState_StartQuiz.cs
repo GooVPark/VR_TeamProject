@@ -22,18 +22,10 @@ public class RoomState_StartQuiz : RoomState
     {
         base.OnStateEnter();
         toast.gameObject.SetActive(true);
-        foreach(var quizObject in quizObjects)
-        {
-            quizObject.Activate();
-        }
     }
 
     public override void OnStateExit()
     {
-        foreach (var quizObject in quizObjects)
-        {
-            quizObject.Deactivate();
-        }
         toast.gameObject.SetActive(false);
         base.OnStateExit();
     }

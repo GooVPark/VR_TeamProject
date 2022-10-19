@@ -27,6 +27,7 @@ public class RoomState_Quiz : RoomState, IPunObservable
 
     [Header("Quiz Objects")]
     public QuizObjectManager quizManager;
+    public InteractableQuizObject[] quizObjects;
     [Space(5)]
 
     private float time = 600f;
@@ -48,6 +49,11 @@ public class RoomState_Quiz : RoomState, IPunObservable
         }
         if(NetworkManager.User.userType == UserType.Student)
         {
+            foreach (var quizObject in quizObjects)
+            {
+                quizObject.Activate();
+            }
+
             foreach (InteractableQuizObject quizObject in quizManager.quizObjects)
             {
                 quizObject.onSubmit += ScoreCount;
@@ -62,6 +68,11 @@ public class RoomState_Quiz : RoomState, IPunObservable
         timerObject.SetActive(false);
         if (NetworkManager.User.userType == UserType.Student)
         {
+            foreach (var quizObject in quizObjects)
+            {
+                quizObject.Activate();
+            }
+
             roomSceneManager.onRoomStateEvent -= ConfirmQuizResult;
             foreach (InteractableQuizObject quizObject in quizManager.quizObjects)
             {

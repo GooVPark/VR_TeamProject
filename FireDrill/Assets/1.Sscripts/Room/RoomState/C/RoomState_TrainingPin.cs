@@ -6,7 +6,7 @@ using Photon.Pun;
 public class RoomState_TrainingPin : RoomState
 {
     [Header("Room State")]
-    public RoomState_TraningControler roomStateTrainingController;
+    public RoomState_TrainingExtinguish roomStateExtinguish;
     [Space(5)]
 
     [Header("Toast")]
@@ -66,7 +66,7 @@ public class RoomState_TrainingPin : RoomState
     [PunRPC]
     public void EventTriggerRPC()
     {
-        roomSceneManager.RoomState = roomStateTrainingController;
+        roomSceneManager.RoomState = roomStateExtinguish;
     }
 
     public void OnPinRemove()

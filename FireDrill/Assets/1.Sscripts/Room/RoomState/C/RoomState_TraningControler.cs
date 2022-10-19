@@ -6,7 +6,7 @@ using Photon.Pun;
 public class RoomState_TraningControler : RoomState
 {
     [Header("Room State")]
-    public RoomState_TrainingExtinguish roomStateTrainingExtinguish;
+    public RoomState_TrainingPin roomstateTrainingPin;
     [Space(5)]
 
     [Header("Toast")]
@@ -25,7 +25,6 @@ public class RoomState_TraningControler : RoomState
                 {
                     toast.gameObject.SetActive(true);
                     roomSceneManager.onRoomStateEvent += EventTrigger;
-                    
                 }
                 break;
         }
@@ -40,6 +39,12 @@ public class RoomState_TraningControler : RoomState
             case UserType.Student:
                 toast.gameObject.SetActive(false);
                 roomSceneManager.onRoomStateEvent -= EventTrigger;
+
+                if(user.hasExtingisher)
+                {
+                    roomSceneManager.player.SetExtinguisher();
+                }
+
                 break;
         }
         base.OnStateExit();
@@ -53,6 +58,6 @@ public class RoomState_TraningControler : RoomState
     [PunRPC]
     public void EventTriggerRPC()
     {
-        roomSceneManager.RoomState = roomStateTrainingExtinguish;
+        roomSceneManager.RoomState = roomstateTrainingPin;
     }
 }
