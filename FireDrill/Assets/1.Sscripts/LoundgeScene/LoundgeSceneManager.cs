@@ -31,6 +31,8 @@ public class LoundgeSceneManager : GameManager
     private bool isOnline = false;
     public bool isEventServerConnected = false;
 
+    [SerializeField] private GameObject voiceChatErrorToast;
+
     private void Awake()
     {
         if(Instance == null)
@@ -82,6 +84,11 @@ public class LoundgeSceneManager : GameManager
         string message = $"{EventMessageType.SPAWN}_{NetworkManager.User.email}";
         eventMesage?.Invoke(message);
 
+        for (int i = 0; i < playerCountsText.Length; i++)
+        {
+            UpdateRoomPlayerCount(i);
+        }
+
         StopCoroutine(initializer);
     }
 
@@ -126,11 +133,34 @@ public class LoundgeSceneManager : GameManager
         NetworkManager.Instance.roomType = RoomType.VoiceRoom;
         PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, null);
     }
+    public void VoiceChatToRoomErrorToast()
+    {
+        voiceChatErrorToast.gameObject.SetActive(true);
+    }
+
+    public void LeaveVoiceChatAndEnterRoom()
+    {
+        voiceChatErrorToast.SetActive(false);
+        voiceManager.DisconnectVoiceChat();
+
+
+    }
+
+    public void KeepVoiceChat()
+    {
+        voiceChatErrorToast.SetActive(false);
+    }
+
 
     public void RemoveNPCObject(string email)
     {
+        Destroy(spawnedNPCObject[email]);
+
         spawnedNPC.Remove(email);
-        spawnedNPCObject.Remove(email);
+        if (spawnedNPCObject.ContainsKey(email))
+        {
+            spawnedNPCObject.Remove(email);
+        }
 
         DataManager.Instance.DeleteLobbyUser(email);
     }
@@ -318,6 +348,11 @@ public class LoundgeSceneManager : GameManager
     [SerializeField] private List<ProgressUI> progresses;
     [SerializeField] private TMP_Text playerCountText;
 
+    [SerializeField] private Image[] progressUIs;
+    [SerializeField] private Sprite[] progressImages;
+
+    [SerializeField] private TMP_Text[] playerCountsText;
+
     private float progressBoardElapsedTime = 0f;
     private float progressBoardUpdateInterval = 1f;
 
@@ -327,17 +362,12 @@ public class LoundgeSceneManager : GameManager
 
         for(int i = 0; i < roomDatas.Count; i++)
         {
-            progresses[i].UpdateProgressUI(roomDatas[i]);
-        }
-
-        for(int i = roomDatas.Count; i < progresses.Count; i++)
-        {
-            progresses[i].UpdateProgressUI(null);
+            progressUIs[i].sprite = progressImages[roomDatas[i].progress];
         }
     }
     public void UpdateLobbyPlayerCount()
     {
-        playerCountText.text = (PhotonNetwork.CountOfPlayers - NetworkManager.Instance.GetPlayerCountOnRooms()).ToString();
+        playerCountText.text = DataManager.Instance.GetLoundgeUsers().Count.ToString();
     }
     public void UpdateRoomPlayerCount(int roomNumber)
     {
@@ -346,7 +376,7 @@ public class LoundgeSceneManager : GameManager
         int playerCount = roomData.currentPlayerCount;
         int maxPlayerCount = roomData.maxPlayerCount;
 
-        progresses[roomNumber].UpdatePlayerCount(playerCount, maxPlayerCount);
+        playerCountsText[roomNumber].text = $"{playerCount}/{maxPlayerCount}";
     }
 
 
@@ -369,6 +399,9 @@ public class LoundgeSceneManager : GameManager
     private RoomOptions roomOptions;
     public void JoinRoom(int roomNumber)
     {
+        string message = $"{EventMessageType.DISCONNECT}_{NetworkManager.User.email}";
+        eventMesage?.Invoke(message);
+
         DataManager.Instance.DeleteLobbyUser(NetworkManager.User);
 
         Debug.Log("Join Room: " + roomNumber);
@@ -478,6 +511,9 @@ public class LoundgeSceneManager : GameManager
 
     private void OnApplicationQuit()
     {
+        string message = $"{EventMessageType.DISCONNECT}_{NetworkManager.User.email}";
+        eventMesage?.Invoke(message);
+
         DataManager.Instance.DeleteLobbyUser(NetworkManager.User);
     }
 }

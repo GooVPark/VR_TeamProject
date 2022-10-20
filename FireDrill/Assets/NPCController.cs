@@ -2,6 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
+using TMPro;
+
 using Photon.Pun;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
@@ -49,10 +53,22 @@ public class NPCController : MonoBehaviourPun //, IPunInstantiateMagicCallback
     //}
 
     [SerializeField] private GameObject[] models;
-    public GameObject selectTest;
 
-    public Outline outline;
-    private Dictionary<int, OutlineNormalsCalculator[]> outlines = new Dictionary<int, OutlineNormalsCalculator[]>();
+    [SerializeField] private Mesh[] meshs;
+    [SerializeField] private Material[] materials;
+
+    private SkinnedMeshRenderer skinnedMeshRenderer;
+    [SerializeField] private SkinnedMeshRenderer skinnedMeshRendererFemale;
+    [SerializeField] private SkinnedMeshRenderer skinnedMeshRendererMale;
+
+    private SkinnedMeshRenderer outline;
+    [SerializeField] private SkinnedMeshRenderer outlineMale;
+    [SerializeField] private SkinnedMeshRenderer outlineFemale;
+
+    [SerializeField] private TMP_Text userName;
+    [SerializeField] private Image lectureIcon;
+    [SerializeField] private Image studentIcon;
+    [SerializeField] private Image onVoiceChatIcon; 
 
     private bool senderIsOnVoiceChat = false;
     public bool isVoiceChatReady = false;
@@ -61,14 +77,6 @@ public class NPCController : MonoBehaviourPun //, IPunInstantiateMagicCallback
 
     private void Start()
     {
-        outline = GetComponentInChildren<Outline>();
-
-        for(int i = 0; i < models.Length; i++)
-        {
-            OutlineNormalsCalculator[] oncs = models[i].GetComponentsInChildren<OutlineNormalsCalculator>(true);
-            outlines.Add(i, oncs);
-        }
-
         //if (photonView.IsMine)
         //{
         //    FindObjectOfType<VoiceManager>().Initialize(photonView.ViewID);
@@ -95,7 +103,39 @@ public class NPCController : MonoBehaviourPun //, IPunInstantiateMagicCallback
 
     public void Initialize(LoundgeUser userData)
     {
-        models[userData.characterNumber].SetActive(true);
+        if (userData.characterNumber < materials.Length / 2)
+        {
+            models[1].SetActive(false);
+            models[0].SetActive(true);
+
+            skinnedMeshRenderer = skinnedMeshRendererMale;
+            outline = outlineMale;
+        }
+        else
+        {
+            models[0].SetActive(false);
+            models[1].SetActive(true);
+
+            skinnedMeshRenderer = skinnedMeshRendererFemale;
+            outline = outlineFemale;
+        }
+
+        skinnedMeshRenderer.sharedMaterial = materials[userData.characterNumber];
+        skinnedMeshRenderer.sharedMesh = meshs[userData.characterNumber];
+        outline.sharedMesh = meshs[userData.characterNumber];
+
+        userName.text = userData.name;
+
+        switch (userData.userType)
+        {
+            case UserType.Lecture:
+                lectureIcon.gameObject.SetActive(true);
+                break;
+            case UserType.Student:
+                studentIcon.gameObject.SetActive(true);
+                break;
+        }
+
         user = userData;
     }
 
@@ -111,6 +151,11 @@ public class NPCController : MonoBehaviourPun //, IPunInstantiateMagicCallback
             string message = $"{EventMessageType.VOICECHAT}_{VoiceEventType.REQUEST}_{NetworkManager.User.email}_{user.email}";
             eventMessage?.Invoke(message);
         }
+    }
+
+    public void OnVoiceChat(bool value)
+    {
+        onVoiceChatIcon.gameObject.SetActive(value);
     }
 
     public void OnHoverEnter()
@@ -145,17 +190,11 @@ public class NPCController : MonoBehaviourPun //, IPunInstantiateMagicCallback
 
     public void OutlineEnable()
     {
-        foreach (OutlineNormalsCalculator outline in outlines[user.characterNumber])
-        {
-            outline.gameObject.SetActive(true);
-        }
+        outline.gameObject.SetActive(true);
     }
 
     public void OutlineDisable()
     {
-        foreach (OutlineNormalsCalculator outline in outlines[user.characterNumber])
-        {
-            outline.gameObject.SetActive(false);
-        }
+        outline.gameObject.SetActive(false);
     }
 }

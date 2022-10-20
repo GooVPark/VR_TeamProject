@@ -157,6 +157,7 @@ public class LoundgeUser
     public string name;
     public int characterNumber;
     public bool onVoiceChat;
+    public UserType userType;
 
     public LoundgeUser(User user)
     {
@@ -164,6 +165,7 @@ public class LoundgeUser
         name = user.name;
         characterNumber = user.characterNumber;
         onVoiceChat = false;
+        userType = user.userType;
     }
 }
 

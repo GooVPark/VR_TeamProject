@@ -229,6 +229,11 @@ public class RoomSceneManager : GameManager
 
     }
 
+    public override void OnConnectedToMaster()
+    {
+        base.OnConnectedToMaster();
+    }
+
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         if (newPlayer != PhotonNetwork.LocalPlayer)

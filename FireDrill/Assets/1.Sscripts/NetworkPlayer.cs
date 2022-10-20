@@ -39,12 +39,16 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         switch (userLevel)
         {
             case UserType.Lecture:
-                userTypeLecture.SetActive(true);
+                lectureIcon.gameObject.SetActive(true);
                 break;
             case UserType.Student:
-                userTypeStudent.SetActive(true);
+                studentIcon.gameObject.SetActive(true);
+                scoreUI.gameObject.SetActive(true);
+                scoreUI.text = "-";
+                uiGroup.sizeDelta = new Vector2(220, 0) + uiGroup.sizeDelta;
                 break;
         }
+        uiGroup.sizeDelta = new Vector2(100, 0) + uiGroup.sizeDelta;
     }
 
     [SerializeField] private int currentCharacter;
@@ -64,7 +68,8 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         hasExtinguisher = value;
         if(hasExtinguisher)
         {
-            extingusiherEnabled.SetActive(true);
+            extinguisherIcon.gameObject.SetActive(true);
+            uiGroup.sizeDelta = new Vector2(100, 0) + uiGroup.sizeDelta;
         }
         else
         {
@@ -140,11 +145,15 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
 
     [Header("Player UI")]
     public GameObject userInfoUI;
+    public RectTransform uiGroup;
     public TMP_Text userNameUI;
-    public TMP_Text userLevelUI;
-    public TMP_Text distanceUI;
-    public Image image;
+    public Image lectureIcon;
+    public Image studentIcon;
+    public Image extinguisherIcon;
+    public TMP_Text scoreUI;
+
     public GameObject speachBubble;
+    [Space(5)]
 
     [Header("User Type Icons")]
     public GameObject userTypeLecture;
@@ -378,7 +387,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
             headModel.layer = 31;
             leftHand.gameObject.layer = 31;
             rightHand.gameObject.layer = 31;
-            //outlineObject.layer = 31;
+            outlineObject.gameObject.layer = 31;
 
             TextChatManager.sendChatMessage += OnSendChatMessage;
         }
@@ -398,7 +407,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     }
     public void UpdateDistanceUI(float distance)
     {
-        distanceUI.text = distance.ToString("0:0.0") + "m";
+
     }
 
     private void MapPosition()
