@@ -7379,7 +7379,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
-  m_SortingLayerID: 0
+  m_SortingLayerID: -39330807
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!1 &384377202
@@ -7773,7 +7773,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
-  m_SortingLayerID: 0
+  m_SortingLayerID: -39330807
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!1 &411083703
@@ -8319,6 +8319,7 @@ MonoBehaviour:
   spawnPosition: {fileID: 0}
   npcPrefab: {fileID: 0}
   isEventServerConnected: 0
+  voiceChatErrorToast: {fileID: 0}
   posts: []
   currentPage: 0
   totalPage: 0
@@ -8341,6 +8342,7 @@ MonoBehaviour:
   playerCountText: {fileID: 0}
   progressUIs: []
   progressImages: []
+  playerCountsText: []
   roomNumber: 0
 --- !u!4 &442421933
 Transform:
@@ -16217,7 +16219,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
-  m_SortingLayerID: 0
+  m_SortingLayerID: -39330807
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!1001 &834823277
@@ -19722,6 +19724,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8167539631880995550, guid: 3d47939297531f74e907681d3df38bb1,
+        type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 779158801280045519}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3d47939297531f74e907681d3df38bb1, type: 3}
 --- !u!4 &1124865812 stripped
@@ -24709,7 +24716,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
-  m_SortingLayerID: 0
+  m_SortingLayerID: -39330807
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!1 &1436961809

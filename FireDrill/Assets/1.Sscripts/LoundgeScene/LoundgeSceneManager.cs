@@ -362,7 +362,7 @@ public class LoundgeSceneManager : GameManager
 
         for(int i = 0; i < roomDatas.Count; i++)
         {
-            progressUIs[i].sprite = progressImages[roomDatas[i].progress];
+            progressUIs[i].sprite = progressImages[roomDatas[i].progress-1];
         }
     }
     public void UpdateLobbyPlayerCount()

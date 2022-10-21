@@ -43,7 +43,7 @@ public class RoomState_GoToC : RoomState
 
     public override void OnUpdate()
     {
-        if(eventAreaMR.playerCount >= 1 && roomSceneManager.IsReady(eventArea.playerCount))
+        if(eventAreaMR.playerCount >= 1 && roomSceneManager.IsReady(eventArea.playerCount+1))
         {
             roomSceneManager.RoomState = roomStateInTraning;
         }

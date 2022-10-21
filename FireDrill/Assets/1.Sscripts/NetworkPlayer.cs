@@ -190,8 +190,8 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     [SerializeField] private HandAnimationController leftHandAnimation;
     [SerializeField] private HandAnimationController rightHandAnimation;
 
-    private Animator leftHandAnimator;
-    private Animator rightHandAnimator;
+    [SerializeField] private Animator leftHandAnimator;
+    [SerializeField] private Animator rightHandAnimator;
 
     [SerializeField] private Animator femaleLeftHandAnimator;
     [SerializeField] private Animator femaleRightHandAnimator;
@@ -384,6 +384,8 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
 
             userInfoUI.SetActive(false);
 
+            femaleRig.layer = 31;
+            maleRig.layer = 31;
             headModel.layer = 31;
             leftHand.gameObject.layer = 31;
             rightHand.gameObject.layer = 31;
@@ -468,8 +470,8 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
             extinguisherPivot = extinguisherPivotMale;
             
             skinnedMeshRenderer = skinnedMeshRendererMale;
-            leftHandAnimator = maleLeftHandAnimator;
-            rightHandAnimator = maleRightHandAnimator;
+            //leftHandAnimator = maleLeftHandAnimator;
+            //rightHandAnimator = maleRightHandAnimator;
         }
         else
         {
@@ -481,8 +483,8 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
             extinguisherPivot = extinguisherPivotFemale;
 
             skinnedMeshRenderer = skinnedMeshRendererFemale;
-            leftHandAnimator = femaleLeftHandAnimator;
-            rightHandAnimator = femaleRightHandAnimator;
+            //leftHandAnimator = femaleLeftHandAnimator;
+            //rightHandAnimator = femaleRightHandAnimator;
         }
 
         skinnedMeshRenderer.sharedMaterial = materials[value];
