@@ -31,7 +31,7 @@ public class RoomState_InTraning : RoomState
             case UserType.Lecture:
                 currentToast = toastLecture.gameObject;
                 roomSceneManager.onRoomStateEvent += StartTraining;
-                DataManager.Instance.UpdateRoomProgress(roomSceneManager.roomNumber, 5);
+                DataManager.Instance.UpdateRoomProgress(roomSceneManager.roomNumber, 4);
 
                 string message = $"{EventMessageType.PROGRESS}_{ProgressEventType.UPDATE}_{roomSceneManager.roomNumber}";
                 SendEventMessage(message);

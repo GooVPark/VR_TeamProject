@@ -18,7 +18,7 @@ public class RoomState_EndTraining : RoomState
         switch (user.userType)
         {
             case UserType.Lecture:
-                DataManager.Instance.UpdateRoomProgress(roomSceneManager.roomNumber, 6);
+                DataManager.Instance.UpdateRoomProgress(roomSceneManager.roomNumber, 5);
                 DataManager.Instance.UpdateRoomState(roomSceneManager.roomNumber, false);
 
                 string message = $"{EventMessageType.PROGRESS}_{ProgressEventType.UPDATE}_{roomSceneManager.roomNumber}";

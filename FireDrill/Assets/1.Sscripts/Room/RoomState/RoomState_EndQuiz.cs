@@ -17,7 +17,7 @@ public class RoomState_EndQuiz : RoomState
         base.OnStateEnter();
         if(NetworkManager.User.userType == UserType.Lecture)
         {
-            DataManager.Instance.UpdateRoomProgress(roomSceneManager.roomNumber, 4);
+            DataManager.Instance.UpdateRoomProgress(roomSceneManager.roomNumber, 3);
 
             string message = $"{EventMessageType.PROGRESS}_{ProgressEventType.UPDATE}_{roomSceneManager.roomNumber}";
             SendEventMessage(message);

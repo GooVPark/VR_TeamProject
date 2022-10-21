@@ -26,7 +26,7 @@ public class RoomState_ClassEnd : RoomState
 
         if(user.userType == UserType.Lecture)
         {
-            DataManager.Instance.UpdateRoomProgress(roomSceneManager.roomNumber, 2);
+            DataManager.Instance.UpdateRoomProgress(roomSceneManager.roomNumber, 1);
 
             string message = $"{EventMessageType.PROGRESS}_{ProgressEventType.UPDATE}_{roomSceneManager.roomNumber}";
             SendEventMessage(message);

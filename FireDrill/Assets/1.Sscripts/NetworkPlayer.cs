@@ -187,6 +187,9 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     [SerializeField] private GameObject femaleRig;
     [SerializeField] private GameObject maleRig;
 
+    [SerializeField] private GameObject maleMesh;
+    [SerializeField] private GameObject femaleMesh;
+
     [SerializeField] private HandAnimationController leftHandAnimation;
     [SerializeField] private HandAnimationController rightHandAnimation;
 
@@ -384,8 +387,8 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
 
             userInfoUI.SetActive(false);
 
-            femaleRig.layer = 31;
-            maleRig.layer = 31;
+            maleMesh.layer = 31;
+            femaleMesh.layer = 31;
             headModel.layer = 31;
             leftHand.gameObject.layer = 31;
             rightHand.gameObject.layer = 31;
