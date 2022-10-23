@@ -30,7 +30,7 @@ public class RoomState_InQuiz : RoomState
         if(NetworkManager.User.userType == UserType.Lecture)
         {
             lectureToast.gameObject.SetActive(true);
-            DataManager.Instance.UpdateRoomProgress(roomSceneManager.roomNumber, 2);
+            DataManager.Instance.UpdateRoomProgress(roomSceneManager.roomNumber, 3);
 
             string message = $"{EventMessageType.PROGRESS}_{ProgressEventType.UPDATE}_{roomSceneManager.roomNumber}";
             SendEventMessage(message);

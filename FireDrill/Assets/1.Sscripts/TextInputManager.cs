@@ -6,7 +6,7 @@ using TMPro;
 
 public class TextInputManager : MonoBehaviour
 {
-    public VirtualKeyboard virtualKeyboard;
+    public XRVirtualKeyboard virtualKeyboard;
     [SerializeField] private TMP_InputField input;
 
     private void Awake()
@@ -25,7 +25,7 @@ public class TextInputManager : MonoBehaviour
 
     public void Submit()
     {
-        input.text = virtualKeyboard.TextInputBox.TextField;    
+        input.text = virtualKeyboard.textInputBox.TextField;    
         virtualKeyboard.gameObject.SetActive(false);
     }
 }

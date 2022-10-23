@@ -7,41 +7,73 @@ using System.Collections.Generic;
 //public class AutomateKR : MonoBehaviour {
 public class AutomateKR {
 
-    public static int KEY_CODE_SPACE = -1;		// 띄어쓰기
-	public static int KEY_CODE_ENTER = -2;		// 내려쓰기
-	public static int KEY_CODE_BACKSPACE = -3;		// 지우기
+    public static int KEY_CODE_SPACE = -1;      // 띄어쓰기
+    public static int KEY_CODE_ENTER = -2;      // 내려쓰기
+    public static int KEY_CODE_BACKSPACE = -3;      // 지우기
 
-	public static Dictionary<char, int> HANGULE_KEY_TABLE = new Dictionary<char, int>
-	{
-		{'q', 7}, 	{'Q', 8},
-		{'w', 12}, 	{'W', 13},
-		{'e', 3}, 	{'E', 4},
-		{'r', 0},	{'R', 1},
-		{'t', 9},	{'T', 10},
-		{'y', 31},	{'Y', 31},
-		{'u', 25},	{'U', 25},
-		{'i', 21},	{'I', 21},
-		{'o', 20},	{'O', 22},
-		{'p', 24},	{'P', 26},
+    public static Dictionary<char, int> HANGULE_KEY_TABLE = new Dictionary<char, int>
+    {
+        {'q', 7},   {'Q', 8},
+        {'w', 12},  {'W', 13},
+        {'e', 3},   {'E', 4},
+        {'r', 0},   {'R', 1},
+        {'t', 9},   {'T', 10},
+        {'y', 31},  {'Y', 31},
+        {'u', 25},  {'U', 25},
+        {'i', 21},  {'I', 21},
+        {'o', 20},  {'O', 22},
+        {'p', 24},  {'P', 26},
 
-		{'a', 6},	{'A', 6},
-		{'s', 2},	{'S', 2},
-		{'d', 11},	{'D', 11},
-		{'f', 5},	{'F', 5},
-		{'g', 18},	{'G', 18},
-		{'h', 27},	{'H', 27},
-		{'j', 23},	{'J', 23},
-		{'k', 19},	{'K', 19},
-		{'l', 39},	{'L', 39},
+        {'a', 6},   {'A', 6},
+        {'s', 2},   {'S', 2},
+        {'d', 11},  {'D', 11},
+        {'f', 5},   {'F', 5},
+        {'g', 18},  {'G', 18},
+        {'h', 27},  {'H', 27},
+        {'j', 23},  {'J', 23},
+        {'k', 19},  {'K', 19},
+        {'l', 39},  {'L', 39},
 
-		{'z', 15}, 	{'Z', 15},
-		{'x', 16},	{'X', 16},
-		{'c', 14},	{'C', 14},
-		{'v', 17},	{'V', 17},
-		{'b', 36},	{'B', 36},
-		{'n', 32},	{'N', 32},
-		{'m', 37},	{'M', 37},
-	};
+        {'z', 15},  {'Z', 15},
+        {'x', 16},  {'X', 16},
+        {'c', 14},  {'C', 14},
+        {'v', 17},  {'V', 17},
+        {'b', 36},  {'B', 36},
+        {'n', 32},  {'N', 32},
+        {'m', 37},  {'M', 37},
+    };
+
+    public static Dictionary<char, char> NUMBER_KEY_TABLE = new Dictionary<char, char>()
+    {
+        {'q', '1'},
+        {'w', '2'},
+        {'e', '3'},
+        {'r', '4'},
+        {'t', '5'},
+        {'y', '6'},
+        {'u', '7'},
+        {'i', '8'},
+        {'o', '9'},
+        {'p', '0'},
+        {'a', '-'},
+        {'s', '/'},
+        {'d', ':'},
+        {'f', ';'},
+        {'g', '('},
+        {'h', ')'},
+        {'j', '\\'},
+        {'k', '&'},
+        {'l', '\"'},
+        {'z', '#'},
+        {'x', '^'},
+        {'c', '*'},
+        {'v', '@'},
+        {'b', '?'},
+        {'n', '!'},
+        {'m', '\''},
+        {'.', '.' },
+        {',', ','}
+    };
 
     // 초성, 중성, 종성 테이블.
     static string SOUND_TABLE =
@@ -224,6 +256,11 @@ public class AutomateKR {
         return m_nStatus;
 	}
 
+    public void SetKeyStringNumber(char str)
+    {
+        SetKeyString(NUMBER_KEY_TABLE[str]);
+    }
+
     public void SetKeyString(char str)
     {
         m_nStatus = HAN_STATUS.HS_FIRST;
@@ -242,6 +279,11 @@ public class AutomateKR {
     public string SetKeyCode(char _key)
     {
         return SetKeyCode(HANGULE_KEY_TABLE[_key]);
+    }
+
+    public string SetNumberKeyCode(char _key)
+    {
+        return SetKeyCode(NUMBER_KEY_TABLE[_key]);
     }
 
     

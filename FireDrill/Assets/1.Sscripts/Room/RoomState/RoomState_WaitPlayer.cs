@@ -16,6 +16,10 @@ public class RoomState_WaitPlayer : RoomState
     public override void OnStateEnter()
     {
         base.OnStateEnter();
+
+        NetworkManager.Instance.voiceChatDisabled = false;
+        NetworkManager.Instance.textChatDisabled = false;
+
         voiceChat.UpdateState(ButtonState.Deactivate);
         voiceChat.button.onClick += roomSceneManager.ToggleVoiceChat;
 
@@ -24,6 +28,8 @@ public class RoomState_WaitPlayer : RoomState
 
         if(user.userType == UserType.Lecture)
         {
+            NetworkManager.Instance.megaphoneDisabled = false;
+
             DataManager.Instance.UpdateRoomProgress(roomSceneManager.roomNumber, 0);
             DataManager.Instance.UpdateRoomState(roomSceneManager.roomNumber, true);
 

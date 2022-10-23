@@ -63,7 +63,7 @@ public class InputManager : MonoBehaviour
     public InputActionReference rightStick = null;
 
     public InputActionReference rightControllerRotation = null;
-    
+
 
     #region LeftHand Context Values
 

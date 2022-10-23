@@ -14,7 +14,6 @@ public class LineVisualizerHandler : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log("Set Handler");
         lineVisual = GetComponent<XRInteractorLineVisual>();
         rayInteractor = GetComponent<XRRayInteractor>();
 
@@ -33,7 +32,6 @@ public class LineVisualizerHandler : MonoBehaviour
 
     public void LineVisualize(bool value)
     {
-        Debug.Log("LineVisualize Value: " + value);
         if(value)
         {
             lineVisual.enabled = true;

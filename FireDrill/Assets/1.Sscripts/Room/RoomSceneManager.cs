@@ -69,6 +69,8 @@ public class RoomSceneManager : GameManager
 
     public Transform origin;
 
+    public bool socreOrderBy = false;
+
     private int currentProcess;
     public int CurrentProcess
     {
@@ -108,7 +110,7 @@ public class RoomSceneManager : GameManager
         DataManager.Instance.UpdateRoomProgress(roomNumber, progress);
     }
 
-    private List<User> GetUsersInRoom(int number)
+    public List<User> GetUsersInRoom(int number)
     {
         return DataManager.Instance.GetUsersListInRoom(number);
     }
@@ -130,21 +132,28 @@ public class RoomSceneManager : GameManager
         if (scoreBoardUI.activeSelf)
         {
             scoreBoardUI.SetActive(false);
+            NetworkManager.Instance.onScoreBoard = false;
             return;
         }
 
+        NetworkManager.Instance.onScoreBoard = true;
         scoreBoardUI.SetActive(true);
 
+        //UpdateScoreBoard();
+    }
+
+    private void UpdateScoreBoard()
+    {
         List<User> users = GetUsersInRoom(NetworkManager.RoomNumber);
 
-        for(int i = 0; i < users.Count; i++)
+        for (int i = 0; i < users.Count; i++)
         {
             if (users[i].userType == UserType.Lecture) continue;
 
             scoureRows[i].gameObject.SetActive(true);
             scoureRows[i].UpdateScore(users[i]);
         }
-        for(int i = users.Count; i < scoureRows.Length; i++)
+        for (int i = users.Count; i < scoureRows.Length; i++)
         {
             scoureRows[i].gameObject.SetActive(false);
         }

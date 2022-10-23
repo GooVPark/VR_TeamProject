@@ -435,11 +435,11 @@ public class LoundgeSceneManager : GameManager
                 spawnedNPCObject[voiceManager.reciever.email].SetActive(false);
 
                 voiceChatButton.button.onClick += voiceManager.DisconnectVoiceChat;
-                voiceChatButton.UpdateState(ButtonState.Activate);
+                NetworkManager.Instance.onVoiceChat = true;
 
                 foreach(string key in spawnedNPCObject.Keys)
                 {
-                    spawnedNPCObject[key].GetComponent<NPCController>().SetVoiceChatState(false);
+                    spawnedNPCObject[key].GetComponent<NPCController>().SetVoiceChatState(true);
                 }
 
                 break;
@@ -469,12 +469,13 @@ public class LoundgeSceneManager : GameManager
                 }
 
                 NetworkManager.Instance.roomType = RoomType.Loundge;
-                voiceChatButton.UpdateState(ButtonState.Disable);
+                NetworkManager.Instance.onVoiceChat = false;
+
                 voiceChatButton.button.onClick -= voiceManager.DisconnectVoiceChat;
 
                 foreach (string key in spawnedNPCObject.Keys)
                 {
-                    spawnedNPCObject[key].GetComponent<NPCController>().SetVoiceChatState(true);
+                    spawnedNPCObject[key].GetComponent<NPCController>().SetVoiceChatState(false);
                 }
 
                 Debug.Log(PhotonNetwork.NetworkClientState);

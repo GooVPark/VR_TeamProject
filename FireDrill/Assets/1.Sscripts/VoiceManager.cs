@@ -205,6 +205,7 @@ public class VoiceManager : MonoBehaviourPunCallbacks
         acceptVoiceChatToast.message.text = $"{sender.name}님과의 1:1 대화가 수락 되었습니다.";
 
         reciever.onVoiceChat = true;
+
         DataManager.Instance.UpdateLobbyUser(reciever);
 
         string message = $"{EventMessageType.VOICECHAT}_{VoiceEventType.CONNECT}_{sender.email}_{reciever.email}";
@@ -357,5 +358,10 @@ public class VoiceManager : MonoBehaviourPunCallbacks
     private void CloseToast()
     {
         CurrentToast = null;
+    }
+
+    private void OnApplicationQuit()
+    {
+        DisconnectVoiceChat();
     }
 }

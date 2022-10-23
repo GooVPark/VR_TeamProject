@@ -40,6 +40,7 @@ public class RoomState_Class : RoomState
 
         //textChat.button.onClick -= roomSceneManager.ToggleTextChat;
 
+        NetworkManager.Instance.voiceChatDisabled = true;
         roomSceneManager.DeactivateVoiceChat();
         //roomSceneManager.DisableTextChat();
 
@@ -60,7 +61,9 @@ public class RoomState_Class : RoomState
 
     public override void OnStateExit()
     {
-        voiceChat.UpdateState(ButtonState.Deactivate);
+        //voiceChat.UpdateState(ButtonState.Deactivate);
+        NetworkManager.Instance.voiceChatDisabled = false;
+        NetworkManager.Instance.onVoiceChat = false;
         voiceChat.button.onClick += roomSceneManager.ToggleVoiceChat;
         voiceChat.button.onClick -= MicDisabled;
 

@@ -132,6 +132,7 @@ public class User
 
     public int currentRoom;
     public int[] quizResult = new int[10];
+    public int totalScore;
 
     public User()
     {

@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class ButtonStateHandler : MonoBehaviour
 {
+    public enum UIButtonType { Megaphone, Score, VoiceChat, TextChat }
+    public UIButtonType type;
     public Sprite disable;
     public Sprite activate;
     public Sprite deactivate;
@@ -21,10 +23,46 @@ public class ButtonStateHandler : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         button = gameObject.GetComponent<ButtonInteractor>();
-        button.OnClick.AddListener(() => OnSelect());
+        //button.OnClick.AddListener(() => OnSelect());
 
         UpdateState(buttonState);
 
+    }
+
+    private void Update()
+    {
+        switch (type)
+        {
+            case UIButtonType.Megaphone:
+                UpdateState(NetworkManager.Instance.megaphoneDisabled, NetworkManager.Instance.onMegaphone);
+                break;
+            case UIButtonType.Score:
+                UpdateState(NetworkManager.Instance.scoreBoardDisabled, NetworkManager.Instance.onScoreBoard);
+                break;
+            case UIButtonType.VoiceChat:
+                UpdateState(NetworkManager.Instance.voiceChatDisabled, NetworkManager.Instance.onVoiceChat);
+                break;
+            case UIButtonType.TextChat:
+                UpdateState(NetworkManager.Instance.textChatDisabled, NetworkManager.Instance.onTextChat);
+                break;
+        }
+    }
+
+    private void UpdateState(bool isDisabled, bool state)
+    {
+        if (isDisabled)
+        {
+            image.sprite = disable;
+            return;
+        }
+        if (state)
+        {
+            image.sprite = activate;
+        }
+        else
+        {
+            image.sprite = deactivate;
+        }
     }
 
     public void UpdateState(ButtonState buttonState)
@@ -68,5 +106,5 @@ public class ButtonStateHandler : MonoBehaviour
                 break;
         }
     }
-    
+
 }

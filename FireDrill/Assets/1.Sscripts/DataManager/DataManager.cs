@@ -296,6 +296,30 @@ public class DataManager : MonoBehaviour
         var update = Builders<User>.Update.Set(x => x.quizResult[code], result);
 
         accountCollection.UpdateOne(filter, update);
+
+        int total = GetTotalScore(email);
+
+        update = Builders<User>.Update.Set("totalScore", total);
+    }
+
+    public int GetTotalScore(string email)
+    {
+        var filter = Builders<User>.Filter.Eq("email", email);
+
+        var users = accountCollection.Find(filter).ToList();
+        var user = users[0];
+
+        int total = 0;
+
+        for(int i = 0; i < user.quizResult.Length; i++)
+        {
+            if(user.quizResult[i] == 1)
+            {
+                total += 10;
+            }
+        }
+
+        return total;
     }
 
     public void GetScoreBoard()

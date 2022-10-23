@@ -20,11 +20,7 @@ public class HUDController : MonoBehaviour
 
     private void Awake()
     {
-        for (int i = 0; i < chatList.Length; i++)
-        {
-            chatList[i].text = "";
-        }
-        chatInputField.text = "";
+
     }
 
     #region Camera UI

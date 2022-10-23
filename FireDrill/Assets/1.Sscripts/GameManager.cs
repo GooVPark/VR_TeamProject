@@ -74,7 +74,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         
         player.MegaphoneOn();
 
-        megaphoneButton.UpdateState(ButtonState.Activate);
+        NetworkManager.Instance.onMegaphone = true;
+        //megaphoneButton.UpdateState(ButtonState.Activate);
 
         Haptic(0.5f, 0.1f);
     }
@@ -86,7 +87,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         player.MegaphoneOff();
 
-        megaphoneButton.UpdateState(ButtonState.Deactivate);
+        NetworkManager.Instance.onMegaphone = false;
+        //megaphoneButton.UpdateState(ButtonState.Deactivate);
 
         Haptic(0.5f, 0.1f);
     }
@@ -138,14 +140,16 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         onVoice = true;
         localRecoder.TransmitEnabled = true;
-        voiceChatButton.UpdateState(ButtonState.Activate);
+        NetworkManager.Instance.onVoiceChat = true;
+        //voiceChatButton.UpdateState(ButtonState.Activate);
     }
 
     public void DeactivateVoiceChat()
     {
         onVoice = false;
         localRecoder.TransmitEnabled = false;
-        voiceChatButton.UpdateState(ButtonState.Deactivate);
+        NetworkManager.Instance.onVoiceChat = false;
+        //voiceChatButton.UpdateState(ButtonState.Deactivate);
     }
 
     public void RequsetVoiceChat(int receiverID, int senderID)
@@ -302,7 +306,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public GameObject chatUI;
     private bool onChatView;
 
-    public InputField chatInputField;
+    public TMP_InputField chatInputField;
     public TMP_Text[] chatList;
 
     public void ToggleTextChat()
@@ -313,6 +317,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             chatUI.SetActive(false);
 
             onChatView = false;
+            NetworkManager.Instance.onTextChat = false;
             //LoundgeSceneManager.Instance.Haptic(0.2f, 0.1f);
         }
         else
@@ -321,6 +326,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             chatUI.SetActive(true);
 
             onChatView = true;
+            NetworkManager.Instance.onTextChat = true;
             //LoundgeSceneManager.Instance.Haptic(0.5f, 0.1f);
         }
 

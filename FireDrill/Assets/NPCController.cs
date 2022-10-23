@@ -70,7 +70,7 @@ public class NPCController : MonoBehaviourPun //, IPunInstantiateMagicCallback
     [SerializeField] private Image studentIcon;
     [SerializeField] private Image onVoiceChatIcon; 
 
-    private bool senderIsOnVoiceChat = false;
+    public bool senderIsOnVoiceChat = false;
     public bool isVoiceChatReady = false;
     private bool isHovered = false;
     public LoundgeUser user;
@@ -146,7 +146,7 @@ public class NPCController : MonoBehaviourPun //, IPunInstantiateMagicCallback
     //}
     public void OnRequestPrivateVoiceChat()
     {
-        if (!user.onVoiceChat && isVoiceChatReady && isHovered)
+        if (!user.onVoiceChat && isVoiceChatReady && isHovered && !senderIsOnVoiceChat)
         {
             string message = $"{EventMessageType.VOICECHAT}_{VoiceEventType.REQUEST}_{NetworkManager.User.email}_{user.email}";
             eventMessage?.Invoke(message);
@@ -160,11 +160,13 @@ public class NPCController : MonoBehaviourPun //, IPunInstantiateMagicCallback
 
     public void OnHoverEnter()
     {
-        isHovered = true;
         if(senderIsOnVoiceChat)
         {
             return;
         }
+
+        isHovered = true;
+
         if (!user.onVoiceChat && isVoiceChatReady)
         {
             OutlineEnable();

@@ -30,6 +30,18 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     private bool onChangeRoom = false;
 
+    public bool onMegaphone = false;
+    public bool megaphoneDisabled = false;
+
+    public bool onScoreBoard = false;
+    public bool scoreBoardDisabled = false;
+
+    public bool onVoiceChat = false;
+    public bool voiceChatDisabled = false;
+
+    public bool onTextChat = false;
+    public bool textChatDisabled = false;
+
     private void Awake()
     {
         if (Instance == null)

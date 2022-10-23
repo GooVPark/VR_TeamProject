@@ -16,8 +16,21 @@ public class TextChatManager : MonoBehaviour, IChatClientListener
 
     public TMP_Text[] chatList;
 
+    private int colorNumber = 0;
+    [SerializeField] private List<Color> colorList = new List<Color>();
     private void Start()
     {
+        colorList.Add(Color.red);
+        colorList.Add(Color.green);
+        colorList.Add(Color.blue);
+        //colorList.Add(Color.white);
+        colorList.Add(Color.black);
+        colorList.Add(Color.yellow);
+        colorList.Add(Color.cyan);
+        colorList.Add(Color.magenta);
+        colorList.Add(Color.gray);
+        colorList.Add(Color.grey);
+
         Connect();
     }
 
@@ -64,22 +77,38 @@ public class TextChatManager : MonoBehaviour, IChatClientListener
     public void OnConnected()
     {
         Debug.Log("Connected to Chat");
+        colorNumber = NetworkManager.User.characterNumber % 9;
+
         chatClient.Subscribe(new string[] { worldChat });
         chatClient.SetOnlineStatus(ChatUserStatus.Online);
     }
     public delegate void SendChatMessageEvent(string message);
     public static SendChatMessageEvent sendChatMessage;
-    public void SendChatMessage(InputField inputField)
+    public void SendChatMessage(TMP_InputField inputField)
     {
         if(string.IsNullOrEmpty(inputField.text))
         {
             return;
         }
 
-        chatClient.PublishMessage(worldChat, inputField.text);
+        string message = inputField.text + "=" + colorNumber;
+
+        chatClient.PublishMessage(worldChat, message);
         sendChatMessage?.Invoke(inputField.text);
     }
+    public static string ColorToStr(Color color)
+    {
+        string r = ((int)(color.r * 255)).ToString("X2");
+        string g = ((int)(color.g * 255)).ToString("X2");
+        string b = ((int)(color.b * 255)).ToString("X2");
+        string a = ((int)(color.a * 255)).ToString("X2");
 
+
+        string result = string.Format("{0}{1}{2}{3}", r, g, b, a);
+
+
+        return result;
+    }
     public void OnSpawnNPC()
     {
 
@@ -108,7 +137,12 @@ public class TextChatManager : MonoBehaviour, IChatClientListener
                 return;
             }
 
-            chatList[0].text = channel.ToStringMessages();
+            string[] command = messages[^1].ToString().Split('=');
+            Debug.Log(messages[^1].ToString());
+            Debug.Log(command[0]);
+            Debug.Log(command[1]);
+            string message = $"<color=#{ColorToStr(colorList[int.Parse(command[1])])}><b>{senders[^1]}</b>\n{command[0]}</color>\n";
+            chatList[0].text += message;
         }
     }
 

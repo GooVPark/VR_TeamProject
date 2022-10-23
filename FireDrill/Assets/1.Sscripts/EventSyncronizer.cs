@@ -229,8 +229,8 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
                     loundgeManager.spawnedNPC[senderEmail].onVoiceChat = false;
                     loundgeManager.spawnedNPC[recieverEmail].onVoiceChat = false;
 
-                    loundgeManager.spawnedNPCObject[senderEmail].GetComponent<NPCController>().OnVoiceChat(true);
-                    loundgeManager.spawnedNPCObject[recieverEmail].GetComponent<NPCController>().OnVoiceChat(true);
+                    loundgeManager.spawnedNPCObject[senderEmail].GetComponent<NPCController>().OnVoiceChat(false);
+                    loundgeManager.spawnedNPCObject[recieverEmail].GetComponent<NPCController>().OnVoiceChat(false);
                 }
             }
         }

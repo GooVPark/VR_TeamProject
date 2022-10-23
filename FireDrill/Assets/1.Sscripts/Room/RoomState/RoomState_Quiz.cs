@@ -45,7 +45,9 @@ public class RoomState_Quiz : RoomState, IPunObservable
         if(NetworkManager.User.userType == UserType.Lecture)
         {
             scoreObject.SetActive(false);
-            scoreBoard.UpdateState(ButtonState.Deactivate);
+            //scoreBoard.UpdateState(ButtonState.Deactivate);
+            NetworkManager.Instance.scoreBoardDisabled = false;
+            NetworkManager.Instance.onScoreBoard = false;
         }
         if(NetworkManager.User.userType == UserType.Student)
         {
