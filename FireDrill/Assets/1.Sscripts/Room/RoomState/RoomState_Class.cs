@@ -47,6 +47,9 @@ public class RoomState_Class : RoomState
 
         if (NetworkManager.User.userType == UserType.Lecture)
         {
+            InputManager.leftSecondaryButton += NextPage;
+            InputManager.leftPrimaryButton += PrevPage;
+
             currentToast = lectureToast.gameObject;
             lectureToast.gameObject.SetActive(true);
             roomSceneManager.MegaphoneOn();
@@ -73,6 +76,8 @@ public class RoomState_Class : RoomState
 
         if (NetworkManager.User.userType == UserType.Lecture)
         {
+            InputManager.leftSecondaryButton -= NextPage;
+            InputManager.leftPrimaryButton -= PrevPage;
             //roomSceneManager.MegaphoneOff();
             //megaphone.ChangeIconState(ButtonState.IconState.Off);
         }

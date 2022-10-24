@@ -160,6 +160,9 @@ public class VoiceManager : MonoBehaviourPunCallbacks
         string email = PhotonNetwork.CurrentRoom.CustomProperties[viewID.ToString()].ToString();
         voiceChatDisconnectToast.message.text = $"{email}님과의 대화가 종료되었습니다";
 
+        NetworkManager.Instance.voiceChatDisabled = true;
+        NetworkManager.Instance.onVoiceChat = false;
+
         PhotonVoiceNetwork.Instance.Client.OpChangeGroups(new byte[] { }, new byte[] { 255 });
         groupText.text = (255).ToString();
 
@@ -193,6 +196,8 @@ public class VoiceManager : MonoBehaviourPunCallbacks
         acceptVoiceChatToast.message.text = $"{reciever.name}님과의 1:1 대화가 수락 되었습니다.";
 
         DataManager.Instance.UpdateLobbyUser(sender);
+        NetworkManager.Instance.voiceChatDisabled = false;
+        NetworkManager.Instance.onVoiceChat = true;
 
         string message = $"{EventMessageType.VOICECHAT}_{VoiceEventType.CONNECT}_{sender.email}_{reciever.email}";
         eventMessage?.Invoke(message);
@@ -203,6 +208,8 @@ public class VoiceManager : MonoBehaviourPunCallbacks
     {
         CurrentToast = acceptVoiceChatToast.gameObject;
         acceptVoiceChatToast.message.text = $"{sender.name}님과의 1:1 대화가 수락 되었습니다.";
+        NetworkManager.Instance.voiceChatDisabled = false;
+        NetworkManager.Instance.onVoiceChat = true;
 
         reciever.onVoiceChat = true;
 

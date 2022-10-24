@@ -52,7 +52,7 @@ public class ScoreBoard : MonoBehaviour
 
     private void UpdateScoreBoard()
     {
-        List<User> users = roomManager.GetUsersInRoom(NetworkManager.RoomNumber);
+        List<User> users = roomManager.GetUsersInRoom(roomManager.roomNumber);
         
         if(isOrderd)
         {

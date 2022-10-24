@@ -8,7 +8,7 @@ public class EventArea : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("NetworkPlayer"))
+        if(other.CompareTag("NetworkPlayerRoom"))
         {
             playerCount++;
         }
@@ -16,7 +16,7 @@ public class EventArea : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if(other.CompareTag("NetworkPlayer"))
+        if(other.CompareTag("NetworkPlayerRoom"))
         {
             playerCount--;
         }

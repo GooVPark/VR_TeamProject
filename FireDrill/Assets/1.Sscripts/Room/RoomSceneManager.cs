@@ -186,7 +186,7 @@ public class RoomSceneManager : GameManager
 
         if (photonView.IsMine) DataManager.Instance.UpdateRoomPlayerCount(roomNumber, PhotonNetwork.CurrentRoom.PlayerCount);
         roomData = DataManager.Instance.GetRoomData()[roomNumber];
-        DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, NetworkManager.RoomNumber);
+        DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, roomNumber);
         requiredPlayer = roomData.requirePlayerCount;
 
         StartCoroutine(JoinVoice());
@@ -199,10 +199,12 @@ public class RoomSceneManager : GameManager
         {
             if(isEventServerConnected)
             {
-                PhotonVoiceNetwork.Instance.Client.OpChangeGroups(new byte[0], new byte[0]);
-                PhotonVoiceNetwork.Instance.PrimaryRecorder.InterestGroup = 0;
+                //PhotonVoiceNetwork.Instance.Client.OpChangeGroups(new byte[0], new byte[0]);
+                //PhotonVoiceNetwork.Instance.PrimaryRecorder.InterestGroup = 0;
 
                 DataManager.Instance.UpdateRoomPlayerCount(roomNumber, PhotonNetwork.CurrentRoom.PlayerCount);
+                DataManager.Instance.InitializeQuizScore(NetworkManager.User.email);
+
                 string message = $"{EventMessageType.NOTICE}_{NoticeEventType.JOIN}_{roomNumber}_{NetworkManager.User.email}";
                 eventMessage?.Invoke(message);
 
@@ -220,8 +222,11 @@ public class RoomSceneManager : GameManager
         RoomData roomData = DataManager.Instance.GetRoomData(roomNumber);
         int playerCount = roomData.currentPlayerCount - 1;
 
-        DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, -1);
+        DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, 999);
         DataManager.Instance.UpdateRoomPlayerCount(roomNumber, playerCount);
+
+        string message = $"{EventMessageType.NOTICE}_{NoticeEventType.DISCONNECT}_{roomNumber}_{NetworkManager.User.email}";
+        eventMessage?.Invoke(message);
 
         PhotonNetwork.SendAllOutgoingCommands();
     }
@@ -255,7 +260,10 @@ public class RoomSceneManager : GameManager
         int playerCount = roomData.currentPlayerCount - 1;
 
         DataManager.Instance.UpdateRoomPlayerCount(roomNumber, playerCount);
-        DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, -1);
+        DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, 999);
+
+        string message = $"{EventMessageType.NOTICE}_{NoticeEventType.DISCONNECT}_{roomNumber}_{NetworkManager.User.email}";
+        eventMessage?.Invoke(message);
 
         PhotonNetwork.SendAllOutgoingCommands();
     }

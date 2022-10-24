@@ -290,6 +290,14 @@ public class DataManager : MonoBehaviour
         }
     }
 
+    public void InitializeQuizScore(string email)
+    {
+        var filter = Builders<User>.Filter.Eq("email", email);
+        var update = Builders<User>.Update.Set("quizResult", new int[10]);
+
+        accountCollection.UpdateOne(filter, update);
+    }
+
     public void SetQuizResult(string email, int result, int code)
     {
         var filter = Builders<User>.Filter.Eq("email", email);

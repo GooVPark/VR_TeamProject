@@ -23,17 +23,19 @@ public class RoomState_SelectMRPlayer : RoomState
     {
         base.OnStateEnter();
 
-        foreach(Transform playerTransform in playerTransform)
-        {
-            NetworkPlayer player = playerTransform.GetComponent<NetworkPlayer>();
-            player.onPlayerSelectEvent = null;
-            player.onPlayerSelectEvent += ShowSelectPlayerToast;
-            player.isHoverActivated = true;
-        }
-
+       
         if (user.userType == UserType.Lecture)
         {
             lectureToast.gameObject.SetActive(true);
+
+            foreach (Transform playerTransform in playerTransform)
+            {
+                NetworkPlayer player = playerTransform.GetComponent<NetworkPlayer>();
+                player.onPlayerSelectEvent = null;
+                player.onPlayerSelectEvent += ShowSelectPlayerToast;
+                player.isHoverActivated = true;
+            }
+
         }
         else if(user.userType == UserType.Student)
         {

@@ -12,6 +12,9 @@ public class InputManager : MonoBehaviour
     public delegate void LeftSecondaryButtonEvent();
     public static LeftSecondaryButtonEvent leftSecondaryButton;
 
+    public delegate void LeftPrimaryButtonEvent();
+    public static LeftPrimaryButtonEvent leftPrimaryButton;
+
     public delegate void LeftTriggerButtonEvent(bool value);
     public static LeftTriggerButtonEvent leftTriggerButton;
 
@@ -186,7 +189,7 @@ public class InputManager : MonoBehaviour
 
     private void LeftPrimary(InputAction.CallbackContext context)
     {
-        
+        leftPrimaryButton?.Invoke();
     }
 
     private void LeftSecondary(InputAction.CallbackContext context)

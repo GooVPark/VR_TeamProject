@@ -8,7 +8,7 @@ public class ExitArea : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if(other.CompareTag("NetworkPlayer"))
+        if(other.CompareTag("NetworkPlayerRoom"))
         {
             NetworkPlayer player =other.GetComponentInParent<NetworkPlayer>();
 

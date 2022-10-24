@@ -8,8 +8,8 @@ using ExitGames.Client.Photon;
 
 public enum EventMessageType { MOVE, VOICECHAT, SPAWN, DISCONNECT, NOTICE, PROGRESS }
 public enum VoiceEventType { REQUEST, CANCEL, ACCEPT, DEACCEPT, DISCONNECT, CONNECT }
-public enum NoticeEventType { ONVOICE, JOIN }
-public enum ProgressEventType { UPDATE }
+public enum NoticeEventType { ONVOICE, JOIN, DISCONNECT }
+public enum ProgressEventType { UPDATE, PLAYERCOUNT }
 
 public class EventSyncronizer : MonoBehaviour, IChatClientListener
 {
@@ -105,13 +105,18 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
 
             string type = command[0];
 
-            Debug.Log(message);
-
             if(type.Equals(EventMessageType.NOTICE.ToString()))
             {
                 string noticeEventType = command[1];
 
                 if(noticeEventType.Equals(NoticeEventType.JOIN.ToString()))
+                {
+                    int roomNumber = int.Parse(command[2]);
+                    string targetEmail = command[3];
+                    loundgeManager.UpdateRoomPlayerCount(roomNumber);
+                    loundgeManager.UpdateLobbyPlayerCount();
+                }
+                if(noticeEventType.Equals(NoticeEventType.DISCONNECT.ToString()))
                 {
                     int roomNumber = int.Parse(command[2]);
                     string targetEmail = command[3];

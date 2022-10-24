@@ -32,7 +32,7 @@ public class TrainingManager : MonoBehaviourPunCallbacks, IPunObservable
             photonView.RPC(nameof(SetProgressGaugeRPC), RpcTarget.All, currentProgress / totalProgress);
         }
 
-        GetTrainingProgress?.Invoke(currentProgress / totalProgress);
+        //GetTrainingProgress?.Invoke(currentProgress / totalProgress);
     }
 
     [PunRPC]

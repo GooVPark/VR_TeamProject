@@ -6,7 +6,7 @@ public class EventAreaMR : EventArea
 {
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("NetworkPlayer"))
+        if (other.CompareTag("NetworkPlayerRoom"))
         {
             if(other.GetComponentInParent<NetworkPlayer>().HasExtinguisher)
             {
@@ -17,7 +17,7 @@ public class EventAreaMR : EventArea
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("NetworkPlayer"))
+        if (other.CompareTag("NetworkPlayerRoom"))
         {
             if (!other.GetComponentInParent<NetworkPlayer>().HasExtinguisher)
             {

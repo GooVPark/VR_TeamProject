@@ -84,7 +84,12 @@ public class LoundgeSceneManager : GameManager
         }
 
         Debug.Log("Instantiate User Object");
-        DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, -1);
+        DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, roomNumber);
+        NetworkManager.Instance.megaphoneDisabled = true;
+        NetworkManager.Instance.voiceChatDisabled = true;
+
+        NetworkManager.Instance.hasExtingusher = false;
+
         string message = $"{EventMessageType.SPAWN}_{NetworkManager.User.email}";
         eventMesage?.Invoke(message);
 
@@ -533,6 +538,7 @@ public class LoundgeSceneManager : GameManager
         string message = $"{EventMessageType.DISCONNECT}_{NetworkManager.User.email}";
         eventMesage?.Invoke(message);
 
+        DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, roomNumber);
         DataManager.Instance.DeleteLobbyUser(NetworkManager.User);
     }
 }

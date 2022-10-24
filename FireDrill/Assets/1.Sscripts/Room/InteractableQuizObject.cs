@@ -65,6 +65,7 @@ public class InteractableQuizObject : MonoBehaviour
     private bool isSolved = false;
     private bool isHovered;
     private bool isActivated;
+    public int quizNumber = 0;
 
     [SerializeField] private Transform userTransform; // 로컬 플레이어의 transform을 가져옴
     
@@ -227,7 +228,7 @@ public class InteractableQuizObject : MonoBehaviour
         isSolved = true;
 
         StartCoroutine(OXFeedback(2f, result));
-        DataManager.Instance.SetQuizResult(NetworkManager.User.email, result, code);
+        DataManager.Instance.SetQuizResult(NetworkManager.User.email, result, quizNumber);
     }
 
     IEnumerator OXFeedback(float duration, int result)
