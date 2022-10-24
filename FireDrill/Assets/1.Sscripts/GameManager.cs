@@ -77,7 +77,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         NetworkManager.Instance.onMegaphone = true;
         //megaphoneButton.UpdateState(ButtonState.Activate);
 
-        Haptic(0.5f, 0.1f);
+        //Haptic(0.5f, 0.1f);
     }
 
     public void MegaphoneOff()
@@ -90,7 +90,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         NetworkManager.Instance.onMegaphone = false;
         //megaphoneButton.UpdateState(ButtonState.Deactivate);
 
-        Haptic(0.5f, 0.1f);
+        //Haptic(0.5f, 0.1f);
     }
 
     public void MegaphoneToggle()
@@ -198,10 +198,10 @@ public class GameManager : MonoBehaviourPunCallbacks
             {
                 NetworkPlayer other = playerTransforms.GetChild(i).GetComponent<NetworkPlayer>();
 
-                if (other.UserID != senderID && other.UserID != recieverID)
-                {
-                    other.VoiceOff();
-                }
+                //if (other.UserID != senderID && other.UserID != recieverID)
+                //{
+                //    other.VoiceOff();
+                //}
             }
         }
         else
@@ -267,10 +267,10 @@ public class GameManager : MonoBehaviourPunCallbacks
             {
                 NetworkPlayer other = playerTransforms.GetChild(i).GetComponent<NetworkPlayer>();
 
-                if (other.UserID != senderID && other.UserID != recieverID)
-                {
-                    if (!other.OnVoiceChat) other.VoiceOn();
-                }
+                //if (other.UserID != senderID && other.UserID != recieverID)
+                //{
+                //    if (!other.OnVoiceChat) other.VoiceOn();
+                //}
             }
         }
         else
@@ -330,7 +330,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             //LoundgeSceneManager.Instance.Haptic(0.5f, 0.1f);
         }
 
-        Haptic(0.5f, 0.1f);
+        //Haptic(0.5f, 0.1f);
     }
 
     public void DisableTextChat()
@@ -387,10 +387,10 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             NetworkPlayer player = playerTransforms.GetChild(i).GetComponent<NetworkPlayer>();
 
-            if (player.UserID == id)
-            {
-                return player;
-            }
+            //if (player.UserID == id)
+            //{
+            //    return player;
+            //}
         }
 
         return null;

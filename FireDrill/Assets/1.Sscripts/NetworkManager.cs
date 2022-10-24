@@ -188,6 +188,16 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         );
     }
 
+    public bool IsMine(string email)
+    {
+        if(photonView.IsMine  && email.Equals(user.email))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     public override void OnDisconnected(DisconnectCause cause)
     {
         DataManager.Instance.SetOffline(User.email);

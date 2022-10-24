@@ -13,10 +13,10 @@ using Photon.Voice.PUN;
 public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
 {
     #region 동기화 프로퍼티
-    [SerializeField] private int userID;
-    public int UserID { get => userID; set => ActionRPC(nameof(SetUserIDRPC), value); }
+    [SerializeField] private string userID;
+    public string UserID { get => userID; set => ActionRPC(nameof(SetUserIDRPC), value); }
     [PunRPC]
-    private void SetUserIDRPC(int value)
+    private void SetUserIDRPC(string value)
     {
         userID = value;
     }
@@ -379,7 +379,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     {
         if (photonView.IsMine)
         {
-            UserID = NetworkManager.User.id;
+            UserID = NetworkManager.User.email;
             UserName = NetworkManager.User.name;
             UserLevel = NetworkManager.User.userType;
             HasExtinguisher = NetworkManager.User.hasExtingisher;

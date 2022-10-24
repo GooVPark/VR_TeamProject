@@ -5,6 +5,9 @@ using Photon.Pun;
 
 public class RoomState_EndTraining : RoomState
 {
+    [Header("Room State")]
+    public RoomState_GoToLoundge roomStateGoToLoundge;
+
     [Header("Toast")]
     public ToastOneButton lectureToast;
     public Toast studentToast;
@@ -35,18 +38,23 @@ public class RoomState_EndTraining : RoomState
 
     public override void OnStateExit()
     {
+        roomSceneManager.onRoomStateEvent -= LeaveRoom;
+        lectureToast.gameObject.SetActive(false);
+        studentToast.gameObject.SetActive(false);
         base.OnStateExit();
     }
 
     public void LeaveRoom()
     {
-        DataManager.Instance.UpdateRoomPlayerCount(NetworkManager.RoomNumber, PhotonNetwork.CurrentRoom.PlayerCount - 1);
+        //DataManager.Instance.UpdateRoomPlayerCount(NetworkManager.RoomNumber, PhotonNetwork.CurrentRoom.PlayerCount - 1);
         photonView.RPC(nameof(LeaveRoomRPC), RpcTarget.All);
     }
 
     [PunRPC]
     public void LeaveRoomRPC()
     {
-        PhotonNetwork.LeaveRoom();
+        //NetworkManager.Instance.roomType = RoomType.Loundge;
+        //PhotonNetwork.LeaveRoom();
+        roomSceneManager.RoomState = roomStateGoToLoundge;
     }
 }

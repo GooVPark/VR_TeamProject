@@ -25,7 +25,8 @@ public class RoomState_Class : RoomState
     public RoomState_ClassEnd roomStateClassEnd;
 
     [Header("Toast")]
-    public ToastThreeButton lectureToast;
+    public ToastOneButton lectureToast;
+    public ToastTwoButtons lectureEndClassToast;
     public Toast studentToast;
     private GameObject currentToast;
     public Toast disMicToast;
@@ -81,12 +82,28 @@ public class RoomState_Class : RoomState
         }
 
         currentToast.SetActive(false);
+        lectureEndClassToast.gameObject.SetActive(false);
+        lectureToast.gameObject.SetActive(false);
         base.OnStateExit();
     }
 
     public override void OnUpdate()
     {
         
+    }
+
+    public void OnEndClassButton()
+    {
+        if(lectureEndClassToast.gameObject.activeSelf)
+        {
+            lectureEndClassToast.gameObject.SetActive(false);
+            lectureToast.gameObject.SetActive(true);
+        }
+        else
+        {
+            lectureToast.gameObject.SetActive(false);
+            lectureEndClassToast.gameObject.SetActive(true);
+        }
     }
 
     public void ClasssEnd()

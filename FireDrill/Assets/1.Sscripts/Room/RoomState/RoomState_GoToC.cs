@@ -15,7 +15,9 @@ public class RoomState_GoToC : RoomState
 
     [Header("Event Area")]
     public EventArea eventAreaMR;
+    public GameObject eventAreaMRMarker;
     public EventArea eventArea;
+    public GameObject eventAreaMarker;
     [Space(5)]
 
     [Header("QuizObject")]
@@ -30,14 +32,27 @@ public class RoomState_GoToC : RoomState
         base.OnStateEnter();
         quizObject.SetActive(false);
         trainingObject.SetActive(true);
-        eventArea.gameObject.SetActive(true);
+
         eventAreaMR.gameObject.SetActive(true);
+        eventArea.gameObject.SetActive(true);
+
+        if (user.hasExtingisher)
+        {
+            eventAreaMRMarker.gameObject.SetActive(true);
+        }
+        else
+        {
+            eventAreaMarker.gameObject.SetActive(true);
+        }
         toast.gameObject.SetActive(true);
     }
 
     public override void OnStateExit()
     {
         toast.gameObject.SetActive(false);
+
+        eventAreaMR.gameObject.SetActive(false);
+        eventArea.gameObject.SetActive(false);
         base.OnStateExit();
     }
 

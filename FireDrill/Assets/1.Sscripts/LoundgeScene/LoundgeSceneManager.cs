@@ -32,6 +32,7 @@ public class LoundgeSceneManager : GameManager
     public bool isEventServerConnected = false;
 
     [SerializeField] private GameObject voiceChatErrorToast;
+    [SerializeField] private GameObject megaphoneErrorToast;
 
     private void Awake()
     {
@@ -48,6 +49,9 @@ public class LoundgeSceneManager : GameManager
     private void Start()
     {
         Initialize();
+
+        NetworkManager.Instance.voiceChatDisabled = true;
+        NetworkManager.Instance.scoreBoardDisabled = true;
         NetworkManager.Instance.roomType = RoomType.Loundge;
 
         InsertUserData();
@@ -80,7 +84,7 @@ public class LoundgeSceneManager : GameManager
         }
 
         Debug.Log("Instantiate User Object");
-
+        DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, -1);
         string message = $"{EventMessageType.SPAWN}_{NetworkManager.User.email}";
         eventMesage?.Invoke(message);
 
@@ -109,6 +113,11 @@ public class LoundgeSceneManager : GameManager
                 NPCController npc = npcObject.GetComponent<NPCController>();
                 npc.Initialize(loundgeUser);
                 npc.eventMessage += eventSyncronizer.OnSendMessage;
+
+                if(NetworkManager.Instance.onVoiceChat)
+                {
+                    npc.senderIsOnVoiceChat = true;
+                }
 
                 if (loundgeUser.email.Equals(NetworkManager.User.email))
                 {
@@ -142,8 +151,6 @@ public class LoundgeSceneManager : GameManager
     {
         voiceChatErrorToast.SetActive(false);
         voiceManager.DisconnectVoiceChat();
-
-
     }
 
     public void KeepVoiceChat()
@@ -182,6 +189,17 @@ public class LoundgeSceneManager : GameManager
         }
     }
 
+    public void MegaphoneSelected()
+    {
+        megaphoneErrorToast.SetActive(true);
+
+        Invoke(nameof(CloseToast), 3f);
+    }
+
+    private void CloseToast()
+    {
+        megaphoneErrorToast.SetActive(false);
+    }
 
     #region Database
 
@@ -373,7 +391,7 @@ public class LoundgeSceneManager : GameManager
     {
         RoomData roomData = DataManager.Instance.GetRoomData(roomNumber);
 
-        int playerCount = roomData.currentPlayerCount;
+        int playerCount = roomData.currentPlayerCount < 0 ? 0 : roomData.currentPlayerCount;
         int maxPlayerCount = roomData.maxPlayerCount;
 
         playerCountsText[roomNumber].text = $"{playerCount}/{maxPlayerCount}";
@@ -405,8 +423,8 @@ public class LoundgeSceneManager : GameManager
         DataManager.Instance.DeleteLobbyUser(NetworkManager.User);
 
         Debug.Log("Join Room: " + roomNumber);
-        textChatManager.DisconnectChat();
-        eventSyncronizer.DisconnectChat();
+        //textChatManager.DisconnectChat();
+        //eventSyncronizer.DisconnectChat();
         NetworkManager.Instance.SetRoomNumber(roomNumber);
         roomName = roomNumber.ToString();
 

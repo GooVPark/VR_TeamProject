@@ -18,11 +18,15 @@ public class RoomState_Quiz : RoomState, IPunObservable
     [Header("Timer")]
     public GameObject timerObject;
     public TMP_Text timerText;
+
+    public GameObject timerObjectLecture;
+    public TMP_Text timerTextLecture;
     [Space(5)]
 
     [Header("Score")]
     public GameObject scoreObject;
     public TMP_Text scoreText;
+    public ScoreBoard scoreBoardObject;
     [Space(5)]
 
     [Header("Quiz Objects")]
@@ -40,17 +44,19 @@ public class RoomState_Quiz : RoomState, IPunObservable
     {
         base.OnStateEnter();
        
-        timerObject.SetActive(true);
-
         if(NetworkManager.User.userType == UserType.Lecture)
         {
-            scoreObject.SetActive(false);
+            timerObjectLecture.SetActive(true);
             //scoreBoard.UpdateState(ButtonState.Deactivate);
             NetworkManager.Instance.scoreBoardDisabled = false;
             NetworkManager.Instance.onScoreBoard = false;
+
+            scoreBoard.button.OnClick.AddListener(() => ShowScoreBoard());
         }
         if(NetworkManager.User.userType == UserType.Student)
         {
+            timerObject.SetActive(true);
+
             foreach (var quizObject in quizObjects)
             {
                 quizObject.Activate();
@@ -68,6 +74,8 @@ public class RoomState_Quiz : RoomState, IPunObservable
     public override void OnStateExit()
     {
         timerObject.SetActive(false);
+        timerObjectLecture.SetActive(false);
+
         if (NetworkManager.User.userType == UserType.Student)
         {
             foreach (var quizObject in quizObjects)
@@ -81,13 +89,21 @@ public class RoomState_Quiz : RoomState, IPunObservable
                 quizObject.onSubmit -= ScoreCount;
             }
         }
+
         base.OnStateExit();
     }
     public override void OnUpdate()
     {
+
+        timerText.text = $"{(int)time / 60} : {(int)time % 60}";
+        timerTextLecture.text = $"{(int)time / 60} : {(int)time % 60}";
+        scoreText.text = $"{scoreCount}/{solveCount}";
+
         if (NetworkManager.User.userType == UserType.Lecture)
         {
             time -= Time.deltaTime;
+
+            photonView.RPC(nameof(Timer), RpcTarget.All, time);
 
             if (time < 0)
             {
@@ -100,9 +116,6 @@ public class RoomState_Quiz : RoomState, IPunObservable
                 roomSceneManager.RoomState = roomStateQuizWait;
             }
         }
-
-        timerText.text = $"{(int)time / 60} : {(int)time % 60}";
-        scoreText.text = $"{scoreCount}/{solveCount}";
 
         if (solveCount >= quizManager.quizObjects.Length)
         {
@@ -124,7 +137,7 @@ public class RoomState_Quiz : RoomState, IPunObservable
 
         timerObject.SetActive(false);
         toast.gameObject.SetActive(true);
-        toast.text.text = $"{scoreCount * 10} / 30";
+        toast.text.text = $"{scoreCount * 10}";
     }
 
     [PunRPC]
@@ -148,14 +161,26 @@ public class RoomState_Quiz : RoomState, IPunObservable
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        if (stream.IsWriting)
+
+    }
+
+    public void ShowScoreBoard()
+    {
+        if(scoreBoardObject.gameObject.activeSelf)
         {
-            stream.SendNext(time);
+            scoreBoardObject.gameObject.SetActive(false);
+            NetworkManager.Instance.onScoreBoard = false;
         }
-        if (stream.IsReading)
+        else
         {
-            time = (float)stream.ReceiveNext();
-            timerText.text = ((int)time).ToString();
+            scoreBoardObject.gameObject.SetActive(true);
+            NetworkManager.Instance.onScoreBoard = true;
         }
+    }
+
+    [PunRPC]
+    public void Timer(float time)
+    {
+        this.time = time;
     }
 }

@@ -224,6 +224,8 @@ public class InteractableQuizObject : MonoBehaviour
         sequenceSubmitButton.collider.enabled = false;
         oxSubmitButton.collider.enabled = false;
 
+        isSolved = true;
+
         StartCoroutine(OXFeedback(2f, result));
         DataManager.Instance.SetQuizResult(NetworkManager.User.email, result, code);
     }

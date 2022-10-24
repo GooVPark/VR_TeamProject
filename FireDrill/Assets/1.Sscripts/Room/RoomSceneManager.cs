@@ -127,8 +127,6 @@ public class RoomSceneManager : GameManager
 
     public void ShowScoreBoard()
     {
-        Haptic(0.5f, 0.1f);
-
         if (scoreBoardUI.activeSelf)
         {
             scoreBoardUI.SetActive(false);
@@ -178,16 +176,6 @@ public class RoomSceneManager : GameManager
         pdfViewr.GoToPreviousPage();
     }
 
-    private void OnApplicationQuit()
-    {
-        RoomData roomData = DataManager.Instance.GetRoomData(roomNumber);
-        int playerCount = roomData.currentPlayerCount - 1;
-
-        DataManager.Instance.UpdateRoomPlayerCount(roomNumber, playerCount);
-
-        PhotonNetwork.SendAllOutgoingCommands();
-    }
-
     public override void OnJoinedRoom()
     {
         Initialize();
@@ -229,6 +217,11 @@ public class RoomSceneManager : GameManager
 
     public override void OnLeftRoom()
     {
+        RoomData roomData = DataManager.Instance.GetRoomData(roomNumber);
+        int playerCount = roomData.currentPlayerCount - 1;
+
+        DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, -1);
+        DataManager.Instance.UpdateRoomPlayerCount(roomNumber, playerCount);
 
         PhotonNetwork.SendAllOutgoingCommands();
     }
@@ -240,7 +233,12 @@ public class RoomSceneManager : GameManager
 
     public override void OnConnectedToMaster()
     {
-        base.OnConnectedToMaster();
+        PhotonNetwork.JoinLobby();
+    }
+
+    public override void OnJoinedLobby()
+    {
+        PhotonNetwork.LoadLevel("Loundge");
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
@@ -251,4 +249,14 @@ public class RoomSceneManager : GameManager
         }
     }
 
+    private void OnApplicationQuit()
+    {
+        RoomData roomData = DataManager.Instance.GetRoomData(roomNumber);
+        int playerCount = roomData.currentPlayerCount - 1;
+
+        DataManager.Instance.UpdateRoomPlayerCount(roomNumber, playerCount);
+        DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, -1);
+
+        PhotonNetwork.SendAllOutgoingCommands();
+    }
 }

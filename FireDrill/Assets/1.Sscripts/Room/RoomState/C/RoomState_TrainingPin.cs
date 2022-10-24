@@ -56,11 +56,21 @@ public class RoomState_TrainingPin : RoomState
         base.OnStateExit();
     }
 
+    public override void OnUpdate()
+    {
+        base.OnUpdate();
+        if(user.hasExtingisher)
+        {
+            EventTrigger();
+        }
+    }
+
     public void EventTrigger()
     {
         if (isPinRemoved)
         {
             photonView.RPC(nameof(EventTriggerRPC), RpcTarget.All);
+            isPinRemoved = false;
         }
     }
 

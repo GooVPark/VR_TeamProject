@@ -136,6 +136,11 @@ public class NPCController : MonoBehaviourPun //, IPunInstantiateMagicCallback
                 break;
         }
 
+        if(userData.onVoiceChat)
+        {
+            onVoiceChatIcon.gameObject.SetActive(true);
+        }
+
         user = userData;
     }
 

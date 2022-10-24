@@ -81,7 +81,7 @@ public class ButtonStateHandler : MonoBehaviour
                 break;
         }
 
-        image.sprite = sprite;
+        //image.sprite = sprite;
     }
 
     public void OnSelect()

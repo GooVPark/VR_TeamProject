@@ -36,6 +36,8 @@ public class RoomState_StartQuiz : RoomState
 
         if (NetworkManager.User.userType == UserType.Lecture)
         {
+            time -= Time.deltaTime;
+
             photonView.RPC(nameof(Timer), RpcTarget.All, time);
 
             if(time < 0)
@@ -54,6 +56,6 @@ public class RoomState_StartQuiz : RoomState
     [PunRPC]
     public void Timer(float time)
     {
-        this.time = time -= Time.deltaTime;
+        this.time = time;
     }
 }
