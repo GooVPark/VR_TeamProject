@@ -86,7 +86,7 @@ public class VoiceManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        groupText.text = recorder.InterestGroup.ToString();
+        //groupText.text = recorder.InterestGroup.ToString();
 
         acceptVoiceChatButton.onClick += AcceptVoiceChat;
         deacceptVoiceChatButton.onClick += DeaccpetVoiceChat;
