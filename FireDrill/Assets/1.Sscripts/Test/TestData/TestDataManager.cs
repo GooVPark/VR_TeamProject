@@ -130,7 +130,7 @@ public class User
     public int trainingProgress = 0;
     public bool hasExtingisher;
 
-    public int currentRoom;
+    public int currentRoom = 999;
     public int[] quizResult = new int[10];
     public int totalScore;
 
