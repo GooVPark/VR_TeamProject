@@ -53,6 +53,10 @@ public class RoomState_InTraning : RoomState
 
     public override void OnStateExit()
     {
+        if(user.userType == UserType.Lecture)
+        {
+            roomSceneManager.onRoomStateEvent -= StartTraining;
+        }
         currentToast.SetActive(false);
         base.OnStateExit();
     }

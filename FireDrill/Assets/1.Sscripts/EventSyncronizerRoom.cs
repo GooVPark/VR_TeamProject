@@ -14,6 +14,7 @@ public class EventSyncronizerRoom : MonoBehaviour, IChatClientListener
     [SerializeField] private RoomSceneManager roomSceneManager;
     private ChatClient chatClient;
     [SerializeField] private string eventServer;
+    [SerializeField] private TextChatManager textChatManager;
 
     public bool onConnected = false;
 
@@ -23,6 +24,7 @@ public class EventSyncronizerRoom : MonoBehaviour, IChatClientListener
 
         RoomSceneManager.eventMessage = null;
         RoomSceneManager.eventMessage += OnSendMessage;
+        textChatManager.eventMessage += OnSendMessage;
     }
 
     private void Update()
@@ -42,6 +44,11 @@ public class EventSyncronizerRoom : MonoBehaviour, IChatClientListener
         string email = NetworkManager.User.email;
         chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, PhotonNetwork.AppVersion, new Photon.Chat.AuthenticationValues(email));
         
+    }
+
+    public void Disconnect()
+    {
+        chatClient.Disconnect();
     }
 
     public void OnSendMessage(string message)
@@ -79,26 +86,29 @@ public class EventSyncronizerRoom : MonoBehaviour, IChatClientListener
 
     public void OnGetMessages(string channelName, string[] senders, object[] messages)
     {
-        //if(channelName.Equals(eventServer))
-        //{
-        //    ChatChannel channel = null;
-        //    bool isFound = chatClient.TryGetChannel(eventServer, out channel);
-        //    if (!isFound)
-        //    {
-        //        Debug.Log("Channel not found");
-        //        return;
-        //    }
+        if (channelName.Equals(eventServer))
+        {
+            ChatChannel channel = null;
+            bool isFound = chatClient.TryGetChannel(eventServer, out channel);
+            if (!isFound)
+            {
+                Debug.Log("Channel not found");
+                return;
+            }
 
-        //    string message = messages[^1].ToString();
-        //    string[] command = message.Split('_');
+            string message = messages[^1].ToString();
+            string[] command = message.Split('_');
 
-        //    string type = command[0];
+            string type = command[0];
 
-        //    if(type.Equals(EventMessageType.NOTICE.ToString()))
-        //    {
+            if (type.Equals(EventMessageType.TEXTCHAT.ToString()))
+            {
+                string sender = command[1];
+                string chatMessage = command[2];
 
-        //    }
-        //}
+                textChatManager.OnGetMessage(sender, chatMessage, NetworkManager.RoomNumber);
+            }
+        }
     }
 
     public void OnPrivateMessage(string sender, object message, string channelName)

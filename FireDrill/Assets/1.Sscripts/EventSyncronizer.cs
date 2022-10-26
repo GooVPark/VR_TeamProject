@@ -6,7 +6,7 @@ using Photon.Pun;
 using Photon.Chat;
 using ExitGames.Client.Photon;
 
-public enum EventMessageType { MOVE, VOICECHAT, SPAWN, DISCONNECT, NOTICE, PROGRESS }
+public enum EventMessageType { TEXTCHAT, MOVE, VOICECHAT, SPAWN, DISCONNECT, NOTICE, PROGRESS }
 public enum VoiceEventType { REQUEST, CANCEL, ACCEPT, DEACCEPT, DISCONNECT, CONNECT }
 public enum NoticeEventType { ONVOICE, JOIN, DISCONNECT }
 public enum ProgressEventType { UPDATE, PLAYERCOUNT }
@@ -18,8 +18,11 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
 
     [SerializeField] private VoiceManager voiceManager;
     [SerializeField] private LoundgeSceneManager loundgeManager;
+    [SerializeField] private TextChatManager textChatManager;
     private ChatClient chatClient;
     [SerializeField] private string eventServer;
+
+    ChatChannel chatChannel;
     private void Start()
     {
         Connect();
@@ -31,6 +34,7 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
         DynamicRayVisualizer.eventSyncronizer += OnSendMessage;
         LoundgeSceneManager.eventMesage += OnSendMessage;
         VoiceManager.eventMessage += OnSendMessage;
+        textChatManager.eventMessage += OnSendMessage;
     }
 
     private void Update()
@@ -67,6 +71,8 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
         chatClient.Subscribe(new string[] { eventServer });
         chatClient.SetOnlineStatus(ChatUserStatus.Online);
         LoundgeSceneManager.Instance.isEventServerConnected = true;
+
+        Debug.Log("Connected");
     }
 
     public void DisconnectChat()
@@ -105,6 +111,13 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
 
             string type = command[0];
 
+            if(type.Equals(EventMessageType.TEXTCHAT.ToString()))
+            {
+                string sender = command[1];
+                string chatMessage = command[2];
+
+                textChatManager.OnGetMessage(sender, chatMessage, NetworkManager.RoomNumber);
+            }
             if(type.Equals(EventMessageType.NOTICE.ToString()))
             {
                 string noticeEventType = command[1];

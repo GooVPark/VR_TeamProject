@@ -64,6 +64,8 @@ public class RoomSceneManager : GameManager
     [Header("Toast")]
     [SerializeField] private ToastTypeAndMessage toasts;
 
+    [SerializeField] private EventSyncronizerRoom eventSyncronizer;
+
     public Transform spawnPivot;
     public int roomNumber;
 
@@ -98,6 +100,8 @@ public class RoomSceneManager : GameManager
 
     private void Start()
     {
+        NetworkManager.Instance.SetRoomNumber(roomNumber);
+        NetworkManager.Instance.roomType = RoomType.Room;
     }
 
     private void Update()
@@ -228,6 +232,7 @@ public class RoomSceneManager : GameManager
         string message = $"{EventMessageType.NOTICE}_{NoticeEventType.DISCONNECT}_{roomNumber}_{NetworkManager.User.email}";
         eventMessage?.Invoke(message);
 
+        //eventSyncronizer.Disconnect();
         PhotonNetwork.SendAllOutgoingCommands();
     }
 
@@ -265,6 +270,7 @@ public class RoomSceneManager : GameManager
         string message = $"{EventMessageType.NOTICE}_{NoticeEventType.DISCONNECT}_{roomNumber}_{NetworkManager.User.email}";
         eventMessage?.Invoke(message);
 
+        //eventSyncronizer.Disconnect();
         PhotonNetwork.SendAllOutgoingCommands();
     }
 }

@@ -71,7 +71,7 @@ public class LoundgeSceneManager : GameManager
     {
 
     }
-
+    
     private Coroutine initializer;
     private IEnumerator Initializer()
     {
@@ -84,7 +84,11 @@ public class LoundgeSceneManager : GameManager
         }
 
         Debug.Log("Instantiate User Object");
+        
         DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, roomNumber);
+
+        NetworkManager.Instance.SetRoomNumber(roomNumber);
+        NetworkManager.Instance.roomType = RoomType.Loundge;
         NetworkManager.Instance.megaphoneDisabled = true;
         NetworkManager.Instance.voiceChatDisabled = true;
 
@@ -510,7 +514,7 @@ public class LoundgeSceneManager : GameManager
 
     public override void OnLeftLobby()
     {
-
+        //eventSyncronizer.DisconnectChat();
     }
     //public override void OnPlayerEnteredRoom(Player newPlayer)
     //{
@@ -537,6 +541,7 @@ public class LoundgeSceneManager : GameManager
     {
         string message = $"{EventMessageType.DISCONNECT}_{NetworkManager.User.email}";
         eventMesage?.Invoke(message);
+        //eventSyncronizer.DisconnectChat();
 
         DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, roomNumber);
         DataManager.Instance.DeleteLobbyUser(NetworkManager.User);
