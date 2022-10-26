@@ -72,42 +72,10 @@ public class DataManager : MonoBehaviour
         lobbyDatabase = client.GetDatabase("LobbyData");
         loundgeUsercollection = lobbyDatabase.GetCollection<LoundgeUser>("MainLoundge");
 
-
-        var options = new ChangeStreamOptions { FullDocument = ChangeStreamFullDocumentOption.UpdateLookup };
-        var pipeline = new EmptyPipelineDefinition<ChangeStreamDocument<LoundgeUser>>().Match("{ operationType: { $in: [ 'insert', 'delete', 'update' ] } }");
-        var cursor = loundgeUsercollection.Watch(pipeline, options);
-        var enumerator = cursor.ToEnumerable().GetEnumerator();
-
-        DBTest();
-
         GetAllToast();
         GetQuizDatabase();
     }
 
-    private IEnumerator DBTest()
-    {
-        
-        var options = new ChangeStreamOptions { FullDocument = ChangeStreamFullDocumentOption.UpdateLookup };
-        var pipeline = new EmptyPipelineDefinition<ChangeStreamDocument<LoundgeUser>>().Match("{ operationType: { $in: [ 'insert', 'delete', 'update' ] } }");
-        var cursor = loundgeUsercollection.Watch(pipeline, options);
-        
-        if(cursor == null)
-        {
-            StopCoroutine(DBTest());
-        }
-        var enumerator = cursor.ToEnumerable().GetEnumerator();
-        
-
-        while (enumerator.MoveNext())
-        {
-            ChangeStreamDocument<LoundgeUser> document = enumerator.Current;
-
-            Debug.Log(document.FullDocument.email);
-
-            //Debug.Log(document.DocumentKey);
-            yield return null;
-        }
-    }
 
     #region Login
 

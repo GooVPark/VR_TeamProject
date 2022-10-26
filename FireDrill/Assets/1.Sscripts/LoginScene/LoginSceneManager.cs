@@ -162,7 +162,6 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
         NetworkManager.User.characterNumber = index;
         DataManager.Instance.UpdateUserData("email", NetworkManager.User.email, "characterNumber", index);
         characterObjects.SetActive(false);
-        
         PhotonNetwork.JoinLobby();
     }
 
