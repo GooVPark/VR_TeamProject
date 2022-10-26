@@ -4895,6 +4895,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   voiceManager: {fileID: 1337410979}
   loundgeManager: {fileID: 442421932}
+  textChatManager: {fileID: 1499728229}
   eventServer: EventServer
 --- !u!4 &438715285
 Transform:
@@ -18527,7 +18528,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fb53f62601670c449a306cd99f3df8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldChat: LobbyChat
   chatList:
   - {fileID: 6513619951638104469}
   colorList: []

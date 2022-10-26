@@ -71,7 +71,7 @@ public class DataManager : MonoBehaviour
 
         lobbyDatabase = client.GetDatabase("LobbyData");
         loundgeUsercollection = lobbyDatabase.GetCollection<LoundgeUser>("MainLoundge");
-
+        
         GetAllToast();
         GetQuizDatabase();
     }
@@ -397,18 +397,18 @@ public class DataManager : MonoBehaviour
     #endregion
 
     ///
-    /// Mongo DB ¿¹Á¦
+    /// Mongo DB ì˜ˆì œ
     /// 
-    /// filter¸¦ ¸¸µé¾î¼­ Ã£À»¶§ ¾µ¼öÀÖÀ»°Å°°´Ù
+    /// filterë¥¼ ë§Œë“¤ì–´ì„œ ì°¾ì„ë•Œ ì“¸ìˆ˜ìˆì„ê±°ê°™ë‹¤
     /// 
-    /// var filter = Builduers<User>.Filter.Eq(x => x.name, "name"); °°Àº°Å
-    /// var filter = Builduers<User>.Filter.Ne(x => x.name, "name"); ´Ù¸¥°Å
-    /// var filter = Builduers<User>.Filter.Gt(x => x.name, "name"); ÃÊ°ú
-    /// var filter = Builduers<User>.Filter.Gte(x => x.name, "name"); ÀÌ»ó
-    /// var filter = Builduers<User>.Filter.Lt(x => x.name, "name"); ¹Ì¸¸
-    /// var filter = Builduers<User>.Filter.Lte(x => x.name, "name"); ÀÌÇÏ
+    /// var filter = Builduers<User>.Filter.Eq(x => x.name, "name"); ê°™ì€ê±°
+    /// var filter = Builduers<User>.Filter.Ne(x => x.name, "name"); ë‹¤ë¥¸ê±°
+    /// var filter = Builduers<User>.Filter.Gt(x => x.name, "name"); ì´ˆê³¼
+    /// var filter = Builduers<User>.Filter.Gte(x => x.name, "name"); ì´ìƒ
+    /// var filter = Builduers<User>.Filter.Lt(x => x.name, "name"); ë¯¸ë§Œ
+    /// var filter = Builduers<User>.Filter.Lte(x => x.name, "name"); ì´í•˜
     /// 
-    /// var result = collection.Find(filter).ToList(); ÇÊÅÍ·Î °¡Á®¿À±â
+    /// var result = collection.Find(filter).ToList(); í•„í„°ë¡œ ê°€ì ¸ì˜¤ê¸°
     ///
 
     #region Lobby

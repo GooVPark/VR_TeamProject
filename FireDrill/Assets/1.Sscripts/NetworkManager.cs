@@ -74,7 +74,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public void SetRoomNumber(int _roomNumber)
     {
         roomNumber = _roomNumber;
-        DataManager.Instance.UpdateCurrentRoom(user.email, _roomNumber);
+        //DataManager.Instance.UpdateCurrentRoom(user.email, _roomNumber);
     }
 
     #region Lobby

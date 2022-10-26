@@ -184,6 +184,9 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     private Quaternion leftWristOrigin;
     private Quaternion rightWristOrigin;
 
+    [SerializeField] private GameObject femaleHelmet;
+    [SerializeField] private GameObject maleHelmet;
+
     [SerializeField] private GameObject femaleRig;
     [SerializeField] private GameObject maleRig;
 
@@ -400,7 +403,10 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
             rightHand.gameObject.layer = 31;
             outlineObject.gameObject.layer = 31;
 
-            TextChatManager.sendChatMessage += OnSendChatMessage;
+            if (NetworkManager.Instance.roomType == RoomType.Room)
+            {
+                FindObjectOfType<TextChatManager>().sendChatMessage += OnSendChatMessage;
+            }
         }
 
         //requestVoiceChatButton.onClick.AddListener(() => LoundgeSceneManager.Instance.RequsetVoiceChat(NetworkManager.User.id, UserID));
@@ -481,6 +487,11 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
             skinnedMeshRenderer = skinnedMeshRendererMale;
             //leftHandAnimator = maleLeftHandAnimator;
             //rightHandAnimator = maleRightHandAnimator;
+
+            if(UserLevel == UserType.Lecture)
+            {
+                maleHelmet.SetActive(false);
+            }
         }
         else
         {
@@ -494,6 +505,11 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
             skinnedMeshRenderer = skinnedMeshRendererFemale;
             //leftHandAnimator = femaleLeftHandAnimator;
             //rightHandAnimator = femaleRightHandAnimator;
+
+            if (UserLevel == UserType.Lecture)
+            {
+                femaleHelmet.SetActive(false);
+            }
         }
 
         skinnedMeshRenderer.sharedMaterial = materials[value];
