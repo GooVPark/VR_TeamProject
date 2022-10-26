@@ -25,12 +25,12 @@ public class ScoreBoard : MonoBehaviour
 
     private void Update()
     {
-        if(elapsedTime > interval)
-        {
-            UpdateScoreBoard();
-            elapsedTime = 0f;
-        }
-        elapsedTime += Time.deltaTime;
+
+    }
+
+    private void OnEnable()
+    {
+        UpdateScoreBoard();
     }
 
     public void ListOrder()
@@ -50,7 +50,7 @@ public class ScoreBoard : MonoBehaviour
         elapsedTime = 0f;
     }
 
-    private void UpdateScoreBoard()
+    public void UpdateScoreBoard()
     {
         List<User> users = roomManager.GetUsersInRoom(roomManager.roomNumber);
         

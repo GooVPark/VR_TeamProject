@@ -12,6 +12,9 @@ public class InteractableQuizObject : MonoBehaviour
     public delegate void SubmitEvent(int value);
     public SubmitEvent onSubmit;
 
+    public delegate void EventMessage(string message);
+    public EventMessage eventMessage;
+
     #endregion
 
     [Header("Quiz")]
@@ -68,7 +71,12 @@ public class InteractableQuizObject : MonoBehaviour
     public int quizNumber = 0;
 
     [SerializeField] private Transform userTransform; // 로컬 플레이어의 transform을 가져옴
-    
+
+    private void Start()
+    {
+        eventMessage += EventSyncronizerRoom.Instance.OnSendMessage;
+    }
+
     public void OnSelected()
     { 
         if(!isHovered)
@@ -229,6 +237,9 @@ public class InteractableQuizObject : MonoBehaviour
 
         StartCoroutine(OXFeedback(2f, result));
         DataManager.Instance.SetQuizResult(NetworkManager.User.email, result, quizNumber);
+
+        string message = $"{EventMessageType.QUIZ}";
+        eventMessage?.Invoke(message);
     }
 
     IEnumerator OXFeedback(float duration, int result)

@@ -34,6 +34,7 @@ public class LoundgeSceneManager : GameManager
     [SerializeField] private GameObject voiceChatErrorToast;
     [SerializeField] private GameObject megaphoneErrorToast;
 
+    [SerializeField] private List<RoomEnterance> roomEnterances;
     private void Awake()
     {
         if(Instance == null)
@@ -208,6 +209,26 @@ public class LoundgeSceneManager : GameManager
     private void CloseToast()
     {
         megaphoneErrorToast.SetActive(false);
+    }
+
+    public void UpdateRoomEnterence(int roomNUmber)
+    {
+        bool isStarted = DataManager.Instance.GetRoomProgressState(roomNUmber);
+
+        foreach(var enterence in roomEnterances)
+        {
+            if(enterence.roomNumber == roomNumber)
+            {
+                if(isStarted)
+                {
+                    enterence.interactionArea.SetActive(false);
+                }
+                else
+                {
+                    enterence.interactionArea.SetActive(true);
+                }
+            }
+        }
     }
 
     #region Database
@@ -543,6 +564,7 @@ public class LoundgeSceneManager : GameManager
         eventMesage?.Invoke(message);
         //eventSyncronizer.DisconnectChat();
 
+        DataManager.Instance.SetOffline(NetworkManager.User.email);
         DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, roomNumber);
         DataManager.Instance.DeleteLobbyUser(NetworkManager.User);
     }

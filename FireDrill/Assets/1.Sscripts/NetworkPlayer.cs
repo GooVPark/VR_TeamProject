@@ -358,8 +358,17 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
 
     public void OffExtinguisher()
     {
-        hose.SetActive(false);
-        extinguisher.gameObject.SetActive(false);
+        photonView.RPC(nameof(OffExtinguisher), RpcTarget.All);
+    }
+
+    [PunRPC]
+    private void OffExtinguisherRPC()
+    {
+        if(photonView.IsMine)
+        {
+            extinguisher.gameObject.SetActive(false);
+            hose.gameObject.SetActive(false);
+        }
     }
 
     public void Spread(bool value)

@@ -308,6 +308,8 @@ public class DataManager : MonoBehaviour
         int total = GetTotalScore(email);
 
         update = Builders<User>.Update.Set("totalScore", total);
+
+        accountCollection.UpdateOne(filter, update);
     }
 
     public int GetTotalScore(string email)

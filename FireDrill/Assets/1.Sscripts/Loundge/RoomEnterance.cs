@@ -7,7 +7,7 @@ using Photon.Pun;
 
 public class RoomEnterance : MonoBehaviour
 {
-    [SerializeField] private int roomNumber;
+    [SerializeField] public int roomNumber;
 
     [SerializeField] private BoxCollider enteranceCollider;
     [SerializeField] private string targetTag;
@@ -18,6 +18,7 @@ public class RoomEnterance : MonoBehaviour
     [SerializeField] private TMP_Text roomInfo;
 
     [SerializeField] private LoundgeSceneManager loundgeSceneManager;
+    public GameObject interactionArea;
 
     private void Awake()
     {
@@ -58,7 +59,12 @@ public class RoomEnterance : MonoBehaviour
 
     public void JoinRoom()
     {
-
+        if(DataManager.Instance.GetRoomProgressState(roomNumber))
+        {
+            joinRoomError.gameObject.SetActive(false);
+            joinRoomButton.gameObject.SetActive(false);
+            return;
+        }
         loundgeSceneManager.JoinRoom(roomNumber);
 
     }

@@ -6,7 +6,7 @@ using Photon.Pun;
 using Photon.Chat;
 using ExitGames.Client.Photon;
 
-public enum EventMessageType { TEXTCHAT, MOVE, VOICECHAT, SPAWN, DISCONNECT, NOTICE, PROGRESS }
+public enum EventMessageType { TEXTCHAT, MOVE, VOICECHAT, SPAWN, DISCONNECT, NOTICE, PROGRESS, QUIZ, UPDATEROOMSTATE }
 public enum VoiceEventType { REQUEST, CANCEL, ACCEPT, DEACCEPT, DISCONNECT, CONNECT }
 public enum NoticeEventType { ONVOICE, JOIN, DISCONNECT }
 public enum ProgressEventType { UPDATE, PLAYERCOUNT }
@@ -19,6 +19,7 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
     [SerializeField] private VoiceManager voiceManager;
     [SerializeField] private LoundgeSceneManager loundgeManager;
     [SerializeField] private TextChatManager textChatManager;
+
     private ChatClient chatClient;
     [SerializeField] private string eventServer;
 
@@ -158,6 +159,11 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
                 loundgeManager.RemoveNPCObject(email);
                 loundgeManager.UpdateLobbyPlayerCount();
             }
+            if(type.Equals(EventMessageType.UPDATEROOMSTATE.ToString()))
+            {
+                int roomNumber = int.Parse(command[1]);
+                loundgeManager.UpdateRoomEnterence(roomNumber);
+            }
             if(type.Equals(EventMessageType.VOICECHAT.ToString()))
             {
                 string voiceEventType = command[1];
@@ -188,6 +194,12 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
                     {
                         voiceManager.OnVoiceChatSendEvent(sender, reciever);
                     }
+
+                    loundgeManager.spawnedNPC[senderEmail].onVoiceChat = true;
+                    loundgeManager.spawnedNPC[recieverEmail].onVoiceChat = true;
+
+                    loundgeManager.spawnedNPCObject[senderEmail].GetComponent<NPCController>().OnVoiceChat(true);
+                    loundgeManager.spawnedNPCObject[recieverEmail].GetComponent<NPCController>().OnVoiceChat(true);
                 }
                 if (voiceEventType.Equals(VoiceEventType.ACCEPT.ToString()))
                 {
@@ -199,6 +211,8 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
                     {
                         voiceManager.OnAcceptVoiceChatEventSender(sender, reciever);
                     }
+
+
                 }
                 if (voiceEventType.Equals(VoiceEventType.DEACCEPT.ToString()))
                 {
@@ -210,6 +224,12 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
                     {
                         voiceManager.OnDeacceptVoiceChatEventSender(sender, reciever);
                     }
+
+                    loundgeManager.spawnedNPC[senderEmail].onVoiceChat = false;
+                    loundgeManager.spawnedNPC[recieverEmail].onVoiceChat = false;
+
+                    loundgeManager.spawnedNPCObject[senderEmail].GetComponent<NPCController>().OnVoiceChat(false);
+                    loundgeManager.spawnedNPCObject[recieverEmail].GetComponent<NPCController>().OnVoiceChat(false);
                 }
                 if (voiceEventType.Equals(VoiceEventType.CONNECT.ToString()))
                 {

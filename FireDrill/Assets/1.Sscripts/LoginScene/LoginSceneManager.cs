@@ -30,6 +30,10 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
 
     [SerializeField] private GameObject loginErrorWindow;
     [SerializeField] private Button confirmLoginErrorButton;
+
+    [SerializeField] private GameObject loginErrorWindow2;
+    [SerializeField] private Button confirmLoginErrorButton2;
+
     [Space(5)]
 
     [Header("Character Select UI")]
@@ -108,10 +112,13 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
     {
         //User userData;
         bool isContain = DataManager.Instance.IsExistAccount(emailInputField.text, passwordInputField.text, out userData);
-
         if (isContain)
         {
-            //NetworkManager.Instance.Connect(userData);
+            if(userData.isOnline)
+            {
+                CurrentWindow = loginErrorWindow2;
+                return;
+            }
             Connect(userData);
         }
         else
@@ -179,6 +186,10 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
     public void ShowSignInWindow()
     {
         CurrentWindow = signInWindow;
+        signInID.text = "";
+        signInPassword.text = "";
+        signInPasswordCheck.text = "";
+        signInName.text = "";
     }
 
     public void SignInAccount()

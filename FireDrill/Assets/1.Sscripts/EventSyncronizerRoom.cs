@@ -8,6 +8,8 @@ using ExitGames.Client.Photon;
 
 public class EventSyncronizerRoom : MonoBehaviour, IChatClientListener
 {
+    public static EventSyncronizerRoom Instance;
+
     public delegate void EventMessage();
     public EventMessage eventMessage;
 
@@ -15,8 +17,21 @@ public class EventSyncronizerRoom : MonoBehaviour, IChatClientListener
     private ChatClient chatClient;
     [SerializeField] private string eventServer;
     [SerializeField] private TextChatManager textChatManager;
+    [SerializeField] private ScoreBoard scoreBoard;
 
     public bool onConnected = false;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(Instance.gameObject);
+        }
+    }
 
     private void Start()
     { 
@@ -107,6 +122,10 @@ public class EventSyncronizerRoom : MonoBehaviour, IChatClientListener
                 string chatMessage = command[2];
 
                 textChatManager.OnGetMessage(sender, chatMessage, NetworkManager.RoomNumber);
+            }
+            if (type.Equals(EventMessageType.QUIZ.ToString()))
+            {
+                scoreBoard.UpdateScoreBoard();
             }
         }
     }

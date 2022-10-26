@@ -266,9 +266,19 @@ public class RoomSceneManager : GameManager
 
         DataManager.Instance.UpdateRoomPlayerCount(roomNumber, playerCount);
         DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, 999);
+        DataManager.Instance.SetOffline(NetworkManager.User.email);
 
         string message = $"{EventMessageType.NOTICE}_{NoticeEventType.DISCONNECT}_{roomNumber}_{NetworkManager.User.email}";
         eventMessage?.Invoke(message);
+
+        if(NetworkManager.User.userType == UserType.Lecture)
+        {
+            DataManager.Instance.UpdateRoomProgress(roomNumber, 0);
+            DataManager.Instance.UpdateRoomState(roomNumber, false);
+
+            message = $"{EventMessageType.PROGRESS}_{ProgressEventType.UPDATE}_{roomNumber}";
+            SendEventMessage(message);
+        }
 
         //eventSyncronizer.Disconnect();
         PhotonNetwork.SendAllOutgoingCommands();

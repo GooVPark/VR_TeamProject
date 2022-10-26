@@ -5008,6 +5008,8 @@ MonoBehaviour:
   isEventServerConnected: 0
   voiceChatErrorToast: {fileID: 1469227080}
   megaphoneErrorToast: {fileID: 0}
+  roomEnterances:
+  - {fileID: 515783893}
   posts:
   - {fileID: 1852759533}
   - {fileID: 990629787}
@@ -6750,6 +6752,7 @@ MonoBehaviour:
   joinRoomError: {fileID: 1469227080}
   roomInfo: {fileID: 2065558814}
   loundgeSceneManager: {fileID: 442421932}
+  interactionArea: {fileID: 0}
 --- !u!65 &515783894
 BoxCollider:
   m_ObjectHideFlags: 0

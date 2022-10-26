@@ -28,6 +28,14 @@ public class RoomState_GoToLoundge : RoomState
     public void LeaveRoom()
     {
         DataManager.Instance.UpdateRoomPlayerCount(NetworkManager.RoomNumber, PhotonNetwork.CurrentRoom.PlayerCount - 1);
+        if (PhotonNetwork.CurrentRoom.PlayerCount <= 0)
+        {
+            DataManager.Instance.UpdateRoomProgress(roomSceneManager.roomNumber, 0);
+            DataManager.Instance.UpdateRoomState(roomSceneManager.roomNumber, false);
+
+            string message = $"{EventMessageType.PROGRESS}_{ProgressEventType.UPDATE}_{roomSceneManager.roomNumber}";
+            SendEventMessage(message);
+        }
         PhotonNetwork.LeaveRoom();
     }
 }

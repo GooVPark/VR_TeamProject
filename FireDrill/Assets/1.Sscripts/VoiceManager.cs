@@ -251,6 +251,7 @@ public class VoiceManager : MonoBehaviourPunCallbacks
         }
         else user = null;
 
+        CurrentToast = acceptVoiceChatToast.gameObject;
         user.onVoiceChat = true;
 
         DataManager.Instance.UpdateLobbyUser(user);
@@ -269,6 +270,7 @@ public class VoiceManager : MonoBehaviourPunCallbacks
         }
         else user = null;
 
+        CurrentToast = voiceChatDisconnectToast.gameObject;
         user.onVoiceChat = false;
 
         DataManager.Instance.UpdateLobbyUser(user);
