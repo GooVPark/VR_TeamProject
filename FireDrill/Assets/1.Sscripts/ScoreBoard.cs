@@ -47,17 +47,23 @@ public class ScoreBoard : MonoBehaviour
         }
 
         UpdateScoreBoard();
-        elapsedTime = 0f;
     }
 
     public void UpdateScoreBoard()
     {
         List<User> users = roomManager.GetUsersInRoom(roomManager.roomNumber);
-        
+           
         if(isOrderd)
         {
-            var list = from user in users orderby user.totalScore descending select users;
-            users = (List<User>)list;
+            var list = from user in users orderby user.totalScore descending select user;
+
+            users = list.ToList();
+        }
+
+        Debug.Log("Sorted User List");
+        foreach(var user in users)
+        {
+            Debug.Log(user.email);
         }
 
         for (int i = 0; i < users.Count; i++)

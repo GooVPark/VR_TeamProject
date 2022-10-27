@@ -70,7 +70,7 @@ public class LoundgeSceneManager : GameManager
 
     private void FixedUpdate()
     {
-
+        UpdateRoomPlayerCount(0);
     }
     
     private Coroutine initializer;
@@ -419,14 +419,35 @@ public class LoundgeSceneManager : GameManager
     }
     public void UpdateRoomPlayerCount(int roomNumber)
     {
-        RoomData roomData = DataManager.Instance.GetRoomData(roomNumber);
+        //RoomData roomData = DataManager.Instance.GetRoomData(roomNumber);
 
-        int playerCount = roomData.currentPlayerCount < 0 ? 0 : roomData.currentPlayerCount;
-        int maxPlayerCount = roomData.maxPlayerCount;
+        //int playerCount = roomData.currentPlayerCount < 0 ? 0 : roomData.currentPlayerCount;
+        //int maxPlayerCount = roomData.maxPlayerCount;
+        int playerCount = 0;
+        if (cachedRoomList.ContainsKey(roomNumber.ToString()))
+        {
+            playerCount = cachedRoomList[roomNumber.ToString()].PlayerCount;
+        }
 
-        playerCountsText[roomNumber].text = $"{playerCount}/{maxPlayerCount}";
+        playerCountsText[roomNumber].text = $"{playerCount}/16";
     }
+    private Dictionary<string, RoomInfo> cachedRoomList = new Dictionary<string, RoomInfo>();
 
+    private void UpdateCachedRoomList(List<RoomInfo> roomList)
+    {
+        for (int i = 0; i < roomList.Count; i++)
+        {
+            RoomInfo info = roomList[i];
+            if (info.RemovedFromList)
+            {
+                cachedRoomList.Remove(info.Name);
+            }
+            else
+            {
+                cachedRoomList[info.Name] = info;
+            }
+        }
+    }
 
     #endregion
 
@@ -439,7 +460,14 @@ public class LoundgeSceneManager : GameManager
 
     public override void OnJoinedLobby()
     {
+        cachedRoomList.Clear();
         Debug.Log("Loundge Maanger: Joined Lobby");
+    }
+
+
+    public override void OnRoomListUpdate(List<RoomInfo> roomList)
+    {
+        UpdateCachedRoomList(roomList);
     }
 
     public int roomNumber;
@@ -532,9 +560,13 @@ public class LoundgeSceneManager : GameManager
                 break;
         }
     }
-
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        cachedRoomList.Clear();
+    }
     public override void OnLeftLobby()
     {
+        cachedRoomList.Clear();
         //eventSyncronizer.DisconnectChat();
     }
     //public override void OnPlayerEnteredRoom(Player newPlayer)

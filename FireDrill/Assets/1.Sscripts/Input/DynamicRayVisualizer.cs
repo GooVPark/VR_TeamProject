@@ -60,9 +60,6 @@ public class DynamicRayVisualizer : MonoBehaviour
                 var heightAdjustment = xrOrigin.Origin.transform.up * xrOrigin.CameraInOriginSpaceHeight;
                 var cameraDestination = teleportPointer.transform.position + heightAdjustment;
                 xrOrigin.MoveCameraToWorldLocation(cameraDestination);
-
-                string message = $"move_{NetworkManager.User.email}_{cameraDestination}";
-                eventSyncronizer?.Invoke(message);
             }
 
             isTeleportable = false;

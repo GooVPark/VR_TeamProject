@@ -32,19 +32,32 @@ public class RoomEnterance : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("NetworkPlayerRoom"))
-        {
+        //if (other.CompareTag("NetworkPlayerRoom"))
+        //{
 
-            if (other.GetComponentInParent<PhotonView>().IsMine)
+        //    if (other.GetComponentInParent<PhotonView>().IsMine)
+        //    {
+        //        joinRoomButton.gameObject.SetActive(false);
+        //        joinRoomError.gameObject.SetActive(true);
+        //    }
+        //}
+        //else if(other.CompareTag("NetworkPlayer"))
+        //{
+        //    joinRoomError.gameObject.SetActive(false);
+        //    joinRoomButton.gameObject.SetActive(true);
+        //}
+        if(other.CompareTag(targetTag))
+        {
+            if(NetworkManager.Instance.onVoiceChat)
             {
                 joinRoomButton.gameObject.SetActive(false);
                 joinRoomError.gameObject.SetActive(true);
             }
-        }
-        else if(other.CompareTag("NetworkPlayer"))
-        {
-            joinRoomError.gameObject.SetActive(false);
-            joinRoomButton.gameObject.SetActive(true);
+            else
+            {
+                joinRoomError.gameObject.SetActive(false);
+                joinRoomButton.gameObject.SetActive(true);
+            }
         }
     }
 
@@ -68,4 +81,5 @@ public class RoomEnterance : MonoBehaviour
         loundgeSceneManager.JoinRoom(roomNumber);
 
     }
+
 }

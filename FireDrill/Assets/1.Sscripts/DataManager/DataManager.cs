@@ -6,6 +6,20 @@ using UnityEngine;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
+public class LogData
+{
+    public string date;
+    public string user;
+    public string log;
+
+    public LogData(string date, string user, string log)
+    {
+        this.date = date;
+        this.user = user;
+        this.log = log;
+    }
+}
+
 public class DataManager : MonoBehaviour
 {
     public static DataManager Instance;
@@ -29,6 +43,9 @@ public class DataManager : MonoBehaviour
 
     IMongoDatabase lobbyDatabase;
     IMongoCollection<LoundgeUser> loundgeUsercollection;
+
+    IMongoDatabase eventLogDatabase;
+    IMongoCollection<LogData> eventLogCollection;
 
     private static UserTable userTable;
     public static UserTable UserTable { get => userTable; }
@@ -71,11 +88,24 @@ public class DataManager : MonoBehaviour
 
         lobbyDatabase = client.GetDatabase("LobbyData");
         loundgeUsercollection = lobbyDatabase.GetCollection<LoundgeUser>("MainLoundge");
+
+        eventLogDatabase = client.GetDatabase("EventData");
+        eventLogCollection = eventLogDatabase.GetCollection<LogData>("EventLog");
         
         GetAllToast();
         GetQuizDatabase();
     }
 
+    #region Log
+
+    public void WriteLog(string log)
+    {
+        LogData logData = new LogData(System.DateTime.Now.ToString(), NetworkManager.User.email, log);
+
+        eventLogCollection.InsertOne(logData);
+    }
+
+    #endregion
 
     #region Login
 
@@ -249,6 +279,8 @@ public class DataManager : MonoBehaviour
     {
         var filter = Builders<RoomData>.Filter.Eq("roomNumber", roomNumber);
         var update = Builders<RoomData>.Update.Set("isStarted", value);
+
+        roomCollection.UpdateOne(filter, update);
     }
 
     public bool GetRoomProgressState(int roomNumber)
@@ -258,7 +290,14 @@ public class DataManager : MonoBehaviour
         BsonDocument bson = new BsonDocument { { "roomNumber", roomNumber } };
         roomDatas = roomCollection.Find(bson).ToList();
 
-        return roomDatas[0].isStarted;
+        if (roomDatas.Count > 0)
+        {
+            return roomDatas[0].isStarted;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public RoomData GetRoomData(int roomNumber)
@@ -418,6 +457,7 @@ public class DataManager : MonoBehaviour
     public void InsertLobbyUser(User user)
     {
         LoundgeUser loundgeUser = new LoundgeUser(user);
+        NetworkManager.Instance.SetLoundgeUser(loundgeUser);
         loundgeUsercollection.InsertOne(loundgeUser);
     }
 
@@ -466,6 +506,14 @@ public class DataManager : MonoBehaviour
         var filter = Builders<LoundgeUser>.Filter.Eq("email", email);
 
         return loundgeUsercollection.Find(filter).ToList()[0];
+    }
+
+    public void SetUserOnRequest(string email, bool state)
+    {
+        var filter = Builders<LoundgeUser>.Filter.Eq("email", email);
+        var update = Builders<LoundgeUser>.Update.Set("onRequestVoiceChat", state);
+
+        loundgeUsercollection.UpdateOne(filter, update);
     }
 
     #endregion

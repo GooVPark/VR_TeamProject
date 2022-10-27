@@ -31,7 +31,6 @@ public class RoomState_WaitPlayer : RoomState
             NetworkManager.Instance.megaphoneDisabled = false;
 
             DataManager.Instance.UpdateRoomProgress(roomSceneManager.roomNumber, 0);
-            DataManager.Instance.UpdateRoomState(roomSceneManager.roomNumber, true);
 
             string message = $"{EventMessageType.PROGRESS}_{ProgressEventType.UPDATE}_{roomSceneManager.roomNumber}";
             SendEventMessage(message);

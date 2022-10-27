@@ -326,7 +326,6 @@ public class InputManager : MonoBehaviour
 
     private void OnRightTriggerStarted(InputAction.CallbackContext context)
     {
-        Debug.Log("Start");
         rightTriggerButton?.Invoke(true);
     }
 
@@ -337,7 +336,6 @@ public class InputManager : MonoBehaviour
 
     private void OnRightTriggerCanceled(InputAction.CallbackContext context)
     {
-        Debug.Log("Cancel");
         rightTriggerButton?.Invoke(false);
     }    
 

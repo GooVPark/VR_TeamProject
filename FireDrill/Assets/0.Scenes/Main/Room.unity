@@ -3252,6 +3252,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomSceneManager: {fileID: 335426633}
   eventServer: EventServer
+  textChatManager: {fileID: 1226118958}
+  scoreBoard: {fileID: 1831353994}
   onConnected: 0
 --- !u!4 &114635938
 Transform:
@@ -4123,7 +4125,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 166929707}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.398, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5953,7 +5955,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 2, y: 1, z: 3.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &290360347
 MonoBehaviour:
@@ -5977,7 +5979,7 @@ Transform:
   m_GameObject: {fileID: 290360345}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -36.91, y: 0.1, z: 2.43}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 532504802}
@@ -8630,6 +8632,7 @@ MonoBehaviour:
   isEventServerConnected: 0
   voiceChatErrorToast: {fileID: 0}
   megaphoneErrorToast: {fileID: 0}
+  roomEnterances: []
   posts: []
   currentPage: 0
   totalPage: 0
@@ -18476,7 +18479,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 835924857}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.368, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -19211,7 +19214,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 2, y: 1, z: 3.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!4 &901952508
 Transform:
@@ -19221,8 +19224,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 901952505}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -12, y: 0, z: 0.14}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -16.92, y: 0, z: 0.14}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 111010399}
@@ -26215,6 +26218,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1468227897}
     m_Modifications:
+    - target: {fileID: -8727032608964313185, guid: e68af1a7e5a581a48809c1a619539777,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -8727032608964313185, guid: e68af1a7e5a581a48809c1a619539777,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -8727032608964313185, guid: e68af1a7e5a581a48809c1a619539777,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e68af1a7e5a581a48809c1a619539777,
         type: 3}
       propertyPath: m_RootOrder
@@ -37654,7 +37672,8 @@ GameObject:
   - component: {fileID: 1593390610}
   - component: {fileID: 1593390613}
   - component: {fileID: 1593390612}
-  - component: {fileID: 1593390611}
+  - component: {fileID: 1593390615}
+  - component: {fileID: 1593390614}
   m_Layer: 0
   m_Name: Image
   m_TagString: Untagged
@@ -37682,46 +37701,6 @@ RectTransform:
   m_AnchoredPosition: {x: 178, y: 266}
   m_SizeDelta: {x: 172, y: 92}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1593390611
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1593390609}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7387ef91a19b3c94bb0c3491da384f5c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  OnClick:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1831353994}
-        m_TargetAssemblyTypeName: ScoreBoard, Assembly-CSharp
-        m_MethodName: ListOrder
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  image: {fileID: 0}
-  text: {fileID: 0}
-  collider: {fileID: 0}
-  interactable: 0
-  isHovered: 0
-  defaultState: 0
-  disabledSprite: {fileID: 0}
-  enabledSprite: {fileID: 0}
-  hoverEnterSprite: {fileID: 0}
-  hoverExitSprite: {fileID: 0}
-  activateSprite: {fileID: 0}
-  deactivateSprite: {fileID: 0}
-  buttonState: 0
 --- !u!114 &1593390612
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37760,6 +37739,109 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1593390609}
   m_CullTransparentMesh: 1
+--- !u!65 &1593390614
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1593390609}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 120, y: 40, z: 1}
+  m_Center: {x: 0, y: 5, z: 0}
+--- !u!114 &1593390615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1593390609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a35f6cfbfba9b548aaa00d52cfe8a50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_InteractionManager: {fileID: 223164375}
+  m_Colliders: []
+  m_InteractionLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_InteractionLayers:
+    m_Bits: 1
+  m_SelectMode: 0
+  m_CustomReticle: {fileID: 0}
+  m_FirstHoverEntered:
+    m_PersistentCalls:
+      m_Calls: []
+  m_LastHoverExited:
+    m_PersistentCalls:
+      m_Calls: []
+  m_HoverEntered:
+    m_PersistentCalls:
+      m_Calls: []
+  m_HoverExited:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FirstSelectEntered:
+    m_PersistentCalls:
+      m_Calls: []
+  m_LastSelectExited:
+    m_PersistentCalls:
+      m_Calls: []
+  m_SelectEntered:
+    m_PersistentCalls:
+      m_Calls: []
+  m_SelectExited:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1831353994}
+        m_TargetAssemblyTypeName: ScoreBoard, Assembly-CSharp
+        m_MethodName: ListOrder
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  m_Activated:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Deactivated:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnFirstHoverEntered:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnLastHoverExited:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnHoverEntered:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnHoverExited:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnSelectEntered:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnSelectExited:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnSelectCanceled:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnActivate:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnDeactivate:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1598283221
 GameObject:
   m_ObjectHideFlags: 0
@@ -42593,7 +42675,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -46885,7 +46967,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 2, y: 1, z: 3.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1954790662
 MonoBehaviour:
@@ -46909,7 +46991,7 @@ Transform:
   m_GameObject: {fileID: 1954790660}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -22.08, y: 0, z: -7.42}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1460201526}
@@ -48612,7 +48694,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: -39330807
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!1 &1989716658
 GameObject:
@@ -53638,7 +53720,7 @@ MonoBehaviour:
   m_Camera: {fileID: 779158801280045519}
   m_OriginBaseGameObject: {fileID: 779158800427111306}
   m_CameraFloorOffsetObject: {fileID: 779158802479900517}
-  m_RequestedTrackingOriginMode: 2
+  m_RequestedTrackingOriginMode: 1
   m_CameraYOffset: 1.7
 --- !u!114 &779158800585760378
 MonoBehaviour:

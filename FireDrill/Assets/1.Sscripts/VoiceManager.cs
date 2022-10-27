@@ -86,10 +86,6 @@ public class VoiceManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-
-        groupText.text = recorder.InterestGroup.ToString();
-
-
         acceptVoiceChatButton.onClick += AcceptVoiceChat;
         deacceptVoiceChatButton.onClick += DeaccpetVoiceChat;
         cancelVoiceChatButton.onClick += CancelVoiceChat;
@@ -107,7 +103,7 @@ public class VoiceManager : MonoBehaviourPunCallbacks
     {
         //localPlayer.SetVoiceState(VoiceChatState.Send);
         Debug.Log($"OnVoiceChatSendEvent - Sender: {sender.email}, Reciever: {reciever.email}");
-
+        DataManager.Instance.SetUserOnRequest(sender.email, true);
         CurrentToast = cancelVoiceChatToast.gameObject;
         string userName = reciever.name;
         cancelVoiceChatToast.message.text = $"{userName}님에게 1:1 대화 요청";
@@ -120,7 +116,7 @@ public class VoiceManager : MonoBehaviourPunCallbacks
     {
         //localPlayer.SetVoiceState(VoiceChatState.Recieve);
         Debug.Log($"OnVoiceChatRecieveEvent - Sender: {sender.email}, Reciever: {reciever.email}");
-
+        DataManager.Instance.SetUserOnRequest(reciever.email, true);
         CurrentToast = voiceChatRequestToast.gameObject;
         string userName = sender.name;
         voiceChatRequestToast.message.text = $"{userName}님의 1:1 대화 요청";
@@ -135,6 +131,7 @@ public class VoiceManager : MonoBehaviourPunCallbacks
         Debug.Log($"OnVoiceChatCancleEvent - Sender: {sender.email}, Reciever: {reciever.email}");
 
         CurrentToast = voiceChatCanceledToast.gameObject;
+        DataManager.Instance.SetUserOnRequest(user.email, false);
         string userName = user.name;
         voiceChatCanceledToast.message.text = $"{userName}님과의 대화가 취소되었습니다";
 
@@ -197,6 +194,7 @@ public class VoiceManager : MonoBehaviourPunCallbacks
         CurrentToast = acceptVoiceChatToast.gameObject;
         acceptVoiceChatToast.message.text = $"{reciever.name}님과의 1:1 대화가 수락 되었습니다.";
 
+        DataManager.Instance.SetUserOnRequest(sender.email, false);
         DataManager.Instance.UpdateLobbyUser(sender);
         NetworkManager.Instance.voiceChatDisabled = false;
         NetworkManager.Instance.onVoiceChat = true;
@@ -210,6 +208,9 @@ public class VoiceManager : MonoBehaviourPunCallbacks
     {
         CurrentToast = acceptVoiceChatToast.gameObject;
         acceptVoiceChatToast.message.text = $"{sender.name}님과의 1:1 대화가 수락 되었습니다.";
+
+        DataManager.Instance.SetUserOnRequest(reciever.email, false);
+
         NetworkManager.Instance.voiceChatDisabled = false;
         NetworkManager.Instance.onVoiceChat = true;
 
@@ -226,6 +227,7 @@ public class VoiceManager : MonoBehaviourPunCallbacks
     public void OnDeacceptVoiceChatEventSender(LoundgeUser sender, LoundgeUser reciever)
     {
         CurrentToast = deacceptVoiceChatToastSender.gameObject;
+        DataManager.Instance.SetUserOnRequest(sender.email, false);
         deacceptVoiceChatToastSender.message.text = $"{reciever.name}님과의 1:1 대화가 거절 되었습니다.";
 
         Invoke(nameof(CloseToast), 3f);
@@ -233,6 +235,7 @@ public class VoiceManager : MonoBehaviourPunCallbacks
     public void OnDeacceptVoiceChatEventReciever(LoundgeUser sender, LoundgeUser reciever)
     {
         CurrentToast = deacceptVoiceChatToastReciever.gameObject;
+        DataManager.Instance.SetUserOnRequest(reciever.email, false);
         deacceptVoiceChatToastReciever.message.text = $"{sender.name}님과의 1:1 대화가 거절 되었습니다.";
 
         Invoke(nameof(CloseToast), 3f);

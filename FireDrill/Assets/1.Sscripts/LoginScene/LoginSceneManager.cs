@@ -60,6 +60,8 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject signInWindow;
     [SerializeField] private Button idCheckButton;
     [SerializeField] private GameObject idCheckPopUp;
+    [SerializeField] private Button idCheckErrorButton;
+    [SerializeField] private GameObject idCheckErrorPopUp;
     [SerializeField] private TMP_Text idCheckText;
     [SerializeField] private bool idCheck = false;
 
@@ -237,19 +239,22 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
         {
             idCheckText.text = "사용 불가";
             idCheck = false;
+            idCheckPopUp.SetActive(false);
+            idCheckErrorPopUp.SetActive(true);
         }
         else
         {
             idCheckText.text = "사용 가능";
             idCheck = true;
+            idCheckErrorPopUp.SetActive(false);
+            idCheckPopUp.SetActive(true);
         }
-
-        idCheckPopUp.SetActive(true);
     }
 
     public void IDCheckConfirm()
     {
         idCheckPopUp.SetActive(false);
+        idCheckErrorPopUp.SetActive(false);
     }
 
     #endregion

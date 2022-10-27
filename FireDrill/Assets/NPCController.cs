@@ -151,7 +151,17 @@ public class NPCController : MonoBehaviourPun //, IPunInstantiateMagicCallback
     //}
     public void OnRequestPrivateVoiceChat()
     {
-        if (!user.onVoiceChat && isVoiceChatReady && isHovered && !senderIsOnVoiceChat)
+        DataManager.Instance.FindLobbyUser(NetworkManager.User);
+        LoundgeUser reciever = DataManager.Instance.GetUser(user.email);
+
+        bool recieverIsOnVoiceChat = reciever.onVoiceChat;
+        bool recieverIsOnRequestVoiceChat = reciever.onRequestVoiceChat;
+
+        LoundgeUser sender = DataManager.Instance.GetUser(NetworkManager.LoundgeUser.email);
+
+        bool senderIsOnVoiceChat = sender.onVoiceChat;
+        bool senderIsOnRequestVoiceChat = sender.onRequestVoiceChat;
+        if (isVoiceChatReady && isHovered && !senderIsOnVoiceChat && !senderIsOnRequestVoiceChat && !recieverIsOnRequestVoiceChat && !recieverIsOnVoiceChat)
         {
             string message = $"{EventMessageType.VOICECHAT}_{VoiceEventType.REQUEST}_{NetworkManager.User.email}_{user.email}";
             eventMessage?.Invoke(message);
@@ -165,17 +175,8 @@ public class NPCController : MonoBehaviourPun //, IPunInstantiateMagicCallback
 
     public void OnHoverEnter()
     {
-        if(senderIsOnVoiceChat)
-        {
-            return;
-        }
-
         isHovered = true;
-
-        if (!user.onVoiceChat && isVoiceChatReady)
-        {
-            OutlineEnable();
-        }
+        OutlineEnable();
     }
 
     public void OnHoverExit()

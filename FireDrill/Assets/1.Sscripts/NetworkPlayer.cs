@@ -65,17 +65,24 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     [PunRPC]
     private void SetHasExtinguisher(bool value)
     {
-        hasExtinguisher = value;
-        if(hasExtinguisher)
+        if (NetworkManager.RoomNumber == 999)
         {
-            extinguisherIcon.gameObject.SetActive(true);
-            uiGroup.sizeDelta = new Vector2(100, 0) + uiGroup.sizeDelta;
+            hasExtinguisher = false;
         }
         else
         {
-            extinguisherDisabled.SetActive(false);
-            //var collision = hoseWater.collision;
-            //collision.enabled = false;
+            hasExtinguisher = value;
+            if (hasExtinguisher)
+            {
+                extinguisherIcon.gameObject.SetActive(true);
+                uiGroup.sizeDelta = new Vector2(100, 0) + uiGroup.sizeDelta;
+            }
+            else
+            {
+                extinguisherDisabled.SetActive(false);
+                //var collision = hoseWater.collision;
+                //collision.enabled = false;
+            }
         }
     }
 
@@ -395,6 +402,8 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
 
     public void Initialize()
     {
+        rightWrist.gameObject.layer = 31;
+        leftWrist.gameObject.layer = 31;
         if (photonView.IsMine)
         {
             UserID = NetworkManager.User.email;
@@ -405,6 +414,8 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
 
             userInfoUI.SetActive(false);
 
+            maleHelmet.layer = 31;
+            femaleHelmet.layer = 31;
             maleMesh.layer = 31;
             femaleMesh.layer = 31;
             headModel.layer = 31;
