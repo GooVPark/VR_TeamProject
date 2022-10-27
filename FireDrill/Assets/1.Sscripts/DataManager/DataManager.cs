@@ -40,6 +40,9 @@ public class DataManager : MonoBehaviour
 
     IMongoDatabase quizDatabase;
     IMongoCollection<QuizJson> selectionQuizCollection;
+    IMongoCollection<QuizJson> quizTypeACollection;
+    IMongoCollection<QuizJson> quizTypeBCollection;
+    IMongoCollection<QuizJson> quizTypeCCollection;
 
     IMongoDatabase lobbyDatabase;
     IMongoCollection<LoundgeUser> loundgeUsercollection;
@@ -374,6 +377,15 @@ public class DataManager : MonoBehaviour
     public void GetScoreBoard()
     {
 
+    }
+
+    public List<QuizJson> GetQuizListByType(string type)
+    {
+        IMongoCollection<QuizJson> quizCollection = quizDatabase.GetCollection<QuizJson>(type);
+        BsonDocument bson = new BsonDocument { };
+        List<QuizJson> quizJsons = new List<QuizJson>();
+
+        return quizCollection.Find(bson).ToList();
     }
 
     #endregion

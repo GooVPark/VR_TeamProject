@@ -70,6 +70,8 @@ public class InteractableQuizObject : MonoBehaviour
     private bool isActivated;
     public int quizNumber = 0;
 
+    public List<QuizJson> quizs = new List<QuizJson>();
+
     [SerializeField] private Transform userTransform; // 로컬 플레이어의 transform을 가져옴
 
     private void Start()

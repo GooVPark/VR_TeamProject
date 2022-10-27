@@ -20,6 +20,7 @@ public class RoomState_InQuiz : RoomState
 
     [Header("QuizObject")]
     public GameObject quizObject;
+    public QuizManager quizManager;
 
     public override void OnStateEnter()
     {

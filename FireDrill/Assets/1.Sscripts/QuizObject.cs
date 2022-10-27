@@ -29,6 +29,7 @@ public class QuizJson
     public ObjectId _id;
 
     public QuizType type;
+    public int quizIndex;
     public string question;
     public string[] selections;
     public int[] answer;
