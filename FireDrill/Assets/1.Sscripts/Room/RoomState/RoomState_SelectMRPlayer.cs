@@ -69,7 +69,7 @@ public class RoomState_SelectMRPlayer : RoomState
     {
         lectureToast.gameObject.SetActive(false);
         lectureSelectToast.gameObject.SetActive(true);
-        lectureSelectToast.message.text = $"{player.UserName}님을 소화기 보유자로 지정하시겠습니까?";
+        lectureSelectToast.message.text = $"{player.UserName}";
         targetPlayer = player;
     }
 

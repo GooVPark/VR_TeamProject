@@ -5,6 +5,7 @@ using TMPro;
 
 public class Toast : MonoBehaviour
 {
+    public bool hasDurationTime;
     public TMP_Text message;
 
     public void Activate(float duration)

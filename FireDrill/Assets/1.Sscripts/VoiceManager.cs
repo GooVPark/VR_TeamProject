@@ -106,7 +106,7 @@ public class VoiceManager : MonoBehaviourPunCallbacks
         DataManager.Instance.SetUserOnRequest(sender.email, true);
         CurrentToast = cancelVoiceChatToast.gameObject;
         string userName = reciever.name;
-        cancelVoiceChatToast.message.text = $"{userName}님에게 1:1 대화 요청";
+        cancelVoiceChatToast.message.text = $"{userName}님의 대화 수락 요청을 기다리는 중...";
 
         this.sender = sender;
         this.reciever = reciever;
@@ -119,7 +119,7 @@ public class VoiceManager : MonoBehaviourPunCallbacks
         DataManager.Instance.SetUserOnRequest(reciever.email, true);
         CurrentToast = voiceChatRequestToast.gameObject;
         string userName = sender.name;
-        voiceChatRequestToast.message.text = $"{userName}님의 1:1 대화 요청";
+        voiceChatRequestToast.message.text = $"{userName}님이 대화 요청을 보냈습니다. 대화를 원하시면 YES, 아니면 NO를 클릭해주세요.";
 
         this.sender = sender;
         this.reciever = reciever;
@@ -133,7 +133,7 @@ public class VoiceManager : MonoBehaviourPunCallbacks
         CurrentToast = voiceChatCanceledToast.gameObject;
         DataManager.Instance.SetUserOnRequest(user.email, false);
         string userName = user.name;
-        voiceChatCanceledToast.message.text = $"{userName}님과의 대화가 취소되었습니다";
+        voiceChatCanceledToast.message.text = $"{userName}님과의 대화가 취소되었습니다.";
 
         sender = null;
         reciever = null;

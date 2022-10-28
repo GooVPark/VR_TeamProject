@@ -507,11 +507,6 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
             skinnedMeshRenderer = skinnedMeshRendererMale;
             //leftHandAnimator = maleLeftHandAnimator;
             //rightHandAnimator = maleRightHandAnimator;
-
-            if(UserLevel == UserType.Lecture)
-            {
-                maleHelmet.SetActive(false);
-            }
         }
         else
         {
@@ -525,11 +520,6 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
             skinnedMeshRenderer = skinnedMeshRendererFemale;
             //leftHandAnimator = femaleLeftHandAnimator;
             //rightHandAnimator = femaleRightHandAnimator;
-
-            if (UserLevel == UserType.Lecture)
-            {
-                femaleHelmet.SetActive(false);
-            }
         }
 
         skinnedMeshRenderer.sharedMaterial = materials[value];

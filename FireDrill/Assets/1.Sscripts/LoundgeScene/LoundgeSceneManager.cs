@@ -33,6 +33,7 @@ public class LoundgeSceneManager : GameManager
 
     [SerializeField] private GameObject voiceChatErrorToast;
     [SerializeField] private GameObject megaphoneErrorToast;
+    [SerializeField] private GameObject scoreboardErrorToast;
 
     [SerializeField] private List<RoomEnterance> roomEnterances;
     private void Awake()
@@ -101,6 +102,11 @@ public class LoundgeSceneManager : GameManager
         for (int i = 0; i < playerCountsText.Length; i++)
         {
             UpdateRoomPlayerCount(i);
+        }
+
+        for (int i = 0; i < roomEnterances.Count; i++)
+        {
+            UpdateRoomEnterence(i);
         }
 
         StopCoroutine(initializer);
@@ -206,29 +212,21 @@ public class LoundgeSceneManager : GameManager
         Invoke(nameof(CloseToast), 3f);
     }
 
+    public void ScoreBoardSelected()
+    {
+        scoreboardErrorToast.SetActive(true);
+        Invoke(nameof(CloseToast), 3f);
+    }
+
     private void CloseToast()
     {
         megaphoneErrorToast.SetActive(false);
     }
 
-    public void UpdateRoomEnterence(int roomNUmber)
+    public void UpdateRoomEnterence(int roomNumber)
     {
-        bool isStarted = DataManager.Instance.GetRoomProgressState(roomNUmber);
-
-        foreach(var enterence in roomEnterances)
-        {
-            if(enterence.roomNumber == roomNumber)
-            {
-                if(isStarted)
-                {
-                    enterence.interactionArea.SetActive(false);
-                }
-                else
-                {
-                    enterence.interactionArea.SetActive(true);
-                }
-            }
-        }
+        bool isStarted = DataManager.Instance.GetRoomProgressState(roomNumber);
+        roomEnterances[roomNumber].isStarted = isStarted;
     }
 
     #region Database

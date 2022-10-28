@@ -22,6 +22,7 @@ public class LogData
 
 public class DataManager : MonoBehaviour
 {
+    public bool writeLog = false;
     public static DataManager Instance;
     public TestDataManager testDataManager;
 
@@ -103,9 +104,14 @@ public class DataManager : MonoBehaviour
 
     public void WriteLog(string log)
     {
-        LogData logData = new LogData(System.DateTime.Now.ToString(), NetworkManager.User.email, log);
+        if (writeLog)
+        {
 
-        eventLogCollection.InsertOne(logData);
+
+            LogData logData = new LogData(System.DateTime.Now.ToString(), NetworkManager.User.email, log);
+
+            eventLogCollection.InsertOne(logData);
+        }
     }
 
     #endregion

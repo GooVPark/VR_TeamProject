@@ -398,6 +398,6 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void Haptic(float amplitude, float duration)
     {
-        hapticTargetController.SendHapticImpulse(amplitude, duration);
+        //hapticTargetController.SendHapticImpulse(amplitude, duration);
     }
 }

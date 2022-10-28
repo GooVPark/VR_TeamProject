@@ -26,11 +26,12 @@ public class RoomState_WaitPlayer : RoomState
         textChat.UpdateState(ButtonState.Deactivate);
         textChat.button.onClick += roomSceneManager.ToggleTextChat;
 
-        if(user.userType == UserType.Lecture)
+
+        DataManager.Instance.UpdateRoomProgress(roomSceneManager.roomNumber, 0);
+
+        if (user.userType == UserType.Lecture)
         {
             NetworkManager.Instance.megaphoneDisabled = false;
-
-            DataManager.Instance.UpdateRoomProgress(roomSceneManager.roomNumber, 0);
 
             string message = $"{EventMessageType.PROGRESS}_{ProgressEventType.UPDATE}_{roomSceneManager.roomNumber}";
             SendEventMessage(message);

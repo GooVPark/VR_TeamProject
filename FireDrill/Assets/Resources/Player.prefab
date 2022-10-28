@@ -3609,8 +3609,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uB098\uB8E8\uD53C"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: d6db610222642a641ac18569ce64d1c5, type: 2}
-  m_sharedMaterial: {fileID: -8145302480376091091, guid: d6db610222642a641ac18569ce64d1c5,
+  m_fontAsset: {fileID: 11400000, guid: fcf2040af2fde5043a46cd6bdcc4c033, type: 2}
+  m_sharedMaterial: {fileID: -4313065834206754984, guid: fcf2040af2fde5043a46cd6bdcc4c033,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -11439,7 +11439,8 @@ AudioSource:
   m_GameObject: {fileID: 8257823102094649740}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300001, guid: 1dd706bb85d8aef4e83a6229dbd62c36,
+    type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
@@ -11451,7 +11452,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 5
+  MaxDistance: 10
   Pan2D: 0
   rolloffMode: 2
   BypassEffects: 0

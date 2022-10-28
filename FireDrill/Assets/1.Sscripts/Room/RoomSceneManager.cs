@@ -232,6 +232,18 @@ public class RoomSceneManager : GameManager
         string message = $"{EventMessageType.NOTICE}_{NoticeEventType.DISCONNECT}_{roomNumber}_{NetworkManager.User.email}";
         eventMessage?.Invoke(message);
 
+        if (NetworkManager.User.userType == UserType.Lecture)
+        {
+            DataManager.Instance.UpdateRoomProgress(roomNumber, 0);
+            DataManager.Instance.UpdateRoomState(roomNumber, false);
+
+            message = $"{EventMessageType.PROGRESS}_{ProgressEventType.UPDATE}_{roomNumber}";
+            SendEventMessage(message);
+
+            message = $"{EventMessageType.UPDATEROOMSTATE}_{roomNumber}";
+            SendEventMessage(message);
+        }
+
         //eventSyncronizer.Disconnect();
         PhotonNetwork.SendAllOutgoingCommands();
     }
@@ -277,6 +289,9 @@ public class RoomSceneManager : GameManager
             DataManager.Instance.UpdateRoomState(roomNumber, false);
 
             message = $"{EventMessageType.PROGRESS}_{ProgressEventType.UPDATE}_{roomNumber}";
+            SendEventMessage(message);
+
+            message = $"{EventMessageType.UPDATEROOMSTATE}_{roomNumber}";
             SendEventMessage(message);
         }
 
