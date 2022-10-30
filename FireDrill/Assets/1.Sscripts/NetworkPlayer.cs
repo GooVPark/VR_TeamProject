@@ -57,6 +57,8 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     private void SetCurrentCharacterRPC(int value)
     {
         currentCharacter = value;
+        rightWrist.gameObject.layer = 31;
+        leftWrist.gameObject.layer = 31;
         SetCurrentCharacter(value);
     }
 
@@ -157,6 +159,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     public Image lectureIcon;
     public Image studentIcon;
     public Image extinguisherIcon;
+    public Image megaphoneIcon;
     public TMP_Text scoreUI;
 
     public GameObject speachBubble;
@@ -402,8 +405,6 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
 
     public void Initialize()
     {
-        rightWrist.gameObject.layer = 31;
-        leftWrist.gameObject.layer = 31;
         if (photonView.IsMine)
         {
             UserID = NetworkManager.User.email;
@@ -634,6 +635,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         audioSource.maxDistance = 500f;
         audioSource.SetCustomCurve(AudioSourceCurveType.CustomRolloff, megaphoneAudioCurve);
 
+        megaphoneIcon.gameObject.SetActive(true);
         megaphoneEnabled.SetActive(true);
 
     }
@@ -649,6 +651,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         audioSource.maxDistance = 5f;
         audioSource.SetCustomCurve(AudioSourceCurveType.CustomRolloff, voiceAudioCurve);
 
+        megaphoneIcon.gameObject.SetActive(false);
         megaphoneEnabled.SetActive(false);
     }
 

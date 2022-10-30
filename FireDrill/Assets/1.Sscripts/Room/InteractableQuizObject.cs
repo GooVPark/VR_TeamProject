@@ -70,6 +70,11 @@ public class InteractableQuizObject : MonoBehaviour
     private bool isActivated;
     public int quizNumber = 0;
 
+    [SerializeField] private Sprite readySprite;
+    [SerializeField] private Sprite finishSprite;
+
+    [SerializeField] private Image signImage;
+
     public List<QuizJson> quizs = new List<QuizJson>();
 
     [SerializeField] private Transform userTransform; // 로컬 플레이어의 transform을 가져옴
@@ -87,8 +92,8 @@ public class InteractableQuizObject : MonoBehaviour
         }
 
         quizUI.SetActive(true);
+        signImage.gameObject.SetActive(false);
         if (isSolved) return;
-
 
         quiz = DataManager.Instance.quizsByCode[code];
         question.text = quiz.question;
@@ -125,8 +130,6 @@ public class InteractableQuizObject : MonoBehaviour
                 currentQuizUI = oxQuizUI;
                 break;
         }
-
-        DistanceCheck();
     }
 
     public void OnHoverEntered()
@@ -278,6 +281,16 @@ public class InteractableQuizObject : MonoBehaviour
         solvedUI.SetActive(true);
         quizUI.SetActive(false);
         feedbackUI.SetActive(false);
+        signImage.gameObject.SetActive(true);
+
+        if(isSolved)
+        {
+            signImage.sprite = finishSprite;
+        }
+        else
+        {
+            signImage.sprite = readySprite;
+        }
     }
 
     /// <summary>

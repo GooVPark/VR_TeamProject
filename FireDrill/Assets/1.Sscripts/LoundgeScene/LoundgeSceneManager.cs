@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.XR.Interaction.Toolkit;
+using Unity.XR.CoreUtils;
 using Photon.Pun;
 using Photon.Realtime;
 using Photon.Voice.PUN;
@@ -15,7 +16,6 @@ public class LoundgeSceneManager : GameManager
     public static Eventmessage eventMesage;
 
     public static LoundgeSceneManager Instance;
-
 
     public VoiceManager voiceManager;
     public EventSyncronizer eventSyncronizer;
@@ -55,6 +55,8 @@ public class LoundgeSceneManager : GameManager
         NetworkManager.Instance.voiceChatDisabled = true;
         NetworkManager.Instance.scoreBoardDisabled = true;
         NetworkManager.Instance.roomType = RoomType.Loundge;
+
+        SetIdleMode(NetworkManager.User.idleMode);
 
         InsertUserData();
 

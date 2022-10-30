@@ -121,6 +121,7 @@ public class User
     public int id;
     public string name;
     public UserType userType;
+    public IdleMode idleMode;
     public string company;
 
     public int characterNumber;

@@ -26,6 +26,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     private static LoundgeUser loundgeUser;
     public static LoundgeUser LoundgeUser => loundgeUser;
 
+    public bool inFireControl = false;
+
     private static int roomNumber;
     public static int RoomNumber => roomNumber;
 

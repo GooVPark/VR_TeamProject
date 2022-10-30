@@ -64,6 +64,10 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject idCheckErrorPopUp;
     [SerializeField] private TMP_Text idCheckText;
     [SerializeField] private bool idCheck = false;
+    [Space(5)]
+
+    [Header("Idle Mode UI")]
+    [SerializeField] private GameObject setIdleModeWindow;
 
     private static User userData;
     public static User UserData { get => userData; }
@@ -171,7 +175,8 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
         NetworkManager.User.characterNumber = index;
         DataManager.Instance.UpdateUserData("email", NetworkManager.User.email, "characterNumber", index);
         characterObjects.SetActive(false);
-        PhotonNetwork.JoinLobby();
+
+        CurrentWindow = setIdleModeWindow;
     }
 
     public void SelectExtingusher(bool isSelected)
@@ -255,6 +260,21 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
     {
         idCheckPopUp.SetActive(false);
         idCheckErrorPopUp.SetActive(false);
+    }
+
+    #endregion
+
+    #region Set Idle Mode
+
+    public void SetIdleMode()
+    {
+        IdleMode idleMode = setIdleModeWindow.GetComponent<SitStandSettButton>().mode;
+        NetworkManager.User.idleMode = idleMode;
+        DataManager.Instance.UpdateUserData("email", NetworkManager.User.email, "idleMode", idleMode);
+
+        CurrentWindow = null;
+
+        PhotonNetwork.JoinLobby();
     }
 
     #endregion

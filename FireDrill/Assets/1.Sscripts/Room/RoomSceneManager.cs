@@ -63,6 +63,7 @@ public class RoomSceneManager : GameManager
 
     [Header("Toast")]
     [SerializeField] private ToastTypeAndMessage toasts;
+    [SerializeField] private GameObject forceExitToast;
 
     [SerializeField] private EventSyncronizerRoom eventSyncronizer;
 
@@ -194,6 +195,42 @@ public class RoomSceneManager : GameManager
         requiredPlayer = roomData.requirePlayerCount;
 
         StartCoroutine(JoinVoice());
+    }
+
+    public void ForceExit()
+    {
+        photonView.RPC(nameof(ForceExitRPC), RpcTarget.All);
+    }
+
+    [PunRPC]
+    public void ForceExitRPC()
+    {
+        LeaveRoom();
+    }
+    public void LeaveRoom()
+    {
+        DataManager.Instance.UpdateRoomPlayerCount(NetworkManager.RoomNumber, PhotonNetwork.CurrentRoom.PlayerCount - 1);
+        if (PhotonNetwork.CurrentRoom.PlayerCount <= 0)
+        {
+            DataManager.Instance.UpdateRoomProgress(roomNumber, 0);
+            DataManager.Instance.UpdateRoomState(roomNumber, false);
+
+            string message = $"{EventMessageType.PROGRESS}_{ProgressEventType.UPDATE}_{roomNumber}";
+            SendEventMessage(message);
+        }
+        PhotonNetwork.LeaveRoom();
+    }
+
+    public void ForceExitPopUp()
+    {
+        if(forceExitToast.activeSelf)
+        {
+            forceExitToast.SetActive(false);
+        }
+        else
+        {
+            forceExitToast.SetActive(true);
+        }
     }
 
     private IEnumerator JoinVoice()

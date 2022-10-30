@@ -7,6 +7,7 @@ public class RoomState_QuizWait : RoomState
 {
     [Header("RoomState")]
     public RoomState_SelectMRPlayer roomStateSelectMRPlayer;
+    public RoomState_EndQuiz roomStateEndQuiz;
     [Space(5)]
 
     [Header("Toast")]
@@ -37,6 +38,6 @@ public class RoomState_QuizWait : RoomState
     [PunRPC]
     public void SetState()
     {
-        roomSceneManager.RoomState = roomStateSelectMRPlayer;
+        roomSceneManager.RoomState = roomStateEndQuiz; 
     }
 }

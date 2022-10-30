@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.XR.Interaction.Toolkit;
+using Unity.XR.CoreUtils;
 using Photon.Pun;
 using Photon.Realtime;
 using Photon.Voice.Unity;
@@ -11,7 +12,7 @@ using TMPro;
 public class GameManager : MonoBehaviourPunCallbacks
 {
     public Recorder localRecoder;
-
+    public XROrigin xrOrigin;
     public Transform playerTransforms;
     public NetworkPlayer player;
 
@@ -49,6 +50,27 @@ public class GameManager : MonoBehaviourPunCallbacks
         player = playerObject.GetComponent<NetworkPlayer>();
 
         return spawnPosition;
+    }
+
+    protected void SetIdleMode(IdleMode mode)
+    {
+        switch (mode)
+        {
+            case IdleMode.STAND:
+                xrOrigin.CameraYOffset = 1.6f;
+                if(NetworkManager.User.characterNumber > 15)
+                {
+                    xrOrigin.CameraYOffset = 1.6f - 0.08f;
+                }
+                break;
+            case IdleMode.SIT:
+                xrOrigin.CameraYOffset = 0.9f;
+                if (NetworkManager.User.characterNumber > 15)
+                {
+                    xrOrigin.CameraYOffset = 0.9f - 0.08f;
+                }
+                break;
+        }
     }
 
     #region Camera UI
