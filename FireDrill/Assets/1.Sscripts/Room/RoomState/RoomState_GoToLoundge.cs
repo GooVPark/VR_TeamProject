@@ -16,6 +16,9 @@ public class RoomState_GoToLoundge : RoomState
     {
         base.OnStateEnter();
 
+        string message = $"{EventMessageType.LAMPUPDATE}";
+        SendEventMessage(message);
+
         goToLoundgeToast.gameObject.SetActive(true);
         eventArea.SetActive(true);
     }

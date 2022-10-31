@@ -9,8 +9,6 @@ using TMPro;
 using Photon.Pun;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
-using SelectedEffectOutline;
-
 public class NPCController : MonoBehaviourPun //, IPunInstantiateMagicCallback
 {
     public delegate void EventMessage(string message);

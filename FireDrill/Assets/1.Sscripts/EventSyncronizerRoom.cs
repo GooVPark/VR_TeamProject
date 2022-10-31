@@ -113,7 +113,7 @@ public class EventSyncronizerRoom : MonoBehaviour, IChatClientListener
 
             string message = messages[^1].ToString();
 
-            DataManager.Instance.WriteLog(message);
+            
 
             string[] command = message.Split('_');
 

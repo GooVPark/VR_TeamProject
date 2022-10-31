@@ -26,6 +26,8 @@ public class RoomState_WaitPlayer : RoomState
         textChat.UpdateState(ButtonState.Deactivate);
         textChat.button.onClick += roomSceneManager.ToggleTextChat;
 
+        string message = $"{EventMessageType.LAMPUPDATE}";
+        SendEventMessage(message);
 
         DataManager.Instance.UpdateRoomProgress(roomSceneManager.roomNumber, 0);
 
@@ -33,7 +35,7 @@ public class RoomState_WaitPlayer : RoomState
         {
             NetworkManager.Instance.megaphoneDisabled = false;
 
-            string message = $"{EventMessageType.PROGRESS}_{ProgressEventType.UPDATE}_{roomSceneManager.roomNumber}";
+            message = $"{EventMessageType.PROGRESS}_{ProgressEventType.UPDATE}_{roomSceneManager.roomNumber}";
             SendEventMessage(message);
 
             forceStartToast.gameObject.SetActive(true);

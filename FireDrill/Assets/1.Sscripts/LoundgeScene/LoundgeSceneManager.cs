@@ -210,14 +210,11 @@ public class LoundgeSceneManager : GameManager
     public void MegaphoneSelected()
     {
         megaphoneErrorToast.SetActive(true);
-
-        Invoke(nameof(CloseToast), 3f);
     }
 
     public void ScoreBoardSelected()
     {
         scoreboardErrorToast.SetActive(true);
-        Invoke(nameof(CloseToast), 3f);
     }
 
     private void CloseToast()
@@ -446,6 +443,22 @@ public class LoundgeSceneManager : GameManager
             {
                 cachedRoomList[info.Name] = info;
             }
+        }
+    }
+
+    #endregion
+
+    #region Room State Lamp
+
+    public Lamp[] lamps;
+
+    public void UpdateRoomStateLamp()
+    {
+        roomDatas = DataManager.Instance.GetRoomData();
+
+        for (int i = 0; i < roomDatas.Count; i++)
+        {
+            lamps[i].UpdateLampState(roomDatas[i]);
         }
     }
 

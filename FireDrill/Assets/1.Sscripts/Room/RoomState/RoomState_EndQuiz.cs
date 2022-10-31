@@ -42,6 +42,6 @@ public class RoomState_EndQuiz : RoomState
     [PunRPC]
     public void SetStateRPC()
     {
-        roomSceneManager.RoomState = roomStateGoToC;
+        roomSceneManager.RoomState = roomState_SelectMRPlayer;
     }
 }

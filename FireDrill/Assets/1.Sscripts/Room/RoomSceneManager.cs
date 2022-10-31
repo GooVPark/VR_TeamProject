@@ -64,6 +64,7 @@ public class RoomSceneManager : GameManager
     [Header("Toast")]
     [SerializeField] private ToastTypeAndMessage toasts;
     [SerializeField] private GameObject forceExitToast;
+    [SerializeField] private GameObject forceExitButton;
 
     [SerializeField] private EventSyncronizerRoom eventSyncronizer;
 
@@ -103,6 +104,8 @@ public class RoomSceneManager : GameManager
     {
         NetworkManager.Instance.SetRoomNumber(roomNumber);
         NetworkManager.Instance.roomType = RoomType.Room;
+
+        SetIdleMode(NetworkManager.User.idleMode);
     }
 
     private void Update()
@@ -187,6 +190,10 @@ public class RoomSceneManager : GameManager
         origin.position = SpawnPlayer(spawnPivot.position);
         localRecoder.TransmitEnabled = false;
         NetworkManager.Instance.roomType = RoomType.Room;
+        if(NetworkManager.User.userType == UserType.Lecture)
+        {
+            forceExitButton.SetActive(true);
+        }
         RoomState = roomStateWaitPlayer;
 
         if (photonView.IsMine) DataManager.Instance.UpdateRoomPlayerCount(roomNumber, PhotonNetwork.CurrentRoom.PlayerCount);

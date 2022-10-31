@@ -137,8 +137,6 @@ public class VoiceManager : MonoBehaviourPunCallbacks
 
         sender = null;
         reciever = null;
-
-        Invoke(nameof(CloseToast), 3f);
     }
 
     public void CancelVoiceChat()
@@ -167,7 +165,7 @@ public class VoiceManager : MonoBehaviourPunCallbacks
 
         voiceChatToggleButton.onClick.RemoveAllListeners();
 
-        Invoke(nameof(CloseToast), 3f);
+     
     }
 
     public void DisconnectVoiceChat()
@@ -202,7 +200,6 @@ public class VoiceManager : MonoBehaviourPunCallbacks
         string message = $"{EventMessageType.VOICECHAT}_{VoiceEventType.CONNECT}_{sender.email}_{reciever.email}";
         eventMessage?.Invoke(message);
 
-        Invoke(nameof(CloseToast), 3f);
     }
     public void OnAcceptVoiceChatEventReciever(LoundgeUser sender, LoundgeUser reciever)
     {
@@ -221,7 +218,6 @@ public class VoiceManager : MonoBehaviourPunCallbacks
         string message = $"{EventMessageType.VOICECHAT}_{VoiceEventType.CONNECT}_{sender.email}_{reciever.email}";
         eventMessage?.Invoke(message);
 
-        Invoke(nameof(CloseToast), 3f);
     }
 
     public void OnDeacceptVoiceChatEventSender(LoundgeUser sender, LoundgeUser reciever)
@@ -229,16 +225,12 @@ public class VoiceManager : MonoBehaviourPunCallbacks
         CurrentToast = deacceptVoiceChatToastSender.gameObject;
         DataManager.Instance.SetUserOnRequest(sender.email, false);
         deacceptVoiceChatToastSender.message.text = $"{reciever.name}님과의 1:1 대화가 거절 되었습니다.";
-
-        Invoke(nameof(CloseToast), 3f);
     }
     public void OnDeacceptVoiceChatEventReciever(LoundgeUser sender, LoundgeUser reciever)
     {
         CurrentToast = deacceptVoiceChatToastReciever.gameObject;
         DataManager.Instance.SetUserOnRequest(reciever.email, false);
         deacceptVoiceChatToastReciever.message.text = $"{sender.name}님과의 1:1 대화가 거절 되었습니다.";
-
-        Invoke(nameof(CloseToast), 3f);
     }
 
     public void OnConnectVoiceManagerEvent(string userEmail)
@@ -367,11 +359,6 @@ public class VoiceManager : MonoBehaviourPunCallbacks
         }
 
         return null;
-    }
-
-    private void CloseToast()
-    {
-        CurrentToast = null;
     }
 
     private void OnApplicationQuit()

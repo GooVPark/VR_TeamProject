@@ -6,7 +6,7 @@ using Photon.Pun;
 using Photon.Chat;
 using ExitGames.Client.Photon;
 
-public enum EventMessageType { TEXTCHAT, MOVE, VOICECHAT, SPAWN, DISCONNECT, NOTICE, PROGRESS, QUIZ, UPDATEROOMSTATE }
+public enum EventMessageType { TEXTCHAT, MOVE, VOICECHAT, SPAWN, DISCONNECT, NOTICE, PROGRESS, QUIZ, UPDATEROOMSTATE, LAMPUPDATE }
 public enum VoiceEventType { REQUEST, CANCEL, ACCEPT, DEACCEPT, DISCONNECT, CONNECT }
 public enum NoticeEventType { ONVOICE, JOIN, DISCONNECT }
 public enum ProgressEventType { UPDATE, PLAYERCOUNT }
@@ -115,6 +115,10 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
 
             string type = command[0];
 
+            if(type.Equals(EventMessageType.LAMPUPDATE.ToString()))
+            {
+                loundgeManager.UpdateRoomStateLamp();
+            }
             if(type.Equals(EventMessageType.TEXTCHAT.ToString()))
             {
                 string sender = command[1];

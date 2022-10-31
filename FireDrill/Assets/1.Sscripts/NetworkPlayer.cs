@@ -57,8 +57,6 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     private void SetCurrentCharacterRPC(int value)
     {
         currentCharacter = value;
-        rightWrist.gameObject.layer = 31;
-        leftWrist.gameObject.layer = 31;
         SetCurrentCharacter(value);
     }
 
@@ -349,8 +347,8 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         {
             Debug.Log("OnExtinguisher Is Mine");
 
-            extinguisherObject = PhotonNetwork.Instantiate("Extinguisher", extinguisherPivot.position, extinguisherPivot.rotation);
-            onExtinguisher = true;
+            extinguisherObject = PhotonNetwork.Instantiate("Extinguisher", position, Quaternion.identity);
+            //onExtinguisher = true;
             photonView.RPC(nameof(OnExtinguisherRPC), RpcTarget.All, extinguisherObject.name);
         }
     }
@@ -358,7 +356,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     public void OnExtinguisherRPC(string name)
     {
         extinguisher = GameObject.Find(name).GetComponent<Extinguisher>();
-        pinTrigger = extinguisher.pinTrigger;
+        pinTrigger = extinguisher.pinTrigger.GetComponent<PinTrigger>();
         hose = extinguisher.hose;
         hoseWater = extinguisher.hoseWater;
 

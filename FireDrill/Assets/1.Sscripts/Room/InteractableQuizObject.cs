@@ -84,6 +84,18 @@ public class InteractableQuizObject : MonoBehaviour
         eventMessage += EventSyncronizerRoom.Instance.OnSendMessage;
     }
 
+    private void OnEnable()
+    {
+        if (isSolved)
+        {
+            signImage.sprite = finishSprite;
+        }
+        else
+        {
+            signImage.sprite = readySprite;
+        }
+    }
+
     public void OnSelected()
     { 
         if(!isHovered)
@@ -278,7 +290,7 @@ public class InteractableQuizObject : MonoBehaviour
     public void CloseQuizWindow()
     {
         isSolved = true;
-        solvedUI.SetActive(true);
+        //solvedUI.SetActive(true);
         quizUI.SetActive(false);
         feedbackUI.SetActive(false);
         signImage.gameObject.SetActive(true);
@@ -291,29 +303,5 @@ public class InteractableQuizObject : MonoBehaviour
         {
             signImage.sprite = readySprite;
         }
-    }
-
-    /// <summary>
-    /// 퀴즈 오브젝트로부터 너무 멀어지면 자동으로 퀴즈창이 꺼지도록함.
-    /// </summary>
-    private void DistanceCheck()
-    {
-        if (distanceCheck != null)
-        {
-            StopCoroutine(distanceCheck);
-            distanceCheck = null;
-        }
-        distanceCheck = StartCoroutine(DistanceCheckIE());
-    }
-    private Coroutine distanceCheck;
-    private IEnumerator DistanceCheckIE()
-    {
-        float distance = 0f;
-        do
-        {
-            distance = Vector3.Distance(transform.position, userTransform.position);
-            yield return null;
-        }
-        while (quizUI.activeSelf && distance < 5f);
     }
 }
