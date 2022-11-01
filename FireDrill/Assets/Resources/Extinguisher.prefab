@@ -127,6 +127,7 @@ Transform:
   - {fileID: 5958633004392913384}
   - {fileID: 2161763620075230586}
   - {fileID: 6288038018458786980}
+  - {fileID: 8903925779668163014}
   m_Father: {fileID: 3247952364223167883}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -141,7 +142,6 @@ GameObject:
   - component: {fileID: 3247952364223167883}
   - component: {fileID: 1227497803961917335}
   - component: {fileID: 2050433050001581294}
-  - component: {fileID: 1789673219387099403}
   - component: {fileID: 3675213722457423247}
   - component: {fileID: 8983670656567543976}
   - component: {fileID: 2046536529}
@@ -212,24 +212,6 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
---- !u!114 &1789673219387099403
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2763200105545279281}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e92a96fa110415f45b906b613f0c592b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pinTrigger: {fileID: 3991350858208336507}
-  nozzle: {fileID: 2638172155877836172}
-  hose: {fileID: 3775450815817528318}
-  hoseWater: {fileID: 2638172155858234540}
-  isPinOff: 0
-  isNozzleOff: 0
 --- !u!54 &3675213722457423247
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -396,12 +378,12 @@ MonoBehaviour:
     m_RotationOrder: 4
   m_ThrowVelocityScale: 1.5
   m_ThrowAngularVelocityScale: 1
-  m_ForceGravityOnDetach: 0
-  m_RetainTransformParent: 1
+  m_ForceGravityOnDetach: 1
+  m_RetainTransformParent: 0
   m_AttachPointCompatibilityMode: 0
   userOffset: 0
   hasPose: 0
-  poseIndex: 0
+  poseIndex: 1
 --- !u!114 &2046536530
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -510,6 +492,7 @@ GameObject:
   - component: {fileID: 3599169491102467606}
   - component: {fileID: 1787199269741672435}
   - component: {fileID: 2681926742944970049}
+  - component: {fileID: 5035151501583849326}
   - component: {fileID: 6989370549079650680}
   - component: {fileID: 4796891608135681833}
   - component: {fileID: 4388005406841080188}
@@ -617,6 +600,19 @@ CapsuleCollider:
   m_Height: 0.4908151
   m_Direction: 1
   m_Center: {x: 0.00000016205014, y: -0.24509887, z: -0.000000118040774}
+--- !u!114 &5035151501583849326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3775450815817528318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c16fd62d31dfc7a4d9911d44dab8d171, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isUnlinked: 0
 --- !u!114 &6989370549079650680
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -661,7 +657,19 @@ MonoBehaviour:
       m_Calls: []
   m_SelectExited:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5035151501583849326}
+        m_TargetAssemblyTypeName: Nozzle, Assembly-CSharp
+        m_MethodName: OnDeselected
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_Activated:
     m_PersistentCalls:
       m_Calls: []
@@ -734,7 +742,7 @@ MonoBehaviour:
   m_AttachPointCompatibilityMode: 0
   userOffset: 0
   hasPose: 1
-  poseIndex: 0
+  poseIndex: 1
 --- !u!114 &4796891608135681833
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1522,6 +1530,51 @@ Transform:
   m_Father: {fileID: 4491362178093465469}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8790443709219949619
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8903925779668163014}
+  - component: {fileID: 5013909860010577446}
+  m_Layer: 14
+  m_Name: NozzleOrigin
+  m_TagString: NozzleCollider
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8903925779668163014
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8790443709219949619}
+  m_LocalRotation: {x: 0.000000030908623, y: -0.7071068, z: -0.7071068, w: 0.000000030908623}
+  m_LocalPosition: {x: -0.0034, y: 0.1579, z: 0.176}
+  m_LocalScale: {x: 1.43381, y: 1.43381, z: 1.43381}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7990537212665103053}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &5013909860010577446
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8790443709219949619}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.004656081, y: 0.025341678, z: 0.02601723}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &9085484298414818183
 GameObject:
   m_ObjectHideFlags: 0
@@ -1684,12 +1737,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2638172155877928786}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &2638172155877836172 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 191198, guid: 7edcc7d7e9e78d54899028cc1dd9dd03,
-    type: 3}
-  m_PrefabInstance: {fileID: 2638172155877928786}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7201276456839077087
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1721,7 +1768,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Target
       value: 
-      objectReference: {fileID: 3247952364223167883}
+      objectReference: {fileID: 5958633004392913384}
     - target: {fileID: 337482696842525894, guid: b2b10f03747465e4eb07be67193c6206,
         type: 3}
       propertyPath: m_Target

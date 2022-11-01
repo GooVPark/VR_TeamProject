@@ -16,35 +16,45 @@ public class Extinguisher : MonoBehaviour
 
     private void Start()
     {
-        pinTrigger.GetComponent<PinTrigger>().onPinRemoved += PinOff;
         rigidBody = GetComponent<Rigidbody>();
+        pinTrigger.GetComponent<PinTrigger>().onPinRemoved += PinOff;
+        nozzle.GetComponent<Nozzle>().onNozzleDettached += NozzleOff;
     }
 
     public void OnAttach()
     {
+        Debug.Log("OnAttach");
+
         Collider nozzleCollider = nozzle.GetComponent<Collider>();
         nozzleCollider.enabled = true;
-        nozzle.GetComponent<Rigidbody>().isKinematic = false;
+        nozzle.GetComponent<Nozzle>().Activate();
+        pinTrigger.GetComponent<PinTrigger>().Activate();
+        //nozzle.GetComponent<Rigidbody>().isKinematic = false;
 
         Collider pinTriggerCollider = pinTrigger.GetComponent<Collider>();
         pinTriggerCollider.enabled = true;
-        nozzle.GetComponent<Rigidbody>().isKinematic = false;
+        //nozzle.GetComponent<Rigidbody>().isKinematic = false;
 
         rigidBody.isKinematic = false;
     }
 
     public void OnDettach()
     {
-        if(!isPinOff)
-        {
-            Collider nozzleCollider = nozzle.GetComponent<Collider>();
-            nozzleCollider.enabled = false;
-        }
-        if (!isNozzleOff)
-        {
-            Collider pinTriggerCollider = pinTrigger.GetComponent<Collider>();
-            pinTriggerCollider.enabled = false;
-        }
+        nozzle.GetComponent<Nozzle>().Deactivate();
+        pinTrigger.GetComponent<PinTrigger>().Deactivate();
+        //Debug.Log("OnDettach");
+        //if (!isPinOff)
+        //{
+        //    Collider nozzleCollider = nozzle.GetComponent<Collider>();
+        //    nozzleCollider.enabled = false;
+        //}
+        //if (!isNozzleOff)
+        //{
+        //    Debug.Log("IsNozzleOff");
+        //    Collider pinTriggerCollider = pinTrigger.GetComponent<Collider>();
+        //    pinTriggerCollider.enabled = false;
+        //}
+        rigidBody.isKinematic = false;
     }
 
     public void PinOff()
@@ -54,6 +64,7 @@ public class Extinguisher : MonoBehaviour
 
     public void NozzleOff()
     {
+        Debug.Log("NozzleOff");
         isNozzleOff = true;
     }
 }

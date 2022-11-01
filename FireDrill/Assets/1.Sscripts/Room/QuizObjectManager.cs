@@ -14,6 +14,17 @@ public class QuizObjectManager : MonoBehaviour
     [SerializeField] private int typeBCount;
     [SerializeField] private int typeCCount;
 
+    public List<QuizObject> typeAList;
+    public List<QuizObject> typeBList;
+    public List<QuizObject> typeCList;
+
+    private int quizIndex = 0;
+
+    private void Start()
+    {
+
+    }
+
     public List<int> GetRandomNumbers(int maxCount)
     {
         List<int> numbers = new List<int>();
@@ -35,13 +46,9 @@ public class QuizObjectManager : MonoBehaviour
         return randomNumber;
     }
 
-    public List<QuizJson> GetQuizs()
+    public List<QuizObject> GetQuizs()
     {
-        List<QuizJson> quizList = new List<QuizJson>();
-
-        List<QuizJson> typeAList = DataManager.Instance.GetQuizListByType("TypeA");
-        List<QuizJson> typeBList = DataManager.Instance.GetQuizListByType("TypeB");
-        List<QuizJson> typeCList = DataManager.Instance.GetQuizListByType("TypeC");
+        List<QuizObject> quizList = new List<QuizObject>();
 
         List<int> randomNumberA = GetRandomNumbers(typeACount);
         List<int> randomNumberB = GetRandomNumbers(typeBCount);
@@ -49,15 +56,21 @@ public class QuizObjectManager : MonoBehaviour
 
         for (int i = 0; i < typeACount; i++)
         {
+            typeAList[randomNumberA[i]].quizIndex = quizIndex;
             quizList.Add(typeAList[randomNumberA[i]]);
+            quizIndex++;
         }
         for(int i = 0; i < typeBCount; i++)
         {
+            typeBList[randomNumberB[i]].quizIndex = quizIndex;
             quizList.Add(typeBList[randomNumberB[i]]);
+            quizIndex++;
         }
         for(int i = 0;  i < typeCCount; i++)
         {
+            typeCList[randomNumberC[i]].quizIndex = quizIndex;
             quizList.Add(typeCList[randomNumberC[i]]);
+            quizIndex++;
         }
 
         return quizList;
@@ -65,10 +78,15 @@ public class QuizObjectManager : MonoBehaviour
 
     public void SetQuiz()
     {
-        List<QuizJson> quizList = GetQuizs();
+        List<QuizObject> quizList = GetQuizs();
         foreach(var quiz in quizList)
         {
-            quizObjects[quiz.quizIndex].quizs.Add(quiz);
+            quizObjects[quiz.position].quizObjects.Add(quiz);
+        }
+
+        foreach(var quizObject in quizObjects)
+        {
+            quizObject.HasQuiz();
         }
     }
 }
