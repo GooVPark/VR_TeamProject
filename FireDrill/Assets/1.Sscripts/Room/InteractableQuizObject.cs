@@ -82,6 +82,11 @@ public class InteractableQuizObject : MonoBehaviour
     private void Start()
     {
         eventMessage += EventSyncronizerRoom.Instance.OnSendMessage;
+
+        if(NetworkManager.User.userType == UserType.Lecture)
+        {
+            signImage.gameObject.SetActive(false);
+        }
     }
 
     private void OnEnable()
@@ -291,7 +296,7 @@ public class InteractableQuizObject : MonoBehaviour
     {
         isSolved = true;
         //solvedUI.SetActive(true);
-        quizUI.SetActive(false);
+        //quizUI.SetActive(false);
         feedbackUI.SetActive(false);
         signImage.gameObject.SetActive(true);
 

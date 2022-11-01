@@ -82,6 +82,7 @@ public class RoomState_TrainingPin : RoomState
 
     public void OnPinRemove()
     {
+        Debug.Log("Pin Removed");
         isPinRemoved = true;
     }
 }

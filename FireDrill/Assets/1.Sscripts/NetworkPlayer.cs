@@ -244,6 +244,8 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     [SerializeField] private AnimationCurve voiceAudioCurve;
     [SerializeField] private AnimationCurve megaphoneAudioCurve;
 
+    [SerializeField] private XRSimpleInteractable interactable;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -267,6 +269,8 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         {
             leftWrist.gameObject.SetActive(true);
             rightWrist.gameObject.SetActive(true);
+
+            interactable.enabled = false;
         }
 
         leftWristOrigin = leftWrist.localRotation;
@@ -355,7 +359,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     [PunRPC]
     public void OnExtinguisherRPC(string name)
     {
-        extinguisher = GameObject.Find(name).GetComponent<Extinguisher>();
+        extinguisher = FindObjectOfType<Extinguisher>();
         pinTrigger = extinguisher.pinTrigger.GetComponent<PinTrigger>();
         hose = extinguisher.hose;
         hoseWater = extinguisher.hoseWater;
@@ -477,6 +481,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
 
   //          Quaternion rightWristRotation = rightHandAnimation.transform.rotation;
 //            rightWrist.localRotation = rightWristRotation;
+
         }
 
         if (leftHandAnimation.animator.GetInteger("Pose") == 0)

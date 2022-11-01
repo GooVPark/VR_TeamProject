@@ -9,21 +9,28 @@ public class Extinguisher : MonoBehaviour
     public GameObject hose;
     public ParticleSystem hoseWater;
 
+    private Rigidbody rigidBody;
+
     [SerializeField] private bool isPinOff = false;
     [SerializeField] private bool isNozzleOff = false;
 
     private void Start()
     {
         pinTrigger.GetComponent<PinTrigger>().onPinRemoved += PinOff;
+        rigidBody = GetComponent<Rigidbody>();
     }
 
     public void OnAttach()
     {
         Collider nozzleCollider = nozzle.GetComponent<Collider>();
         nozzleCollider.enabled = true;
+        nozzle.GetComponent<Rigidbody>().isKinematic = false;
 
         Collider pinTriggerCollider = pinTrigger.GetComponent<Collider>();
         pinTriggerCollider.enabled = true;
+        nozzle.GetComponent<Rigidbody>().isKinematic = false;
+
+        rigidBody.isKinematic = false;
     }
 
     public void OnDettach()

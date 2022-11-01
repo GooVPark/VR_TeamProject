@@ -52,25 +52,34 @@ public class GameManager : MonoBehaviourPunCallbacks
         return spawnPosition;
     }
 
+    public float standCameraOffset = 1.6f;
+    public float sitCameraOffset = 0.9f;
+    public float eyeOffset = 0.01f;
+    public float femaleOffet = 0.08f;
+
+    public float totalOffset = 0f;
+
     protected void SetIdleMode(IdleMode mode)
     {
         switch (mode)
         {
             case IdleMode.STAND:
-                xrOrigin.CameraYOffset = 1.6f;
+                xrOrigin.CameraYOffset = standCameraOffset - eyeOffset;
                 if(NetworkManager.User.characterNumber > 15)
                 {
-                    xrOrigin.CameraYOffset = 1.6f - 0.08f;
+                    xrOrigin.CameraYOffset -= femaleOffet;
                 }
                 break;
             case IdleMode.SIT:
-                xrOrigin.CameraYOffset = 0.9f;
+                xrOrigin.CameraYOffset = sitCameraOffset - eyeOffset;
                 if (NetworkManager.User.characterNumber > 15)
                 {
-                    xrOrigin.CameraYOffset = 0.9f - 0.08f;
+                    xrOrigin.CameraYOffset -= femaleOffet;
                 }
                 break;
         }
+
+        totalOffset = xrOrigin.CameraYOffset;
     }
 
     #region Camera UI
