@@ -37,4 +37,20 @@ public class Announcement : MonoBehaviour
             yield return null;
         }
     }
+
+    public void PlayAudio()
+    {
+        play = StartCoroutine(Play());
+    }
+
+    public void StopAudio()
+    {
+        if(play != null)
+        {
+            StopCoroutine(play);
+            play = null;
+        }
+
+        audioSource.Stop();
+    }
 }

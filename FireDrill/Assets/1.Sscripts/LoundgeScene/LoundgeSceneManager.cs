@@ -36,6 +36,8 @@ public class LoundgeSceneManager : GameManager
     [SerializeField] private GameObject scoreboardErrorToast;
 
     [SerializeField] private List<RoomEnterance> roomEnterances;
+
+    [SerializeField] private Announcement announcement;
     private void Awake()
     {
         if(Instance == null)
@@ -526,6 +528,8 @@ public class LoundgeSceneManager : GameManager
                 voiceChatButton.button.onClick += voiceManager.DisconnectVoiceChat;
                 NetworkManager.Instance.onVoiceChat = true;
 
+                announcement.StopAudio();
+
                 foreach(string key in spawnedNPCObject.Keys)
                 {
                     spawnedNPCObject[key].GetComponent<NPCController>().SetVoiceChatState(true);
@@ -559,6 +563,8 @@ public class LoundgeSceneManager : GameManager
 
                 NetworkManager.Instance.roomType = RoomType.Loundge;
                 NetworkManager.Instance.onVoiceChat = false;
+
+                announcement.PlayAudio();
 
                 voiceChatButton.button.onClick -= voiceManager.DisconnectVoiceChat;
 

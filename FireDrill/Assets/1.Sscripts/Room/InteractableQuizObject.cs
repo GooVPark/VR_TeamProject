@@ -190,6 +190,8 @@ public class InteractableQuizObject : MonoBehaviour
     {
         selectedNumber = slotNumber;
         QuizObject quiz = quizObjects[quizNumber];
+
+        bool isCollect = false;
         
         if(quiz.answer == slotNumber)
         {
@@ -200,6 +202,7 @@ public class InteractableQuizObject : MonoBehaviour
                     StopCoroutine(selectionResultPopUp);
                 }
                 selectionResultPopUp = StartCoroutine(SelectionResultPopUp(true));
+                isCollect = true;
             }
             else
             {
@@ -219,6 +222,7 @@ public class InteractableQuizObject : MonoBehaviour
                     StopCoroutine(selectionResultPopUp);
                 }
                 selectionResultPopUp = StartCoroutine(SelectionResultPopUp(false));
+                isCollect = true;
             }
             else
             {
@@ -228,6 +232,15 @@ public class InteractableQuizObject : MonoBehaviour
                 }
                 oxResultPopUp = StartCoroutine(OXResultPopUp(false));
             }
+        }
+
+        if (isCollect)
+        {
+            onSubmit?.Invoke(1);
+        }
+        else
+        {
+            onSubmit?.Invoke(2);
         }
     }
 

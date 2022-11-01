@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class QuizObjectManager : MonoBehaviour
+public class QuizObjectManager : MonoBehaviourPun
 {
     //1. 각 타입별로 3~4개씩 랜덤하게 번호 지정
     //2. 랜덤하게 뽑힌 번호로 QuizJson 불러와서 List<QuizJson>으로 저장
@@ -78,13 +79,19 @@ public class QuizObjectManager : MonoBehaviour
 
     public void SetQuiz()
     {
+        photonView.RPC(nameof(SetQuizRPC), RpcTarget.All);
+    }
+
+    [PunRPC]
+    public void SetQuizRPC()
+    {
         List<QuizObject> quizList = GetQuizs();
-        foreach(var quiz in quizList)
+        foreach (var quiz in quizList)
         {
             quizObjects[quiz.position].quizObjects.Add(quiz);
         }
 
-        foreach(var quizObject in quizObjects)
+        foreach (var quizObject in quizObjects)
         {
             quizObject.HasQuiz();
         }
