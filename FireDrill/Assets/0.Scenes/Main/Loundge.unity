@@ -5079,6 +5079,11 @@ MonoBehaviour:
   voiceChatRequestToast: {fileID: 0}
   textChatManager: {fileID: 1499728229}
   hapticTargetController: {fileID: 779158800944872192}
+  standCameraOffset: 1.6
+  sitCameraOffset: 0.9
+  eyeOffset: 0.01
+  femaleOffet: 0.08
+  totalOffset: 0
   megaphoneButton: {fileID: 533399015}
   scoreboardButton: {fileID: 2042829245}
   voiceChatButton: {fileID: 862593185}
@@ -44330,7 +44335,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:

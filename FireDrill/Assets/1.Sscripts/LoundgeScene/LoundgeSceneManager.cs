@@ -56,7 +56,7 @@ public class LoundgeSceneManager : GameManager
         NetworkManager.Instance.scoreBoardDisabled = true;
         NetworkManager.Instance.roomType = RoomType.Loundge;
 
-        SetIdleMode(NetworkManager.User.idleMode);
+        SetIdleMode(IdleMode.STAND);
 
         InsertUserData();
 

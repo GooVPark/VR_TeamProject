@@ -105,7 +105,7 @@ public class RoomSceneManager : GameManager
         NetworkManager.Instance.SetRoomNumber(roomNumber);
         NetworkManager.Instance.roomType = RoomType.Room;
 
-        SetIdleMode(NetworkManager.User.idleMode);
+        SetIdleMode(IdleMode.STAND);
     }
 
     private void Update()

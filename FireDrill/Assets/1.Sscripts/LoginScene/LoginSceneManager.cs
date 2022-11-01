@@ -176,7 +176,7 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
         DataManager.Instance.UpdateUserData("email", NetworkManager.User.email, "characterNumber", index);
         characterObjects.SetActive(false);
 
-        CurrentWindow = setIdleModeWindow;
+        PhotonNetwork.JoinLobby();
     }
 
     public void SelectExtingusher(bool isSelected)

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.32905823, g: 0.4760204, b: 0.638438, a: 1}
+  m_IndirectSpecularColor: {r: 0.33228835, g: 0.4738851, b: 0.6324786, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -273,6 +273,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 1178159842}
 --- !u!4 &19243831
 Transform:
@@ -1845,6 +1847,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fe62af719aad6647b89028d2959eb38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 316102065}
   button: {fileID: 1388355332}
 --- !u!4 &91537897
@@ -2888,6 +2892,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4796891608135681833, guid: 48c68bf7a47b5e943b2fd647e74ebb0c,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 6504688142132722232, guid: 48c68bf7a47b5e943b2fd647e74ebb0c,
         type: 3}
       propertyPath: sceneViewId
@@ -3144,6 +3153,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fe62af719aad6647b89028d2959eb38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 1893909234}
   button: {fileID: 0}
 --- !u!1001 &111010398
@@ -3597,6 +3608,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 2080598296}
 --- !u!1 &129930619
 GameObject:
@@ -3913,6 +3926,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 151127539}
 --- !u!1 &151127537
 GameObject:
@@ -4392,6 +4407,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 1225948881}
 --- !u!1 &197659509
 GameObject:
@@ -5391,6 +5408,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49ea2a2bf20442f4daf2a540f9d485fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 396208484}
   button1: {fileID: 1797207999}
   button2: {fileID: 1609275650}
@@ -5461,6 +5480,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fe62af719aad6647b89028d2959eb38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 1405990153}
   button: {fileID: 0}
 --- !u!1001 &242236236
@@ -6575,6 +6596,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0932c8c35ed9ecb47beb1b9398d88b3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 1275669214}
   text: {fileID: 413873909}
 --- !u!4 &323310683
@@ -6760,11 +6783,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   localRecoder: {fileID: 0}
+  xrOrigin: {fileID: 0}
   playerTransforms: {fileID: 162511461}
   player: {fileID: 0}
   voiceChatRequestToast: {fileID: 1806084302}
   textChatManager: {fileID: 1226118958}
   hapticTargetController: {fileID: 0}
+  standCameraOffset: 1.6
+  sitCameraOffset: 0.9
+  eyeOffset: 0.01
+  femaleOffet: 0.08
+  totalOffset: 0
   megaphoneButton: {fileID: 1608001549}
   scoreboardButton: {fileID: 475193116}
   voiceChatButton: {fileID: 20682182}
@@ -6826,6 +6855,8 @@ MonoBehaviour:
   eventAreaB: {fileID: 0}
   eventAreaC: {fileID: 0}
   toasts: {fileID: 0}
+  forceExitToast: {fileID: 0}
+  forceExitButton: {fileID: 0}
   eventSyncronizer: {fileID: 114635937}
   spawnPivot: {fileID: 743592818}
   roomNumber: 0
@@ -8526,6 +8557,7 @@ MonoBehaviour:
   voiceChat: {fileID: 0}
   textChat: {fileID: 0}
   roomStateSelectMRPlayer: {fileID: 1331053778}
+  roomStateEndQuiz: {fileID: 0}
   toast: {fileID: 1102209051}
 --- !u!114 &423802572
 MonoBehaviour:
@@ -8820,11 +8852,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   localRecoder: {fileID: 0}
+  xrOrigin: {fileID: 0}
   playerTransforms: {fileID: 162511461}
   player: {fileID: 0}
   voiceChatRequestToast: {fileID: 1806084302}
   textChatManager: {fileID: 0}
   hapticTargetController: {fileID: 0}
+  standCameraOffset: 1.6
+  sitCameraOffset: 0.9
+  eyeOffset: 0.01
+  femaleOffet: 0.08
+  totalOffset: 0
   megaphoneButton: {fileID: 0}
   scoreboardButton: {fileID: 0}
   voiceChatButton: {fileID: 0}
@@ -8845,6 +8883,7 @@ MonoBehaviour:
   isEventServerConnected: 0
   voiceChatErrorToast: {fileID: 0}
   megaphoneErrorToast: {fileID: 0}
+  scoreboardErrorToast: {fileID: 0}
   roomEnterances: []
   posts: []
   currentPage: 0
@@ -8869,6 +8908,7 @@ MonoBehaviour:
   progressUIs: []
   progressImages: []
   playerCountsText: []
+  lamps: []
   roomNumber: 0
 --- !u!4 &442421933
 Transform:
@@ -8934,6 +8974,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 2028325522}
 --- !u!1001 &448621437
 PrefabInstance:
@@ -10963,6 +11005,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fe62af719aad6647b89028d2959eb38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 316102065}
   button: {fileID: 0}
 --- !u!1001 &475193114
@@ -11169,6 +11213,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 180036541}
 --- !u!4 &480457276
 Transform:
@@ -11357,6 +11403,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fe62af719aad6647b89028d2959eb38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 1753625739}
   button: {fileID: 0}
 --- !u!1 &484527423
@@ -11388,6 +11436,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 747460235}
 --- !u!224 &484527425
 RectTransform:
@@ -11695,6 +11745,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 793244645}
 --- !u!1001 &504090156
 PrefabInstance:
@@ -12531,6 +12583,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 467839593}
 --- !u!114 &546891346 stripped
 MonoBehaviour:
@@ -13603,6 +13657,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 1598283223}
 --- !u!1 &614133939
 GameObject:
@@ -14608,6 +14664,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 151127539}
 --- !u!4 &678375730
 Transform:
@@ -14790,6 +14848,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fe62af719aad6647b89028d2959eb38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 452272864}
   button: {fileID: 1548615764}
 --- !u!4 &687098993
@@ -14858,6 +14918,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 876365179}
 --- !u!1 &703648353
 GameObject:
@@ -17621,6 +17683,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fe62af719aad6647b89028d2959eb38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 1753625739}
   button: {fileID: 750787611}
 --- !u!4 &757260415
@@ -17721,6 +17785,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 1225948881}
 --- !u!4 &770825607
 Transform:
@@ -18067,6 +18133,7 @@ MonoBehaviour:
   studnetToast: {fileID: 1772132040}
   eventArea: {fileID: 901952506}
   quizObject: {fileID: 1009705126}
+  quizManager: {fileID: 0}
 --- !u!114 &786928280
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18138,6 +18205,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 775972477}
 --- !u!1 &791885951
 GameObject:
@@ -18188,6 +18257,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 437523292}
 --- !u!1 &793244643
 GameObject:
@@ -21081,6 +21152,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 875699922}
 --- !u!4 &929134032
 Transform:
@@ -24261,6 +24334,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fe62af719aad6647b89028d2959eb38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 649568281}
   button: {fileID: 365644875}
 --- !u!4 &1006886872
@@ -24434,6 +24509,9 @@ MonoBehaviour:
   - {fileID: 1807223025}
   - {fileID: 546891346}
   - {fileID: 1275628061}
+  typeACount: 0
+  typeBCount: 0
+  typeCCount: 0
 --- !u!4 &1009705128
 Transform:
   m_ObjectHideFlags: 0
@@ -24677,6 +24755,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fe62af719aad6647b89028d2959eb38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 1893909234}
   button: {fileID: 2006173938}
 --- !u!4 &1033901953
@@ -24742,6 +24822,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e464da7ed0651cf4f8a119fa146461f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 1845292342}
   text: {fileID: 591220390}
   button: {fileID: 1424652163}
@@ -25885,6 +25967,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 1178159842}
 --- !u!1001 &1095424712
 PrefabInstance:
@@ -26015,6 +26099,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 0}
 --- !u!1001 &1113478041
 PrefabInstance:
@@ -26461,6 +26547,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fe62af719aad6647b89028d2959eb38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 452272864}
   button: {fileID: 0}
 --- !u!1 &1133611594
@@ -26723,6 +26811,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 340778892}
 --- !u!1 &1146516017
 GameObject:
@@ -26849,6 +26939,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 340778892}
 --- !u!1 &1160234425
 GameObject:
@@ -26996,6 +27088,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49ea2a2bf20442f4daf2a540f9d485fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 589626059}
   button1: {fileID: 242236238}
   button2: {fileID: 611371156}
@@ -27128,6 +27222,7 @@ MonoBehaviour:
   voiceChat: {fileID: 0}
   textChat: {fileID: 0}
   roomStateGoToC: {fileID: 1929709376}
+  roomState_SelectMRPlayer: {fileID: 0}
   toast: {fileID: 1237756957}
 --- !u!114 &1165179017
 MonoBehaviour:
@@ -28684,6 +28779,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 1645855762}
 --- !u!1 &1238232215
 GameObject:
@@ -28811,6 +28908,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e464da7ed0651cf4f8a119fa146461f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 1845292342}
   text: {fileID: 591220390}
   button: {fileID: 0}
@@ -29120,6 +29219,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 1645855762}
 --- !u!1001 &1255664061
 PrefabInstance:
@@ -30980,6 +31081,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 2028325522}
 --- !u!1 &1313585178
 GameObject:
@@ -32400,6 +32503,7 @@ MonoBehaviour:
   voiceChat: {fileID: 0}
   textChat: {fileID: 0}
   roomStateEndQuiz: {fileID: 1165179016}
+  roomStateGoToC: {fileID: 0}
   studentToast: {fileID: 480457275}
   lectureToast: {fileID: 1756684500}
   lectureSelectToast: {fileID: 1162598810}
@@ -33031,6 +33135,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 876365179}
 --- !u!4 &1356692328
 Transform:
@@ -35893,6 +35999,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fe62af719aad6647b89028d2959eb38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 1313585180}
   button: {fileID: 1891825421}
 --- !u!4 &1455028584
@@ -38021,6 +38129,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fe62af719aad6647b89028d2959eb38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 1405990153}
   button: {fileID: 570259848}
 --- !u!4 &1526348185
@@ -38164,6 +38274,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0932c8c35ed9ecb47beb1b9398d88b3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 1275669214}
   text: {fileID: 413873909}
 --- !u!1 &1540127525
@@ -38414,6 +38526,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 1609640102}
 --- !u!1 &1571678536
 GameObject:
@@ -39040,6 +39154,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fe62af719aad6647b89028d2959eb38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 1313585180}
   button: {fileID: 0}
 --- !u!1 &1593390609
@@ -41122,6 +41238,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 793244645}
 --- !u!4 &1646082316
 Transform:
@@ -42655,6 +42773,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 2104746955}
 --- !u!4 &1756684501
 Transform:
@@ -42864,6 +42984,7 @@ MonoBehaviour:
   eventArea: {fileID: 290360347}
   toast: {fileID: 1356692327}
   classObject: {fileID: 1312156811}
+  image: {fileID: 0}
 --- !u!114 &1759315616
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42960,6 +43081,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 437523292}
 --- !u!4 &1772132041
 Transform:
@@ -43100,6 +43223,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 1609640102}
 --- !u!1 &1780069430
 GameObject:
@@ -43702,6 +43827,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46139897d3ce5744aac0119dcd9c03c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 1644102016}
   accept: {fileID: 0}
   deaccept: {fileID: 0}
@@ -45664,6 +45791,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 1057244693}
 --- !u!4 &1884308369
 Transform:
@@ -46957,6 +47086,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c34e23cfc884014448d7268aef6a5202, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 1581687066}
   button1: {fileID: 0}
   button2: {fileID: 0}
@@ -47633,6 +47764,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fe62af719aad6647b89028d2959eb38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 1757232539}
   button: {fileID: 0}
 --- !u!1 &1923205509
@@ -48603,6 +48736,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 467839593}
 --- !u!1 &1973299718
 GameObject:
@@ -50192,6 +50327,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 775972477}
 --- !u!4 &1989716660
 Transform:
@@ -50421,6 +50558,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 875699922}
 --- !u!1 &2000954027
 GameObject:
@@ -50703,6 +50842,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fe62af719aad6647b89028d2959eb38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 1581687066}
   button: {fileID: 1844215198}
 --- !u!1001 &2006173937
@@ -50913,6 +51054,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fe62af719aad6647b89028d2959eb38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 0}
   button: {fileID: 0}
 --- !u!1 &2018209819
@@ -50965,6 +51108,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 1977723908}
 --- !u!1 &2021448805
 GameObject:
@@ -51900,6 +52045,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fe62af719aad6647b89028d2959eb38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  hasDurationTime: 0
   message: {fileID: 649568281}
   button: {fileID: 0}
 --- !u!1 &2063663410
