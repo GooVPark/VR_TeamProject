@@ -9,6 +9,8 @@ public class Extinguisher : MonoBehaviour
     public GameObject hose;
     public ParticleSystem hoseWater;
 
+    public GameObject lever;
+
     private Rigidbody rigidBody;
 
     [SerializeField] private bool isPinOff = false;
@@ -66,5 +68,10 @@ public class Extinguisher : MonoBehaviour
     {
         Debug.Log("NozzleOff");
         isNozzleOff = true;
+    }
+
+    public void OnSpread()
+    {
+
     }
 }

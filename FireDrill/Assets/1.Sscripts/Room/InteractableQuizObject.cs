@@ -236,10 +236,12 @@ public class InteractableQuizObject : MonoBehaviour
 
         if (isCollect)
         {
+            Debug.Log("Collect");
             onSubmit?.Invoke(1);
         }
         else
         {
+            Debug.Log("Incollect");
             onSubmit?.Invoke(2);
         }
     }

@@ -27,13 +27,12 @@ public class RoomState_InQuiz : RoomState
         base.OnStateEnter();
         eventArea.gameObject.SetActive(false);
         quizObject.SetActive(true);
-        quizObject.GetComponent<QuizObjectManager>().SetQuiz();
         roomSceneManager.onRoomStateEvent += OnQuizStart;
         if(NetworkManager.User.userType == UserType.Lecture)
         {
             lectureToast.gameObject.SetActive(true);
             DataManager.Instance.UpdateRoomProgress(roomSceneManager.roomNumber, 3);
-
+            quizObject.GetComponent<QuizObjectManager>().SetQuiz();
             string message = $"{EventMessageType.PROGRESS}_{ProgressEventType.UPDATE}_{roomSceneManager.roomNumber}";
             SendEventMessage(message);
         }

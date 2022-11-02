@@ -400,6 +400,7 @@ MonoBehaviour:
   nozzle: {fileID: 3775450815817528318}
   hose: {fileID: 3775450815817528318}
   hoseWater: {fileID: 2638172155858234540}
+  lever: {fileID: 0}
   isPinOff: 0
   isNozzleOff: 0
 --- !u!1 &3069680380252007830
@@ -1218,6 +1219,8 @@ GameObject:
   - component: {fileID: 6288038018458786980}
   - component: {fileID: 1077050341566232015}
   - component: {fileID: 3910822406944148526}
+  - component: {fileID: 5728908800344442139}
+  - component: {fileID: 800831693336693883}
   m_Layer: 14
   m_Name: Fire ExtinguisherLever
   m_TagString: Untagged
@@ -1290,6 +1293,38 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &5728908800344442139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6316459248457393267}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0576c09b7620e4f45871e8e985d5c741, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!95 &800831693336693883
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6316459248457393267}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: eb0c8f5a4cd93a1479720e11984a6ac5, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6601996922052548253
 GameObject:
   m_ObjectHideFlags: 0
