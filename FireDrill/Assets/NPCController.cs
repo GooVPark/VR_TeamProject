@@ -196,11 +196,11 @@ public class NPCController : MonoBehaviourPun //, IPunInstantiateMagicCallback
 
     public void OutlineEnable()
     {
-        outline.gameObject.SetActive(true);
+        //outline.gameObject.SetActive(true);
     }
 
     public void OutlineDisable()
     {
-        outline.gameObject.SetActive(false);
+        //outline.gameObject.SetActive(false);
     }
 }
