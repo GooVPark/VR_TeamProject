@@ -125,7 +125,13 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
                 string chatMessage = command[2];
 
                 textChatManager.OnGetMessage(sender, chatMessage, NetworkManager.RoomNumber);
-                loundgeManager.spawnedNPCObject[sender].GetComponent<NPCController>().ShowBubble(chatMessage);
+                if(!NetworkManager.User.email.Equals(sender))
+                {
+                    if (loundgeManager.spawnedNPCObject.ContainsKey(sender))
+                    {
+                        loundgeManager.spawnedNPCObject[sender].GetComponent<NPCController>().ShowBubble(chatMessage);
+                    }
+                }
             }
             if(type.Equals(EventMessageType.NOTICE.ToString()))
             {

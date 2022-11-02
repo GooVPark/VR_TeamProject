@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2a68d621ff52944fa113e62ac448a58, type: 3}
   m_Name: Q3_9
   m_EditorClassIdentifier: 
+  quizIndex: 0
   type: 2
   quizType: 2
   position: 8
@@ -19,8 +20,9 @@ MonoBehaviour:
   isPositive: 0
   answer: 0
   question: []
-  hasFixedAnswer: 0
-  fixedAnswer: []
+  hasFixedAnswer: 1
+  fixedAnswer:
+  - "O \uBAA8\uB450 \uB9DE\uB2E4"
   contents: "\uB2E4\uC74C \uC548\uC804\xB7\uBCF4\uAC74 \uD45C\uC9C0\uC758 \uBA85\uCE6D\uC774
     \uBAA8\uB450 \uB9DE\uC73C\uBA74 'O' \uD558\uB098\uB77C\uB3C4 \uD2C0\uB9AC\uBA74
     'X'"

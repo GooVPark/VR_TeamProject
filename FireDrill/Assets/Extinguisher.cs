@@ -7,6 +7,7 @@ public class Extinguisher : MonoBehaviourPun
 {
     public GameObject pinTrigger;
     public GameObject nozzle;
+    public Transform extinguisherOrigin;
     public GameObject hose;
     public ParticleSystem hoseWater;
 
@@ -20,7 +21,6 @@ public class Extinguisher : MonoBehaviourPun
 
     private void Start()
     {
-        rigidBody = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         pinTrigger.GetComponent<PinTrigger>().onPinRemoved += PinOff;
         nozzle.GetComponent<Nozzle>().onNozzleDettached += NozzleOff;
@@ -39,8 +39,6 @@ public class Extinguisher : MonoBehaviourPun
         Collider pinTriggerCollider = pinTrigger.GetComponent<Collider>();
         pinTriggerCollider.enabled = true;
         //nozzle.GetComponent<Rigidbody>().isKinematic = false;
-
-        SetKinematic(true);
     }
 
     public void OnDettach()
@@ -59,7 +57,9 @@ public class Extinguisher : MonoBehaviourPun
         //    Collider pinTriggerCollider = pinTrigger.GetComponent<Collider>();
         //    pinTriggerCollider.enabled = false;
         //}
-        SetKinematic(false);
+
+        transform.position = extinguisherOrigin.position;
+        transform.rotation = extinguisherOrigin.rotation;
     }
 
     public void PinOff()
@@ -81,16 +81,5 @@ public class Extinguisher : MonoBehaviourPun
     public void Deactivate()
     {
         animator.SetInteger("Pose", 1);
-    }
-
-    public void SetKinematic(bool value)
-    {
-        photonView.RPC(nameof(SetKinematicRPC), RpcTarget.All, value);
-    }
-
-    [PunRPC]
-    private void SetKinematicRPC(bool value)
-    {
-        rigidBody.isKinematic = value;
     }
 }

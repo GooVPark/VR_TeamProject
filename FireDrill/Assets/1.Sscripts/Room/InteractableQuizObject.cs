@@ -262,7 +262,7 @@ public class InteractableQuizObject : MonoBehaviour
 
         selectionFeedbackAnswer.gameObject.SetActive(true);
         selectionAIndex.text = $"A{quiz.quizIndex}";
-        selectionFeedbackAnswerText.text = quiz.question[quiz.answer];
+        selectionFeedbackAnswerText.text = quiz.question[selectedNumber];
 
         if (isCollected)
         {
@@ -273,7 +273,14 @@ public class InteractableQuizObject : MonoBehaviour
         {
             selectionFeedbackResult.text = "오답입니다.";
             selectionFeedbackDescript.gameObject.SetActive(true);
-            selectionFeedbackDescript.text = $"[오답 풀이]\n";
+            if(quiz.hasFixedAnswer)
+            {
+                selectionFeedbackDescript.text = $"[오답 풀이]\n{quiz.fixedAnswer[0]}";
+            }
+            else
+            {
+                selectionFeedbackDescript.text = $"[오답 풀이]\n{quiz.fixedAnswer[selectedNumber]}";
+            }
         }
 
         yield return new WaitForSeconds(2f);
@@ -292,7 +299,7 @@ public class InteractableQuizObject : MonoBehaviour
         oxQuestionUI.SetActive(false);
         oxFeedbackUI.SetActive(true);
 
-        oxFeedbackAnswer[quiz.answer].SetActive(true);
+        oxFeedbackAnswer[selectedNumber].SetActive(true);
         oxAIndex.text = $"A{quiz.quizIndex}";
 
         if (isCollected)
@@ -304,7 +311,7 @@ public class InteractableQuizObject : MonoBehaviour
         {
             oxFeedbackResult.text = "오답입니다.";
             oxFeedbackDescript.gameObject.SetActive(true);
-            oxFeedbackDescript.text = $"[오답 풀이]";
+            oxFeedbackDescript.text = $"[오답 풀이]\n{quiz.fixedAnswer[0]}";
         }
 
         yield return new WaitForSeconds(2f);

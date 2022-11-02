@@ -7,6 +7,7 @@ public class Nozzle : MonoBehaviourPun
 {
     public delegate void OnNozzleDettached();
     public OnNozzleDettached onNozzleDettached;
+    public Transform nozzleOrigin;
 
     [SerializeField] private bool isUnlinked = false;
 
@@ -14,7 +15,9 @@ public class Nozzle : MonoBehaviourPun
     {
         if (isUnlinked)
         {
-            SetKinematic(false);
+            transform.position = nozzleOrigin.position;
+            transform.rotation = nozzleOrigin.rotation;
+            transform.SetParent(nozzleOrigin);
         }
     }
     public void Activate()
@@ -34,16 +37,5 @@ public class Nozzle : MonoBehaviourPun
             isUnlinked = true;
             onNozzleDettached?.Invoke();
         }
-    }
-
-    public void SetKinematic(bool value)
-    {
-        photonView.RPC(nameof(SetKinemaicRPC), RpcTarget.All, value);
-    }
-
-    [PunRPC]
-    private void SetKinemaicRPC(bool value)
-    {
-        GetComponent<Rigidbody>().isKinematic = false;
     }
 }

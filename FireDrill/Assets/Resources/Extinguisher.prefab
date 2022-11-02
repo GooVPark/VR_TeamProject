@@ -443,6 +443,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pinTrigger: {fileID: 3991350858208336507}
   nozzle: {fileID: 3775450815817528318}
+  nozzleOrigin: {fileID: 0}
   hose: {fileID: 3775450815817528318}
   hoseWater: {fileID: 2638172155858234540}
   lever: {fileID: 6316459248457393267}
@@ -564,7 +565,7 @@ Transform:
   - {fileID: 2638172155877609964}
   - {fileID: 218165680}
   m_Father: {fileID: 4491362178093465469}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 2.797, y: 0, z: 0}
 --- !u!33 &4110100458455285352
 MeshFilter:
@@ -658,6 +659,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c16fd62d31dfc7a4d9911d44dab8d171, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nozzleOrigin: {fileID: 8738708571211175013}
   isUnlinked: 0
 --- !u!114 &6989370549079650680
 MonoBehaviour:
@@ -1513,6 +1515,37 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.000000016298145, y: -0.2524655, z: 0.000000048428774}
     m_Extent: {x: 0.009952763, y: 0.25250304, z: 0.009952836}
   m_DirtyAABB: 0
+--- !u!1 &7346271800005048020
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8738708571211175013}
+  m_Layer: 14
+  m_Name: NozzleOrigin
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8738708571211175013
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7346271800005048020}
+  m_LocalRotation: {x: 0.02440923, y: 0.000000044765336, z: 0.000000042631417, w: 0.99970204}
+  m_LocalPosition: {x: 0, y: -0.117, z: -0.432}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4491362178093465469}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 2.797, y: 0, z: 0}
 --- !u!1 &7542516985297126238
 GameObject:
   m_ObjectHideFlags: 0
@@ -1574,7 +1607,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4491362178093465469}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8790443709219949619
 GameObject:
@@ -1681,6 +1714,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 8738708571211175013}
   - {fileID: 3273964905142514491}
   - {fileID: 8925019673193251243}
   m_Father: {fileID: 9067654215121691835}

@@ -344,14 +344,16 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         }
     }
 
-    public void OnExtinguisher(Vector3 position)
+    public void OnExtinguisher(Transform pivot)
     {
         Debug.Log("OnExtinguisher");
         if (photonView.IsMine)
         {
             Debug.Log("OnExtinguisher Is Mine");
 
-            extinguisherObject = PhotonNetwork.Instantiate("Extinguisher", position, Quaternion.identity);
+            extinguisherObject = PhotonNetwork.Instantiate("Extinguisher", pivot.position, Quaternion.identity);
+            extinguisherObject.GetComponent<Extinguisher>().extinguisherOrigin = pivot;
+            extinguisherObject.GetComponent<InteractableObject>().enabled = true;
             //onExtinguisher = true;
             photonView.RPC(nameof(OnExtinguisherRPC), RpcTarget.All, extinguisherObject.name);
         }

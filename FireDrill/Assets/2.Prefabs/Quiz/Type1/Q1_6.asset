@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2a68d621ff52944fa113e62ac448a58, type: 3}
   m_Name: Q1_6
   m_EditorClassIdentifier: 
+  quizIndex: 0
   type: 0
   quizType: 0
   position: 1
@@ -23,8 +24,9 @@ MonoBehaviour:
   - "\u2461 \uBC29\uB3C5\uB9C8\uC2A4\uD06C"
   - "\u2462 \uBC29\uC9C4\uB9C8\uC2A4\uD06C"
   - "\u2463 \uBCF4\uD638\uC7A5\uAC11"
-  hasFixedAnswer: 0
-  fixedAnswer: []
+  hasFixedAnswer: 1
+  fixedAnswer:
+  - "\u2461 \uBC29\uB3C5\uB9C8\uC2A4\uD06C"
   contents: "\uC720\uAE30\uC6A9\uC81C, \uC0B0\uACFC \uC54C\uCE7C\uB9AC\uC131 \uD654\uD559\uBB3C\uC9C8\uC758
     \uAC00\uC2A4\uC640 \uC99D\uAE30 \uB3C5\uC131\uC744 \uC81C\uAC70\uD574 \uD638\uD761\uAE30\uB97C
     \uBCF4\uD638\uD558\uACE0 \uC720\uD574\uD654\uD559\uBB3C\uC9C8\uC758 \uC911\uB3C5\uC744

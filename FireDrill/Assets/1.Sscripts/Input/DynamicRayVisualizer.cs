@@ -40,8 +40,14 @@ public class DynamicRayVisualizer : MonoBehaviour
             teleportInteractor.gameObject.SetActive(true);
             isTeleportable = teleportInteractor.TryGetCurrent3DRaycastHit(out teleportRayHit);
 
+
             if (isTeleportable)
             {
+                if (teleportRayHit.collider.gameObject.layer == 13)
+                {
+                    Debug.Log("Is Wall");
+                    return;
+                }
                 teleportPointer.SetActive(true);
                 teleportPointer.transform.position = teleportRayHit.point;
             }

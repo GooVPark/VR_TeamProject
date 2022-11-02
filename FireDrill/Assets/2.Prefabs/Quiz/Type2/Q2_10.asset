@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2a68d621ff52944fa113e62ac448a58, type: 3}
   m_Name: Q2_10
   m_EditorClassIdentifier: 
+  quizIndex: 0
   type: 1
   quizType: 2
   position: 4
@@ -19,8 +20,10 @@ MonoBehaviour:
   isPositive: 0
   answer: 0
   question: []
-  hasFixedAnswer: 0
-  fixedAnswer: []
+  hasFixedAnswer: 1
+  fixedAnswer:
+  - "O \uD654\uC7AC(\uD3ED\uBC1C) 3\uC694\uC18C\uB294 \uC0B0\uC18C(\uACF5\uAE30),
+    \uAC00\uC5F0\uBB3C(\uC778\uD654\uBB3C), \uC810\uD654\uC6D0(\uC5F4)\uC774\uB2E4."
   contents: "\uD654\uC7AC(\uD3ED\uBC1C) 3\uC694\uC18C\uB294 \uC0B0\uC18C(\uACF5\uAE30),
     \uAC00\uC5F0\uBB3C(\uC778\uD654\uBB3C), \uC810\uD654\uC6D0(\uC5F4)\uC774\uB2E4."
   quizInfo: 
