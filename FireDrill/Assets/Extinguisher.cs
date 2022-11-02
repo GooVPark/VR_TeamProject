@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class Extinguisher : MonoBehaviour
+public class Extinguisher : MonoBehaviourPun
 {
     public GameObject pinTrigger;
     public GameObject nozzle;
@@ -12,6 +13,7 @@ public class Extinguisher : MonoBehaviour
     public GameObject lever;
 
     private Rigidbody rigidBody;
+    private Animator animator;
 
     [SerializeField] private bool isPinOff = false;
     [SerializeField] private bool isNozzleOff = false;
@@ -19,6 +21,7 @@ public class Extinguisher : MonoBehaviour
     private void Start()
     {
         rigidBody = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
         pinTrigger.GetComponent<PinTrigger>().onPinRemoved += PinOff;
         nozzle.GetComponent<Nozzle>().onNozzleDettached += NozzleOff;
     }
@@ -37,7 +40,7 @@ public class Extinguisher : MonoBehaviour
         pinTriggerCollider.enabled = true;
         //nozzle.GetComponent<Rigidbody>().isKinematic = false;
 
-        rigidBody.isKinematic = false;
+        SetKinematic(true);
     }
 
     public void OnDettach()
@@ -56,7 +59,7 @@ public class Extinguisher : MonoBehaviour
         //    Collider pinTriggerCollider = pinTrigger.GetComponent<Collider>();
         //    pinTriggerCollider.enabled = false;
         //}
-        rigidBody.isKinematic = false;
+        SetKinematic(false);
     }
 
     public void PinOff()
@@ -70,8 +73,24 @@ public class Extinguisher : MonoBehaviour
         isNozzleOff = true;
     }
 
-    public void OnSpread()
+    public void Activate()
     {
+        animator.SetInteger("Pose", 4);
+    }
 
+    public void Deactivate()
+    {
+        animator.SetInteger("Pose", 1);
+    }
+
+    public void SetKinematic(bool value)
+    {
+        photonView.RPC(nameof(SetKinematicRPC), RpcTarget.All, value);
+    }
+
+    [PunRPC]
+    private void SetKinematicRPC(bool value)
+    {
+        rigidBody.isKinematic = value;
     }
 }

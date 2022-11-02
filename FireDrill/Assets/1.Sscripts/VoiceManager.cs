@@ -119,7 +119,7 @@ public class VoiceManager : MonoBehaviourPunCallbacks
         DataManager.Instance.SetUserOnRequest(reciever.email, true);
         CurrentToast = voiceChatRequestToast.gameObject;
         string userName = sender.name;
-        voiceChatRequestToast.message.text = $"{userName}님이 대화 요청을 보냈습니다. 대화를 원하시면 YES, 아니면 NO를 클릭해주세요.";
+        voiceChatRequestToast.message.text = $"{userName}님이 대화 요청을 보냈습니다. 대화를 원하시면 YES, 아니면 NO를\n클릭해주세요.";
 
         this.sender = sender;
         this.reciever = reciever;
@@ -215,8 +215,8 @@ public class VoiceManager : MonoBehaviourPunCallbacks
 
         DataManager.Instance.UpdateLobbyUser(reciever);
 
-        string message = $"{EventMessageType.VOICECHAT}_{VoiceEventType.CONNECT}_{sender.email}_{reciever.email}";
-        eventMessage?.Invoke(message);
+        //string message = $"{EventMessageType.VOICECHAT}_{VoiceEventType.CONNECT}_{sender.email}_{reciever.email}";
+        //eventMessage?.Invoke(message);
 
     }
 

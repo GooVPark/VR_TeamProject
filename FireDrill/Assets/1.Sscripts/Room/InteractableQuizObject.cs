@@ -202,7 +202,6 @@ public class InteractableQuizObject : MonoBehaviour
                     StopCoroutine(selectionResultPopUp);
                 }
                 selectionResultPopUp = StartCoroutine(SelectionResultPopUp(true));
-                isCollect = true;
             }
             else
             {
@@ -212,6 +211,7 @@ public class InteractableQuizObject : MonoBehaviour
                 }
                 oxResultPopUp = StartCoroutine(OXResultPopUp(true));
             }
+            isCollect = true;
         }
         else
         {
@@ -222,7 +222,6 @@ public class InteractableQuizObject : MonoBehaviour
                     StopCoroutine(selectionResultPopUp);
                 }
                 selectionResultPopUp = StartCoroutine(SelectionResultPopUp(false));
-                isCollect = true;
             }
             else
             {
@@ -232,18 +231,25 @@ public class InteractableQuizObject : MonoBehaviour
                 }
                 oxResultPopUp = StartCoroutine(OXResultPopUp(false));
             }
+            isCollect = false;
         }
 
         if (isCollect)
         {
             Debug.Log("Collect");
             onSubmit?.Invoke(1);
+            DataManager.Instance.SetQuizResult(NetworkManager.User.email, 1, quizObjects[quizNumber].quizIndex);
         }
         else
         {
             Debug.Log("Incollect");
             onSubmit?.Invoke(2);
+            DataManager.Instance.SetQuizResult(NetworkManager.User.email, 2, quizObjects[quizNumber].quizIndex);
         }
+
+        string message = $"{EventMessageType.QUIZ}";
+        eventMessage?.Invoke(message);
+
     }
 
     private Coroutine selectionResultPopUp;
@@ -292,6 +298,7 @@ public class InteractableQuizObject : MonoBehaviour
         if (isCollected)
         {
             oxFeedbackResult.text = "정답입니다.";
+            oxFeedbackDescript.gameObject.SetActive(false);
         }
         else
         {

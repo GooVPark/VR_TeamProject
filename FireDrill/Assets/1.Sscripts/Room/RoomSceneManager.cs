@@ -190,6 +190,7 @@ public class RoomSceneManager : GameManager
         origin.position = SpawnPlayer(spawnPivot.position);
         localRecoder.TransmitEnabled = false;
         NetworkManager.Instance.roomType = RoomType.Room;
+        NetworkManager.Instance.onTextChat = false;
         if(NetworkManager.User.userType == UserType.Lecture)
         {
             forceExitButton.SetActive(true);

@@ -68,7 +68,7 @@ public class TextChatManager : MonoBehaviour
         {
             Debug.Log("OnGetMessage Success");
             string[] command = message.Split('=');
-            string chatMessage = $"<color=#{ColorToStr(colorList[int.Parse(command[1])])}><b>{senders}</b>\n{command[0]}</color>\n";
+            string chatMessage = $"<color=#{ColorToStr(colorList[int.Parse(command[1]) % colorList.Count])}><b>{senders}</b>\n{command[0]}</color>\n";
             chatList[0].text += chatMessage;
         }
     }

@@ -66,7 +66,9 @@ public class NPCController : MonoBehaviourPun //, IPunInstantiateMagicCallback
     [SerializeField] private TMP_Text userName;
     [SerializeField] private Image lectureIcon;
     [SerializeField] private Image studentIcon;
-    [SerializeField] private Image onVoiceChatIcon; 
+    [SerializeField] private Image onVoiceChatIcon;
+
+    public SpeachBubble speachBubble;
 
     public bool senderIsOnVoiceChat = false;
     public bool isVoiceChatReady = false;
@@ -202,5 +204,25 @@ public class NPCController : MonoBehaviourPun //, IPunInstantiateMagicCallback
     public void OutlineDisable()
     {
         outline.gameObject.SetActive(false);
+    }
+
+    public void ShowBubble(string message)
+    {
+        if(speachTimer != null)
+        {
+            StopCoroutine(speachTimer);
+        }
+        speachTimer = null;
+        speachTimer = StartCoroutine(SpeachTimer(message));
+    }
+
+    private Coroutine speachTimer;
+    private IEnumerator SpeachTimer(string message)
+    {
+        speachBubble.ShowBubble(message);
+
+        yield return new WaitForSeconds(5f);
+
+        speachBubble.HideBubble();
     }
 }

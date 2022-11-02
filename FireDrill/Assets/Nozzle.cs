@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class Nozzle : MonoBehaviour
+public class Nozzle : MonoBehaviourPun
 {
     public delegate void OnNozzleDettached();
     public OnNozzleDettached onNozzleDettached;
@@ -13,7 +14,7 @@ public class Nozzle : MonoBehaviour
     {
         if (isUnlinked)
         {
-            GetComponent<Rigidbody>().isKinematic = false;
+            SetKinematic(false);
         }
     }
     public void Activate()
@@ -33,5 +34,16 @@ public class Nozzle : MonoBehaviour
             isUnlinked = true;
             onNozzleDettached?.Invoke();
         }
+    }
+
+    public void SetKinematic(bool value)
+    {
+        photonView.RPC(nameof(SetKinemaicRPC), RpcTarget.All, value);
+    }
+
+    [PunRPC]
+    private void SetKinemaicRPC(bool value)
+    {
+        GetComponent<Rigidbody>().isKinematic = false;
     }
 }

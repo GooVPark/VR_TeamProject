@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -67,8 +68,10 @@ public class DataManager : MonoBehaviour
         {
             Destroy(Instance.gameObject);
         }
-
+        
         userTable = testDataManager.GetUserTable();
+
+        DebugManager.instance.enableRuntimeUI = false;
     }
 
     private void Start()

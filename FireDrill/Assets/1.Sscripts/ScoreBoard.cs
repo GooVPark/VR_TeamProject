@@ -52,13 +52,25 @@ public class ScoreBoard : MonoBehaviour
     public void UpdateScoreBoard()
     {
         List<User> users = roomManager.GetUsersInRoom(roomManager.roomNumber);
-           
+        
         if(isOrderd)
         {
             var list = from user in users orderby user.totalScore descending select user;
 
             users = list.ToList();
         }
+
+        int index = 0;
+        for(int i = 0; i < users.Count; i++)
+        {
+            if (users[i].email.Equals(NetworkManager.User.email))
+            {
+                index = i;
+                break;
+            }
+        }
+
+        users.RemoveAt(index);
 
         Debug.Log("Sorted User List");
         foreach(var user in users)
@@ -68,8 +80,6 @@ public class ScoreBoard : MonoBehaviour
 
         for (int i = 0; i < users.Count; i++)
         {
-            if (users[i].userType == UserType.Lecture) continue;
-
             scoureRows[i].gameObject.SetActive(true);
             scoureRows[i].UpdateScore(users[i]);
         }
