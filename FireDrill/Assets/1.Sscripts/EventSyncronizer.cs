@@ -246,8 +246,6 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
                     //loundgeManager.spawnedNPC[senderEmail].onVoiceChat = false;
                     //loundgeManager.spawnedNPC[recieverEmail].onVoiceChat = false;
 
-                    //loundgeManager.spawnedNPCObject[senderEmail].GetComponent<NPCController>().OnVoiceChat(false);
-                    //loundgeManager.spawnedNPCObject[recieverEmail].GetComponent<NPCController>().OnVoiceChat(false);
                 }
                 if (voiceEventType.Equals(VoiceEventType.CONNECT.ToString()))
                 {
@@ -265,9 +263,16 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
                     //loundgeManager.spawnedNPC[senderEmail].onVoiceChat = true;
                     //loundgeManager.spawnedNPC[recieverEmail].onVoiceChat = true;
 
-                    //loundgeManager.spawnedNPCObject[senderEmail].GetComponent<NPCController>().OnVoiceChat(true);
-                    //loundgeManager.spawnedNPCObject[recieverEmail].GetComponent<NPCController>().OnVoiceChat(true);
-
+                    GameObject spawnedNPC = null;
+                    if(loundgeManager.spawnedNPCObject.TryGetValue(senderEmail, out spawnedNPC))
+                    {
+                        spawnedNPC.GetComponent<NPCController>().OnVoiceChat(true);
+                    }
+                    
+                    if(loundgeManager.spawnedNPCObject.TryGetValue(recieverEmail, out spawnedNPC))
+                    {
+                        spawnedNPC.GetComponent<NPCController>().OnVoiceChat(true);
+                    }
                 }
                 if (voiceEventType.Equals(VoiceEventType.DISCONNECT.ToString()))
                 {
@@ -285,8 +290,16 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
                     //loundgeManager.spawnedNPC[senderEmail].onVoiceChat = false;
                     //loundgeManager.spawnedNPC[recieverEmail].onVoiceChat = false;
 
-                    //loundgeManager.spawnedNPCObject[senderEmail].GetComponent<NPCController>().OnVoiceChat(false);
-                    //loundgeManager.spawnedNPCObject[recieverEmail].GetComponent<NPCController>().OnVoiceChat(false);
+                    GameObject spawnedNPC = null;
+                    if (loundgeManager.spawnedNPCObject.TryGetValue(senderEmail, out spawnedNPC))
+                    {
+                        spawnedNPC.GetComponent<NPCController>().OnVoiceChat(false);
+                    }
+
+                    if (loundgeManager.spawnedNPCObject.TryGetValue(recieverEmail, out spawnedNPC))
+                    {
+                        spawnedNPC.GetComponent<NPCController>().OnVoiceChat(false);
+                    }
                 }
             }
         }

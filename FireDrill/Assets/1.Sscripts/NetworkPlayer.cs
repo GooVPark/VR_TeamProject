@@ -109,6 +109,22 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         }
     }
 
+    [SerializeField] private bool onPersonalChat;
+    public bool OnPersonalChat { get => onPersonalChat; set => ActionRPC(nameof(SetOnPersonalChatRPC), value); }
+    [PunRPC]
+    private void SetOnPersonalChatRPC(bool value)
+    {
+        onPersonalChat = value;
+        if(value)
+        {
+            personalVoice.SetActive(true);
+        }
+        else
+        {
+            personalVoice.SetActive(false);
+        }
+    }
+
     private void ActionRPC(string functionName, object value)
     {
         photonView.RPC(functionName, RpcTarget.All, value);
@@ -178,6 +194,8 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     public GameObject voiceChatEnabled;
     public GameObject voiceChatHoverd;
     public GameObject voiceChatOn;
+
+    public GameObject personalVoice;
     [Space(5)]
 
     [Header("Megaphotn Icon")]
@@ -428,10 +446,12 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
             rightHand.gameObject.layer = 31;
             outlineObject.gameObject.layer = 31;
 
-            if (NetworkManager.Instance.roomType == RoomType.Room)
-            {
-                FindObjectOfType<TextChatManager>().sendChatMessage += OnSendChatMessage;
-            }
+            //if (NetworkManager.Instance.roomType == RoomType.Room)
+            //{
+            //    FindObjectOfType<TextChatManager>().sendChatMessage += OnSendChatMessage;
+            //}
+            FindObjectOfType<TextChatManager>().sendChatMessage = null;
+            FindObjectOfType<TextChatManager>().sendChatMessage += OnSendChatMessage;
         }
 
         //requestVoiceChatButton.onClick.AddListener(() => LoundgeSceneManager.Instance.RequsetVoiceChat(NetworkManager.User.id, UserID));

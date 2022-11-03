@@ -115,6 +115,11 @@ public class InteractableQuizObject : MonoBehaviour
                 signImage.gameObject.SetActive(false);
             }
         }
+
+        if(quizObjects.Count <= 0)
+        {
+            signImage.gameObject.SetActive(false);
+        }
     }
 
     private void OnEnable()
@@ -136,7 +141,7 @@ public class InteractableQuizObject : MonoBehaviour
 
     public void SetCurrentQuiz()
     {
-        if (quizObjects.Count > 0)
+        if (quizObjects.Count <= 0)
         {
             return;
         }

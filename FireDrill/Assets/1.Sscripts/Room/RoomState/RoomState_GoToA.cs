@@ -29,7 +29,7 @@ public class RoomState_GoToA : RoomState
 
     [Header("Class Object")]
     public GameObject classObject;
-    public Photon.Pun.PhotonView screen;
+    public UnityEngine.XR.Interaction.Toolkit.XRSimpleInteractable screen;
     public UnityEngine.UI.Image image;
 
     public override void OnStateEnter()
@@ -42,8 +42,7 @@ public class RoomState_GoToA : RoomState
 
         if (NetworkManager.User.userType == UserType.Lecture)
         {
-            image.raycastTarget = true;
-            screen.RequestOwnership();
+            screen.enabled = true;
             DataManager.Instance.UpdateRoomState(roomSceneManager.roomNumber, true);
             string message = $"{EventMessageType.UPDATEROOMSTATE}_{roomSceneManager.roomNumber}";
             roomSceneManager.SendEventMessage(message);

@@ -19,9 +19,9 @@ public class Nozzle : MonoBehaviourPun
     {
         if (isUnlinked)
         {
-            transform.position = nozzleOrigin.position;
-            transform.rotation = nozzleOrigin.rotation;
             transform.SetParent(nozzleOrigin);
+            transform.position = Vector3.zero;
+            transform.rotation = Quaternion.Euler(Vector3.zero);
         }
     }
     public void Activate()

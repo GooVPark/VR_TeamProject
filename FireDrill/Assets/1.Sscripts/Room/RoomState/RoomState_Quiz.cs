@@ -26,6 +26,7 @@ public class RoomState_Quiz : RoomState, IPunObservable
     [Header("Score")]
     public GameObject scoreObject;
     public TMP_Text scoreText;
+    public TMP_Text progressText;
     public ScoreBoard scoreBoardObject;
     [Space(5)]
 
@@ -94,10 +95,14 @@ public class RoomState_Quiz : RoomState, IPunObservable
     }
     public override void OnUpdate()
     {
-
+        if(time <= 0f)
+        {
+            time = 0;
+        }
         timerText.text = $"{(int)time / 60} : {(int)time % 60}";
         timerTextLecture.text = $"{(int)time / 60} : {(int)time % 60}";
-        scoreText.text = $"{scoreCount}/{solveCount}";
+        progressText.text = $"{solveCount}/10";
+        scoreText.text = $"{scoreCount}";
 
         if (NetworkManager.User.userType == UserType.Lecture)
         {
@@ -105,7 +110,7 @@ public class RoomState_Quiz : RoomState, IPunObservable
 
             photonView.RPC(nameof(Timer), RpcTarget.All, time);
 
-            if (time < 0)
+            if (time <= 0)
             {
 
                 photonView.RPC(nameof(ShowQuizResultRPC), RpcTarget.Others);
@@ -134,10 +139,13 @@ public class RoomState_Quiz : RoomState, IPunObservable
 
     public void ShowQuizResult()
     {
-        timerObjectLecture.SetActive(false);
-        timerObject.SetActive(false);
-        toast.gameObject.SetActive(true);
-        toast.text.text = $"{scoreCount * 10}";
+        if (NetworkManager.User.userType == UserType.Student || roomSceneManager.RoomState != roomStateQuizWait)
+        {
+            timerObjectLecture.SetActive(false);
+            timerObject.SetActive(false);
+            toast.gameObject.SetActive(true);
+            toast.text.text = $"{scoreCount * 10}";
+        }
     }
 
     [PunRPC]
