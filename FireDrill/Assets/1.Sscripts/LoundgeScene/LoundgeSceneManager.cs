@@ -84,12 +84,9 @@ public class LoundgeSceneManager : GameManager
         WaitForSeconds waitForSeconds = new WaitForSeconds(0.3f);
         while (!isOnline || !isEventServerConnected)
         {
-            Debug.Log("Finding User");
             isOnline = DataManager.Instance.FindLobbyUser(NetworkManager.User);
             yield return waitForSeconds;
         }
-
-        Debug.Log("Instantiate User Object");
         
         DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, roomNumber);
 
@@ -183,7 +180,10 @@ public class LoundgeSceneManager : GameManager
     {
         Destroy(spawnedNPCObject[email]);
 
-        spawnedNPC.Remove(email);
+        if(spawnedNPC.ContainsKey(email))
+        {
+            spawnedNPC.Remove(email);
+        }
         if (spawnedNPCObject.ContainsKey(email))
         {
             spawnedNPCObject.Remove(email);

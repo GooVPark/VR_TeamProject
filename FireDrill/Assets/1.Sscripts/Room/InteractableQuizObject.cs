@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.XR.Interaction.Toolkit;
 using TMPro;
 
 
@@ -52,10 +53,15 @@ public class InteractableQuizObject : MonoBehaviour
     [SerializeField] private TMP_Text oxAIndex;
     [SerializeField] private QuizSlot[] ox;
     [SerializeField] private Image quizImage;
+    [SerializeField] private Image oxSignImage;
     [SerializeField] private ButtonInteractor oxSubmitButton;
     [Space(5)]
 
     [Header("Feedback")]
+    [SerializeField] private Sprite signO;
+    [SerializeField] private Sprite signX;
+    [SerializeField] private Image quizResult;
+    [Space(5)]
 
     [Header("Parameters")]
     QuizJson quiz;
@@ -64,6 +70,7 @@ public class InteractableQuizObject : MonoBehaviour
     [SerializeField] private bool isActivated;
     public int quizNumber = 0;
     [SerializeField] private int selectedNumber = 0;
+    [SerializeField] private TMP_Text quizCounts;
     [Space(5)]
 
     private QuizSlot selectedSlot;
@@ -92,6 +99,7 @@ public class InteractableQuizObject : MonoBehaviour
     public List<QuizObject> quizObjects = new List<QuizObject>();
 
     [SerializeField] private Transform userTransform; // 로컬 플레이어의 transform을 가져옴
+    [SerializeField] private XRSimpleInteractable[] selectionButtons;
 
     private void Start()
     {
@@ -120,12 +128,20 @@ public class InteractableQuizObject : MonoBehaviour
             signImage.sprite = readySprite;
         }
 
-        signImage.gameObject.SetActive(true);
+        if (quizObjects.Count > 0)
+        {
+            signImage.gameObject.SetActive(true);
+        }
     }
 
     public void SetCurrentQuiz()
     {
-        if(quizNumber == quizObjects.Count)
+        if (quizObjects.Count > 0)
+        {
+            return;
+        }
+
+        if (quizNumber == quizObjects.Count)
         {
             isSolved = true;
             selectionQuizUI.SetActive(false);
@@ -142,6 +158,16 @@ public class InteractableQuizObject : MonoBehaviour
 
             signImage.gameObject.SetActive(true);
             return;
+        }
+
+        if (quizObjects.Count > 1)
+        {
+            quizCounts.gameObject.SetActive(true);
+            quizCounts.text = $"{quizNumber + 1}/{quizObjects.Count}";
+        }
+        else
+        {
+            quizCounts.gameObject.SetActive(false);
         }
 
         signImage.gameObject.SetActive(false);
@@ -184,6 +210,12 @@ public class InteractableQuizObject : MonoBehaviour
 
                 break;
         }
+
+        for (int i = 0; i < selectionButtons.Length; i++)
+        {
+            selectionButtons[i].enabled = true;
+            selectionButtons[i].gameObject.GetComponent<QuizSlot>().Deselect();
+        }
     }
 
     public void SelectQuizSlot(int slotNumber)
@@ -191,61 +223,84 @@ public class InteractableQuizObject : MonoBehaviour
         selectedNumber = slotNumber;
         QuizObject quiz = quizObjects[quizNumber];
 
+        for(int i = 0; i < selectionButtons.Length; i++)
+        {
+            selectionButtons[i].enabled = false;
+        }
+
         bool isCollect = false;
         
         if(quiz.answer == slotNumber)
         {
-            if (quiz.quizType == QuizType.Selection)
-            {
-                if (selectionResultPopUp != null)
-                {
-                    StopCoroutine(selectionResultPopUp);
-                }
-                selectionResultPopUp = StartCoroutine(SelectionResultPopUp(true));
-            }
-            else
-            {
-                if(oxResultPopUp != null)
-                {
-                    StopCoroutine(oxResultPopUp);
-                }
-                oxResultPopUp = StartCoroutine(OXResultPopUp(true));
-            }
             isCollect = true;
+            if(resultSignPopUp != null)
+            {
+                StopCoroutine(resultSignPopUp);
+            }
+            resultSignPopUp = StartCoroutine(ResultSignPopUp(quiz.quizType, isCollect));
+
         }
         else
         {
-            if (quiz.quizType == QuizType.Selection)
-            {
-                if (selectionResultPopUp != null)
-                {
-                    StopCoroutine(selectionResultPopUp);
-                }
-                selectionResultPopUp = StartCoroutine(SelectionResultPopUp(false));
-            }
-            else
-            {
-                if (oxResultPopUp != null)
-                {
-                    StopCoroutine(oxResultPopUp);
-                }
-                oxResultPopUp = StartCoroutine(OXResultPopUp(false));
-            }
             isCollect = false;
+            if (resultSignPopUp != null)
+            {
+                StopCoroutine(resultSignPopUp);
+            }
+            resultSignPopUp = StartCoroutine(ResultSignPopUp(quiz.quizType, isCollect));
         }
 
-        if (isCollect)
+    }
+
+    private Coroutine resultSignPopUp;
+    private IEnumerator ResultSignPopUp(QuizType quizType, bool isCollected)
+    {
+        quizResult.gameObject.SetActive(true);
+
+        if (isCollected)
         {
-            Debug.Log("Collect");
+            quizResult.sprite = signO;
+        }
+        else
+        {
+            quizResult.sprite = signX;
+        }
+
+        yield return new WaitForSeconds(2f);
+
+        quizResult.gameObject.SetActive(false);
+
+        QuizObject quiz = quizObjects[quizNumber];
+
+        if (isCollected)
+        {
             onSubmit?.Invoke(1);
             DataManager.Instance.SetQuizResult(NetworkManager.User.email, 1, quizObjects[quizNumber].quizIndex);
         }
         else
         {
-            Debug.Log("Incollect");
             onSubmit?.Invoke(2);
             DataManager.Instance.SetQuizResult(NetworkManager.User.email, 2, quizObjects[quizNumber].quizIndex);
         }
+        if (quiz.quizType == QuizType.Selection)
+        {
+            selections[quiz.answer].Select();
+            if (selectionResultPopUp != null)
+            {
+                StopCoroutine(selectionResultPopUp);
+            }
+            selectionResultPopUp = StartCoroutine(SelectionResultPopUp(isCollected));
+        }
+        else
+        {
+            if (oxResultPopUp != null)
+            {
+                StopCoroutine(oxResultPopUp);
+            }
+            oxResultPopUp = StartCoroutine(OXResultPopUp(isCollected));
+        }
+
+
 
         string message = $"{EventMessageType.QUIZ}";
         eventMessage?.Invoke(message);
@@ -260,9 +315,8 @@ public class InteractableQuizObject : MonoBehaviour
         selectionQuestionUI.SetActive(false);
         selectionFeedbackUI.SetActive(true);
 
-        selectionFeedbackAnswer.gameObject.SetActive(true);
         selectionAIndex.text = $"A{quiz.quizIndex}";
-        selectionFeedbackAnswerText.text = quiz.question[selectedNumber];
+        //selectionFeedbackAnswerText.text = quiz.question[selectedNumber];
 
         if (isCollected)
         {
@@ -281,10 +335,14 @@ public class InteractableQuizObject : MonoBehaviour
             {
                 selectionFeedbackDescript.text = $"[오답 풀이]\n{quiz.fixedAnswer[selectedNumber]}";
             }
+
+            selections[selectedNumber].OnCheckSign();
         }
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(5f);
+
         selectionFeedbackUI.SetActive(false);
+        selectionQuizUI.SetActive(false);
 
         quizNumber++;
 
@@ -299,7 +357,7 @@ public class InteractableQuizObject : MonoBehaviour
         oxQuestionUI.SetActive(false);
         oxFeedbackUI.SetActive(true);
 
-        oxFeedbackAnswer[selectedNumber].SetActive(true);
+        //oxFeedbackAnswer[selectedNumber].SetActive(true);
         oxAIndex.text = $"A{quiz.quizIndex}";
 
         if (isCollected)
@@ -309,14 +367,18 @@ public class InteractableQuizObject : MonoBehaviour
         }
         else
         {
+            quizImage.gameObject.SetActive(false);
             oxFeedbackResult.text = "오답입니다.";
             oxFeedbackDescript.gameObject.SetActive(true);
             oxFeedbackDescript.text = $"[오답 풀이]\n{quiz.fixedAnswer[0]}";
+
+            selections[selectedNumber].OnCheckSign();
         }
 
-        yield return new WaitForSeconds(2f);
-        oxFeedbackAnswer[quiz.answer].SetActive(false);
+        yield return new WaitForSeconds(5f);
+
         oxFeedbackUI.SetActive(false);
+        oxQuizUI.SetActive(false);
 
         quizNumber++;
 

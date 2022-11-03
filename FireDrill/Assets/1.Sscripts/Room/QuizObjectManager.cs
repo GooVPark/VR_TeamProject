@@ -67,19 +67,20 @@ public class QuizObjectManager : MonoBehaviourPun
     public void SetQuiz()
     {
         Dictionary<int, int[]> quizList = GetQuizs();
-        photonView.RPC(nameof(SetQuizRPC), RpcTarget.All);
+        photonView.RPC(nameof(SetQuizRPC), RpcTarget.All, quizList);
     }
 
     [PunRPC]
     public void SetQuizRPC(Dictionary<int, int[]> quizs)
     {
+        int index = 0;
         for(int i = 0; i < quizs.Count; i++)
         {
             for(int j = 0; j < quizs[i].Length; j++)
             {
                 QuizObject quiz = null;
 
-                switch(j)
+                switch(i)
                 {
                     case 0:
                         quiz = typeAList[quizs[i][j]];
@@ -91,9 +92,9 @@ public class QuizObjectManager : MonoBehaviourPun
                         quiz = typeCList[quizs[i][j]];
                         break;
                 }
-
                 quizObjects[quiz.position].quizObjects.Add(quiz);
-                quiz.quizIndex = j + i * quizs.Count + 1;
+                quiz.quizIndex = index;
+                index++;
             }
         }
     }

@@ -22,6 +22,10 @@ public class RoomState_GoToB : RoomState
     [Header("Quiz Object")]
     public GameObject quizObject;
 
+    [Header("Quiz NPC")]
+    public GameObject npcObject;
+    public Animator npcAnimator;
+
     public override void OnStateEnter()
     {
         base.OnStateEnter();
@@ -29,6 +33,8 @@ public class RoomState_GoToB : RoomState
         quizObject.SetActive(true);
         eventArea.gameObject.SetActive(true);
         toast.gameObject.SetActive(true);
+
+        npcObject.SetActive(true);
     }
 
     public override void OnStateExit()

@@ -200,9 +200,10 @@ public class RoomSceneManager : GameManager
         if (photonView.IsMine) DataManager.Instance.UpdateRoomPlayerCount(roomNumber, PhotonNetwork.CurrentRoom.PlayerCount);
         roomData = DataManager.Instance.GetRoomData()[roomNumber];
         DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, roomNumber);
+        DataManager.Instance.InitializeQuizScore(NetworkManager.User.email);
         requiredPlayer = roomData.requirePlayerCount;
 
-        StartCoroutine(JoinVoice());
+        //StartCoroutine(JoinVoice());
     }
 
     public void ForceExit()
@@ -243,7 +244,6 @@ public class RoomSceneManager : GameManager
 
     private IEnumerator JoinVoice()
     {
-        Debug.Log("Test Joined");
         while(true)
         {
             if(isEventServerConnected)
@@ -256,14 +256,10 @@ public class RoomSceneManager : GameManager
 
                 string message = $"{EventMessageType.NOTICE}_{NoticeEventType.JOIN}_{roomNumber}_{NetworkManager.User.email}";
                 eventMessage?.Invoke(message);
-
-                Debug.Log("Test Join Server");
-
                 break;
             }
             yield return null;
         }
-        Debug.Log("Test Ended");
     }
 
     public override void OnLeftRoom()
@@ -288,9 +284,6 @@ public class RoomSceneManager : GameManager
             message = $"{EventMessageType.UPDATEROOMSTATE}_{roomNumber}";
             SendEventMessage(message);
         }
-
-        //eventSyncronizer.Disconnect();
-        PhotonNetwork.SendAllOutgoingCommands();
     }
 
     public override void OnDisconnected(DisconnectCause cause)
@@ -339,8 +332,5 @@ public class RoomSceneManager : GameManager
             message = $"{EventMessageType.UPDATEROOMSTATE}_{roomNumber}";
             SendEventMessage(message);
         }
-
-        //eventSyncronizer.Disconnect();
-        PhotonNetwork.SendAllOutgoingCommands();
     }
 }

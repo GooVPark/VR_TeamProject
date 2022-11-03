@@ -53,7 +53,7 @@ public class RoomState_Quiz : RoomState, IPunObservable
 
             scoreBoard.button.OnClick.AddListener(() => ShowScoreBoard());
         }
-        if(NetworkManager.User.userType == UserType.Student)
+        if (NetworkManager.User.userType == UserType.Student)
         {
             timerObject.SetActive(true);
 
@@ -134,7 +134,7 @@ public class RoomState_Quiz : RoomState, IPunObservable
 
     public void ShowQuizResult()
     {
-
+        timerObjectLecture.SetActive(false);
         timerObject.SetActive(false);
         toast.gameObject.SetActive(true);
         toast.text.text = $"{scoreCount * 10}";

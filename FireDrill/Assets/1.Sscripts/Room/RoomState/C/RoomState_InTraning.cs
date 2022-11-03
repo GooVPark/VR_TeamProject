@@ -14,10 +14,16 @@ public class RoomState_InTraning : RoomState
     public Toast toastStudent;
     public Toast toastMR;
     private GameObject currentToast;
+    [Space(5)]
 
     [Header("Event Area")]
     public EventArea eventArea;
     public EventAreaMR eventAreaMR;
+    [Space(5)]
+
+    [Header("NPC")]
+    public GameObject npcObject;
+    public Animator npcAnimator;
 
     public override void OnStateEnter()
     {
@@ -25,6 +31,8 @@ public class RoomState_InTraning : RoomState
 
         eventArea.gameObject.SetActive(false);
         eventAreaMR.gameObject.SetActive(false);
+
+        npcAnimator.SetInteger("AnimationState", 2);
 
         switch (user.userType)
         {

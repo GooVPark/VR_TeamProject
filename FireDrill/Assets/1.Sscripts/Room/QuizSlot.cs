@@ -5,6 +5,8 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using TMPro;
 
+using UnityEngine.XR.Interaction.Toolkit;
+
 public class QuizSlot : MonoBehaviour
 {
     [SerializeField] private TMP_Text text;
@@ -13,28 +15,42 @@ public class QuizSlot : MonoBehaviour
     [SerializeField] private Sprite selectSprite;
     [SerializeField] private Sprite defaultSprite;
     [SerializeField] private Image buttonImage;
+    [SerializeField] private Image checkSign;
     [Space(5)]
 
     public UnityEvent OnClick;
 
+    private bool isHovered;
+
     private void OnEnable()
     {
         buttonImage.sprite = defaultSprite;
+        checkSign.gameObject.SetActive(false);
+    }
+
+    public void OnCheckSign()
+    {
+        checkSign.gameObject.SetActive(true);
     }
 
     public void OnSelected()
     {
-        OnClick?.Invoke();
+        if (isHovered)
+        {
+            OnClick?.Invoke();
+        }
     }
 
     public void OnHoverEntered()
     {
         buttonImage.sprite = selectSprite;
+        isHovered = true;
     }
     
     public void OnHoverExited()
     {
         buttonImage.sprite = defaultSprite;
+        isHovered = false;
     }
 
     public void Select()

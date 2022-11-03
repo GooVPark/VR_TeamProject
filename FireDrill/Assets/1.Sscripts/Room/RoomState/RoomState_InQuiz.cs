@@ -27,6 +27,7 @@ public class RoomState_InQuiz : RoomState
         base.OnStateEnter();
         eventArea.gameObject.SetActive(false);
         quizObject.SetActive(true);
+
         roomSceneManager.onRoomStateEvent += OnQuizStart;
         if(NetworkManager.User.userType == UserType.Lecture)
         {

@@ -45,10 +45,10 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
                 studentIcon.gameObject.SetActive(true);
                 scoreUI.gameObject.SetActive(true);
                 scoreUI.text = "-";
-                uiGroup.sizeDelta = new Vector2(220, 0) + uiGroup.sizeDelta;
+                //uiGroup.sizeDelta = new Vector2(220, 0) + uiGroup.sizeDelta;
                 break;
         }
-        uiGroup.sizeDelta = new Vector2(100, 0) + uiGroup.sizeDelta;
+        //uiGroup.sizeDelta = new Vector2(100, 0) + uiGroup.sizeDelta;
     }
 
     [SerializeField] private int currentCharacter;
@@ -75,7 +75,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
             if (hasExtinguisher)
             {
                 extinguisherIcon.gameObject.SetActive(true);
-                uiGroup.sizeDelta = new Vector2(100, 0) + uiGroup.sizeDelta;
+                //uiGroup.sizeDelta = new Vector2(100, 0) + uiGroup.sizeDelta;
             }
             else
             {
