@@ -23,7 +23,7 @@ public class TalkInteractable : MonoBehaviour
     {
         if (other.CompareTag("NPC"))
         {
-            interlocutor = other.GetComponent<AIController>();
+            interlocutor = other.GetComponentInParent<AIController>();
             if (interlocutor.status == AIController.Status.Talk ||
                 self.status == AIController.Status.Talk)
                 return;

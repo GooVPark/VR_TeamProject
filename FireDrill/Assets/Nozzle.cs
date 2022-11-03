@@ -11,6 +11,10 @@ public class Nozzle : MonoBehaviourPun
 
     [SerializeField] private bool isUnlinked = false;
 
+    public void OnSelected()
+    {
+        photonView.RPC(nameof(OnSelectedRPC), RpcTarget.All);
+    }
     public void OnDeselected()
     {
         if (isUnlinked)
@@ -28,6 +32,7 @@ public class Nozzle : MonoBehaviourPun
     public void Deactivate()
     {
         GetComponent<XROffsetGrabInteractable>().enabled = false;
+        
     }
 
     private void OnTriggerExit(Collider other)
@@ -37,5 +42,11 @@ public class Nozzle : MonoBehaviourPun
             isUnlinked = true;
             onNozzleDettached?.Invoke();
         }
+    }
+
+    [PunRPC]
+    private void OnSelectedRPC()
+    {
+        transform.SetParent(null);
     }
 }

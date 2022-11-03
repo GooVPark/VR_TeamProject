@@ -70,7 +70,9 @@ public class AIController : MonoBehaviour
 
                     if (WayPointCollections.list[index].target != null)
                     {
-                        transform.LookAt(WayPointCollections.list[index].target.position);
+                        //transform.LookAt(WayPointCollections.list[index].target.position);
+                        Vector3 target = new Vector3(WayPointCollections.list[index].target.position.x, 0, WayPointCollections.list[index].target.position.z);
+                        transform.LookAt(target);
                     }
                     timer -= Time.deltaTime;
 
@@ -126,7 +128,9 @@ public class AIController : MonoBehaviour
     void ChangeStatus(Status status)
     {
         this.status = status;
-        animator.SetTrigger(triggerKey[status]);
+        //animator.SetTrigger(triggerKey[status]);
+        int animationState = (int)status;
+        animator.SetInteger("AnimationState", animationState);
     }
 
     int ResetTimer(int min = 3, int max = 6)

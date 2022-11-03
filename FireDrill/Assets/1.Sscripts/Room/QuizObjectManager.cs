@@ -21,6 +21,8 @@ public class QuizObjectManager : MonoBehaviourPun
 
     private int quizIndex = 0;
 
+    public Dictionary<int, int[]> quizs = new Dictionary<int, int[]>();
+
     private void Start()
     {
 
@@ -47,53 +49,52 @@ public class QuizObjectManager : MonoBehaviourPun
         return randomNumber;
     }
 
-    public List<QuizObject> GetQuizs()
+    public Dictionary<int, int[]> GetQuizs()
     {
-        List<QuizObject> quizList = new List<QuizObject>();
+        Dictionary<int, int[]> quizListByTpye = new Dictionary<int, int[]>();
 
         List<int> randomNumberA = GetRandomNumbers(typeACount);
         List<int> randomNumberB = GetRandomNumbers(typeBCount);
         List<int> randomNumberC = GetRandomNumbers(typeCCount);
 
-        for (int i = 0; i < typeACount; i++)
-        {
-            typeAList[randomNumberA[i]].quizIndex = quizIndex;
-            quizList.Add(typeAList[randomNumberA[i]]);
-            quizIndex++;
-        }
-        for(int i = 0; i < typeBCount; i++)
-        {
-            typeBList[randomNumberB[i]].quizIndex = quizIndex;
-            quizList.Add(typeBList[randomNumberB[i]]);
-            quizIndex++;
-        }
-        for(int i = 0;  i < typeCCount; i++)
-        {
-            typeCList[randomNumberC[i]].quizIndex = quizIndex;
-            quizList.Add(typeCList[randomNumberC[i]]);
-            quizIndex++;
-        }
+        quizListByTpye.Add(0, randomNumberA.ToArray());
+        quizListByTpye.Add(1, randomNumberB.ToArray());
+        quizListByTpye.Add(2, randomNumberC.ToArray());
 
-        return quizList;
+        return quizListByTpye;
     }
 
     public void SetQuiz()
     {
+        Dictionary<int, int[]> quizList = GetQuizs();
         photonView.RPC(nameof(SetQuizRPC), RpcTarget.All);
     }
 
     [PunRPC]
-    public void SetQuizRPC()
+    public void SetQuizRPC(Dictionary<int, int[]> quizs)
     {
-        List<QuizObject> quizList = GetQuizs();
-        foreach (var quiz in quizList)
+        for(int i = 0; i < quizs.Count; i++)
         {
-            quizObjects[quiz.position].quizObjects.Add(quiz);
-        }
+            for(int j = 0; j < quizs[i].Length; j++)
+            {
+                QuizObject quiz = null;
 
-        foreach (var quizObject in quizObjects)
-        {
-            quizObject.HasQuiz();
+                switch(j)
+                {
+                    case 0:
+                        quiz = typeAList[quizs[i][j]];
+                        break;
+                    case 1:
+                        quiz = typeBList[quizs[i][j]];
+                        break;
+                    case 2:
+                        quiz = typeCList[quizs[i][j]];
+                        break;
+                }
+
+                quizObjects[quiz.position].quizObjects.Add(quiz);
+                quiz.quizIndex = j + i * quizs.Count + 1;
+            }
         }
     }
 }
