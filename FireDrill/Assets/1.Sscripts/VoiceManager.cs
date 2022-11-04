@@ -86,6 +86,7 @@ public class VoiceManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
+        recorder = FindObjectOfType<Recorder>();
         acceptVoiceChatButton.onClick += AcceptVoiceChat;
         deacceptVoiceChatButton.onClick += DeaccpetVoiceChat;
         cancelVoiceChatButton.onClick += CancelVoiceChat;
@@ -173,8 +174,6 @@ public class VoiceManager : MonoBehaviourPunCallbacks
         string message = $"{EventMessageType.VOICECHAT}_{VoiceEventType.DISCONNECT}_{sender.email}_{reciever.email}";
         eventMessage?.Invoke(message);
     }
-
-
     public void AcceptVoiceChat()
     {
         string message = $"{EventMessageType.VOICECHAT}_{VoiceEventType.ACCEPT}_{sender.email}_{reciever.email}";

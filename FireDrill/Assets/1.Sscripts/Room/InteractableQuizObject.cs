@@ -70,7 +70,10 @@ public class InteractableQuizObject : MonoBehaviour
     [SerializeField] private bool isActivated;
     public int quizNumber = 0;
     [SerializeField] private int selectedNumber = 0;
-    [SerializeField] private TMP_Text quizCounts;
+    [SerializeField] private TMP_Text oxQuizCounts;
+    [SerializeField] private TMP_Text selectionQuizCounts;
+    private bool onQuizCounts = false;
+    public Transform target;
     [Space(5)]
 
     private QuizSlot selectedSlot;
@@ -100,6 +103,7 @@ public class InteractableQuizObject : MonoBehaviour
 
     [SerializeField] private Transform userTransform; // 로컬 플레이어의 transform을 가져옴
     [SerializeField] private XRSimpleInteractable[] selectionButtons;
+    [SerializeField] private XRSimpleInteractable pannel;
 
     private void Start()
     {
@@ -114,11 +118,6 @@ public class InteractableQuizObject : MonoBehaviour
             {
                 signImage.gameObject.SetActive(false);
             }
-        }
-
-        if(quizObjects.Count <= 0)
-        {
-            signImage.gameObject.SetActive(false);
         }
     }
 
@@ -139,13 +138,23 @@ public class InteractableQuizObject : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if (target != null)
+        {
+            if (Vector3.Distance(transform.position, target.position) < 5f)
+            {
+                pannel.enabled = true;
+            }
+            else
+            {
+                pannel.enabled = false;
+            }
+        }
+    }
+
     public void SetCurrentQuiz()
     {
-        if (quizObjects.Count <= 0)
-        {
-            return;
-        }
-
         if (quizNumber == quizObjects.Count)
         {
             isSolved = true;
@@ -165,18 +174,18 @@ public class InteractableQuizObject : MonoBehaviour
             return;
         }
 
+        signImage.gameObject.SetActive(false);
+        QuizObject quiz = quizObjects[quizNumber];
+
         if (quizObjects.Count > 1)
         {
-            quizCounts.gameObject.SetActive(true);
-            quizCounts.text = $"{quizNumber + 1}/{quizObjects.Count}";
+            onQuizCounts = true;
         }
         else
         {
-            quizCounts.gameObject.SetActive(false);
+            onQuizCounts = false;
         }
 
-        signImage.gameObject.SetActive(false);
-        QuizObject quiz = quizObjects[quizNumber];
 
         switch (quiz.quizType)
         {
@@ -186,13 +195,16 @@ public class InteractableQuizObject : MonoBehaviour
                 selectionQuizUI.SetActive(true);
                 selectionQuestionUI.SetActive(true);
 
-                selectionQIndex.text = $"Q{quiz.quizIndex}";
+                selectionQIndex.text = $"Q{quiz.quizIndex + 1}";
                 selectionQuizText.text = quiz.contents;
 
                 for(int i = 0; i < quiz.question.Length; i++)
                 {
                     selections[i].SetText(quiz.question[i]);
                 }
+
+                selectionQuizCounts.gameObject.SetActive(onQuizCounts);
+                selectionQuizCounts.text = $"{quizNumber}/{quizObjects.Count}";
 
                 break;
             case QuizType.OX:
@@ -201,7 +213,7 @@ public class InteractableQuizObject : MonoBehaviour
                 oxQuizUI.SetActive(true);
                 oxQuestionUI.SetActive(true);
 
-                oxQIndex.text = $"Q{quiz.quizIndex}";
+                oxQIndex.text = $"Q{quiz.quizIndex + 1}";
                 oxQuizText.text = quiz.contents;
 
                 if(quiz.hasImage)
@@ -212,6 +224,9 @@ public class InteractableQuizObject : MonoBehaviour
                 {
                     quizImage.gameObject.SetActive(false);
                 }
+
+                oxQuizCounts.gameObject.SetActive(onQuizCounts);
+                oxQuizCounts.text = $"{quizNumber}/{quizObjects.Count}";
 
                 break;
         }
@@ -320,7 +335,7 @@ public class InteractableQuizObject : MonoBehaviour
         selectionQuestionUI.SetActive(false);
         selectionFeedbackUI.SetActive(true);
 
-        selectionAIndex.text = $"A{quiz.quizIndex}";
+        selectionAIndex.text = $"A{quiz.quizIndex + 1}";
         //selectionFeedbackAnswerText.text = quiz.question[selectedNumber];
 
         if (isCollected)
@@ -363,7 +378,7 @@ public class InteractableQuizObject : MonoBehaviour
         oxFeedbackUI.SetActive(true);
 
         //oxFeedbackAnswer[selectedNumber].SetActive(true);
-        oxAIndex.text = $"A{quiz.quizIndex}";
+        oxAIndex.text = $"A{quiz.quizIndex + 1}";
 
         if (isCollected)
         {

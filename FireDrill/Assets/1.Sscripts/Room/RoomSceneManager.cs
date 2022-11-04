@@ -74,6 +74,7 @@ public class RoomSceneManager : GameManager
     public Transform origin;
 
     public bool socreOrderBy = false;
+    public bool isStarted = false;
 
     private int currentProcess;
     public int CurrentProcess
@@ -110,6 +111,10 @@ public class RoomSceneManager : GameManager
 
     private void Update()
     {
+        if(isStarted)
+        {
+            requiredPlayer = PhotonNetwork.CurrentRoom.PlayerCount;
+        }
         RoomState?.OnUpdate();
     }
 

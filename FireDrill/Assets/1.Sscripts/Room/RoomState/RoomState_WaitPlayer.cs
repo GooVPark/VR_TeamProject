@@ -13,6 +13,11 @@ public class RoomState_WaitPlayer : RoomState
 
     public ToastOneButton forceStartToast;
 
+    [Header("A Objects")]
+    [SerializeField] protected GameObject nextButton;
+    [SerializeField] protected GameObject prevButton;
+
+
     public override void OnStateEnter()
     {
         base.OnStateEnter();
@@ -40,6 +45,9 @@ public class RoomState_WaitPlayer : RoomState
 
             forceStartToast.gameObject.SetActive(true);
             roomSceneManager.onRoomStateEvent += ForceStart;
+
+            nextButton.SetActive(false);
+            prevButton.SetActive(false);
         }
     }
 

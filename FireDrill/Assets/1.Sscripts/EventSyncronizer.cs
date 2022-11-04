@@ -129,7 +129,7 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
                 {
                     if (loundgeManager.spawnedNPCObject.ContainsKey(sender))
                     {
-                        loundgeManager.spawnedNPCObject[sender].GetComponent<NPCController>().ShowBubble(chatMessage);
+                        loundgeManager.spawnedNPCObject[sender].GetComponent<NPCController>().ShowBubble(chatMessage.Split('=')[0]);
                     }
                 }
             }
@@ -249,13 +249,16 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
                 }
                 if (voiceEventType.Equals(VoiceEventType.CONNECT.ToString()))
                 {
+                    Debug.Log("Connect Voice Chat");
                     if (recieverEmail.Equals(NetworkManager.User.email))
                     {
+                        Debug.Log("ConnectEvent Reciever: " + recieverEmail);
                         loundgeManager.JoinVoiceChatRoom(senderEmail);
                         voiceManager.OnConnectVoiceManagerEvent(recieverEmail);
                     }
                     if (senderEmail.Equals(NetworkManager.User.email))
                     {
+                        Debug.Log("ConnectEvent Sender: " + senderEmail);
                         loundgeManager.JoinVoiceChatRoom(senderEmail);
                         voiceManager.OnConnectVoiceManagerEvent(senderEmail);
                     }
@@ -276,15 +279,19 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
                 }
                 if (voiceEventType.Equals(VoiceEventType.DISCONNECT.ToString()))
                 {
+
                     if (recieverEmail.Equals(NetworkManager.User.email))
                     {
+                        Debug.Log("DisconnectEvent RecieverEmail:" + recieverEmail);
                         loundgeManager.LeaveVoiceChatRoom();
                         voiceManager.OnDisconnectVoiceChatEvent(recieverEmail);
                     }
                     if (senderEmail.Equals(NetworkManager.User.email))
                     {
+                        Debug.Log("DisconnectEvent SenderEmail: " + senderEmail);
                         loundgeManager.LeaveVoiceChatRoom();
                         voiceManager.OnDisconnectVoiceChatEvent(senderEmail);
+
                     }
 
                     //loundgeManager.spawnedNPC[senderEmail].onVoiceChat = false;

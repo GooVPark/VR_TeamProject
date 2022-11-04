@@ -135,8 +135,15 @@ public class RoomState_Quiz : RoomState, IPunObservable
             scoreCount++;
         }
         solveCount++;
+
+        photonView.RPC(nameof(SetScoreRPC), RpcTarget.All, scoreCount);
     }
 
+    [PunRPC]
+    private void SetScoreRPC(int scoreCount)
+    {
+        roomSceneManager.player.scoreUI.text = $"{scoreCount * 10}";
+    }
     public void ShowQuizResult()
     {
         if (NetworkManager.User.userType == UserType.Student || roomSceneManager.RoomState != roomStateQuizWait)

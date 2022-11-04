@@ -27,10 +27,11 @@ public class RoomState_StartTraining : RoomState
                     toast.gameObject.SetActive(true);
                     roomSceneManager.onRoomStateEvent += EventTrigger;
                     roomSceneManager.player.OnExtinguisher(pivot);
-                    extinguisher.SetActive(false);
                 }
                 break;
         }
+        extinguisher.SetActive(false);
+
     }
 
     public override void OnStateExit()

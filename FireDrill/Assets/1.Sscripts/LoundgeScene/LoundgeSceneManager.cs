@@ -554,11 +554,19 @@ public class LoundgeSceneManager : GameManager
 
                 if(voiceManager.sender.email == NetworkManager.User.email)
                 {
-                    spawnedNPCObject[voiceManager.reciever.email].SetActive(true);
+                    GameObject npcObject = null;
+                    if (spawnedNPCObject.TryGetValue(voiceManager.reciever.email, out npcObject))
+                    {
+                        npcObject.SetActive(true);
+                    }
                 }
                 if(voiceManager.reciever.email == NetworkManager.User.email)
                 {
-                    spawnedNPCObject[voiceManager.sender.email].SetActive(true);
+                    GameObject npcObject = null;
+                    if (spawnedNPCObject.TryGetValue(voiceManager.sender.email, out npcObject))
+                    {
+                        npcObject.SetActive(true);
+                    }
                 }
 
                 NetworkManager.Instance.roomType = RoomType.Loundge;
@@ -588,25 +596,25 @@ public class LoundgeSceneManager : GameManager
         cachedRoomList.Clear();
         //eventSyncronizer.DisconnectChat();
     }
-    //public override void OnPlayerEnteredRoom(Player newPlayer)
-    //{
-    //    if (newPlayer != PhotonNetwork.LocalPlayer)
-    //    {
-    //        ((GameObject)PhotonNetwork.LocalPlayer.TagObject).GetComponent<NPCController>().InvokeProperties();
-    //    }
-    //    //List<User> users = DataManager.Instance.GetUsersInRoom(roomNumber);
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        if (newPlayer != PhotonNetwork.LocalPlayer)
+        {
+            ((GameObject)PhotonNetwork.LocalPlayer.TagObject).GetComponent<NetworkPlayer>().InvokeProperties();
+        }
+        //List<User> users = DataManager.Instance.GetUsersInRoom(roomNumber);
 
-    //    //Debug.Log(users.Count);
+        //Debug.Log(users.Count);
 
-    //    //foreach (User user in users)
-    //    //{
-    //    //    if (!usersByEmail.ContainsKey(user.email))
-    //    //    {
-    //    //        usersByEmail.Add(user.email, user);
-    //    //        npcManager.SpawnNPC(user);
-    //    //    }
-    //    //}
-    //}
+        //foreach (User user in users)
+        //{
+        //    if (!usersByEmail.ContainsKey(user.email))
+        //    {
+        //        usersByEmail.Add(user.email, user);
+        //        npcManager.SpawnNPC(user);
+        //    }
+        //}
+    }
     #endregion
 
     private void OnApplicationQuit()

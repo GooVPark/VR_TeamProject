@@ -43,8 +43,15 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
                 break;
             case UserType.Student:
                 studentIcon.gameObject.SetActive(true);
-                scoreUI.gameObject.SetActive(true);
-                scoreUI.text = "-";
+                if (NetworkManager.Instance.roomType == RoomType.Room)
+                {
+                    scoreUI.gameObject.SetActive(true);
+                    scoreUI.text = "-";
+                }
+                else if(NetworkManager.Instance.roomType == RoomType.VoiceRoom)
+                {
+                    scoreUI.gameObject.SetActive(false);
+                }
                 //uiGroup.sizeDelta = new Vector2(220, 0) + uiGroup.sizeDelta;
                 break;
         }
@@ -127,7 +134,10 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
 
     private void ActionRPC(string functionName, object value)
     {
-        photonView.RPC(functionName, RpcTarget.All, value);
+        if (value != null)
+        {
+            photonView.RPC(functionName, RpcTarget.All, value);
+        }
     }
 
     public void InvokeProperties()
@@ -390,7 +400,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
 
     public void OffExtinguisher()
     {
-        photonView.RPC(nameof(OffExtinguisher), RpcTarget.All);
+        photonView.RPC(nameof(OffExtinguisherRPC), RpcTarget.All);
     }
 
     [PunRPC]

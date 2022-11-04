@@ -73,6 +73,8 @@ public class QuizObjectManager : MonoBehaviourPun
     [PunRPC]
     public void SetQuizRPC(Dictionary<int, int[]> quizs)
     {
+        PlayerDetector player = FindObjectOfType<PlayerDetector>();
+
         int index = 0;
         for(int i = 0; i < quizs.Count; i++)
         {
@@ -95,6 +97,18 @@ public class QuizObjectManager : MonoBehaviourPun
                 quizObjects[quiz.position].quizObjects.Add(quiz);
                 quiz.quizIndex = index;
                 index++;
+            }
+        }
+
+        for(int i = 0; i < quizObjects.Length; i++)
+        {
+            if(quizObjects[i].quizObjects.Count == 0)
+            {
+                quizObjects[i].gameObject.SetActive(false);
+            }
+            else
+            {
+                quizObjects[i].target = player.transform;
             }
         }
     }

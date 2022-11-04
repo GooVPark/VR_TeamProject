@@ -14,6 +14,7 @@ public class TrackingPlayerPosition : MonoBehaviour
 
     private void Update()
     {
-        transform.LookAt(player.position);
+        Vector3 target = new Vector3(player.position.x, transform.position.y, player.position.z);
+        transform.LookAt(target);
     }
 }

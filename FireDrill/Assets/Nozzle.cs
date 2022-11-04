@@ -10,19 +10,14 @@ public class Nozzle : MonoBehaviourPun
     public Transform nozzleOrigin;
 
     [SerializeField] private bool isUnlinked = false;
-
     public void OnSelected()
     {
         photonView.RPC(nameof(OnSelectedRPC), RpcTarget.All);
     }
+
     public void OnDeselected()
     {
-        if (isUnlinked)
-        {
-            transform.SetParent(nozzleOrigin);
-            transform.position = Vector3.zero;
-            transform.rotation = Quaternion.Euler(Vector3.zero);
-        }
+        photonView.RPC(nameof(OnDeselectedRPC), RpcTarget.All);
     }
     public void Activate()
     {
@@ -48,5 +43,13 @@ public class Nozzle : MonoBehaviourPun
     private void OnSelectedRPC()
     {
         transform.SetParent(null);
+    }
+
+    [PunRPC]
+    private void OnDeselectedRPC()
+    {
+        transform.SetParent(nozzleOrigin);
+        transform.localPosition = Vector3.zero;
+        transform.localRotation = Quaternion.Euler(Vector3.zero);
     }
 }
