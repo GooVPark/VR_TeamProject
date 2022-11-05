@@ -6,8 +6,16 @@ public class RoomState_TrainingAnimation : RoomState
 {
     public RoomState_StartTraining roomStateStartTraining;
     public TrainingManager trainingManager;
+
+    [Header("NPC")]
+    public GameObject npcObject;
+    public Animator npcAnimator;
+
     public override void OnStateEnter()
     {
+        npcAnimator.SetInteger("AnimationState", 2);
+
+
         base.OnStateEnter();
         if(user.hasExtingisher)
         {

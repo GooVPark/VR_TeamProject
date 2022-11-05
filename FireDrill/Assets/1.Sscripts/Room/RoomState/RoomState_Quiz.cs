@@ -35,7 +35,7 @@ public class RoomState_Quiz : RoomState, IPunObservable
     public InteractableQuizObject[] quizObjects;
     [Space(5)]
 
-    private float time = 600f;
+    private float time = 60f;
     private int scoreCount = 0;
     private int solveCount = 0;
     [SerializeField] private int playerCount = 1;

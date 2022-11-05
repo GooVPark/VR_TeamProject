@@ -95,6 +95,10 @@ public class QuizObjectManager : MonoBehaviourPun
                         break;
                 }
                 quizObjects[quiz.position].quizObjects.Add(quiz);
+                quizObjects[quiz.position].isSolved = false;
+                quizObjects[quiz.position].quizNumber = 0;
+                
+
                 quiz.quizIndex = index;
                 index++;
             }

@@ -602,18 +602,6 @@ public class LoundgeSceneManager : GameManager
         {
             ((GameObject)PhotonNetwork.LocalPlayer.TagObject).GetComponent<NetworkPlayer>().InvokeProperties();
         }
-        //List<User> users = DataManager.Instance.GetUsersInRoom(roomNumber);
-
-        //Debug.Log(users.Count);
-
-        //foreach (User user in users)
-        //{
-        //    if (!usersByEmail.ContainsKey(user.email))
-        //    {
-        //        usersByEmail.Add(user.email, user);
-        //        npcManager.SpawnNPC(user);
-        //    }
-        //}
     }
     #endregion
 

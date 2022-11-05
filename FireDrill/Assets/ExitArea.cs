@@ -5,6 +5,7 @@ using UnityEngine;
 public class ExitArea : MonoBehaviour
 {
     public RoomState_GoToLoundge roomState;
+    private bool isLeaved;
 
     private void OnTriggerStay(Collider other)
     {
@@ -12,8 +13,9 @@ public class ExitArea : MonoBehaviour
         {
             NetworkPlayer player =other.GetComponentInParent<NetworkPlayer>();
 
-            if(player.UserID.Equals(NetworkManager.User.email))
+            if(player.UserID.Equals(NetworkManager.User.email) && !isLeaved)
             {
+                isLeaved = true;
                 roomState.LeaveRoom();
             }
         }
@@ -21,6 +23,14 @@ public class ExitArea : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        
+        if (other.CompareTag("NetworkPlayerRoom"))
+        {
+            NetworkPlayer player = other.GetComponentInParent<NetworkPlayer>();
+
+            if (player.UserID.Equals(NetworkManager.User.email) && !isLeaved)
+            {
+                isLeaved = false;
+            }
+        }
     }
 }

@@ -19,11 +19,6 @@ public class RoomState_InTraning : RoomState
     [Header("Event Area")]
     public EventArea eventArea;
     public EventAreaMR eventAreaMR;
-    [Space(5)]
-
-    [Header("NPC")]
-    public GameObject npcObject;
-    public Animator npcAnimator;
 
     public override void OnStateEnter()
     {
@@ -32,18 +27,18 @@ public class RoomState_InTraning : RoomState
         eventArea.gameObject.SetActive(false);
         eventAreaMR.gameObject.SetActive(false);
 
-        npcAnimator.SetInteger("AnimationState", 2);
-
         switch (user.userType)
         {
             case UserType.Lecture:
                 currentToast = toastLecture.gameObject;
                 roomSceneManager.onRoomStateEvent += StartTraining;
+
                 DataManager.Instance.UpdateRoomProgress(roomSceneManager.roomNumber, 5);
 
                 string message = $"{EventMessageType.PROGRESS}_{ProgressEventType.UPDATE}_{roomSceneManager.roomNumber}";
                 SendEventMessage(message);
                 break;
+
             case UserType.Student:
                 if(user.hasExtingisher)
                 {

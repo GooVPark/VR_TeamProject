@@ -45,7 +45,9 @@ public class RoomState_WaitPlayer : RoomState
 
             forceStartToast.gameObject.SetActive(true);
             roomSceneManager.onRoomStateEvent += ForceStart;
-
+        }
+        if(user.userType == UserType.Student)
+        {
             nextButton.SetActive(false);
             prevButton.SetActive(false);
         }

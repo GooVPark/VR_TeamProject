@@ -10,7 +10,7 @@ using Photon.Pun;
 using Photon.Voice.Unity;
 using Photon.Voice.PUN;
 
-public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
+public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
 {
     #region 동기화 프로퍼티
     [SerializeField] private string userID;
@@ -161,7 +161,6 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     public Transform leftHand;
     public Transform rightHand;
 
-    private PhotonView photonView;
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioSource megaphone;
 
@@ -281,7 +280,6 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
 
         Transform parent = GameObject.Find("Players").transform;
         transform.SetParent(parent);
-        photonView = GetComponent<PhotonView>();
 
         GameManager gameManager = FindObjectOfType<GameManager>();
         //gameManager.showSpeechBubble += OnSendChatMessage;

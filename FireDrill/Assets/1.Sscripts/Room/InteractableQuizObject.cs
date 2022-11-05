@@ -65,7 +65,7 @@ public class InteractableQuizObject : MonoBehaviour
 
     [Header("Parameters")]
     QuizJson quiz;
-    private bool isSolved = false;
+    public bool isSolved = false;
     private bool isHovered;
     [SerializeField] private bool isActivated;
     public int quizNumber = 0;
