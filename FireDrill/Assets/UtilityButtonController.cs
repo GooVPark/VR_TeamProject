@@ -42,42 +42,42 @@ public class UtilityButtonController : MonoBehaviourPun
     public void SetLevelA()
     {
         photonView.RPC(nameof(SetLevelARPC), RpcTarget.All);
+
+        levelSelectionUI.SetActive(false);
     }
 
     [PunRPC]
     public void SetLevelARPC()
     {
+        roomStateInitialize.targetRoomState = 0;
         roomManager.RoomState = roomStateInitialize;
-        roomManager.RoomState = roomStateGoToA;
-
-        levelSelectionUI.SetActive(false);
     }
 
     public void SetLevelB()
     {
         photonView.RPC(nameof(SetLevelBRPC), RpcTarget.All);
+
+        levelSelectionUI.SetActive(false);
     }
 
     [PunRPC]
     public void SetLevelBRPC()
     {
+        roomStateInitialize.targetRoomState = 1;
         roomManager.RoomState = roomStateInitialize;
-        roomManager.RoomState = roomStateGoToB;
-
-        levelSelectionUI.SetActive(false);
     }
 
     public void SetLevelC()
     {
         photonView.RPC(nameof(SetLevelCRPC), RpcTarget.All);
+
+        levelSelectionUI.SetActive(false);
     }
 
     [PunRPC]
     public void SetLevelCRPC()
     {
+        roomStateInitialize.targetRoomState = 2;
         roomManager.RoomState = roomStateInitialize;
-        roomManager.RoomState = roomStateGoToC;
-
-        levelSelectionUI.SetActive(false);
     }
 }

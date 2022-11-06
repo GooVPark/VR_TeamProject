@@ -18,6 +18,8 @@ public class RoomState_WaitPlayer : RoomState
     [SerializeField] protected GameObject prevButton;
 
 
+    public GameObject selectLevelUI;
+
     public override void OnStateEnter()
     {
         base.OnStateEnter();
@@ -36,6 +38,8 @@ public class RoomState_WaitPlayer : RoomState
 
         DataManager.Instance.UpdateRoomProgress(roomSceneManager.roomNumber, 0);
 
+        
+
         if (user.userType == UserType.Lecture)
         {
             NetworkManager.Instance.megaphoneDisabled = false;
@@ -50,6 +54,7 @@ public class RoomState_WaitPlayer : RoomState
         {
             nextButton.SetActive(false);
             prevButton.SetActive(false);
+            selectLevelUI.SetActive(false);
         }
     }
 

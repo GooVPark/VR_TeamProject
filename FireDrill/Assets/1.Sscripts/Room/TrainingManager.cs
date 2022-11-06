@@ -80,6 +80,16 @@ public class TrainingManager : MonoBehaviourPunCallbacks, IPunObservable
 
     public void SpawnFire()
     {
+        if(fireObjects.Count > 0)
+        {
+            foreach(var fire in fireObjects)
+            {
+                Destroy(fire.gameObject);
+            }
+        }
+
+        fireObjects.Clear();
+
         for (int i = 0; i < fireSpot.Length; i++)
         {
             GameObject firePrefab = PhotonNetwork.Instantiate("FireObject", fireSpot[i].position, Quaternion.identity);

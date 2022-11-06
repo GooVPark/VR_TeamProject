@@ -508,7 +508,9 @@ public class LoundgeSceneManager : GameManager
         roomOptions.IsVisible = true;
         roomOptions.MaxPlayers = 0;
 
+        Debug.Log("JoinCreateRoom");
         PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, TypedLobby.Default);
+        Debug.Log("LoadLevel Room");
         PhotonNetwork.LoadLevel("Room");
     }
 
@@ -606,6 +608,16 @@ public class LoundgeSceneManager : GameManager
     #endregion
 
     private void OnApplicationQuit()
+    {
+        string message = $"{EventMessageType.DISCONNECT}_{NetworkManager.User.email}";
+        eventMesage?.Invoke(message);
+        //eventSyncronizer.DisconnectChat();
+
+        DataManager.Instance.SetOffline(NetworkManager.User.email);
+        DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, roomNumber);
+        DataManager.Instance.DeleteLobbyUser(NetworkManager.User);
+    }
+    private void OnApplicationPause()
     {
         string message = $"{EventMessageType.DISCONNECT}_{NetworkManager.User.email}";
         eventMesage?.Invoke(message);

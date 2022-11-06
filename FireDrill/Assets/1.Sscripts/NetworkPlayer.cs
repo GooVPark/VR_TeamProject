@@ -86,9 +86,38 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
             }
             else
             {
-                extinguisherDisabled.SetActive(false);
+                extinguisherIcon.gameObject.SetActive(false);
                 //var collision = hoseWater.collision;
                 //collision.enabled = false;
+            }
+        }
+    }
+
+    [SerializeField] private int quizScore;
+    public int QuizScore { get => quizScore; set => ActionRPC(nameof(SetQuizScoreRPC), value); }
+    [PunRPC]
+    private void SetQuizScoreRPC(int value)
+    {
+        quizScore = value;
+        scoreUI.gameObject.SetActive(false);
+        if (UserLevel == UserType.Student)
+        {
+            if (NetworkManager.Instance.roomType == RoomType.Room)
+            {
+                if (value < 0)
+                {
+                    scoreUI.text = $" - ";
+                }
+                else
+                {
+                    scoreUI.text = $"{value}/100";
+                }
+                scoreUI.gameObject.SetActive(true);
+            }
+            else
+            {
+                scoreUI.text = "-";
+                scoreUI.gameObject.SetActive(false);
             }
         }
     }
@@ -149,6 +178,7 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
         OnMegaPhone = OnMegaPhone;
         OnVoiceChat = OnVoiceChat;
         CurrentCharacter = CurrentCharacter;
+        QuizScore = QuizScore;
     }
     #endregion
 

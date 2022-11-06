@@ -35,16 +35,24 @@ public class RoomState_Quiz : RoomState, IPunObservable
     public InteractableQuizObject[] quizObjects;
     [Space(5)]
 
-    private float time = 60f;
+    [SerializeField] private float originTime;
+    [SerializeField] private float time = 60f;
     private int scoreCount = 0;
     private int solveCount = 0;
     [SerializeField] private int playerCount = 1;
-
+    private bool endQuiz = false;
 
     public override void OnStateEnter()
     {
         base.OnStateEnter();
-       
+        playerCount = 1;
+        time = originTime;
+
+        scoreCount = 0;
+        solveCount = 0;
+
+        endQuiz = false;
+
         if(NetworkManager.User.userType == UserType.Lecture)
         {
             timerObjectLecture.SetActive(true);
@@ -76,7 +84,10 @@ public class RoomState_Quiz : RoomState, IPunObservable
     {
         timerObject.SetActive(false);
         timerObjectLecture.SetActive(false);
-
+        if (NetworkManager.User.userType == UserType.Lecture)
+        {
+            scoreBoard.button.OnClick.RemoveAllListeners();
+        }
         if (NetworkManager.User.userType == UserType.Student)
         {
             foreach (var quizObject in quizObjects)
@@ -110,9 +121,9 @@ public class RoomState_Quiz : RoomState, IPunObservable
 
             photonView.RPC(nameof(Timer), RpcTarget.All, time);
 
-            if (time <= 0)
+            if (time <= 0 && !endQuiz)
             {
-
+                endQuiz = true;
                 photonView.RPC(nameof(ShowQuizResultRPC), RpcTarget.Others);
 
             }
@@ -136,7 +147,8 @@ public class RoomState_Quiz : RoomState, IPunObservable
         }
         solveCount++;
 
-        photonView.RPC(nameof(SetScoreRPC), RpcTarget.All, scoreCount);
+        roomSceneManager.player.QuizScore = scoreCount * 10;
+        //photonView.RPC(nameof(SetScoreRPC), RpcTarget.All, scoreCount);
     }
 
     [PunRPC]

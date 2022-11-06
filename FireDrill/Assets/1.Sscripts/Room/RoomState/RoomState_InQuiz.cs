@@ -20,6 +20,7 @@ public class RoomState_InQuiz : RoomState
 
     [Header("QuizObject")]
     public GameObject quizObject;
+    public GameObject npc;
     public QuizManager quizManager;
 
     public override void OnStateEnter()
@@ -27,11 +28,12 @@ public class RoomState_InQuiz : RoomState
         base.OnStateEnter();
         eventArea.gameObject.SetActive(false);
         quizObject.SetActive(true);
+        npc.SetActive(true);
 
-        roomSceneManager.onRoomStateEvent += OnQuizStart;
         if(NetworkManager.User.userType == UserType.Lecture)
         {
             lectureToast.gameObject.SetActive(true);
+            roomSceneManager.onRoomStateEvent += OnQuizStart;
             DataManager.Instance.UpdateRoomProgress(roomSceneManager.roomNumber, 3);
             quizObject.GetComponent<QuizObjectManager>().SetQuiz();
             string message = $"{EventMessageType.PROGRESS}_{ProgressEventType.UPDATE}_{roomSceneManager.roomNumber}";

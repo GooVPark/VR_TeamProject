@@ -30,11 +30,18 @@ public class PointerHandler : MonoBehaviourPun
     {
         if(userType == UserType.Lecture && isHovered)
         {
-            points[0] = pointStart.transform.position;
-            points[1] = reticle.transform.position;
-
-            line.SetPositions(points);
+            Vector3 start = pointStart.transform.position;
+            photonView.RPC(nameof(DrawLineRPC), RpcTarget.All, start);
         }
+    }
+
+    [PunRPC]
+    public void DrawLineRPC(Vector3 pointStart)
+    {
+        points[0] = pointStart;
+        points[1] = reticle.transform.position;
+
+        line.SetPositions(points);
     }
 
     public void OnHoverEntered()

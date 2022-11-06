@@ -109,6 +109,7 @@ public class InteractableQuizObject : MonoBehaviour
     {
         if (EventSyncronizerRoom.Instance)
         {
+            eventMessage = null;
             eventMessage += EventSyncronizerRoom.Instance.OnSendMessage;
         }
 
@@ -136,6 +137,32 @@ public class InteractableQuizObject : MonoBehaviour
         {
             signImage.gameObject.SetActive(true);
         }
+
+    }
+
+    public void Initialize()
+    {
+        quizObjects.Clear();
+        isSolved = false;
+        quizNumber = 0;
+
+        if (isSolved)
+        {
+            signImage.sprite = finishSprite;
+        }
+        else
+        {
+            signImage.sprite = readySprite;
+        }
+
+        if (quizObjects.Count > 0 && NetworkManager.User.userType == UserType.Student)
+        {
+            signImage.gameObject.SetActive(true);
+        }
+
+        
+        selectionQuizUI.SetActive(false);
+        oxQuizUI.SetActive(false);
     }
 
     private void Update()

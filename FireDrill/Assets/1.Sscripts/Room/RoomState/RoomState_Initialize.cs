@@ -16,17 +16,36 @@ public class RoomState_Initialize : RoomState
     public GameObject objectA;
     public GameObject objectB;
     public GameObject objectC;
+
+    public GameObject npc;
     [Space(5)]
 
     [Header("Area B")]
     public GameObject dummyExtinguisher;
 
+    public int targetRoomState;
+
+    public RoomState_GoToA roomStateGoToA;
+    public RoomState_GoToB roomStateGoToB;
+    public RoomState_SelectMRPlayer roomStateGoToC;
+
     public override void OnStateEnter()
     {
         base.OnStateEnter();
+
+        roomSceneManager.requiredPlayer = PhotonNetwork.CurrentRoom.PlayerCount;
+
         areaA.gameObject.SetActive(false);
+        areaA.playerCount = 0;
+        areaA.targetObjects.Clear();
         areaB.gameObject.SetActive(false);
+        areaB.playerCount = 0;
+        areaB.targetObjects.Clear();
         areaC.gameObject.SetActive(false);
+        areaC.playerCount = 0;
+        areaC.targetObjects.Clear();
+        areaMR.gameObject.SetActive(false);
+        areaMR.playerCount = 0;
 
         objectA.gameObject.SetActive(false);
         objectB.gameObject.SetActive(false);
@@ -34,14 +53,39 @@ public class RoomState_Initialize : RoomState
 
         dummyExtinguisher.SetActive(true);
 
+        npc.SetActive(false);
+
         Extinguisher extinguisher = FindObjectOfType<Extinguisher>();
         if(extinguisher != null)
         {
             Destroy(extinguisher.gameObject);
         }
 
+        DataManager.Instance.InitializeQuizScore(NetworkManager.User.email);
         NetworkManager.User.hasExtingisher = false;
         roomSceneManager.player.HasExtinguisher = false;
+        roomSceneManager.player.QuizScore = -1;
+
+        switch(targetRoomState)
+        {
+            case 0:
+
+                roomSceneManager.RoomState = roomStateGoToA;
+
+                break;
+            case 1:
+
+                roomSceneManager.RoomState = roomStateGoToB;
+
+                break;
+            case 2:
+
+                roomSceneManager.RoomState = roomStateGoToC;
+                npc.SetActive(true);
+                npc.GetComponent<Animator>().SetInteger("AnimationState", 2);
+
+                break;
+        }
     }
 
 }

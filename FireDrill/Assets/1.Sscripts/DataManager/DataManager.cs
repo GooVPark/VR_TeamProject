@@ -71,6 +71,8 @@ public class DataManager : MonoBehaviour
         
         userTable = testDataManager.GetUserTable();
 
+        Screen.SetResolution(1280, 780, true);
+        Application.targetFrameRate = 60;
         DebugManager.instance.enableRuntimeUI = false;
     }
 

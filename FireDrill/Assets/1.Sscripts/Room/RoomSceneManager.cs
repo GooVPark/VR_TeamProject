@@ -91,6 +91,7 @@ public class RoomSceneManager : GameManager
 
     private void Awake()
     {
+        Debug.Log("RoomScnenManager: Awake Begin");
         if (Instance == null)
         {
             Instance = this;
@@ -99,14 +100,17 @@ public class RoomSceneManager : GameManager
         {
             Destroy(Instance.gameObject);
         }
+        Debug.Log("RoomScnenManager: Awake End");
     }
 
     private void Start()
     {
+        Debug.Log("RoomScnenManager: Start Begin");
         NetworkManager.Instance.SetRoomNumber(roomNumber);
         NetworkManager.Instance.roomType = RoomType.Room;
 
         SetIdleMode(IdleMode.STAND);
+        Debug.Log("RoomScnenManager: Start End");
     }
 
     private void Update()
@@ -327,6 +331,30 @@ public class RoomSceneManager : GameManager
         eventMessage?.Invoke(message);
 
         if(NetworkManager.User.userType == UserType.Lecture)
+        {
+            DataManager.Instance.UpdateRoomProgress(roomNumber, 0);
+            DataManager.Instance.UpdateRoomState(roomNumber, false);
+
+            message = $"{EventMessageType.PROGRESS}_{ProgressEventType.UPDATE}_{roomNumber}";
+            SendEventMessage(message);
+
+            message = $"{EventMessageType.UPDATEROOMSTATE}_{roomNumber}";
+            SendEventMessage(message);
+        }
+    }
+    private void OnApplicationPause()
+    {
+        RoomData roomData = DataManager.Instance.GetRoomData(roomNumber);
+        int playerCount = roomData.currentPlayerCount - 1;
+
+        DataManager.Instance.UpdateRoomPlayerCount(roomNumber, playerCount);
+        DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, 999);
+        DataManager.Instance.SetOffline(NetworkManager.User.email);
+
+        string message = $"{EventMessageType.NOTICE}_{NoticeEventType.DISCONNECT}_{roomNumber}_{NetworkManager.User.email}";
+        eventMessage?.Invoke(message);
+
+        if (NetworkManager.User.userType == UserType.Lecture)
         {
             DataManager.Instance.UpdateRoomProgress(roomNumber, 0);
             DataManager.Instance.UpdateRoomState(roomNumber, false);

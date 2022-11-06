@@ -75,6 +75,11 @@ public class QuizObjectManager : MonoBehaviourPun
     {
         PlayerDetector player = FindObjectOfType<PlayerDetector>();
 
+        foreach(var quiz in quizObjects)
+        {
+            quiz.Initialize();
+        }
+
         int index = 0;
         for(int i = 0; i < quizs.Count; i++)
         {
@@ -95,9 +100,6 @@ public class QuizObjectManager : MonoBehaviourPun
                         break;
                 }
                 quizObjects[quiz.position].quizObjects.Add(quiz);
-                quizObjects[quiz.position].isSolved = false;
-                quizObjects[quiz.position].quizNumber = 0;
-                
 
                 quiz.quizIndex = index;
                 index++;
@@ -106,13 +108,14 @@ public class QuizObjectManager : MonoBehaviourPun
 
         for(int i = 0; i < quizObjects.Length; i++)
         {
-            if(quizObjects[i].quizObjects.Count == 0)
+            if (quizObjects[i].quizObjects.Count > 0 && NetworkManager.User.userType == UserType.Student)
             {
-                quizObjects[i].gameObject.SetActive(false);
+                quizObjects[i].target = player.transform;
+                quizObjects[i].gameObject.SetActive(true);
             }
             else
             {
-                quizObjects[i].target = player.transform;
+                quizObjects[i].gameObject.SetActive(false);
             }
         }
     }
