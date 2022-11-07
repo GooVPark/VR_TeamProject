@@ -571,8 +571,8 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
             extinguisherPivot = extinguisherPivotMale;
             
             skinnedMeshRenderer = skinnedMeshRendererMale;
-            //leftHandAnimator = maleLeftHandAnimator;
-            //rightHandAnimator = maleRightHandAnimator;
+            leftHandAnimator = maleLeftHandAnimator;
+            rightHandAnimator = maleRightHandAnimator;
         }
         else
         {
@@ -584,8 +584,8 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
             extinguisherPivot = extinguisherPivotFemale;
 
             skinnedMeshRenderer = skinnedMeshRendererFemale;
-            //leftHandAnimator = femaleLeftHandAnimator;
-            //rightHandAnimator = femaleRightHandAnimator;
+            leftHandAnimator = femaleLeftHandAnimator;
+            rightHandAnimator = femaleRightHandAnimator;
         }
 
         skinnedMeshRenderer.sharedMaterial = materials[value];
