@@ -101,7 +101,14 @@ public class TrainingManager : MonoBehaviourPunCallbacks, IPunObservable
             GameObject firePrefab = PhotonNetwork.Instantiate("FireObject", fireSpot[i].position, Quaternion.identity);
             FireObject fire = firePrefab.GetComponent<FireObject>();
 
-            fireObjects.Add(fire);
+            if (photonView.IsMine)
+            {
+                fireObjects.Add(fire);
+            }
+            else
+            {
+                photonView.RPC(nameof(AddFireObject), RpcTarget.All);
+            }
         }
 
         for (int i = 0; i < fireObjects.Count; i++)
@@ -110,5 +117,11 @@ public class TrainingManager : MonoBehaviourPunCallbacks, IPunObservable
             //fireObjects[i].onFireObjectTriggerd += SyncFireObject;
         }
         totalProgress = GetTotalProgress();
+    }
+    [PunRPC]
+    private void AddFireObject()
+    {
+        FireObject fire = FindObjectOfType<FireObject>();
+        fireObjects.Add(fire);
     }
 }

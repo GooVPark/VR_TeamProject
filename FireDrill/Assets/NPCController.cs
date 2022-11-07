@@ -213,7 +213,10 @@ public class NPCController : MonoBehaviourPun //, IPunInstantiateMagicCallback
             StopCoroutine(speachTimer);
         }
         speachTimer = null;
-        speachTimer = StartCoroutine(SpeachTimer(message));
+        if (gameObject.activeInHierarchy)
+        {
+            speachTimer = StartCoroutine(SpeachTimer(message));
+        }
     }
 
     private Coroutine speachTimer;
