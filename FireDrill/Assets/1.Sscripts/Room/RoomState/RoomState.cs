@@ -17,6 +17,7 @@ public abstract class RoomState : MonoBehaviourPun
 
     private void Awake()
     {
+     
     }
 
     protected void SendEventMessage(string message)

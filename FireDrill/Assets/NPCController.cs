@@ -64,8 +64,8 @@ public class NPCController : MonoBehaviourPun //, IPunInstantiateMagicCallback
     [SerializeField] private SkinnedMeshRenderer outlineFemale;
 
     [SerializeField] private TMP_Text userName;
-    [SerializeField] private Image lectureIcon;
-    [SerializeField] private Image studentIcon;
+    [SerializeField] private GameObject lectureIcon;
+    [SerializeField] private GameObject studentIcon;
     [SerializeField] private Image onVoiceChatIcon;
 
     public SpeachBubble speachBubble;

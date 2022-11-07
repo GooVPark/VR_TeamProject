@@ -176,7 +176,11 @@ public class RoomSceneManager : GameManager
 
     public bool IsReady()
     {
-        return PhotonNetwork.CurrentRoom.PlayerCount >= requiredPlayer;
+        if (PhotonNetwork.CurrentRoom != null)
+        {
+            return PhotonNetwork.CurrentRoom.PlayerCount >= requiredPlayer;
+        }
+        return false;
     }
     public bool IsReady(int playerCount)
     {

@@ -39,19 +39,12 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
         switch (userLevel)
         {
             case UserType.Lecture:
+                studentIcon.gameObject.SetActive(false);
                 lectureIcon.gameObject.SetActive(true);
                 break;
             case UserType.Student:
+                lectureIcon.gameObject.SetActive(false);
                 studentIcon.gameObject.SetActive(true);
-                if (NetworkManager.Instance.roomType == RoomType.Room)
-                {
-                    scoreUI.gameObject.SetActive(true);
-                    scoreUI.text = "-";
-                }
-                else if(NetworkManager.Instance.roomType == RoomType.VoiceRoom)
-                {
-                    scoreUI.gameObject.SetActive(false);
-                }
                 //uiGroup.sizeDelta = new Vector2(220, 0) + uiGroup.sizeDelta;
                 break;
         }
@@ -280,6 +273,7 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
     public Extinguisher extinguisher;
     public ParticleSystem hoseWater;
     public GameObject hose;
+    public Nozzle nozzle;
     private GameObject extinguisherObject;
     private Transform extinguisherPivot;
     [SerializeField] private Transform extinguisherPivotMale;
@@ -421,7 +415,7 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
         pinTrigger = extinguisher.pinTrigger.GetComponent<PinTrigger>();
         hose = extinguisher.hose;
         hoseWater = extinguisher.hoseWater;
-
+        nozzle = extinguisher.nozzle.GetComponent<Nozzle>();
         hose.SetActive(true);
         extinguisher.gameObject.SetActive(true);
     }
@@ -439,11 +433,19 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
             extinguisher.gameObject.SetActive(false);
             hose.gameObject.SetActive(false);
         }
+        else
+        {
+            extinguisher = FindObjectOfType<Extinguisher>();
+            nozzle = FindObjectOfType<Nozzle>();
+
+            extinguisher.gameObject.SetActive(false);
+            nozzle.gameObject.SetActive(false);
+        }
     }
 
     public void Spread(bool value)
     {
-        if(photonView.IsMine)
+        if(photonView.IsMine && nozzle.isSelected)
         {
             photonView.RPC(nameof(SpreadRPC), RpcTarget.All, value);
         }
@@ -452,7 +454,7 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
     [PunRPC]
     public void SpreadRPC(bool value)
     {
-        if(value)
+        if (value)
         {
             hoseWater.Play();
         }

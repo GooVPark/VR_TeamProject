@@ -24,7 +24,6 @@ public class RoomState_Quiz : RoomState, IPunObservable
     [Space(5)]
 
     [Header("Score")]
-    public GameObject scoreObject;
     public TMP_Text scoreText;
     public TMP_Text progressText;
     public ScoreBoard scoreBoardObject;
@@ -57,10 +56,6 @@ public class RoomState_Quiz : RoomState, IPunObservable
         {
             timerObjectLecture.SetActive(true);
             //scoreBoard.UpdateState(ButtonState.Deactivate);
-            NetworkManager.Instance.scoreBoardDisabled = false;
-            NetworkManager.Instance.onScoreBoard = false;
-
-            scoreBoard.button.OnClick.AddListener(() => ShowScoreBoard());
         }
         if (NetworkManager.User.userType == UserType.Student)
         {
@@ -84,10 +79,7 @@ public class RoomState_Quiz : RoomState, IPunObservable
     {
         timerObject.SetActive(false);
         timerObjectLecture.SetActive(false);
-        if (NetworkManager.User.userType == UserType.Lecture)
-        {
-            scoreBoard.button.OnClick.RemoveAllListeners();
-        }
+
         if (NetworkManager.User.userType == UserType.Student)
         {
             foreach (var quizObject in quizObjects)
@@ -189,20 +181,6 @@ public class RoomState_Quiz : RoomState, IPunObservable
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
 
-    }
-
-    public void ShowScoreBoard()
-    {
-        if(scoreBoardObject.gameObject.activeSelf)
-        {
-            scoreBoardObject.gameObject.SetActive(false);
-            NetworkManager.Instance.onScoreBoard = false;
-        }
-        else
-        {
-            scoreBoardObject.gameObject.SetActive(true);
-            NetworkManager.Instance.onScoreBoard = true;
-        }
     }
 
     [PunRPC]

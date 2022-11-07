@@ -17,15 +17,17 @@ public class RoomState_WaitPlayer : RoomState
     [SerializeField] protected GameObject nextButton;
     [SerializeField] protected GameObject prevButton;
 
-
+    public GameObject view;
     public GameObject selectLevelUI;
+    public ScoreBoard scoreBoardObject;
 
     public override void OnStateEnter()
     {
         base.OnStateEnter();
-
+        view.gameObject.SetActive(true);
         NetworkManager.Instance.voiceChatDisabled = false;
         NetworkManager.Instance.textChatDisabled = false;
+        roomSceneManager.player.QuizScore = -1;
 
         voiceChat.UpdateState(ButtonState.Deactivate);
         voiceChat.button.onClick += roomSceneManager.ToggleVoiceChat;
@@ -42,6 +44,11 @@ public class RoomState_WaitPlayer : RoomState
 
         if (user.userType == UserType.Lecture)
         {
+            NetworkManager.Instance.scoreBoardDisabled = false;
+            NetworkManager.Instance.onScoreBoard = false;
+
+            scoreBoard.button.OnClick.AddListener(() => ShowScoreBoard());
+
             NetworkManager.Instance.megaphoneDisabled = false;
 
             message = $"{EventMessageType.PROGRESS}_{ProgressEventType.UPDATE}_{roomSceneManager.roomNumber}";
@@ -56,6 +63,7 @@ public class RoomState_WaitPlayer : RoomState
             prevButton.SetActive(false);
             selectLevelUI.SetActive(false);
         }
+        view.gameObject.SetActive(false);
     }
 
     public override void OnStateExit()
@@ -83,4 +91,19 @@ public class RoomState_WaitPlayer : RoomState
     {
         roomSceneManager.requiredPlayer = PhotonNetwork.CurrentRoom.PlayerCount;
     }
+
+    private void ShowScoreBoard()
+    {
+        if (scoreBoardObject.gameObject.activeSelf)
+        {
+            scoreBoardObject.gameObject.SetActive(false);
+            NetworkManager.Instance.onScoreBoard = false;
+        }
+        else
+        {
+            scoreBoardObject.gameObject.SetActive(true);
+            NetworkManager.Instance.onScoreBoard = true;
+        }
+    }
+
 }

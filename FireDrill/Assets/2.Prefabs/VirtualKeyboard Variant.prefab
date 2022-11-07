@@ -816,7 +816,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_GlobalFontAsset
       value: 
-      objectReference: {fileID: 11400000, guid: b870c8189934c75478d07b27956f0af8,
+      objectReference: {fileID: 11400000, guid: 5cd2b80e136efcb449c879380325e94d,
         type: 2}
     - target: {fileID: 8620709774342734290, guid: c855b4d8fd1bb484baed7bff82305e62,
         type: 3}
@@ -877,7 +877,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_fontAsset
       value: 
-      objectReference: {fileID: 11400000, guid: b870c8189934c75478d07b27956f0af8,
+      objectReference: {fileID: 11400000, guid: 5cd2b80e136efcb449c879380325e94d,
         type: 2}
     - target: {fileID: 8620709774779980473, guid: c855b4d8fd1bb484baed7bff82305e62,
         type: 3}
@@ -888,8 +888,13 @@ PrefabInstance:
         type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: 5184564808909627882, guid: b870c8189934c75478d07b27956f0af8,
+      objectReference: {fileID: 7615186076778673915, guid: 5cd2b80e136efcb449c879380325e94d,
         type: 2}
+    - target: {fileID: 8620709774779980473, guid: c855b4d8fd1bb484baed7bff82305e62,
+        type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8620709774949644952, guid: c855b4d8fd1bb484baed7bff82305e62,
         type: 3}
       propertyPath: m_IsActive
@@ -913,7 +918,7 @@ PrefabInstance:
     - target: {fileID: 8620709775228750132, guid: c855b4d8fd1bb484baed7bff82305e62,
         type: 3}
       propertyPath: m_Name
-      value: VirtualKeyboard
+      value: VirtualKeyboard Variant
       objectReference: {fileID: 0}
     - target: {fileID: 8620709775228750133, guid: c855b4d8fd1bb484baed7bff82305e62,
         type: 3}
@@ -1045,6 +1050,18 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8620709776209460296, guid: c855b4d8fd1bb484baed7bff82305e62,
+        type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 5cd2b80e136efcb449c879380325e94d,
+        type: 2}
+    - target: {fileID: 8620709776209460296, guid: c855b4d8fd1bb484baed7bff82305e62,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 7615186076778673915, guid: 5cd2b80e136efcb449c879380325e94d,
+        type: 2}
     - target: {fileID: 8620709776307094723, guid: c855b4d8fd1bb484baed7bff82305e62,
         type: 3}
       propertyPath: m_AnchorMax.y

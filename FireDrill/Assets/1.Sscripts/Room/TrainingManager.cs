@@ -54,6 +54,11 @@ public class TrainingManager : MonoBehaviourPunCallbacks, IPunObservable
 
     public float GetCurrentProgress()
     {
+        if(fireObjects.Count <= 0)
+        {
+            return 0f;
+        }
+
         float current = 0;
 
         foreach (FireObject fireObject in fireObjects)
@@ -85,6 +90,7 @@ public class TrainingManager : MonoBehaviourPunCallbacks, IPunObservable
             GameObject destroyTarget = null;
             for(int i = fireObjects.Count - 1; i >= 0; i--)
             {
+                Debug.Log("Clear Fire");
                 destroyTarget = fireObjects[i].gameObject;
                 fireObjects.Remove(fireObjects[i]);
                 Destroy(destroyTarget);

@@ -12,6 +12,8 @@ public class UtilityButtonController : MonoBehaviourPun
     public RoomState_GoToB roomStateGoToB;
     public RoomState_SelectMRPlayer roomStateGoToC;
 
+    public GameObject forceExitToast;
+
     public RoomState_Initialize roomStateInitialize;
 
     public void OnSelect()
@@ -28,15 +30,14 @@ public class UtilityButtonController : MonoBehaviourPun
 
     public void LeaveAll()
     {
-        photonView.RPC(nameof(LeaveALLRPC), RpcTarget.All);   
+        forceExitToast.SetActive(true);
+        levelSelectionUI.SetActive(false);
     }
 
     [PunRPC]
     public void LeaveALLRPC()
     {
         roomManager.LeaveRoom();
-
-        levelSelectionUI.SetActive(false);
     }
 
     public void SetLevelA()

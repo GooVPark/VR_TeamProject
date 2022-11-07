@@ -76,7 +76,11 @@ public class RoomState_TrainingExtinguish : RoomState
     public void NextStateRPC()
     {
         roomSceneManager.RoomState = roomStateEndTraining;
-        roomSceneManager.player.Spread(false);
+
+        if (photonView.IsMine)
+        {
+            roomSceneManager.player.Spread(false);
+        }
     }
     
     

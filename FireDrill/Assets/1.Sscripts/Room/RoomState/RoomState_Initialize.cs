@@ -20,6 +20,8 @@ public class RoomState_Initialize : RoomState
     public GameObject npc;
     [Space(5)]
 
+    [Header("Area A")]
+    public Paroxe.PdfRenderer.PDFViewer view;
     [Header("Area B")]
     public GameObject dummyExtinguisher;
 
@@ -34,7 +36,7 @@ public class RoomState_Initialize : RoomState
         base.OnStateEnter();
 
         roomSceneManager.requiredPlayer = PhotonNetwork.CurrentRoom.PlayerCount;
-
+        DataManager.Instance.UpdateRoomState(roomSceneManager.roomNumber, true);
         areaA.gameObject.SetActive(false);
         areaA.playerCount = 0;
         areaA.targetObjects.Clear();
@@ -50,6 +52,12 @@ public class RoomState_Initialize : RoomState
         objectA.gameObject.SetActive(false);
         objectB.gameObject.SetActive(false);
         objectC.gameObject.SetActive(false);
+
+        #region Area A Initizlize
+
+        view.CurrentPageIndex = 0;
+        
+        #endregion
 
         #region Area B Initailzie
 

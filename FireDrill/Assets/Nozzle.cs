@@ -9,15 +9,18 @@ public class Nozzle : MonoBehaviourPun
     public OnNozzleDettached onNozzleDettached;
     public Transform nozzleOrigin;
 
+    public bool isSelected = false;
     [SerializeField] private bool isUnlinked = false;
     public void OnSelected()
     {
         photonView.RPC(nameof(OnSelectedRPC), RpcTarget.All);
+        isSelected = true;
     }
 
     public void OnDeselected()
     {
         photonView.RPC(nameof(OnDeselectedRPC), RpcTarget.All);
+        isSelected = false;
     }
     public void Activate()
     {
