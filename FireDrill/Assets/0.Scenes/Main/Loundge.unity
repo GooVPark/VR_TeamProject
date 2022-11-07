@@ -2324,8 +2324,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c9ebda02b37f45469454b8da1580ef0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OpponentPos: {x: 0, y: 0, z: 0}
+  interlocutor: {fileID: 0}
   isTalk: 0
+  self: {fileID: 0}
 --- !u!135 &131483156
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -2801,8 +2802,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c9ebda02b37f45469454b8da1580ef0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OpponentPos: {x: 0, y: 0, z: 0}
+  interlocutor: {fileID: 0}
   isTalk: 0
+  self: {fileID: 0}
 --- !u!135 &170155803
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -9426,11 +9428,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   status: 0
+  talkInteractable: {fileID: 550084902}
   objGender:
   - {fileID: 541238053}
   - {fileID: 541238052}
   animator: {fileID: 541238056}
-  talkInteractable: {fileID: 550084902}
   speed: 2
 --- !u!95 &541238056
 Animator:
@@ -9749,8 +9751,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c9ebda02b37f45469454b8da1580ef0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OpponentPos: {x: 0, y: 0, z: 0}
+  interlocutor: {fileID: 0}
   isTalk: 0
+  self: {fileID: 0}
 --- !u!135 &550084903
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -11720,11 +11723,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   status: 0
+  talkInteractable: {fileID: 170155802}
   objGender:
   - {fileID: 551809093}
   - {fileID: 551809092}
   animator: {fileID: 551809096}
-  talkInteractable: {fileID: 170155802}
   speed: 2
 --- !u!95 &551809096
 Animator:
@@ -16043,11 +16046,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   status: 0
+  talkInteractable: {fileID: 1126359586}
   objGender:
   - {fileID: 720294290}
   - {fileID: 720294289}
   animator: {fileID: 720294293}
-  talkInteractable: {fileID: 1126359586}
   speed: 2
 --- !u!95 &720294293
 Animator:
@@ -18641,11 +18644,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   status: 0
+  talkInteractable: {fileID: 131483155}
   objGender:
   - {fileID: 857958069}
   - {fileID: 2040863801}
   animator: {fileID: 857958072}
-  talkInteractable: {fileID: 131483155}
   speed: 2
 --- !u!95 &857958072
 Animator:
@@ -21095,11 +21098,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   status: 0
+  talkInteractable: {fileID: 2036240708}
   objGender:
   - {fileID: 900021409}
   - {fileID: 1937836577}
   animator: {fileID: 1937836579}
-  talkInteractable: {fileID: 2036240708}
   speed: 2
 --- !u!95 &900021412
 Animator:
@@ -24036,11 +24039,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   status: 0
+  talkInteractable: {fileID: 1061856973}
   objGender:
   - {fileID: 1000229417}
   - {fileID: 1000229416}
   animator: {fileID: 1000229420}
-  talkInteractable: {fileID: 1061856973}
   speed: 2
 --- !u!95 &1000229420
 Animator:
@@ -24990,8 +24993,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c9ebda02b37f45469454b8da1580ef0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OpponentPos: {x: 0, y: 0, z: 0}
+  interlocutor: {fileID: 0}
   isTalk: 0
+  self: {fileID: 0}
 --- !u!135 &1061856974
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -25898,8 +25902,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c9ebda02b37f45469454b8da1580ef0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OpponentPos: {x: 0, y: 0, z: 0}
+  interlocutor: {fileID: 0}
   isTalk: 0
+  self: {fileID: 0}
 --- !u!135 &1126359587
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -31102,6 +31107,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 6114765046689036020, guid: 7b8f509c03310b947b04cd048ff6ab72,
+        type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6114765046689036020, guid: 7b8f509c03310b947b04cd048ff6ab72,
         type: 3}
@@ -42258,11 +42268,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   status: 0
+  talkInteractable: {fileID: 2088528909}
   objGender:
   - {fileID: 1963841889}
   - {fileID: 1963841888}
   animator: {fileID: 1963841892}
-  talkInteractable: {fileID: 2088528909}
   speed: 2
 --- !u!95 &1963841892
 Animator:
@@ -44039,8 +44049,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c9ebda02b37f45469454b8da1580ef0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OpponentPos: {x: 0, y: 0, z: 0}
+  interlocutor: {fileID: 0}
   isTalk: 0
+  self: {fileID: 0}
 --- !u!135 &2036240709
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -44799,8 +44810,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c9ebda02b37f45469454b8da1580ef0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OpponentPos: {x: 0, y: 0, z: 0}
+  interlocutor: {fileID: 0}
   isTalk: 0
+  self: {fileID: 0}
 --- !u!135 &2088528910
 SphereCollider:
   m_ObjectHideFlags: 0
