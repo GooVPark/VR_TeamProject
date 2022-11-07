@@ -231,7 +231,7 @@ public class InteractableQuizObject : MonoBehaviour
                 }
 
                 selectionQuizCounts.gameObject.SetActive(onQuizCounts);
-                selectionQuizCounts.text = $"{quizNumber}/{quizObjects.Count}";
+                selectionQuizCounts.text = $"{quizNumber + 1}/{quizObjects.Count}";
 
                 break;
             case QuizType.OX:
@@ -253,7 +253,7 @@ public class InteractableQuizObject : MonoBehaviour
                 }
 
                 oxQuizCounts.gameObject.SetActive(onQuizCounts);
-                oxQuizCounts.text = $"{quizNumber}/{quizObjects.Count}";
+                oxQuizCounts.text = $"{quizNumber + 1}/{quizObjects.Count}";
 
                 break;
         }

@@ -78,16 +78,22 @@ public class TrainingManager : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
-    public void SpawnFire()
+    public void ClearFire()
     {
-        if(fireObjects.Count > 0)
+        if (fireObjects.Count > 0)
         {
-            foreach(var fire in fireObjects)
+            GameObject destroyTarget = null;
+            for(int i = fireObjects.Count - 1; i >= 0; i--)
             {
-                Destroy(fire.gameObject);
+                destroyTarget = fireObjects[i].gameObject;
+                fireObjects.Remove(fireObjects[i]);
+                Destroy(destroyTarget);
             }
         }
+    }
 
+    public void SpawnFire()
+    {
         fireObjects.Clear();
 
         for (int i = 0; i < fireSpot.Length; i++)
@@ -98,7 +104,7 @@ public class TrainingManager : MonoBehaviourPunCallbacks, IPunObservable
             fireObjects.Add(fire);
         }
 
-                for(int i = 0; i < fireObjects.Count; i++)
+        for (int i = 0; i < fireObjects.Count; i++)
         {
             fireObjects[i].fireObjectIndex = i;
             //fireObjects[i].onFireObjectTriggerd += SyncFireObject;

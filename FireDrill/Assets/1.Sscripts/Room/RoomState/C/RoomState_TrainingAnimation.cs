@@ -13,11 +13,10 @@ public class RoomState_TrainingAnimation : RoomState
 
     public override void OnStateEnter()
     {
+        base.OnStateEnter();
         npcAnimator.SetInteger("AnimationState", 2);
 
-
-        base.OnStateEnter();
-        if(user.hasExtingisher)
+        if (user.hasExtingisher)
         {
             trainingManager.SpawnFire();
         }

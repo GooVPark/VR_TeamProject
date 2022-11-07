@@ -51,22 +51,30 @@ public class RoomState_Initialize : RoomState
         objectB.gameObject.SetActive(false);
         objectC.gameObject.SetActive(false);
 
-        dummyExtinguisher.SetActive(true);
-
-        npc.SetActive(false);
-
-        Extinguisher extinguisher = FindObjectOfType<Extinguisher>();
-        if(extinguisher != null)
-        {
-            Destroy(extinguisher.gameObject);
-        }
+        #region Area B Initailzie
 
         DataManager.Instance.InitializeQuizScore(NetworkManager.User.email);
         NetworkManager.User.hasExtingisher = false;
         roomSceneManager.player.HasExtinguisher = false;
         roomSceneManager.player.QuizScore = -1;
+        
+        npc.SetActive(false);
+        #endregion
 
-        switch(targetRoomState)
+        #region Area C Initialize
+
+        dummyExtinguisher.SetActive(true);
+
+        objectC.GetComponent<TrainingManager>().ClearFire();
+        Extinguisher extinguisher = FindObjectOfType<Extinguisher>();
+        if (extinguisher != null)
+        {
+            Destroy(extinguisher.gameObject);
+        }
+
+        #endregion
+
+        switch (targetRoomState)
         {
             case 0:
 
@@ -82,7 +90,7 @@ public class RoomState_Initialize : RoomState
 
                 roomSceneManager.RoomState = roomStateGoToC;
                 npc.SetActive(true);
-                npc.GetComponent<Animator>().SetInteger("AnimationState", 2);
+                npc.GetComponent<Animator>().SetInteger("AnimationState", 1);
 
                 break;
         }

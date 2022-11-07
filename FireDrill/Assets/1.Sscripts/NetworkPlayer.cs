@@ -209,9 +209,9 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
     public GameObject userInfoUI;
     public RectTransform uiGroup;
     public TMP_Text userNameUI;
-    public Image lectureIcon;
-    public Image studentIcon;
-    public Image extinguisherIcon;
+    public GameObject lectureIcon;
+    public GameObject studentIcon;
+    public GameObject extinguisherIcon;
     public Image megaphoneIcon;
     public TMP_Text scoreUI;
 
