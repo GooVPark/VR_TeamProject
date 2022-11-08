@@ -445,7 +445,7 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
 
     public void Spread(bool value)
     {
-        if(photonView.IsMine && nozzle.isSelected)
+        if(photonView.IsMine)
         {
             photonView.RPC(nameof(SpreadRPC), RpcTarget.All, value);
         }
@@ -456,13 +456,19 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
     {
         if (value)
         {
-            hoseWater.Play();
+            if (!nozzle.isSelected)
+            {
+                hoseWater.Stop();
+            }
+            else
+            {
+                hoseWater.Play();
+            }
         }
         else
         {
             hoseWater.Stop();
         }
-        Debug.Log("Spread Value: " + value);
     }
 
     public void Initialize()
@@ -541,9 +547,35 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
             rightHandAnimator.SetLayerWeight(2, rightHandAnimation.animator.GetLayerWeight(2));
             rightHandAnimator.SetLayerWeight(1, rightHandAnimation.animator.GetLayerWeight(1));
 
-  //          Quaternion rightWristRotation = rightHandAnimation.transform.rotation;
-//            rightWrist.localRotation = rightWristRotation;
+            if (maleRightHandAnimator.gameObject.activeSelf)
+            {
+                maleRightHandAnimator.SetFloat("Flex", rightHandAnimation.flex);
+                maleRightHandAnimator.SetLayerWeight(2, rightHandAnimation.animator.GetLayerWeight(2));
+                maleRightHandAnimator.SetLayerWeight(1, rightHandAnimation.animator.GetLayerWeight(1));
+            }
 
+            if (femaleRightHandAnimator.gameObject.activeSelf)
+            {
+                femaleRightHandAnimator.SetFloat("Flex", rightHandAnimation.flex);
+                femaleRightHandAnimator.SetLayerWeight(2, rightHandAnimation.animator.GetLayerWeight(2));
+                femaleRightHandAnimator.SetLayerWeight(1, rightHandAnimation.animator.GetLayerWeight(1));
+            }
+            //          Quaternion rightWristRotation = rightHandAnimation.transform.rotation;
+            //            rightWrist.localRotation = rightWristRotation;
+
+        }
+        else
+        {
+            int pose = rightHandAnimation.poseIndex;
+            rightHandAnimator.SetInteger("Pose", pose);
+            if(maleRightHandAnimator.gameObject.activeSelf)
+            {
+                maleRightHandAnimator.SetInteger("Pose", pose);
+            }
+            if(femaleRightHandAnimator.gameObject.activeSelf)
+            {
+                femaleRightHandAnimator.SetInteger("Pose", pose);
+            }
         }
 
         if (leftHandAnimation.animator.GetInteger("Pose") == 0)
@@ -551,6 +583,33 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
             leftHandAnimator.SetFloat("Flex", leftHandAnimation.flex);
             leftHandAnimator.SetLayerWeight(2, leftHandAnimation.animator.GetLayerWeight(2));
             leftHandAnimator.SetLayerWeight(1, leftHandAnimation.animator.GetLayerWeight(1));
+
+            if (maleLeftHandAnimator.gameObject.activeSelf)
+            {
+                maleLeftHandAnimator.SetFloat("Flex", leftHandAnimation.flex);
+                maleLeftHandAnimator.SetLayerWeight(2, leftHandAnimation.animator.GetLayerWeight(2));
+                maleLeftHandAnimator.SetLayerWeight(1, leftHandAnimation.animator.GetLayerWeight(1));
+            }
+
+            if (femaleLeftHandAnimator.gameObject.activeSelf)
+            {
+                femaleLeftHandAnimator.SetFloat("Flex", leftHandAnimation.flex);
+                femaleLeftHandAnimator.SetLayerWeight(2, leftHandAnimation.animator.GetLayerWeight(2));
+                femaleLeftHandAnimator.SetLayerWeight(1, leftHandAnimation.animator.GetLayerWeight(1));
+            }
+        }
+        else
+        {
+            int pose = leftHandAnimation.poseIndex;
+            leftHandAnimator.SetInteger("Pose", pose);
+            if (maleLeftHandAnimator.gameObject.activeSelf)
+            {
+                maleLeftHandAnimator.SetInteger("Pose", pose);
+            }
+            if (femaleLeftHandAnimator.gameObject.activeSelf)
+            {
+                femaleLeftHandAnimator.SetInteger("Pose", pose);
+            }
         }
     }
 
@@ -571,8 +630,6 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
             extinguisherPivot = extinguisherPivotMale;
             
             skinnedMeshRenderer = skinnedMeshRendererMale;
-            leftHandAnimator = maleLeftHandAnimator;
-            rightHandAnimator = maleRightHandAnimator;
         }
         else
         {
@@ -584,8 +641,6 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
             extinguisherPivot = extinguisherPivotFemale;
 
             skinnedMeshRenderer = skinnedMeshRendererFemale;
-            leftHandAnimator = femaleLeftHandAnimator;
-            rightHandAnimator = femaleRightHandAnimator;
         }
 
         skinnedMeshRenderer.sharedMaterial = materials[value];

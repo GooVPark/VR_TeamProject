@@ -253,14 +253,14 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
                     if (recieverEmail.Equals(NetworkManager.User.email))
                     {
                         Debug.Log("ConnectEvent Reciever: " + recieverEmail);
-                        loundgeManager.JoinVoiceChatRoom(senderEmail);
                         voiceManager.OnConnectVoiceManagerEvent(recieverEmail);
+                        loundgeManager.JoinVoiceChatRoom(senderEmail);
                     }
                     if (senderEmail.Equals(NetworkManager.User.email))
                     {
                         Debug.Log("ConnectEvent Sender: " + senderEmail);
-                        loundgeManager.JoinVoiceChatRoom(senderEmail);
                         voiceManager.OnConnectVoiceManagerEvent(senderEmail);
+                        loundgeManager.JoinVoiceChatRoom(senderEmail);
                     }
 
                     //loundgeManager.spawnedNPC[senderEmail].onVoiceChat = true;

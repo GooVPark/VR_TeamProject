@@ -82,4 +82,5 @@ public class Extinguisher : MonoBehaviourPun
     {
         animator.SetInteger("Pose", 1);
     }
+
 }

@@ -136,6 +136,8 @@ public class VoiceManager : MonoBehaviourPunCallbacks
         string userName = user.name;
         voiceChatCanceledToast.message.text = $"{userName}님과의 대화가 취소되었습니다.";
 
+        NetworkManager.Instance.onVoiceChat = false;
+        NetworkManager.Instance.voiceChatDisabled = true;
         sender = null;
         reciever = null;
     }
@@ -143,7 +145,6 @@ public class VoiceManager : MonoBehaviourPunCallbacks
     public void CancelVoiceChat()
     {
         Debug.Log($"CancelVoiceChat - Sender: {sender.email}, Reciever: {reciever.email}");
-
         string message = $"{EventMessageType.VOICECHAT}_{VoiceEventType.CANCEL}_{sender.email}_{reciever.email}";
         eventMessage?.Invoke(message);
     }

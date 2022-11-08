@@ -146,6 +146,10 @@ public class LoundgeSceneManager : GameManager
 
     public void JoinVoiceChatRoom(string userID)
     {
+        if(!NetworkManager.Instance.onVoiceChat)
+        {
+            return;
+        }
         Debug.Log("LoundgeManager: JoinVoiceChatRoom");
         
         string roomName = $"VoiceChatRoom_{userID}";

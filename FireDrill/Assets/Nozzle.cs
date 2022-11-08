@@ -9,18 +9,18 @@ public class Nozzle : MonoBehaviourPun
     public OnNozzleDettached onNozzleDettached;
     public Transform nozzleOrigin;
 
+    public ParticleSystem water;
+
     public bool isSelected = false;
     [SerializeField] private bool isUnlinked = false;
     public void OnSelected()
     {
         photonView.RPC(nameof(OnSelectedRPC), RpcTarget.All);
-        isSelected = true;
     }
 
     public void OnDeselected()
     {
         photonView.RPC(nameof(OnDeselectedRPC), RpcTarget.All);
-        isSelected = false;
     }
     public void Activate()
     {
@@ -46,13 +46,16 @@ public class Nozzle : MonoBehaviourPun
     private void OnSelectedRPC()
     {
         transform.SetParent(null);
+        isSelected = true;
     }
 
     [PunRPC]
     private void OnDeselectedRPC()
     {
+        isSelected = false;
         transform.SetParent(nozzleOrigin);
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.Euler(Vector3.zero);
+        water.Stop();
     }
 }

@@ -3161,9 +3161,9 @@ RectTransform:
   m_Father: {fileID: 6481900556833621172}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 5, y: -50}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 74.845, y: 0}
   m_SizeDelta: {x: 0, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7230108454176499721
@@ -9529,8 +9529,6 @@ MonoBehaviour:
   - {fileID: 4486848916812755871}
   - {fileID: 3070098252307185445}
   - {fileID: 4026888544340543523}
-  - {fileID: 5752479197646769031}
-  - {fileID: 1483200834346860617}
   - {fileID: 7684461400221440301}
   - {fileID: 14762388162895803}
   - {fileID: 4058337381335320768}
@@ -12801,43 +12799,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2603756628078978093}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &7426219031866086567 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4840626358430789770, guid: 2b814d2dcf8ffea489e727cafc906a74,
-    type: 3}
-  m_PrefabInstance: {fileID: 2603756628078978093}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &5752479197646769031
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7426219031866086567}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowLayerWeightsInspector: 1
-  ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 1
-    SynchronizeType: 1
-    Name: Flex
-  - Type: 3
-    SynchronizeType: 1
-    Name: Pose
-  - Type: 1
-    SynchronizeType: 1
-    Name: Pinch
-  m_SynchronizeLayers:
-  - SynchronizeType: 1
-    LayerIndex: 0
-  - SynchronizeType: 1
-    LayerIndex: 1
-  - SynchronizeType: 1
-    LayerIndex: 2
 --- !u!1001 &2635527983371079109
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14173,43 +14134,6 @@ Animator:
     type: 3}
   m_PrefabInstance: {fileID: 6789346180032627229}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &5740927756348949223 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1266431793911562490, guid: 2233026353d7223459fb1cff827981f1,
-    type: 3}
-  m_PrefabInstance: {fileID: 6789346180032627229}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1483200834346860617
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5740927756348949223}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowLayerWeightsInspector: 1
-  ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 1
-    SynchronizeType: 1
-    Name: Flex
-  - Type: 3
-    SynchronizeType: 1
-    Name: Pose
-  - Type: 1
-    SynchronizeType: 1
-    Name: Pinch
-  m_SynchronizeLayers:
-  - SynchronizeType: 1
-    LayerIndex: 0
-  - SynchronizeType: 1
-    LayerIndex: 1
-  - SynchronizeType: 1
-    LayerIndex: 2
 --- !u!4 &5741413088175327977 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1266921798729468148, guid: 2233026353d7223459fb1cff827981f1,

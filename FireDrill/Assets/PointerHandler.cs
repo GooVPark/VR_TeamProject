@@ -13,6 +13,7 @@ public class PointerHandler : MonoBehaviourPun
     public GameObject pointStart;
 
     public XRRayInteractor interactor;
+    private XRInteractorLineVisual lineVisual;
 
     private UserType userType;
     private Vector3[] points = new Vector3[2];
@@ -24,6 +25,11 @@ public class PointerHandler : MonoBehaviourPun
         
         userType = NetworkManager.User.userType;
         line = reticle.GetComponent<LineRenderer>();
+        lineVisual = interactor.GetComponent<XRInteractorLineVisual>();
+        if (userType == UserType.Student)
+        {
+            lineVisual.reticle = null;
+        }
     }
 
     private void Update()
@@ -31,13 +37,16 @@ public class PointerHandler : MonoBehaviourPun
         if(userType == UserType.Lecture && isHovered)
         {
             Vector3 start = pointStart.transform.position;
-            photonView.RPC(nameof(DrawLineRPC), RpcTarget.All, start);
+            Vector3 end = lineVisual.reticle.transform.position;
+            photonView.RPC(nameof(DrawLineRPC), RpcTarget.All, start, end);
         }
     }
 
     [PunRPC]
-    public void DrawLineRPC(Vector3 pointStart)
+    public void DrawLineRPC(Vector3 pointStart, Vector3 pointEnd)
     {
+        reticle.transform.position = pointEnd;
+
         points[0] = pointStart;
         points[1] = reticle.transform.position;
 
