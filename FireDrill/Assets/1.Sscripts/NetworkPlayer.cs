@@ -257,6 +257,8 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
     [SerializeField] private Animator leftHandAnimator;
     [SerializeField] private Animator rightHandAnimator;
 
+    [SerializeField] private Animator genderLeftHandAnimator;
+    [SerializeField] private Animator genderRightHandAnimator;
     [SerializeField] private Animator femaleLeftHandAnimator;
     [SerializeField] private Animator femaleRightHandAnimator;
     [SerializeField] private Animator maleLeftHandAnimator;
@@ -483,8 +485,10 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
 
             userInfoUI.SetActive(false);
 
-            maleHelmet.layer = 31;
-            femaleHelmet.layer = 31;
+            maleHelmet.transform.GetChild(0).gameObject.layer = 31;
+            maleHelmet.transform.GetChild(1).gameObject.layer = 31;
+            femaleHelmet.transform.GetChild(0).gameObject.layer = 31;
+            femaleHelmet.transform.GetChild(1).gameObject.layer = 31;
             maleMesh.layer = 31;
             femaleMesh.layer = 31;
             headModel.layer = 31;
@@ -546,33 +550,20 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
             rightHandAnimator.SetFloat("Flex", rightHandAnimation.flex);
             rightHandAnimator.SetLayerWeight(2, rightHandAnimation.animator.GetLayerWeight(2));
             rightHandAnimator.SetLayerWeight(1, rightHandAnimation.animator.GetLayerWeight(1));
-
-            if (maleRightHandAnimator.gameObject.activeSelf)
-            {
-                maleRightHandAnimator.SetFloat("Flex", rightHandAnimation.flex);
-                maleRightHandAnimator.SetLayerWeight(2, rightHandAnimation.animator.GetLayerWeight(2));
-                maleRightHandAnimator.SetLayerWeight(1, rightHandAnimation.animator.GetLayerWeight(1));
-            }
-
-            if (femaleRightHandAnimator.gameObject.activeSelf)
-            {
-                femaleRightHandAnimator.SetFloat("Flex", rightHandAnimation.flex);
-                femaleRightHandAnimator.SetLayerWeight(2, rightHandAnimation.animator.GetLayerWeight(2));
-                femaleRightHandAnimator.SetLayerWeight(1, rightHandAnimation.animator.GetLayerWeight(1));
-            }
-            //          Quaternion rightWristRotation = rightHandAnimation.transform.rotation;
-            //            rightWrist.localRotation = rightWristRotation;
-
+         
+            genderRightHandAnimator.SetFloat("Flex", rightHandAnimation.flex);
+            genderRightHandAnimator.SetLayerWeight(2, rightHandAnimation.animator.GetLayerWeight(2));
+            genderRightHandAnimator.SetLayerWeight(1, rightHandAnimation.animator.GetLayerWeight(1));
         }
         else
         {
             int pose = rightHandAnimation.poseIndex;
             rightHandAnimator.SetInteger("Pose", pose);
-            if(maleRightHandAnimator.gameObject.activeSelf)
+            if (maleRightHandAnimator.gameObject.activeSelf)
             {
                 maleRightHandAnimator.SetInteger("Pose", pose);
             }
-            if(femaleRightHandAnimator.gameObject.activeSelf)
+            if (femaleRightHandAnimator.gameObject.activeSelf)
             {
                 femaleRightHandAnimator.SetInteger("Pose", pose);
             }
@@ -584,19 +575,9 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
             leftHandAnimator.SetLayerWeight(2, leftHandAnimation.animator.GetLayerWeight(2));
             leftHandAnimator.SetLayerWeight(1, leftHandAnimation.animator.GetLayerWeight(1));
 
-            if (maleLeftHandAnimator.gameObject.activeSelf)
-            {
-                maleLeftHandAnimator.SetFloat("Flex", leftHandAnimation.flex);
-                maleLeftHandAnimator.SetLayerWeight(2, leftHandAnimation.animator.GetLayerWeight(2));
-                maleLeftHandAnimator.SetLayerWeight(1, leftHandAnimation.animator.GetLayerWeight(1));
-            }
-
-            if (femaleLeftHandAnimator.gameObject.activeSelf)
-            {
-                femaleLeftHandAnimator.SetFloat("Flex", leftHandAnimation.flex);
-                femaleLeftHandAnimator.SetLayerWeight(2, leftHandAnimation.animator.GetLayerWeight(2));
-                femaleLeftHandAnimator.SetLayerWeight(1, leftHandAnimation.animator.GetLayerWeight(1));
-            }
+            genderLeftHandAnimator.SetFloat("Flex", leftHandAnimation.flex);
+            genderLeftHandAnimator.SetLayerWeight(2, leftHandAnimation.animator.GetLayerWeight(2));
+            genderLeftHandAnimator.SetLayerWeight(1, leftHandAnimation.animator.GetLayerWeight(1));
         }
         else
         {
@@ -630,6 +611,9 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
             extinguisherPivot = extinguisherPivotMale;
             
             skinnedMeshRenderer = skinnedMeshRendererMale;
+
+            genderLeftHandAnimator = maleLeftHandAnimator;
+            genderRightHandAnimator = maleRightHandAnimator;
         }
         else
         {
@@ -641,6 +625,9 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
             extinguisherPivot = extinguisherPivotFemale;
 
             skinnedMeshRenderer = skinnedMeshRendererFemale;
+
+            genderLeftHandAnimator = femaleLeftHandAnimator;
+            genderRightHandAnimator = femaleRightHandAnimator;
         }
 
         skinnedMeshRenderer.sharedMaterial = materials[value];

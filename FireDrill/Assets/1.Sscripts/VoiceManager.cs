@@ -87,9 +87,9 @@ public class VoiceManager : MonoBehaviourPunCallbacks
     private void Start()
     {
         recorder = FindObjectOfType<Recorder>();
-        acceptVoiceChatButton.onClick += AcceptVoiceChat;
-        deacceptVoiceChatButton.onClick += DeaccpetVoiceChat;
-        cancelVoiceChatButton.onClick += CancelVoiceChat;
+        //acceptVoiceChatButton.onClick += AcceptVoiceChat;
+        //deacceptVoiceChatButton.onClick += DeaccpetVoiceChat;
+        //cancelVoiceChatButton.onClick += CancelVoiceChat;
     }
 
     public void Initialize(int viewID)
@@ -136,8 +136,9 @@ public class VoiceManager : MonoBehaviourPunCallbacks
         string userName = user.name;
         voiceChatCanceledToast.message.text = $"{userName}님과의 대화가 취소되었습니다.";
 
-        NetworkManager.Instance.onVoiceChat = false;
         NetworkManager.Instance.voiceChatDisabled = true;
+        NetworkManager.Instance.onVoiceChat = false;
+
         sender = null;
         reciever = null;
     }

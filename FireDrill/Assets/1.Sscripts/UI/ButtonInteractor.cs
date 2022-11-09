@@ -15,23 +15,22 @@ public class ButtonInteractor : MonoBehaviour
 
     public UnityEvent OnClick;
 
-    public Image image;
-    public TMP_Text text;
-    public BoxCollider collider;
+    //public Image image;
+    //public TMP_Text text;
 
     public bool interactable = false;
     public bool isHovered = false;
 
-    [SerializeField] private ButtonState defaultState;
+    //[SerializeField] private ButtonState defaultState;
 
-    public Sprite disabledSprite;
-    public Sprite enabledSprite;
-    public Sprite hoverEnterSprite;
-    public Sprite hoverExitSprite;
-    public Sprite activateSprite;
-    public Sprite deactivateSprite;
+    //public Sprite disabledSprite;
+    //public Sprite enabledSprite;
+    //public Sprite hoverEnterSprite;
+    //public Sprite hoverExitSprite;
+    //public Sprite activateSprite;
+    //public Sprite deactivateSprite;
 
-    [SerializeField] private ButtonState buttonState;
+    //[SerializeField] private ButtonState buttonState;
 
     private void Start()
     {
@@ -62,43 +61,43 @@ public class ButtonInteractor : MonoBehaviour
         
     }
 
-    public void SetButtonSprite(ButtonState state)
-    {
-        Sprite sprite = null;
-        switch (state)
-        {
-            case ButtonState.Enable:
-                sprite = enabledSprite;
-                buttonState = state;
-                break;
-            case ButtonState.Disable:
-                sprite = disabledSprite;
-                buttonState = state;
-                break;
-            case ButtonState.Activate:
-                sprite = activateSprite;
-                buttonState = state;
-                break;
-            case ButtonState.Deactivate:
-                sprite = deactivateSprite;
-                buttonState = state;
-                break;
-            case ButtonState.HoverEnter:
-                sprite = hoverEnterSprite;
-                buttonState = state;
-                break;
-            case ButtonState.HoverExit:
-                SetButtonSprite(buttonState);
-                break;
-        }
+    //public void SetButtonSprite(ButtonState state)
+    //{
+    //    Sprite sprite = null;
+    //    switch (state)
+    //    {
+    //        case ButtonState.Enable:
+    //            sprite = enabledSprite;
+    //            buttonState = state;
+    //            break;
+    //        case ButtonState.Disable:
+    //            sprite = disabledSprite;
+    //            buttonState = state;
+    //            break;
+    //        case ButtonState.Activate:
+    //            sprite = activateSprite;
+    //            buttonState = state;
+    //            break;
+    //        case ButtonState.Deactivate:
+    //            sprite = deactivateSprite;
+    //            buttonState = state;
+    //            break;
+    //        case ButtonState.HoverEnter:
+    //            sprite = hoverEnterSprite;
+    //            buttonState = state;
+    //            break;
+    //        case ButtonState.HoverExit:
+    //            SetButtonSprite(buttonState);
+    //            break;
+    //    }
 
-        if (sprite == null)
-        {
+    //    if (sprite == null)
+    //    {
 
-        }
-        else
-        {
-            image.sprite = sprite;
-        }
-    }
+    //    }
+    //    else
+    //    {
+    //        image.sprite = sprite;
+    //    }
+    //}
 }

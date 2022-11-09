@@ -187,20 +187,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnClick:
     m_PersistentCalls:
-      m_Calls: []
-  image: {fileID: 588064023}
-  text: {fileID: 0}
-  collider: {fileID: 390002}
+      m_Calls:
+      - m_Target: {fileID: 1337410979}
+        m_TargetAssemblyTypeName: VoiceManager, Assembly-CSharp
+        m_MethodName: CancelVoiceChat
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   interactable: 0
   isHovered: 0
-  defaultState: 0
-  disabledSprite: {fileID: 0}
-  enabledSprite: {fileID: 0}
-  hoverEnterSprite: {fileID: 0}
-  hoverExitSprite: {fileID: 0}
-  activateSprite: {fileID: 0}
-  deactivateSprite: {fileID: 0}
-  buttonState: 0
 --- !u!114 &390004
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6836,19 +6837,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  image: {fileID: 443103824}
-  text: {fileID: 0}
-  collider: {fileID: 478669468}
   interactable: 0
   isHovered: 0
-  defaultState: 0
-  disabledSprite: {fileID: 0}
-  enabledSprite: {fileID: 0}
-  hoverEnterSprite: {fileID: 0}
-  hoverExitSprite: {fileID: 0}
-  activateSprite: {fileID: 0}
-  deactivateSprite: {fileID: 0}
-  buttonState: 0
 --- !u!114 &478669470
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7257,19 +7247,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  image: {fileID: 0}
-  text: {fileID: 0}
-  collider: {fileID: 0}
   interactable: 0
   isHovered: 0
-  defaultState: 0
-  disabledSprite: {fileID: 0}
-  enabledSprite: {fileID: 0}
-  hoverEnterSprite: {fileID: 0}
-  hoverExitSprite: {fileID: 0}
-  activateSprite: {fileID: 0}
-  deactivateSprite: {fileID: 0}
-  buttonState: 0
 --- !u!114 &492602826
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10590,20 +10569,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnClick:
     m_PersistentCalls:
-      m_Calls: []
-  image: {fileID: 1166061598}
-  text: {fileID: 0}
-  collider: {fileID: 681264666}
+      m_Calls:
+      - m_Target: {fileID: 1337410979}
+        m_TargetAssemblyTypeName: VoiceManager, Assembly-CSharp
+        m_MethodName: DeaccpetVoiceChat
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   interactable: 0
   isHovered: 0
-  defaultState: 0
-  disabledSprite: {fileID: 0}
-  enabledSprite: {fileID: 0}
-  hoverEnterSprite: {fileID: 0}
-  hoverExitSprite: {fileID: 0}
-  activateSprite: {fileID: 0}
-  deactivateSprite: {fileID: 0}
-  buttonState: 0
 --- !u!114 &681264668
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12605,20 +12585,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnClick:
     m_PersistentCalls:
-      m_Calls: []
-  image: {fileID: 1926290182}
-  text: {fileID: 0}
-  collider: {fileID: 852278317}
+      m_Calls:
+      - m_Target: {fileID: 1337410979}
+        m_TargetAssemblyTypeName: VoiceManager, Assembly-CSharp
+        m_MethodName: AcceptVoiceChat
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   interactable: 0
   isHovered: 0
-  defaultState: 0
-  disabledSprite: {fileID: 0}
-  enabledSprite: {fileID: 0}
-  hoverEnterSprite: {fileID: 0}
-  hoverExitSprite: {fileID: 0}
-  activateSprite: {fileID: 0}
-  deactivateSprite: {fileID: 0}
-  buttonState: 0
 --- !u!114 &852278319
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17275,6 +17256,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1566695565409487589, guid: 1520dfc333b67674dac667081bfe9bbf,
+        type: 3}
+      propertyPath: keyBoardType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1566695565409487589, guid: 1520dfc333b67674dac667081bfe9bbf,
+        type: 3}
+      propertyPath: maxTextCount
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1566695565409487589, guid: 1520dfc333b67674dac667081bfe9bbf,
         type: 3}
@@ -27230,19 +27221,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  image: {fileID: 45252902}
-  text: {fileID: 0}
-  collider: {fileID: 1692200536}
   interactable: 0
   isHovered: 0
-  defaultState: 0
-  disabledSprite: {fileID: 0}
-  enabledSprite: {fileID: 0}
-  hoverEnterSprite: {fileID: 0}
-  hoverExitSprite: {fileID: 0}
-  activateSprite: {fileID: 0}
-  deactivateSprite: {fileID: 0}
-  buttonState: 0
 --- !u!114 &1692200538
 MonoBehaviour:
   m_ObjectHideFlags: 0

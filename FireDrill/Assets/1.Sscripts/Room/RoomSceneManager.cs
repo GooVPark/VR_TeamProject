@@ -108,7 +108,6 @@ public class RoomSceneManager : GameManager
         Debug.Log("RoomScnenManager: Start Begin");
         NetworkManager.Instance.SetRoomNumber(roomNumber);
         NetworkManager.Instance.roomType = RoomType.Room;
-
         SetIdleMode(IdleMode.STAND);
         Debug.Log("RoomScnenManager: Start End");
     }
@@ -344,6 +343,8 @@ public class RoomSceneManager : GameManager
 
             message = $"{EventMessageType.UPDATEROOMSTATE}_{roomNumber}";
             SendEventMessage(message);
+
+            ForceExit();
         }
     }
     private void OnApplicationPause()
@@ -368,6 +369,8 @@ public class RoomSceneManager : GameManager
 
             message = $"{EventMessageType.UPDATEROOMSTATE}_{roomNumber}";
             SendEventMessage(message);
+
+            ForceExit();
         }
     }
 }

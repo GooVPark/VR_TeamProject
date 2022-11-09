@@ -23,7 +23,6 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
     private ChatClient chatClient;
     [SerializeField] private string eventServer;
 
-    ChatChannel chatChannel;
     private void Start()
     {
         Connect();
@@ -72,8 +71,6 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
         chatClient.Subscribe(new string[] { eventServer });
         chatClient.SetOnlineStatus(ChatUserStatus.Online);
         LoundgeSceneManager.Instance.isEventServerConnected = true;
-
-        Debug.Log("Connected");
     }
 
     public void DisconnectChat()
@@ -123,8 +120,9 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
             {
                 string sender = command[1];
                 string chatMessage = command[2];
+                int roomNumber = int.Parse(command[3]);
 
-                textChatManager.OnGetMessage(sender, chatMessage, NetworkManager.RoomNumber);
+                textChatManager.OnGetMessage(sender, chatMessage, roomNumber);
                 if(!NetworkManager.User.email.Equals(sender))
                 {
                     if (loundgeManager.spawnedNPCObject.ContainsKey(sender))

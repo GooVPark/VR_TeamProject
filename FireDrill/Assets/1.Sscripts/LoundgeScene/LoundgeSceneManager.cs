@@ -19,10 +19,9 @@ public class LoundgeSceneManager : GameManager
 
     public VoiceManager voiceManager;
     public EventSyncronizer eventSyncronizer;
-    public NPCManager npcManager;
     public Transform NPCTransforms;
     public SpawnPosition spawnPosition;
-    private Dictionary<string, User> usersByEmail = new Dictionary<string, User>();
+
     public Dictionary<string, LoundgeUser> spawnedNPC = new Dictionary<string, LoundgeUser>();
     public Dictionary<string, GameObject> spawnedNPCObject = new Dictionary<string, GameObject>();
 
@@ -56,7 +55,9 @@ public class LoundgeSceneManager : GameManager
 
         NetworkManager.Instance.voiceChatDisabled = true;
         NetworkManager.Instance.scoreBoardDisabled = true;
+        NetworkManager.Instance.onTextChat = false;
         NetworkManager.Instance.roomType = RoomType.Loundge;
+        NetworkManager.Instance.SetRoomNumber(roomNumber);
 
         SetIdleMode(IdleMode.STAND);
 
@@ -94,8 +95,9 @@ public class LoundgeSceneManager : GameManager
         NetworkManager.Instance.roomType = RoomType.Loundge;
         NetworkManager.Instance.megaphoneDisabled = true;
         NetworkManager.Instance.voiceChatDisabled = true;
-
+        NetworkManager.Instance.onVoiceChat = false;
         NetworkManager.Instance.hasExtingusher = false;
+        NetworkManager.User.hasExtingisher = false;
 
         string message = $"{EventMessageType.SPAWN}_{NetworkManager.User.email}";
         eventMesage?.Invoke(message);
@@ -512,16 +514,12 @@ public class LoundgeSceneManager : GameManager
         roomOptions.IsVisible = true;
         roomOptions.MaxPlayers = 0;
 
-        Debug.Log("JoinCreateRoom");
         PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, TypedLobby.Default);
-        Debug.Log("LoadLevel Room");
         PhotonNetwork.LoadLevel("Room");
     }
 
     public override void OnJoinedRoom()
     {
-        Debug.Log("Loundge: OnJoinedRoom");
-
         switch (NetworkManager.Instance.roomType)
         {
             case RoomType.Room:
@@ -531,7 +529,8 @@ public class LoundgeSceneManager : GameManager
                 spawnedNPCObject[voiceManager.sender.email].SetActive(false);
                 spawnedNPCObject[voiceManager.reciever.email].SetActive(false);
 
-                voiceChatButton.button.onClick += voiceManager.DisconnectVoiceChat;
+                voiceChatButton.button.OnClick.AddListener(() => voiceManager.DisconnectVoiceChat());
+                NetworkManager.Instance.voiceChatDisabled = false;
                 NetworkManager.Instance.onVoiceChat = true;
 
                 announcement.StopAudio();
@@ -556,7 +555,6 @@ public class LoundgeSceneManager : GameManager
             case RoomType.Room:
                 break;
             case RoomType.VoiceRoom:
-                Debug.Log("OnLeftRoom");
 
                 if(voiceManager.sender.email == NetworkManager.User.email)
                 {
@@ -577,17 +575,16 @@ public class LoundgeSceneManager : GameManager
 
                 NetworkManager.Instance.roomType = RoomType.Loundge;
                 NetworkManager.Instance.onVoiceChat = false;
+                NetworkManager.Instance.voiceChatDisabled = true;
 
                 announcement.PlayAudio();
 
-                voiceChatButton.button.onClick -= voiceManager.DisconnectVoiceChat;
+                voiceChatButton.button.OnClick.RemoveAllListeners();
 
                 foreach (string key in spawnedNPCObject.Keys)
                 {
                     spawnedNPCObject[key].GetComponent<NPCController>().SetVoiceChatState(false);
                 }
-
-                Debug.Log(PhotonNetwork.NetworkClientState);
                 break;
             case RoomType.Loundge:
                 break;

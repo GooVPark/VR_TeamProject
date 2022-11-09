@@ -38,12 +38,14 @@ public class InteractableObject : XROffsetGrabInteractable
     protected override void OnActivated(ActivateEventArgs args)
     {
         base.OnActivated(args);
-        args.interactorObject.transform.GetComponent<HandAnimationController>().SetHandPose(4);
+        Debug.Log("Extinguisher Activate");
+        args.interactorObject.transform.GetComponent<HandAnimationController>().SetHandPose(poseIndex + 1);
     }
 
     protected override void OnDeactivated(DeactivateEventArgs args)
     {
         base.OnDeactivated(args);
+        Debug.Log("Extinguisher Deactivate");
         args.interactorObject.transform.GetComponent<HandAnimationController>().SetHandPose(1);
     }
 }

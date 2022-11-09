@@ -123,8 +123,9 @@ public class EventSyncronizerRoom : MonoBehaviour, IChatClientListener
             {
                 string sender = command[1];
                 string chatMessage = command[2];
+                int roomNumber = int.Parse(command[3]);
 
-                textChatManager.OnGetMessage(sender, chatMessage, NetworkManager.RoomNumber);
+                textChatManager.OnGetMessage(sender, chatMessage, roomNumber);
             }
             if (type.Equals(EventMessageType.QUIZ.ToString()))
             {
