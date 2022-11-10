@@ -113,7 +113,7 @@ public class EventSyncronizerRoom : MonoBehaviour, IChatClientListener
 
             string message = messages[^1].ToString();
 
-            
+            Debug.Log(message);
 
             string[] command = message.Split('_');
 
@@ -130,6 +130,11 @@ public class EventSyncronizerRoom : MonoBehaviour, IChatClientListener
             if (type.Equals(EventMessageType.QUIZ.ToString()))
             {
                 scoreBoard.UpdateScoreBoard();
+            }
+            if(type.Equals(EventMessageType.FORCEEXIT.ToString()))
+            {
+                Debug.Log("Leave Room Event Message");
+                roomSceneManager.LeaveRoom();
             }
         }
     }

@@ -19,7 +19,10 @@ public class PinTrigger : MonoBehaviour
 
     public void Activate()
     {
-        GetComponent<XROffsetGrabInteractable>().enabled = true;
+        if (RoomSceneManager.Instance.RoomState.GetType() == typeof(RoomState_TrainingPin))
+        {
+            GetComponent<XROffsetGrabInteractable>().enabled = true;
+        }
     }
 
     public void Deactivate()

@@ -80,6 +80,16 @@ public class RoomState_Initialize : RoomState
             Destroy(extinguisher.gameObject);
         }
 
+        if(!NetworkManager.User.hasExtingisher)
+        {
+            FireObject[] fireObjects = FindObjectsOfType<FireObject>();
+
+            foreach (var fire in fireObjects)
+            {
+                Destroy(fire.gameObject);
+            }
+        }
+
         #endregion
 
         switch (targetRoomState)

@@ -63,6 +63,10 @@ public class TrainingManager : MonoBehaviourPunCallbacks, IPunObservable
 
         foreach (FireObject fireObject in fireObjects)
         {
+            if(fireObject == null)
+            {
+                continue;
+            }
             if (fireObject.isActiveAndEnabled)
             {
                 current += fireObject.currentDuration;

@@ -51,23 +51,7 @@ public class LoundgeSceneManager : GameManager
 
     private void Start()
     {
-        Initialize();
-
-        NetworkManager.Instance.voiceChatDisabled = true;
-        NetworkManager.Instance.scoreBoardDisabled = true;
-        NetworkManager.Instance.onTextChat = false;
-        NetworkManager.Instance.roomType = RoomType.Loundge;
-        NetworkManager.Instance.SetRoomNumber(roomNumber);
-
-        SetIdleMode(IdleMode.STAND);
-
-        InsertUserData();
-
-        //NetworkManager.Instance.PullRoomList();
-        LoadFirstPage();
-        UpdateProgressBoard();
-
-        initializer = StartCoroutine(Initializer());
+        PhotonNetwork.JoinLobby();
     }
 
     private void Update()
@@ -483,6 +467,25 @@ public class LoundgeSceneManager : GameManager
     {
         cachedRoomList.Clear();
         Debug.Log("Loundge Maanger: Joined Lobby");
+
+
+        Initialize();
+
+        NetworkManager.Instance.voiceChatDisabled = true;
+        NetworkManager.Instance.scoreBoardDisabled = true;
+        NetworkManager.Instance.onTextChat = false;
+        NetworkManager.Instance.roomType = RoomType.Loundge;
+        NetworkManager.Instance.SetRoomNumber(roomNumber);
+
+        SetIdleMode(IdleMode.STAND);
+
+        InsertUserData();
+
+        //NetworkManager.Instance.PullRoomList();
+        LoadFirstPage();
+        UpdateProgressBoard();
+
+        initializer = StartCoroutine(Initializer());
     }
 
 
@@ -532,6 +535,7 @@ public class LoundgeSceneManager : GameManager
                 voiceChatButton.button.OnClick.AddListener(() => voiceManager.DisconnectVoiceChat());
                 NetworkManager.Instance.voiceChatDisabled = false;
                 NetworkManager.Instance.onVoiceChat = true;
+                FindObjectOfType<Photon.Voice.Unity.Recorder>().TransmitEnabled = true;
 
                 announcement.StopAudio();
 
@@ -576,6 +580,7 @@ public class LoundgeSceneManager : GameManager
                 NetworkManager.Instance.roomType = RoomType.Loundge;
                 NetworkManager.Instance.onVoiceChat = false;
                 NetworkManager.Instance.voiceChatDisabled = true;
+                FindObjectOfType<Photon.Voice.Unity.Recorder>().TransmitEnabled = false;
 
                 announcement.PlayAudio();
 

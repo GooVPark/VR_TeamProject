@@ -230,6 +230,7 @@ public class RoomSceneManager : GameManager
     }
     public void LeaveRoom()
     {
+        Debug.Log("Leave Room");
         DataManager.Instance.UpdateRoomPlayerCount(NetworkManager.RoomNumber, PhotonNetwork.CurrentRoom.PlayerCount - 1);
         if (PhotonNetwork.CurrentRoom.PlayerCount <= 0)
         {
@@ -305,12 +306,12 @@ public class RoomSceneManager : GameManager
 
     public override void OnConnectedToMaster()
     {
-        PhotonNetwork.JoinLobby();
+        PhotonNetwork.LoadLevel("Loundge");
     }
 
     public override void OnJoinedLobby()
     {
-        PhotonNetwork.LoadLevel("Loundge");
+       
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
@@ -344,7 +345,9 @@ public class RoomSceneManager : GameManager
             message = $"{EventMessageType.UPDATEROOMSTATE}_{roomNumber}";
             SendEventMessage(message);
 
-            ForceExit();
+            message = $"{EventMessageType.FORCEEXIT}";
+            SendEventMessage(message);
+
         }
     }
     private void OnApplicationPause()
@@ -370,7 +373,8 @@ public class RoomSceneManager : GameManager
             message = $"{EventMessageType.UPDATEROOMSTATE}_{roomNumber}";
             SendEventMessage(message);
 
-            ForceExit();
+            message = $"{EventMessageType.FORCEEXIT}";
+            SendEventMessage(message);
         }
     }
 }
