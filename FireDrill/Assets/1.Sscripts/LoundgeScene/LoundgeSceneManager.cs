@@ -96,7 +96,11 @@ public class LoundgeSceneManager : GameManager
             UpdateRoomEnterence(i);
         }
 
-        StopCoroutine(initializer);
+        if (initializer != null)
+        {
+            StopCoroutine(initializer);
+            initializer = null;
+        }
     }
 
     public void SpawnNPC()
@@ -482,8 +486,9 @@ public class LoundgeSceneManager : GameManager
         InsertUserData();
 
         //NetworkManager.Instance.PullRoomList();
-        LoadFirstPage();
+        //LoadFirstPage();
         UpdateProgressBoard();
+
 
         initializer = StartCoroutine(Initializer());
     }
