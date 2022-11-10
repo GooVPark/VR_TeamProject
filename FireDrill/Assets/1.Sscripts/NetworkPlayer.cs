@@ -317,6 +317,9 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
         leftHandAnimation = GameObject.Find("Left Direct Interactor").GetComponent<HandAnimationController>();
         rightHandAnimation = GameObject.Find("Right Direct Interactor").GetComponent<HandAnimationController>();
 
+        rightHandAnimation.animator.SetInteger("Pose", 0);
+        leftHandAnimation.animator.SetInteger("Pose", 0);
+
         if (photonView.IsMine)
         {
             leftWrist.gameObject.SetActive(true);
