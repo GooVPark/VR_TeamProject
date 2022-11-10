@@ -468,9 +468,9 @@ public class LoundgeSceneManager : GameManager
         cachedRoomList.Clear();
         Debug.Log("Loundge Maanger: Joined Lobby");
 
-
         Initialize();
 
+        NetworkManager.Instance.inFireControl = false;
         NetworkManager.Instance.voiceChatDisabled = true;
         NetworkManager.Instance.scoreBoardDisabled = true;
         NetworkManager.Instance.onTextChat = false;

@@ -21,11 +21,82 @@ public class LogData
     }
 }
 
+[System.Serializable]
+public class User
+{
+
+    public string email;
+    public string password;
+
+    public int id;
+    public string name;
+    public UserType userType;
+    public IdleMode idleMode;
+    public string company;
+
+    public int characterNumber;
+
+    public bool isOnline;
+
+    public int trainingProgress = 0;
+    public bool hasExtingisher;
+
+    public int currentRoom = 999;
+    public int[] quizResult = new int[10];
+    public int totalScore;
+
+    public User()
+    {
+
+    }
+
+    public User(string email, string password, string name, UserType userType, string company, int id)
+    {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.userType = userType;
+        this.company = company;
+        this.id = id;
+    }
+}
+
+[System.Serializable]
+public class LoundgeUser
+{
+    public ObjectId id;
+    public string email;
+    public string name;
+    public int characterNumber;
+    public bool onRequestVoiceChat;
+    public bool onVoiceChat;
+    public UserType userType;
+
+    public LoundgeUser(User user)
+    {
+        email = user.email;
+        name = user.name;
+        characterNumber = user.characterNumber;
+        onRequestVoiceChat = false;
+        onVoiceChat = false;
+        userType = user.userType;
+    }
+}
+
+[System.Serializable]
+public class ToastJson
+{
+    public ObjectId _id;
+    public string code;
+    public string text;
+    public string type;
+}
+
 public class DataManager : MonoBehaviour
 {
     public bool writeLog = false;
     public static DataManager Instance;
-    public TestDataManager testDataManager;
+    //public TestDataManager testDataManager;
 
     MongoClient client;
     IMongoDatabase noticeBoardDatabase;
@@ -52,8 +123,8 @@ public class DataManager : MonoBehaviour
     IMongoDatabase eventLogDatabase;
     IMongoCollection<LogData> eventLogCollection;
 
-    private static UserTable userTable;
-    public static UserTable UserTable { get => userTable; }
+    //private static UserTable userTable;
+    //public static UserTable UserTable { get => userTable; }
 
     
 
@@ -69,7 +140,7 @@ public class DataManager : MonoBehaviour
             Destroy(Instance.gameObject);
         }
         
-        userTable = testDataManager.GetUserTable();
+        //userTable = testDataManager.GetUserTable();
 
 
         DebugManager.instance.enableRuntimeUI = false;
@@ -100,8 +171,8 @@ public class DataManager : MonoBehaviour
         eventLogDatabase = client.GetDatabase("EventData");
         eventLogCollection = eventLogDatabase.GetCollection<LogData>("EventLog");
         
-        GetAllToast();
-        GetQuizDatabase();
+        //GetAllToast();
+        //GetQuizDatabase();
     }
 
     #region Log
@@ -132,7 +203,6 @@ public class DataManager : MonoBehaviour
             accountCollection.UpdateOne(filter, update);
         }
     }
-
     public void SetOffline(string email)
     {
         if (IsExistID(email))
@@ -143,15 +213,6 @@ public class DataManager : MonoBehaviour
             accountCollection.UpdateOne(filter, update);
         }
     }
-
-    public int GetUserCount()
-    {
-        BsonDocument bson = new BsonDocument { };
-
-        return accountCollection.Find(bson).ToList().Count;
-    }
-
-
     public bool IsExistID(string value)
     {
         BsonDocument bson = new BsonDocument { { "email", value } };
@@ -159,7 +220,6 @@ public class DataManager : MonoBehaviour
 
         return accounts.Count > 0;
     }
-
     public bool IsExistAccount(string email, string password, out User user)
     {
         BsonDocument bson = new BsonDocument { { "email", email }, { "password", password} };
@@ -182,7 +242,6 @@ public class DataManager : MonoBehaviour
             return false;
         }
     }
-
     public void InsertMember(User member)
     {
         Debug.Log("InsertMember");
@@ -248,7 +307,6 @@ public class DataManager : MonoBehaviour
 
         return roomDatas;
     }
-
     public void UpdateRoomPlayerCount(int number, int count)
     {
         var filter = Builders<RoomData>.Filter.Eq("roomNumber", number);
@@ -256,7 +314,6 @@ public class DataManager : MonoBehaviour
         roomCollection.UpdateOne(filter, update);
 
     }
-
     public void UpdateRoomProgress(int number, int progress)
     {
         var filter = Builders<RoomData>.Filter.Eq("roomNumber", number);
@@ -295,7 +352,6 @@ public class DataManager : MonoBehaviour
 
         roomCollection.UpdateOne(filter, update);
     }
-
     public bool GetRoomProgressState(int roomNumber)
     {
         List<RoomData> roomDatas = new List<RoomData>();
@@ -312,7 +368,6 @@ public class DataManager : MonoBehaviour
             return false;
         }
     }
-
     public RoomData GetRoomData(int roomNumber)
     {
         List<RoomData> roomDatas = new List<RoomData>();
@@ -328,19 +383,18 @@ public class DataManager : MonoBehaviour
 
     #region Quiz
 
-    public Dictionary<int, QuizJson> quizsByCode = new Dictionary<int, QuizJson>();
+    //public Dictionary<int, QuizJson> quizsByCode = new Dictionary<int, QuizJson>();
+    //public void GetQuizDatabase()
+    //{
+    //    BsonDocument bson = new BsonDocument { };
+    //    List<QuizJson> quizJsons = new List<QuizJson>();
+    //    quizJsons = selectionQuizCollection.Find(bson).ToList();
 
-    public void GetQuizDatabase()
-    {
-        BsonDocument bson = new BsonDocument { };
-        List<QuizJson> quizJsons = new List<QuizJson>();
-        quizJsons = selectionQuizCollection.Find(bson).ToList();
-
-        foreach (QuizJson quiz in quizJsons)
-        {
-            quizsByCode.Add(quiz.code, quiz);
-        }
-    }
+    //    foreach (QuizJson quiz in quizJsons)
+    //    {
+    //        quizsByCode.Add(quiz.code, quiz);
+    //    }
+    //}
 
     public void InitializeQuizScore(string email)
     {
@@ -349,7 +403,6 @@ public class DataManager : MonoBehaviour
 
         accountCollection.UpdateOne(filter, update);
     }
-
     public void SetQuizResult(string email, int result, int code)
     {
         var filter = Builders<User>.Filter.Eq("email", email);
@@ -363,7 +416,6 @@ public class DataManager : MonoBehaviour
 
         accountCollection.UpdateOne(filter, update);
     }
-
     public int GetTotalScore(string email)
     {
         var filter = Builders<User>.Filter.Eq("email", email);
@@ -384,33 +436,15 @@ public class DataManager : MonoBehaviour
         return total;
     }
 
-    public void GetScoreBoard()
-    {
-
-    }
-
-    public List<QuizJson> GetQuizListByType(string type)
-    {
-        IMongoCollection<QuizJson> quizCollection = quizDatabase.GetCollection<QuizJson>(type);
-        BsonDocument bson = new BsonDocument { };
-        List<QuizJson> quizJsons = new List<QuizJson>();
-
-        return quizCollection.Find(bson).ToList();
-    }
-
     #endregion
 
     #region User
 
-    public User FindUserByEmail(string email)
-    {
-        if (!IsExistID(email)) return null;
-
-        List<User> users = accountCollection.Find(x => x.email == email).ToList();
-
-        return users[0];
-    }
-
+    /// <summary>
+    /// 로컬 유저가 현재 속해있는 방의 번호를 업데이트 합니다.
+    /// </summary>
+    /// <param name="email"></param>
+    /// <param name="number"></param>
     public void UpdateCurrentRoom(string email, int number)
     {
         var filter = Builders<User>.Filter.Eq("email", email);
@@ -418,20 +452,18 @@ public class DataManager : MonoBehaviour
 
         accountCollection.UpdateOne(filter, update);
     }
-
+    /// <summary>
+    /// 룸의 유저 목록을 가져옵니다.
+    /// 유저 데이터베이스에서 지정된 방번호와 일치하는 유저의 리스트를 불러옵니다.
+    /// 라운지의 룸 넘버는 999입니다. 이후 룸 1번은 0번부터 시작합니다.
+    /// </summary>
+    /// <param name="roomNumber"></param>
+    /// <returns></returns>
     public List<User> GetUsersListInRoom(int roomNumber)
     {
         var filter = Builders<User>.Filter.Eq("currentRoom", roomNumber);
 
         return accountCollection.Find(filter).ToList();
-    }
-
-    public void UpdateExtingusher(string email, bool value)
-    {
-        var filter = Builders<User>.Filter.Eq("email", email);
-        var update = Builders<User>.Update.Set("hasExtingisher", value);
-
-        accountCollection.UpdateOne(filter, update);
     }
 
     public void UpdateUserCharacter(string email, int value)
@@ -476,8 +508,25 @@ public class DataManager : MonoBehaviour
 
     #region Lobby
 
+    public bool FindLoundgeUser(string email)
+    {
+        var filter = Builders<LoundgeUser>.Filter.Eq("email", email);
+        var loundgeUsers = loundgeUsercollection.Find(filter).ToList();
+
+        if(loundgeUsers.Count > 0)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     public void InsertLobbyUser(User user)
     {
+        if(FindLoundgeUser(user.email))
+        {
+            return;
+        }
         LoundgeUser loundgeUser = new LoundgeUser(user);
         NetworkManager.Instance.SetLoundgeUser(loundgeUser);
         loundgeUsercollection.InsertOne(loundgeUser);
