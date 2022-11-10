@@ -5869,7 +5869,6 @@ MonoBehaviour:
   - {fileID: 0}
   voiceManager: {fileID: 1337410979}
   eventSyncronizer: {fileID: 438715284}
-  npcManager: {fileID: 15263818}
   NPCTransforms: {fileID: 97536147}
   spawnPosition: {fileID: 34262442}
   npcPrefab: {fileID: 957752976305956935, guid: b05ba968892e28d41b00d6c65fa16310,
@@ -7383,7 +7382,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 56ce381161883c94ba7929178ab70cbb, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -25249,7 +25248,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 56ce381161883c94ba7929178ab70cbb, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -28884,7 +28883,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 56ce381161883c94ba7929178ab70cbb, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -29191,7 +29190,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 56ce381161883c94ba7929178ab70cbb, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -32821,7 +32820,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 56ce381161883c94ba7929178ab70cbb, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -34451,6 +34450,11 @@ PrefabInstance:
       propertyPath: m_ActivateActionValue.m_UseReference
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1140094295753431930, guid: 496be6ecd27dd9e418400be71cbea294,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 56ce381161883c94ba7929178ab70cbb, type: 2}
     - target: {fileID: 1140094295753431931, guid: 496be6ecd27dd9e418400be71cbea294,
         type: 3}
       propertyPath: m_AllowHoveredActivate
@@ -35788,6 +35792,11 @@ PrefabInstance:
       propertyPath: controllerGuide
       value: 
       objectReference: {fileID: 1270174876}
+    - target: {fileID: 2748724960196717622, guid: 3d47939297531f74e907681d3df38bb1,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: 56ce381161883c94ba7929178ab70cbb, type: 2}
     - target: {fileID: 5940303521003543620, guid: 3d47939297531f74e907681d3df38bb1,
         type: 3}
       propertyPath: m_Name
@@ -36367,6 +36376,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6831650745595561627, guid: ab7346c8d8d75ef448174fbc1b04b50b,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 56ce381161883c94ba7929178ab70cbb, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ab7346c8d8d75ef448174fbc1b04b50b, type: 3}
 --- !u!224 &6080631654766197890
