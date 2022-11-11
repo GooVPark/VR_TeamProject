@@ -227,6 +227,7 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
             password = signInPassword.text,
             name = signInName.text,
             userType = UserType.Student,
+            //_id = DataManager.Instance.GetUserCount() + 100000
         };
 
         Debug.Log("Insert Request");

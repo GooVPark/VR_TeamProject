@@ -28,7 +28,7 @@ public class User
     public string email;
     public string password;
 
-    public int id;
+    public ObjectId _id;
     public string name;
     public UserType userType;
     public IdleMode idleMode;
@@ -57,14 +57,14 @@ public class User
         this.name = name;
         this.userType = userType;
         this.company = company;
-        this.id = id;
+        //this._id = id;
     }
 }
 
 [System.Serializable]
 public class LoundgeUser
 {
-    public ObjectId id;
+    public ObjectId _id;
     public string email;
     public string name;
     public int characterNumber;
@@ -94,6 +94,7 @@ public class ToastJson
 
 public class DataManager : MonoBehaviour
 {
+    public bool testBuild = false;
     public bool writeLog = false;
     public static DataManager Instance;
     //public TestDataManager testDataManager;
@@ -151,13 +152,28 @@ public class DataManager : MonoBehaviour
         client = new MongoClient("mongodb+srv://firedrillMember:member11@cluster0.pt8thqp.mongodb.net/?retryWrites=true&w=majority");
 
         userAccountDatabase = client.GetDatabase("UserAccount");
-        accountCollection = userAccountDatabase.GetCollection<User>("Accounts");
+
+        if (testBuild)
+        {
+            accountCollection = userAccountDatabase.GetCollection<User>("UserAccountsTest");
+        }
+        else
+        {
+            accountCollection = userAccountDatabase.GetCollection<User>("UserAccounts");
+        }
 
         noticeBoardDatabase = client.GetDatabase("NoticeBoard");
         postCollection = noticeBoardDatabase.GetCollection<Post>("Posts");
 
         roomDatabase = client.GetDatabase("RoomDatabase");
-        roomCollection = roomDatabase.GetCollection<RoomData>("RoomInfo");
+        if (testBuild)
+        {
+            roomCollection = roomDatabase.GetCollection<RoomData>("RoomInfoTest");
+        }
+        else
+        {
+            roomCollection = roomDatabase.GetCollection<RoomData>("RoomInfo");
+        }
         
         textDatabase = client.GetDatabase("TextDatabase");
         toastCollection = textDatabase.GetCollection<ToastJson>("Toasts");
@@ -166,7 +182,14 @@ public class DataManager : MonoBehaviour
         selectionQuizCollection = quizDatabase.GetCollection<QuizJson>("Selection");
 
         lobbyDatabase = client.GetDatabase("LobbyData");
-        loundgeUsercollection = lobbyDatabase.GetCollection<LoundgeUser>("MainLoundge");
+        if (testBuild)
+        {
+            loundgeUsercollection = lobbyDatabase.GetCollection<LoundgeUser>("LoundgeTest");
+        }
+        else
+        {
+            loundgeUsercollection = lobbyDatabase.GetCollection<LoundgeUser>("Loundge");
+        }
 
         eventLogDatabase = client.GetDatabase("EventData");
         eventLogCollection = eventLogDatabase.GetCollection<LogData>("EventLog");
@@ -192,6 +215,12 @@ public class DataManager : MonoBehaviour
     #endregion
 
     #region Login
+    public int GetUserCount()
+    {
+        BsonDocument bson = new BsonDocument { };
+
+        return accountCollection.Find(bson).ToList().Count;
+    }
 
     public void SetOnline(string email)
     {

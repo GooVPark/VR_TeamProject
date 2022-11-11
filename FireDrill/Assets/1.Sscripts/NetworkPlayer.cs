@@ -325,8 +325,11 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
 
         if (photonView.IsMine)
         {
-            leftWrist.gameObject.SetActive(true);
-            rightWrist.gameObject.SetActive(true);
+            if(NetworkManager.Instance.roomType == RoomType.Room)
+            {
+                leftWrist.gameObject.SetActive(true);
+                rightWrist.gameObject.SetActive(true);
+            }
 
             interactable.enabled = false;
         }
@@ -517,6 +520,11 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
         //requestVoiceChatButton.onClick.AddListener(() => LoundgeSceneManager.Instance.RequsetVoiceChat(NetworkManager.User.id, UserID));
     }
 
+    private void OnDestroy()
+    {
+        FindObjectOfType<TextChatManager>().sendChatMessage = null;
+    }
+
     [PunRPC]
     public void InitializeRPC()
     {
@@ -680,6 +688,7 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
         if (popChat != null)
         {
             StopCoroutine(popChat);
+            popChat = null;
         }
         popChat = StartCoroutine(PopChat(message));
 

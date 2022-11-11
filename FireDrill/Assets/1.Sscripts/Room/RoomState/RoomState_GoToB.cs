@@ -31,6 +31,7 @@ public class RoomState_GoToB : RoomState
         base.OnStateEnter();
         classObject.SetActive(false);
         quizObject.SetActive(true);
+        quizObject.GetComponent<QuizObjectManager>().ClearQuizObject();
         eventArea.gameObject.SetActive(true);
         toast.gameObject.SetActive(true);
 

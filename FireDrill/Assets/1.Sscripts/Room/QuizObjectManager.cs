@@ -28,6 +28,14 @@ public class QuizObjectManager : MonoBehaviourPun
 
     }
 
+    public void ClearQuizObject()
+    {
+        foreach(var quiz in quizObjects)
+        {
+            quiz.Initialize();
+        }
+    }
+
     public List<int> GetRandomNumbers(int maxCount)
     {
         List<int> numbers = new List<int>();

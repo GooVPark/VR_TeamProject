@@ -48,6 +48,6 @@ public class QuizView : View
 
     public void Submit(int index)
     {
-        QuizManager.Instance.SubmitAnswer(NetworkManager.User.id, currentQuizIndex, index);
+        //QuizManager.Instance.SubmitAnswer(NetworkManager.User.id, currentQuizIndex, index);
     }
 }

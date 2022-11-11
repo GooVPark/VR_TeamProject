@@ -188,7 +188,7 @@ public class LoundgeSceneManager : GameManager
 
     public void LeaveVoiceChatRoom()
     {
-        PhotonNetwork.LeaveRoom();
+        PhotonNetwork.LeaveRoom();   
     }
 
     public LoundgeUser GetLoundgeUser(string email)
