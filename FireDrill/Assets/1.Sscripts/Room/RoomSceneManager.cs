@@ -39,7 +39,6 @@ public class RoomSceneManager : GameManager
 
     public static RoomSceneManager Instance;
 
-    [SerializeField] private PDFViewer pdfViewr;
     [SerializeField] private Button nextPage;
     [SerializeField] private Button prevPage;
 
@@ -48,6 +47,7 @@ public class RoomSceneManager : GameManager
 
     [SerializeField] private GameObject scoreBoardUI;
     [SerializeField] private ScoreUI[] scoureRows;
+    [SerializeField] private SimplePDFViwer pdfViwer;
 
     private float elapsedTime = 1f;
     private float interval = 1f;
@@ -186,16 +186,6 @@ public class RoomSceneManager : GameManager
         return playerCount >= requiredPlayer;
     }
 
-    public void NextPage()
-    {
-        pdfViewr.GoToNextPage();
-    }
-
-    public void PrevPage()
-    {
-        pdfViewr.GoToPreviousPage();
-    }
-
     public override void OnJoinedRoom()
     {
         Initialize();
@@ -320,6 +310,16 @@ public class RoomSceneManager : GameManager
         {
             ((GameObject)PhotonNetwork.LocalPlayer.TagObject).GetComponent<NetworkPlayer>().InvokeProperties();
         }
+    }
+
+    public void NextPage()
+    {
+        pdfViwer.NextPage();
+    }
+
+    public void PrevPage()
+    {
+        pdfViwer.PrevPage();
     }
 
     private void OnApplicationQuit()

@@ -130,11 +130,11 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
     {
         if (value)
         {
-            megaphoneEnabled.SetActive(true);
+            megaphoneIcon.gameObject.SetActive(true);
         }
         else
         {
-            megaphoneEnabled.SetActive(false);
+            megaphoneIcon.gameObject.SetActive(false);
         }
     }
 
@@ -146,11 +146,11 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
         onPersonalChat = value;
         if (value)
         {
-            personalVoice.SetActive(true);
+            //personalVoice.SetActive(true);
         }
         else
         {
-            personalVoice.SetActive(false);
+            //personalVoice.SetActive(false);
         }
     }
 
@@ -221,17 +221,6 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
     public GameObject extinguisherDisabled;
     [Space(5)]
 
-    [Header("Voice Chat Icons")]
-    public GameObject voiceChatDisabled;
-    public GameObject voiceChatEnabled;
-    public GameObject voiceChatHoverd;
-    public GameObject voiceChatOn;
-
-    public GameObject personalVoice;
-    [Space(5)]
-
-    [Header("Megaphotn Icon")]
-    public GameObject megaphoneEnabled;
     [Space(5)]
 
     [SerializeField] private ActionBasedController leftController;
@@ -764,7 +753,7 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
         audioSource.SetCustomCurve(AudioSourceCurveType.CustomRolloff, megaphoneAudioCurve);
 
         megaphoneIcon.gameObject.SetActive(true);
-        megaphoneEnabled.SetActive(true);
+        //megaphoneEnabled.SetActive(true);
 
     }
 
@@ -780,7 +769,7 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
         audioSource.SetCustomCurve(AudioSourceCurveType.CustomRolloff, voiceAudioCurve);
 
         megaphoneIcon.gameObject.SetActive(false);
-        megaphoneEnabled.SetActive(false);
+        //megaphoneEnabled.SetActive(false);
     }
 
     #endregion

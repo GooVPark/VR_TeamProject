@@ -20,8 +20,6 @@ public class RoomState_Initialize : RoomState
     public GameObject npc;
     [Space(5)]
 
-    [Header("Area A")]
-    public Paroxe.PdfRenderer.PDFViewer view;
     [Header("Area B")]
     public GameObject dummyExtinguisher;
 
@@ -60,7 +58,6 @@ public class RoomState_Initialize : RoomState
 
         #region Area A Initizlize
 
-        view.CurrentPageIndex = 0;
         
         #endregion
 

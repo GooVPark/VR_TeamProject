@@ -66,7 +66,7 @@ public class LoundgeSceneManager : GameManager
     private Coroutine initializer;
     private IEnumerator Initializer()
     {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(0.3f);
+        WaitForSeconds waitForSeconds = new WaitForSeconds(0.1f);
         while (!isOnline || !isEventServerConnected)
         {
             isOnline = DataManager.Instance.FindLobbyUser(NetworkManager.User);
@@ -106,9 +106,9 @@ public class LoundgeSceneManager : GameManager
     public void SpawnNPC()
     {
         List<LoundgeUser> loundgeUsers = DataManager.Instance.GetLoundgeUsers();
-        foreach(LoundgeUser loundgeUser in loundgeUsers)
+        foreach (LoundgeUser loundgeUser in loundgeUsers)
         {
-            if(!spawnedNPC.ContainsKey(loundgeUser.email))
+            if (!spawnedNPC.ContainsKey(loundgeUser.email))
             {
                 spawnedNPC.Add(loundgeUser.email, loundgeUser);
 
@@ -121,7 +121,7 @@ public class LoundgeSceneManager : GameManager
                 npc.Initialize(loundgeUser);
                 npc.eventMessage += eventSyncronizer.OnSendMessage;
 
-                if(NetworkManager.Instance.onVoiceChat)
+                if (NetworkManager.Instance.onVoiceChat)
                 {
                     npc.senderIsOnVoiceChat = true;
                 }

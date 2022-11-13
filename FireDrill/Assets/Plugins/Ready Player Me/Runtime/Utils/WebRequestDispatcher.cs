@@ -95,7 +95,7 @@ namespace ReadyPlayerMe
                     var downloadHandler = new DownloadHandlerFile(path);
                     downloadHandler.removeFileOnAbort = true;
                     request.downloadHandler = downloadHandler;
-                    
+
                     foreach (var header in CommonHeaders.GetRequestHeaders())
                     {
                         request.SetRequestHeader(header.Key, header.Value);

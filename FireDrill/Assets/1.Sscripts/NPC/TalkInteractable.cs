@@ -24,8 +24,8 @@ public class TalkInteractable : MonoBehaviour
         if (other.CompareTag("NPC"))
         {
             interlocutor = other.GetComponentInParent<AIController>();
-            if (interlocutor.status == AIController.Status.Talk ||
-                self.status == AIController.Status.Talk)
+            if (interlocutor.currentBehaviour == BehaviourState.Talk ||
+                self.currentBehaviour == BehaviourState.Talk)
                 return;
             if (rand.NextDouble() > 0.5f)
             {
