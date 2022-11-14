@@ -314,10 +314,20 @@ public class RoomSceneManager : GameManager
 
     public void NextPage()
     {
+        photonView.RPC(nameof(NextPageRPC), RpcTarget.All);
+    }
+    [PunRPC]
+    public void NextPageRPC()
+    {
         pdfViwer.NextPage();
     }
 
     public void PrevPage()
+    {
+        photonView.RPC(nameof(PrevPageRPC), RpcTarget.All);
+    }
+    [PunRPC]
+    public void PrevPageRPC()
     {
         pdfViwer.PrevPage();
     }

@@ -17,9 +17,9 @@ MonoBehaviour:
     AppIdFusion: 
     AppIdChat: fcd1c493-22ad-4a14-9b5e-c037f4361516
     AppIdVoice: 5b5d6ea3-13f5-4db4-a521-df6efb774deb
-    AppVersion: 0.0.1
+    AppVersion: 1
     UseNameServer: 1
-    FixedRegion: kr
+    FixedRegion: 
     Server: 
     Port: 0
     ProxyServer: 
@@ -28,109 +28,78 @@ MonoBehaviour:
     AuthMode: 0
     EnableLobbyStatistics: 0
     NetworkLogging: 1
-  DevRegion: kr
+  DevRegion: 
   PunLogging: 0
   EnableSupportLogger: 0
   RunInBackground: 1
   StartInOfflineMode: 0
   RpcList:
-  - ClickRpc
-  - DestroyRpc
-  - DestroySpaceship
-  - Fire
-  - RespawnSpaceship
+  - AddFireObject
+  - AddPlayerCount
   - CantHearYou
   - ChangeColour
-  - HeresWhy
-  - SendSelectedVideoRPC
-  - SendSelectedQuizRPC
-  - SubmitAnswerRPC
-  - InitializeRPC
-  - SetUserNameRPC
-  - SendPlayerData
-  - SetUserLevelRPC
   - ChatRPC
-  - OnSendChatMessageRPC
-  - RequestP2PVoiceChat
-  - RequestP2PVoiceChatRPC
-  - RequestVoiceChatRPC
-  - AcceptVoiceChatRPC
-  - DeacceptVoiceChatRPC
-  - RequsetVoiceChatRPC
-  - SetUserIDRPC
-  - DisconnectVoiceChatRPC
-  - SetOnVoiceChatRPC
-  - SendTextChatRPC
-  - PullRoomListRPC
-  - StartClassRPC
-  - ClassStartRPC
   - ClassEndRPC
-  - NextPageRPC
-  - PrevPageRPC
-  - StartQuizRPC
-  - ShowQuizResultRPC
-  - AddPlayerCount
-  - SetState
-  - SetStateRPC
-  - OnQuizStartRPC
-  - StartTrainingRPC
-  - EventTriggerRPC
-  - SetHasExtinguisher
-  - SetOnMegaPhoneRPC
-  - TurnOffAllMics
-  - SyncFireObjectRPC
-  - OnExtinguisherRPC
-  - ShowExtinguisherRPC
-  - SpreadRPC
+  - ClassStartRPC
+  - ClickRpc
   - ControlFire
-  - ForceStartRPC
-  - VoiceOnRPC
-  - VoiceOffRPC
-  - MegaPhoneOffRPC
-  - MegaphoneOnRPC
-  - MegaphoneOffRPC
-  - SetProgressGaugeRPC
-  - LeaveRoomRPC
-  - NextStateRPC
-  - Timer
-  - SetParent
-  - SetCharacterNumber
-  - OnSelectRPC
-  - OnSendRPC
-  - OnRecieveRPC
-  - OnRequestPrivateVoiceChatRPC
-  - SetVoiceChatState
-  - ResponeVoiceChatRPC
-  - OnResponePrivateVoiceChatRPC
-  - OnCanceledVoiceChatRPC
-  - RequestCancelVoiceChatRPC
-  - ResponeCancelVoiceChatRPC
-  - CancelVoiceChatRPC
-  - OnSelectedMRPlayerRPC
-  - SetRoomState
-  - SetCurrentCharacterRPC
-  - OffExtinguisherRPC
+  - DestroyRpc
+  - DestroySpaceship
+  - DrawLineRPC
+  - EventTriggerRPC
+  - Fire
   - ForceExitRPC
-  - SetQuizRPC
-  - SyncPosition
-  - SetKinemaicRPC
-  - SetKinematicRPC
-  - OnSelectedRPC
-  - SetOnPersonalChatRPC
-  - OnDeselectedRPC
-  - SetScoreRPC
+  - ForceStartRPC
+  - HeresWhy
+  - InitializeRPC
   - LeaveALLRPC
+  - LeaveRoomRPC
+  - MegaphoneOffRPC
+  - MegaphoneOnRPC
+  - NextPageRPC
+  - NextStateRPC
+  - OffExtinguisherRPC
+  - OnDeselectedRPC
+  - OnExtinguisherRPC
+  - OnHoverEnteredRPC
+  - OnHoverExitedRPC
+  - OnQuizStartRPC
+  - OnSelectedMRPlayerRPC
+  - OnSelectedRPC
+  - OnSendChatMessageRPC
+  - PrevPageRPC
+  - RespawnSpaceship
+  - SendSelectedQuizRPC
+  - SendSelectedVideoRPC
+  - SetCurrentCharacterRPC
+  - SetHasExtinguisher
   - SetLevelARPC
   - SetLevelBRPC
   - SetLevelCRPC
-  - OnHoverExited
-  - OnHoverEnteredRPC
-  - OnHoverExitedRPC
-  - DrawLineRPC
+  - SetOnMegaPhoneRPC
+  - SetOnPersonalChatRPC
+  - SetOnVoiceChatRPC
+  - SetParent
+  - SetProgressGaugeRPC
+  - SetQuizRPC
   - SetQuizScoreRPC
-  - AddFireObject
-  - SpawnFire
-  - SpawnFireRPC
+  - SetRoomState
+  - SetScoreRPC
+  - SetState
+  - SetStateRPC
+  - SetUserIDRPC
+  - SetUserLevelRPC
+  - SetUserNameRPC
+  - ShowExtinguisherRPC
+  - ShowQuizResultRPC
+  - SpreadRPC
+  - StartQuizRPC
+  - StartTrainingRPC
+  - SubmitAnswerRPC
+  - SyncPosition
+  - Timer
+  - VoiceOffRPC
+  - VoiceOnRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
-  DevRegionSetOnce: 1
+  DevRegionSetOnce: 0

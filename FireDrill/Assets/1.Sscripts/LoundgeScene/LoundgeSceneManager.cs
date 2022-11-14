@@ -478,6 +478,7 @@ public class LoundgeSceneManager : GameManager
         NetworkManager.Instance.voiceChatDisabled = true;
         NetworkManager.Instance.scoreBoardDisabled = true;
         NetworkManager.Instance.onTextChat = false;
+        DisableTextChat();
         NetworkManager.Instance.roomType = RoomType.Loundge;
         NetworkManager.Instance.SetRoomNumber(roomNumber);
 
@@ -540,7 +541,11 @@ public class LoundgeSceneManager : GameManager
                 voiceChatButton.button.OnClick.AddListener(() => voiceManager.DisconnectVoiceChat());
                 NetworkManager.Instance.voiceChatDisabled = false;
                 NetworkManager.Instance.onVoiceChat = true;
+                
                 FindObjectOfType<Photon.Voice.Unity.Recorder>().TransmitEnabled = true;
+
+                NetworkManager.Instance.onTextChat = false;
+                DisableTextChat();
 
                 announcement.StopAudio();
 
@@ -586,6 +591,9 @@ public class LoundgeSceneManager : GameManager
                 NetworkManager.Instance.onVoiceChat = false;
                 NetworkManager.Instance.voiceChatDisabled = true;
                 FindObjectOfType<Photon.Voice.Unity.Recorder>().TransmitEnabled = false;
+
+                NetworkManager.Instance.onTextChat = false;
+                DisableTextChat();
 
                 announcement.PlayAudio();
 
