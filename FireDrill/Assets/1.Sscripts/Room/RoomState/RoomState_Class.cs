@@ -36,8 +36,10 @@ public class RoomState_Class : RoomState
         base.OnStateEnter();
 
         //모든 유저의 보이스챗과 텍스트 챗을 사용 불가로
-        voiceChat.button.onClick -= roomSceneManager.ToggleVoiceChat;
-        voiceChat.button.onClick += MicDisabled;
+        //voiceChat.button.onClick -= roomSceneManager.ToggleVoiceChat;
+        voiceChat.button.OnClick.RemoveAllListeners();
+        //voiceChat.button.onClick += MicDisabled;
+        voiceChat.button.OnClick.AddListener(() => MicDisabled());
 
         //textChat.button.onClick -= roomSceneManager.ToggleTextChat;
 
@@ -53,7 +55,8 @@ public class RoomState_Class : RoomState
             currentToast = lectureToast.gameObject;
             lectureToast.gameObject.SetActive(true);
             roomSceneManager.MegaphoneOn();
-            megaphone.button.onClick += roomSceneManager.MegaphoneToggle;
+            //megaphone.button.onClick += roomSceneManager.MegaphoneToggle;
+            megaphone.button.OnClick.AddListener(() => roomSceneManager.MegaphoneToggle());
         }
         if(NetworkManager.User.userType == UserType.Student)
         {
@@ -68,8 +71,12 @@ public class RoomState_Class : RoomState
         //voiceChat.UpdateState(ButtonState.Deactivate);
         NetworkManager.Instance.voiceChatDisabled = false;
         NetworkManager.Instance.onVoiceChat = false;
-        voiceChat.button.onClick += roomSceneManager.ToggleVoiceChat;
-        voiceChat.button.onClick -= MicDisabled;
+        
+        //voiceChat.button.onClick += roomSceneManager.ToggleVoiceChat;
+        //voiceChat.button.onClick -= MicDisabled;
+
+        voiceChat.button.OnClick.RemoveAllListeners();
+        voiceChat.button.OnClick.AddListener(() => roomSceneManager.ToggleVoiceChat());
 
         //textChat.UpdateState(ButtonState.Deactivate);
         //textChat.button.onClick += roomSceneManager.ToggleTextChat;

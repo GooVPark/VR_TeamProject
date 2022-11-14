@@ -43,7 +43,7 @@ public class TextChatManager : MonoBehaviour
             return;
         }
 
-        string message = $"{EventMessageType.TEXTCHAT}_{NetworkManager.User.name}_{inputField.text}={colorNumber}";
+        string message = $"{EventMessageType.TEXTCHAT}_{NetworkManager.User.name}_{inputField.text}={colorNumber}_{NetworkManager.RoomNumber}";
         eventMessage?.Invoke(message);
         sendChatMessage?.Invoke(inputField.text);
     }
@@ -63,10 +63,8 @@ public class TextChatManager : MonoBehaviour
 
     public void OnGetMessage(string senders, string message, int roomNumber)
     {
-        Debug.Log("OnGetMessage");
         if (NetworkManager.RoomNumber == roomNumber)
         {
-            Debug.Log("OnGetMessage Success");
             string[] command = message.Split('=');
             string chatMessage = $"<color=#{ColorToStr(colorList[int.Parse(command[1]) % colorList.Count])}><b>{senders}</b>\n{command[0]}</color>\n";
             chatList[0].text += chatMessage;

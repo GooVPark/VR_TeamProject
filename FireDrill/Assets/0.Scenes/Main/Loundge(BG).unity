@@ -97,8 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000000, guid: b4497484d7f52ba468014bfc43ac4d16,
-    type: 2}
+  m_LightingDataAsset: {fileID: 0}
   m_LightingSettings: {fileID: 4890085278179872738, guid: 0f897ff8db3c45445bb179a129af6785,
     type: 2}
 --- !u!196 &4
@@ -188,19 +187,8 @@ MonoBehaviour:
   OnClick:
     m_PersistentCalls:
       m_Calls: []
-  image: {fileID: 588064023}
-  text: {fileID: 0}
-  collider: {fileID: 390002}
   interactable: 0
   isHovered: 0
-  defaultState: 0
-  disabledSprite: {fileID: 0}
-  enabledSprite: {fileID: 0}
-  hoverEnterSprite: {fileID: 0}
-  hoverExitSprite: {fileID: 0}
-  activateSprite: {fileID: 0}
-  deactivateSprite: {fileID: 0}
-  buttonState: 0
 --- !u!114 &390004
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2398,19 +2386,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  image: {fileID: 443103824}
-  text: {fileID: 0}
-  collider: {fileID: 478669468}
   interactable: 0
   isHovered: 0
-  defaultState: 0
-  disabledSprite: {fileID: 0}
-  enabledSprite: {fileID: 0}
-  hoverEnterSprite: {fileID: 0}
-  hoverExitSprite: {fileID: 0}
-  activateSprite: {fileID: 0}
-  deactivateSprite: {fileID: 0}
-  buttonState: 0
 --- !u!114 &478669470
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2620,19 +2597,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  image: {fileID: 0}
-  text: {fileID: 0}
-  collider: {fileID: 0}
   interactable: 0
   isHovered: 0
-  defaultState: 0
-  disabledSprite: {fileID: 0}
-  enabledSprite: {fileID: 0}
-  hoverEnterSprite: {fileID: 0}
-  hoverExitSprite: {fileID: 0}
-  activateSprite: {fileID: 0}
-  deactivateSprite: {fileID: 0}
-  buttonState: 0
 --- !u!114 &492602826
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3205,6 +3171,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fe62af719aad6647b89028d2959eb38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
   hasDurationTime: 0
   message: {fileID: 706145644}
   button: {fileID: 390003}
@@ -3608,6 +3575,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
   hasDurationTime: 0
   message: {fileID: 747460235}
 --- !u!1 &681264664
@@ -3673,19 +3641,8 @@ MonoBehaviour:
   OnClick:
     m_PersistentCalls:
       m_Calls: []
-  image: {fileID: 1166061598}
-  text: {fileID: 0}
-  collider: {fileID: 681264666}
   interactable: 0
   isHovered: 0
-  defaultState: 0
-  disabledSprite: {fileID: 0}
-  enabledSprite: {fileID: 0}
-  hoverEnterSprite: {fileID: 0}
-  hoverExitSprite: {fileID: 0}
-  activateSprite: {fileID: 0}
-  deactivateSprite: {fileID: 0}
-  buttonState: 0
 --- !u!114 &681264668
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4228,6 +4185,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
   hasDurationTime: 0
   message: {fileID: 321059405}
 --- !u!1 &747460234
@@ -4435,19 +4393,8 @@ MonoBehaviour:
   OnClick:
     m_PersistentCalls:
       m_Calls: []
-  image: {fileID: 1926290182}
-  text: {fileID: 0}
-  collider: {fileID: 852278317}
   interactable: 0
   isHovered: 0
-  defaultState: 0
-  disabledSprite: {fileID: 0}
-  enabledSprite: {fileID: 0}
-  hoverEnterSprite: {fileID: 0}
-  hoverExitSprite: {fileID: 0}
-  activateSprite: {fileID: 0}
-  deactivateSprite: {fileID: 0}
-  buttonState: 0
 --- !u!114 &852278319
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4935,6 +4882,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
   hasDurationTime: 0
   message: {fileID: 1040709666}
 --- !u!1 &1040709664
@@ -5847,6 +5795,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
   hasDurationTime: 0
   message: {fileID: 2080598296}
 --- !u!1 &1270174876
@@ -6007,6 +5956,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
   hasDurationTime: 0
   message: {fileID: 204017888}
 --- !u!1 &1326100661
@@ -6711,6 +6661,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46139897d3ce5744aac0119dcd9c03c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
   hasDurationTime: 0
   message: {fileID: 1644102016}
   accept: {fileID: 852278318}
@@ -6762,6 +6713,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46139897d3ce5744aac0119dcd9c03c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
   hasDurationTime: 0
   message: {fileID: 277114684}
   accept: {fileID: 1692200537}
@@ -7385,19 +7337,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  image: {fileID: 45252902}
-  text: {fileID: 0}
-  collider: {fileID: 1692200536}
   interactable: 0
   isHovered: 0
-  defaultState: 0
-  disabledSprite: {fileID: 0}
-  enabledSprite: {fileID: 0}
-  hoverEnterSprite: {fileID: 0}
-  hoverExitSprite: {fileID: 0}
-  activateSprite: {fileID: 0}
-  deactivateSprite: {fileID: 0}
-  buttonState: 0
 --- !u!114 &1692200538
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8053,6 +7994,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438c8dd11484b41438bd57df45f5ee3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
   hasDurationTime: 0
   message: {fileID: 1977723908}
 --- !u!1001 &1900181668

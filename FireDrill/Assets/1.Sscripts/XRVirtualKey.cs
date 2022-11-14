@@ -95,9 +95,9 @@ public class XRVirtualKey : MonoBehaviour
                 break;
             case KeyType.SHIFT:
 
-                if(keyBoard.PressedShift)
+                if (keyBoard.PressedShift)
                 {
-                    if(textImage != null)
+                    if (textImage != null)
                     {
                         textImage.sprite = shiftOn;
                     }
@@ -129,6 +129,21 @@ public class XRVirtualKey : MonoBehaviour
                     }
                 }
 
+                break;
+            case KeyType.TYPE:
+
+                switch (keyBoard.keyBoardType)
+                {
+                    case XRVirtualKeyboard.KeyBoardType.KOREAN:
+                        textImage.sprite = textSpriteEN;
+                        break;
+                    case XRVirtualKeyboard.KeyBoardType.ENGLISH:
+                        textImage.sprite = textSpriteNUM;
+                        break;
+                    case XRVirtualKeyboard.KeyBoardType.NUMBER:
+                        textImage.sprite = textSpriteKR;
+                        break;
+                }
                 break;
         }
     }

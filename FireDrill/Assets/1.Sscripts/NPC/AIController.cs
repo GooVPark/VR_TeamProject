@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+public enum BehaviourState
+{
+    Idle,
+    Walk,
+    Talk,
+}
+
 public class AIController : MonoBehaviour
 {
-
-    public enum Status
-    {
-        Idle,
-        Walk,
-        Talk,
-    }
-    public Status status;
+    public BehaviourState currentBehaviour;
     public TalkInteractable talkInteractable;
 
     [SerializeField]
@@ -28,15 +28,22 @@ public class AIController : MonoBehaviour
     int index;
     float timer;
 
+    private float randomAnimationindex = 0f;
+    [SerializeField] private int randomAnimationCount;
+
     System.Random rand;
     NavMeshAgent agent;
-    Dictionary<Status, string> triggerKey;
+    Dictionary<BehaviourState, string> triggerKey;
+
+    [SerializeField] private int idleAnimationCount;
+    [SerializeField] private int walkAnimationCount;
+    [SerializeField] private int talkAnimationCount;
 
 
     private void Start()
     {
         rand = new System.Random();
-        triggerKey = new Dictionary<Status, string>();
+        triggerKey = new Dictionary<BehaviourState, string>();
         agent = GetComponent<NavMeshAgent>();
 
         talkInteractable.self = this;
@@ -46,17 +53,20 @@ public class AIController : MonoBehaviour
             if (item.activeSelf)
             {
                 animator = item.GetComponent<Animator>();
+                item.GetComponent<AnimationEventHandler>().animationEndEvent += AnimationTransition;
             }
         }
 
-        triggerKey.Add(Status.Idle, "Idle");
-        triggerKey.Add(Status.Walk, "Walk");
-        triggerKey.Add(Status.Talk, "Talk");
+        triggerKey.Add(BehaviourState.Idle, "Idle");
+        triggerKey.Add(BehaviourState.Walk, "Walk");
+        triggerKey.Add(BehaviourState.Talk, "Talk");
 
         if (agent != null)
         {
             agent.speed = speed;
         }
+
+        AnimationTransition();
 
         timer = ResetTimer();
     }
@@ -64,9 +74,9 @@ public class AIController : MonoBehaviour
     {
         if(agent != null)
         {
-            switch (status)
+            switch (currentBehaviour)
             {
-                case Status.Idle:
+                case BehaviourState.Idle:
 
                     if (WayPointCollections.list[index].target != null)
                     {
@@ -80,21 +90,21 @@ public class AIController : MonoBehaviour
                     {
                         timer = ResetTimer();
                         Vector3 temp = RandPosition();
-                        temp = new Vector3(transform.position.x, transform.position.y, temp.z);
+                        temp = new Vector3(temp.x, transform.position.y, temp.z);
                         transform.LookAt(temp);
                         agent.SetDestination(temp);
                         agent.isStopped = false;
-                        ChangeStatus(Status.Walk);
+                        ChangeStatus(BehaviourState.Walk);
                     }
                     break;
-                case Status.Walk:
+                case BehaviourState.Walk:
                     if (agent.remainingDistance <= agent.stoppingDistance)
                     {
-                        ChangeStatus(Status.Idle);
+                        ChangeStatus(BehaviourState.Idle);
                         agent.isStopped = true;
                     }
                     break;
-                case Status.Talk:
+                case BehaviourState.Talk:
 
                     timer -= Time.deltaTime;
                     transform.LookAt(new Vector3(transform.position.x , transform.position.y, talkInteractable.interlocutor.transform.position.z));
@@ -104,18 +114,18 @@ public class AIController : MonoBehaviour
                         agent.enabled = true;
                         timer = ResetTimer();
                         Vector3 temp = RandPosition();
-                        temp = new Vector3(transform.position.x, transform.position.y, temp.z);
+                        temp = new Vector3(temp.x, transform.position.y, temp.z);
                         transform.LookAt(temp);
                         agent.SetDestination(temp);
                         agent.isStopped = false;
-                        ChangeStatus(Status.Walk);
+                        ChangeStatus(BehaviourState.Walk);
                     }
                     break;
             }
 
             if (talkInteractable.isTalk)
             {
-                ChangeStatus(Status.Talk);
+                ChangeStatus(BehaviourState.Talk);
                 timer = 5;
                 //agent.isStopped = true;
                 agent.enabled = false;
@@ -125,18 +135,46 @@ public class AIController : MonoBehaviour
         }
     }
 
-    void ChangeStatus(Status status)
+    public void AnimationTransition()
     {
-        this.status = status;
-        //animator.SetTrigger(triggerKey[status]);
+        switch (currentBehaviour)
+        {
+            case BehaviourState.Idle:
+
+                randomAnimationindex = (float)Random.Range(0, idleAnimationCount - 1) / (idleAnimationCount - 1);
+                animator.SetFloat("AnimationIndex", randomAnimationindex);
+
+                break;
+            case BehaviourState.Walk:
+
+                randomAnimationindex = (float)Random.Range(0, walkAnimationCount - 1) / (walkAnimationCount - 1);
+                animator.SetFloat("AnimationIndex", randomAnimationindex);
+
+                break;
+            case BehaviourState.Talk:
+
+                randomAnimationindex = (float)Random.Range(0, talkAnimationCount - 1) / (talkAnimationCount - 1);
+                animator.SetFloat("AnimationIndex", randomAnimationindex);
+
+                break;
+        }
+    }
+
+    void ChangeStatus(BehaviourState status)
+    {
+        currentBehaviour = status;
+
+        AnimationTransition();
+
         int animationState = (int)status;
         animator.SetInteger("AnimationState", animationState);
     }
 
-    int ResetTimer(int min = 3, int max = 6)
+    int ResetTimer(int min = 10, int max = 60)
     {
         return rand.Next(min, max);
     }
+    Vector3 wayPointPos;
     Vector3 RandPosition()
     {
 
@@ -155,6 +193,4 @@ public class AIController : MonoBehaviour
 
         return pos;
     }
-
-
 }

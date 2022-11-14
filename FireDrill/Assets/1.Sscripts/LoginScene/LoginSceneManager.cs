@@ -176,7 +176,7 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
         DataManager.Instance.UpdateUserData("email", NetworkManager.User.email, "characterNumber", index);
         //characterObjects.SetActive(false);
 
-        PhotonNetwork.JoinLobby();
+        PhotonNetwork.LoadLevel("Loundge");
     }
 
     public void SelectExtingusher(bool isSelected)
@@ -227,7 +227,7 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
             password = signInPassword.text,
             name = signInName.text,
             userType = UserType.Student,
-            id = DataManager.Instance.GetUserCount()
+            //_id = DataManager.Instance.GetUserCount() + 100000
         };
 
         Debug.Log("Insert Request");
@@ -303,7 +303,7 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
 
         //PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, null);
 
-        PhotonNetwork.LoadLevel("Loundge");
+        //PhotonNetwork.LoadLevel("Loundge");
     }
 
     #endregion

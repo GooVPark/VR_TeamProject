@@ -15,6 +15,7 @@ public class RoomState_TrainingPin : RoomState
 
     [Header("Extinguisher")]
     public PinTrigger pinTrigger;
+    
     private bool isPinRemoved = false;
 
     public override void OnStateEnter()
@@ -31,6 +32,7 @@ public class RoomState_TrainingPin : RoomState
                     roomSceneManager.onRoomStateEvent += EventTrigger;
 
                     pinTrigger = roomSceneManager.player.pinTrigger;
+                    pinTrigger.GetComponent<XROffsetGrabInteractable>().enabled = true;
                     pinTrigger.onPinRemoved += OnPinRemove;
                 }
                 break;

@@ -20,8 +20,6 @@ public class RoomState_Initialize : RoomState
     public GameObject npc;
     [Space(5)]
 
-    [Header("Area A")]
-    public Paroxe.PdfRenderer.PDFViewer view;
     [Header("Area B")]
     public GameObject dummyExtinguisher;
 
@@ -30,6 +28,9 @@ public class RoomState_Initialize : RoomState
     public RoomState_GoToA roomStateGoToA;
     public RoomState_GoToB roomStateGoToB;
     public RoomState_SelectMRPlayer roomStateGoToC;
+
+    public delegate void EventMessage(string message);
+    public EventMessage eventMessage;   
 
     public override void OnStateEnter()
     {
@@ -53,9 +54,10 @@ public class RoomState_Initialize : RoomState
         objectB.gameObject.SetActive(false);
         objectC.gameObject.SetActive(false);
 
+        eventMessage += eventSyncronizer.OnSendMessage;
+
         #region Area A Initizlize
 
-        view.CurrentPageIndex = 0;
         
         #endregion
 
@@ -65,7 +67,15 @@ public class RoomState_Initialize : RoomState
         NetworkManager.User.hasExtingisher = false;
         roomSceneManager.player.HasExtinguisher = false;
         roomSceneManager.player.QuizScore = -1;
-        
+
+        if (user.userType == UserType.Lecture)
+        {
+            eventMessage = null;
+            eventMessage += eventSyncronizer.OnSendMessage;
+
+            string message = $"{EventMessageType.QUIZ}";
+            eventMessage?.Invoke(message);
+        }
         npc.SetActive(false);
         #endregion
 
@@ -78,6 +88,16 @@ public class RoomState_Initialize : RoomState
         if (extinguisher != null)
         {
             Destroy(extinguisher.gameObject);
+        }
+
+        if(!NetworkManager.User.hasExtingisher)
+        {
+            FireObject[] fireObjects = FindObjectsOfType<FireObject>();
+
+            foreach (var fire in fireObjects)
+            {
+                Destroy(fire.gameObject);
+            }
         }
 
         #endregion

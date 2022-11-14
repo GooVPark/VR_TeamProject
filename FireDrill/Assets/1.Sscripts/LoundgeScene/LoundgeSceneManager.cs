@@ -19,10 +19,9 @@ public class LoundgeSceneManager : GameManager
 
     public VoiceManager voiceManager;
     public EventSyncronizer eventSyncronizer;
-    public NPCManager npcManager;
     public Transform NPCTransforms;
     public SpawnPosition spawnPosition;
-    private Dictionary<string, User> usersByEmail = new Dictionary<string, User>();
+
     public Dictionary<string, LoundgeUser> spawnedNPC = new Dictionary<string, LoundgeUser>();
     public Dictionary<string, GameObject> spawnedNPCObject = new Dictionary<string, GameObject>();
 
@@ -52,21 +51,7 @@ public class LoundgeSceneManager : GameManager
 
     private void Start()
     {
-        Initialize();
-
-        NetworkManager.Instance.voiceChatDisabled = true;
-        NetworkManager.Instance.scoreBoardDisabled = true;
-        NetworkManager.Instance.roomType = RoomType.Loundge;
-
-        SetIdleMode(IdleMode.STAND);
-
-        InsertUserData();
-
-        //NetworkManager.Instance.PullRoomList();
-        LoadFirstPage();
-        UpdateProgressBoard();
-
-        initializer = StartCoroutine(Initializer());
+        PhotonNetwork.JoinLobby();
     }
 
     private void Update()
@@ -81,7 +66,7 @@ public class LoundgeSceneManager : GameManager
     private Coroutine initializer;
     private IEnumerator Initializer()
     {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(0.3f);
+        WaitForSeconds waitForSeconds = new WaitForSeconds(0.1f);
         while (!isOnline || !isEventServerConnected)
         {
             isOnline = DataManager.Instance.FindLobbyUser(NetworkManager.User);
@@ -94,8 +79,9 @@ public class LoundgeSceneManager : GameManager
         NetworkManager.Instance.roomType = RoomType.Loundge;
         NetworkManager.Instance.megaphoneDisabled = true;
         NetworkManager.Instance.voiceChatDisabled = true;
-
+        NetworkManager.Instance.onVoiceChat = false;
         NetworkManager.Instance.hasExtingusher = false;
+        NetworkManager.User.hasExtingisher = false;
 
         string message = $"{EventMessageType.SPAWN}_{NetworkManager.User.email}";
         eventMesage?.Invoke(message);
@@ -110,15 +96,19 @@ public class LoundgeSceneManager : GameManager
             UpdateRoomEnterence(i);
         }
 
-        StopCoroutine(initializer);
+        if (initializer != null)
+        {
+            StopCoroutine(initializer);
+            initializer = null;
+        }
     }
 
     public void SpawnNPC()
     {
         List<LoundgeUser> loundgeUsers = DataManager.Instance.GetLoundgeUsers();
-        foreach(LoundgeUser loundgeUser in loundgeUsers)
+        foreach (LoundgeUser loundgeUser in loundgeUsers)
         {
-            if(!spawnedNPC.ContainsKey(loundgeUser.email))
+            if (!spawnedNPC.ContainsKey(loundgeUser.email))
             {
                 spawnedNPC.Add(loundgeUser.email, loundgeUser);
 
@@ -131,7 +121,7 @@ public class LoundgeSceneManager : GameManager
                 npc.Initialize(loundgeUser);
                 npc.eventMessage += eventSyncronizer.OnSendMessage;
 
-                if(NetworkManager.Instance.onVoiceChat)
+                if (NetworkManager.Instance.onVoiceChat)
                 {
                     npc.senderIsOnVoiceChat = true;
                 }
@@ -198,7 +188,7 @@ public class LoundgeSceneManager : GameManager
 
     public void LeaveVoiceChatRoom()
     {
-        PhotonNetwork.LeaveRoom();
+        PhotonNetwork.LeaveRoom();   
     }
 
     public LoundgeUser GetLoundgeUser(string email)
@@ -481,6 +471,26 @@ public class LoundgeSceneManager : GameManager
     {
         cachedRoomList.Clear();
         Debug.Log("Loundge Maanger: Joined Lobby");
+
+        Initialize();
+
+        NetworkManager.Instance.inFireControl = false;
+        NetworkManager.Instance.voiceChatDisabled = true;
+        NetworkManager.Instance.scoreBoardDisabled = true;
+        NetworkManager.Instance.onTextChat = false;
+        NetworkManager.Instance.roomType = RoomType.Loundge;
+        NetworkManager.Instance.SetRoomNumber(roomNumber);
+
+        SetIdleMode(IdleMode.STAND);
+
+        InsertUserData();
+
+        //NetworkManager.Instance.PullRoomList();
+        //LoadFirstPage();
+        UpdateProgressBoard();
+
+
+        initializer = StartCoroutine(Initializer());
     }
 
 
@@ -512,16 +522,12 @@ public class LoundgeSceneManager : GameManager
         roomOptions.IsVisible = true;
         roomOptions.MaxPlayers = 0;
 
-        Debug.Log("JoinCreateRoom");
         PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, TypedLobby.Default);
-        Debug.Log("LoadLevel Room");
         PhotonNetwork.LoadLevel("Room");
     }
 
     public override void OnJoinedRoom()
     {
-        Debug.Log("Loundge: OnJoinedRoom");
-
         switch (NetworkManager.Instance.roomType)
         {
             case RoomType.Room:
@@ -531,8 +537,10 @@ public class LoundgeSceneManager : GameManager
                 spawnedNPCObject[voiceManager.sender.email].SetActive(false);
                 spawnedNPCObject[voiceManager.reciever.email].SetActive(false);
 
-                voiceChatButton.button.onClick += voiceManager.DisconnectVoiceChat;
+                voiceChatButton.button.OnClick.AddListener(() => voiceManager.DisconnectVoiceChat());
+                NetworkManager.Instance.voiceChatDisabled = false;
                 NetworkManager.Instance.onVoiceChat = true;
+                FindObjectOfType<Photon.Voice.Unity.Recorder>().TransmitEnabled = true;
 
                 announcement.StopAudio();
 
@@ -556,7 +564,6 @@ public class LoundgeSceneManager : GameManager
             case RoomType.Room:
                 break;
             case RoomType.VoiceRoom:
-                Debug.Log("OnLeftRoom");
 
                 if(voiceManager.sender.email == NetworkManager.User.email)
                 {
@@ -577,17 +584,17 @@ public class LoundgeSceneManager : GameManager
 
                 NetworkManager.Instance.roomType = RoomType.Loundge;
                 NetworkManager.Instance.onVoiceChat = false;
+                NetworkManager.Instance.voiceChatDisabled = true;
+                FindObjectOfType<Photon.Voice.Unity.Recorder>().TransmitEnabled = false;
 
                 announcement.PlayAudio();
 
-                voiceChatButton.button.onClick -= voiceManager.DisconnectVoiceChat;
+                voiceChatButton.button.OnClick.RemoveAllListeners();
 
                 foreach (string key in spawnedNPCObject.Keys)
                 {
                     spawnedNPCObject[key].GetComponent<NPCController>().SetVoiceChatState(false);
                 }
-
-                Debug.Log(PhotonNetwork.NetworkClientState);
                 break;
             case RoomType.Loundge:
                 break;

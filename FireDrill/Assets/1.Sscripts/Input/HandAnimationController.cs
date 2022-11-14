@@ -45,6 +45,12 @@ public class HandAnimationController : MonoBehaviour
             animator.SetLayerWeight(2, triggerTouched == 0 ? 0 : point);
             animator.SetLayerWeight(1, thumbsUp);
         }
+        else
+        {
+            animator.SetFloat("Flex", 0);
+            animator.SetLayerWeight(2, 0);
+            animator.SetLayerWeight(1, 0);
+        }
     }
 
     public void GetFlex(float value)

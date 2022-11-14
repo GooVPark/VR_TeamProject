@@ -27,7 +27,7 @@ public class RoomState_GoToLoundge : RoomState
 
         toastControl = StartCoroutine(ToastControl());
 
-        eventArea.SetActive(true);
+        //eventArea.SetActive(true);
     }
     public override void OnStateExit()
     {

@@ -30,10 +30,12 @@ public class RoomState_WaitPlayer : RoomState
         roomSceneManager.player.QuizScore = -1;
 
         voiceChat.UpdateState(ButtonState.Deactivate);
-        voiceChat.button.onClick += roomSceneManager.ToggleVoiceChat;
+        //voiceChat.button.onClick += roomSceneManager.ToggleVoiceChat;
+        voiceChat.button.OnClick.AddListener(() => roomSceneManager.ToggleVoiceChat());
 
         textChat.UpdateState(ButtonState.Deactivate);
-        textChat.button.onClick += roomSceneManager.ToggleTextChat;
+        //textChat.button.onClick += roomSceneManager.ToggleTextChat;
+        textChat.button.OnClick.AddListener(() => roomSceneManager.ToggleTextChat());
 
         string message = $"{EventMessageType.LAMPUPDATE}";
         SendEventMessage(message);

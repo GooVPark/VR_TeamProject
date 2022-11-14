@@ -153,6 +153,7 @@ public class NPCController : MonoBehaviourPun //, IPunInstantiateMagicCallback
     {
         DataManager.Instance.FindLobbyUser(NetworkManager.User);
         LoundgeUser reciever = DataManager.Instance.GetUser(user.email);
+        
 
         bool recieverIsOnVoiceChat = reciever.onVoiceChat;
         bool recieverIsOnRequestVoiceChat = reciever.onRequestVoiceChat;
@@ -161,6 +162,37 @@ public class NPCController : MonoBehaviourPun //, IPunInstantiateMagicCallback
 
         bool senderIsOnVoiceChat = sender.onVoiceChat;
         bool senderIsOnRequestVoiceChat = sender.onRequestVoiceChat;
+        if (isVoiceChatReady && isHovered && !senderIsOnVoiceChat && !senderIsOnRequestVoiceChat && !recieverIsOnRequestVoiceChat && !recieverIsOnVoiceChat)
+        {
+            string message = $"{EventMessageType.VOICECHAT}_{VoiceEventType.REQUEST}_{NetworkManager.User.email}_{user.email}";
+            eventMessage?.Invoke(message);
+        }
+    }
+
+    private Coroutine requestPrivateVoiceChat;
+    private IEnumerator RequestPrivateVoiceChat()
+    {
+        WaitForSeconds delay = new WaitForSeconds(0.1f);
+        LoundgeUser reciever = null;
+        while(reciever == null)
+        {
+            reciever = DataManager.Instance.GetUser(user.email);
+            yield return delay;
+        }
+
+        bool recieverIsOnVoiceChat = reciever.onVoiceChat;
+        bool recieverIsOnRequestVoiceChat = reciever.onRequestVoiceChat;
+
+        LoundgeUser sender = null;
+        while(sender == null)
+        {
+            sender = DataManager.Instance.GetUser(NetworkManager.LoundgeUser.email);
+            yield return delay;
+        }
+
+        bool senderIsOnVoiceChat = sender.onVoiceChat;
+        bool senderIsOnRequestVoiceChat = sender.onRequestVoiceChat;
+
         if (isVoiceChatReady && isHovered && !senderIsOnVoiceChat && !senderIsOnRequestVoiceChat && !recieverIsOnRequestVoiceChat && !recieverIsOnVoiceChat)
         {
             string message = $"{EventMessageType.VOICECHAT}_{VoiceEventType.REQUEST}_{NetworkManager.User.email}_{user.email}";
