@@ -16,13 +16,37 @@ public class RoomState_GoToLoundge : RoomState
     {
         base.OnStateEnter();
 
-        goToLoundgeToast.gameObject.SetActive(true);
-        eventArea.SetActive(true);
-    }
+        string message = $"{EventMessageType.LAMPUPDATE}";
+        SendEventMessage(message);
 
+        if(toastControl != null)
+        {
+            StopCoroutine(toastControl);
+            toastControl = null;
+        }
+
+        toastControl = StartCoroutine(ToastControl());
+
+        //eventArea.SetActive(true);
+    }
     public override void OnStateExit()
     {
+        goToLoundgeToast.gameObject.SetActive(false);
+        if (toastControl != null)
+        {
+            StopCoroutine(toastControl);
+            toastControl = null;
+        }
+        eventArea.SetActive(false);
         base.OnStateExit();
+    }
+
+    private Coroutine toastControl;
+    private IEnumerator ToastControl()
+    {
+        goToLoundgeToast.gameObject.SetActive(true);
+        yield return new WaitForSeconds(3f);
+        goToLoundgeToast.gameObject.SetActive(false);
     }
 
     public void LeaveRoom()

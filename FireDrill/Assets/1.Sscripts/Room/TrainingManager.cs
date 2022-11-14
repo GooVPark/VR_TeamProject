@@ -54,10 +54,19 @@ public class TrainingManager : MonoBehaviourPunCallbacks, IPunObservable
 
     public float GetCurrentProgress()
     {
+        if(fireObjects.Count <= 0)
+        {
+            return 0f;
+        }
+
         float current = 0;
 
         foreach (FireObject fireObject in fireObjects)
         {
+            if(fireObject == null)
+            {
+                continue;
+            }
             if (fireObject.isActiveAndEnabled)
             {
                 current += fireObject.currentDuration;
@@ -78,21 +87,51 @@ public class TrainingManager : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
+    public void ClearFire()
+    {
+        if (fireObjects.Count > 0)
+        {
+            GameObject destroyTarget = null;
+            for(int i = fireObjects.Count - 1; i >= 0; i--)
+            {
+                Debug.Log("Clear Fire");
+                destroyTarget = fireObjects[i].gameObject;
+                fireObjects.Remove(fireObjects[i]);
+                Destroy(destroyTarget);
+            }
+        }
+    }
+
     public void SpawnFire()
     {
+        fireObjects.Clear();
+
         for (int i = 0; i < fireSpot.Length; i++)
         {
             GameObject firePrefab = PhotonNetwork.Instantiate("FireObject", fireSpot[i].position, Quaternion.identity);
             FireObject fire = firePrefab.GetComponent<FireObject>();
 
-            fireObjects.Add(fire);
+            if (photonView.IsMine)
+            {
+                fireObjects.Add(fire);
+            }
+            else
+            {
+                photonView.RPC(nameof(AddFireObject), RpcTarget.All);
+            }
         }
 
-                for(int i = 0; i < fireObjects.Count; i++)
+        for (int i = 0; i < fireObjects.Count; i++)
         {
             fireObjects[i].fireObjectIndex = i;
             //fireObjects[i].onFireObjectTriggerd += SyncFireObject;
         }
         totalProgress = GetTotalProgress();
+    }
+    [PunRPC]
+    private void AddFireObject()
+    {
+        FireObject fire = FindObjectOfType<FireObject>();
+        fireObjects.Add(fire);
     }
 }

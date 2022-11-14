@@ -40,8 +40,14 @@ public class DynamicRayVisualizer : MonoBehaviour
             teleportInteractor.gameObject.SetActive(true);
             isTeleportable = teleportInteractor.TryGetCurrent3DRaycastHit(out teleportRayHit);
 
+
             if (isTeleportable)
             {
+                if (teleportRayHit.collider.gameObject.layer == 13)
+                {
+                    Debug.Log("Is Wall");
+                    return;
+                }
                 teleportPointer.SetActive(true);
                 teleportPointer.transform.position = teleportRayHit.point;
             }
@@ -60,9 +66,6 @@ public class DynamicRayVisualizer : MonoBehaviour
                 var heightAdjustment = xrOrigin.Origin.transform.up * xrOrigin.CameraInOriginSpaceHeight;
                 var cameraDestination = teleportPointer.transform.position + heightAdjustment;
                 xrOrigin.MoveCameraToWorldLocation(cameraDestination);
-
-                string message = $"move_{NetworkManager.User.email}_{cameraDestination}";
-                eventSyncronizer?.Invoke(message);
             }
 
             isTeleportable = false;

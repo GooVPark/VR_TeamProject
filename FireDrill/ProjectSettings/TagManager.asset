@@ -13,6 +13,8 @@ TagManager:
   - audio_selected
   - NPC
   - NetworkPlayerRoom
+  - Origin
+  - NozzleCollider
   layers:
   - Default
   - TransparentFX
@@ -28,23 +30,23 @@ TagManager:
   - FireObject
   - QuizObject
   - Wall
-  - 
+  - Extinguisher
   - Teleportable
   - 
   - OutLinedHover
   - OutLinedSelect
   - OutLineNPC
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - PlayerLine
+  - DirectInteractor
+  - ExtinguisherBody
+  - ExtinguisherPin
+  - ExtinguisherNozzle
+  - TakInteractable
+  - Screen
+  - PlayerBody
+  - QuizPannel
+  - NotRendering
   - Head
   m_SortingLayers:
   - name: Default
@@ -59,11 +61,17 @@ TagManager:
   - name: Water
     uniqueID: 2241434751
     locked: 0
+  - name: PlayerUI
+    uniqueID: 3377209363
+    locked: 0
   - name: CameraUI
     uniqueID: 4255636489
     locked: 0
   - name: VirtualKeyboard
     uniqueID: 1636708849
+    locked: 0
+  - name: LevelSelect
+    uniqueID: 2953940457
     locked: 0
   - name: ControllerRay
     uniqueID: 1507998217

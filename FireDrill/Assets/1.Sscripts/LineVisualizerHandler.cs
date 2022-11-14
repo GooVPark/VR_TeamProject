@@ -34,6 +34,10 @@ public class LineVisualizerHandler : MonoBehaviour
     {
         if(value)
         {
+            if(NetworkManager.Instance.inFireControl)
+            {
+                return;
+            }
             lineVisual.enabled = true;
             rayInteractor.enabled = true;
         }

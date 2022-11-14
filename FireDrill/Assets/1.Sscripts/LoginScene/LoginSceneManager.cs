@@ -60,8 +60,14 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject signInWindow;
     [SerializeField] private Button idCheckButton;
     [SerializeField] private GameObject idCheckPopUp;
+    [SerializeField] private Button idCheckErrorButton;
+    [SerializeField] private GameObject idCheckErrorPopUp;
     [SerializeField] private TMP_Text idCheckText;
     [SerializeField] private bool idCheck = false;
+    [Space(5)]
+
+    [Header("Idle Mode UI")]
+    [SerializeField] private GameObject setIdleModeWindow;
 
     private static User userData;
     public static User UserData { get => userData; }
@@ -168,8 +174,9 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
     {
         NetworkManager.User.characterNumber = index;
         DataManager.Instance.UpdateUserData("email", NetworkManager.User.email, "characterNumber", index);
-        characterObjects.SetActive(false);
-        PhotonNetwork.JoinLobby();
+        //characterObjects.SetActive(false);
+
+        PhotonNetwork.LoadLevel("Loundge");
     }
 
     public void SelectExtingusher(bool isSelected)
@@ -220,7 +227,7 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
             password = signInPassword.text,
             name = signInName.text,
             userType = UserType.Student,
-            id = DataManager.Instance.GetUserCount()
+            //_id = DataManager.Instance.GetUserCount() + 100000
         };
 
         Debug.Log("Insert Request");
@@ -237,19 +244,37 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
         {
             idCheckText.text = "사용 불가";
             idCheck = false;
+            idCheckPopUp.SetActive(false);
+            idCheckErrorPopUp.SetActive(true);
         }
         else
         {
             idCheckText.text = "사용 가능";
             idCheck = true;
+            idCheckErrorPopUp.SetActive(false);
+            idCheckPopUp.SetActive(true);
         }
-
-        idCheckPopUp.SetActive(true);
     }
 
     public void IDCheckConfirm()
     {
         idCheckPopUp.SetActive(false);
+        idCheckErrorPopUp.SetActive(false);
+    }
+
+    #endregion
+
+    #region Set Idle Mode
+
+    public void SetIdleMode()
+    {
+        IdleMode idleMode = setIdleModeWindow.GetComponent<SitStandSettButton>().mode;
+        NetworkManager.User.idleMode = idleMode;
+        DataManager.Instance.UpdateUserData("email", NetworkManager.User.email, "idleMode", idleMode);
+
+        CurrentWindow = null;
+
+        PhotonNetwork.JoinLobby();
     }
 
     #endregion
@@ -278,7 +303,7 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
 
         //PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, null);
 
-        PhotonNetwork.LoadLevel("Loundge");
+        //PhotonNetwork.LoadLevel("Loundge");
     }
 
     #endregion

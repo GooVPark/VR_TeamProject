@@ -42,6 +42,7 @@ public class RoomState_TrainingExtinguish : RoomState
         if(user.hasExtingisher)
         { 
             InputManager.leftTriggerButton += OnExtinguisher;
+            NetworkManager.Instance.inFireControl = true;
         }
 
         progressUIObject.SetActive(true);
@@ -53,6 +54,7 @@ public class RoomState_TrainingExtinguish : RoomState
         {
             roomSceneManager.player.OffExtinguisher();
             InputManager.leftTriggerButton -= OnExtinguisher;
+            NetworkManager.Instance.inFireControl = false;
         }
 
 
@@ -74,7 +76,11 @@ public class RoomState_TrainingExtinguish : RoomState
     public void NextStateRPC()
     {
         roomSceneManager.RoomState = roomStateEndTraining;
-        roomSceneManager.player.Spread(false);
+
+        if (photonView.IsMine)
+        {
+            roomSceneManager.player.Spread(false);
+        }
     }
     
     

@@ -39,7 +39,6 @@ public class RoomSceneManager : GameManager
 
     public static RoomSceneManager Instance;
 
-    [SerializeField] private PDFViewer pdfViewr;
     [SerializeField] private Button nextPage;
     [SerializeField] private Button prevPage;
 
@@ -48,6 +47,7 @@ public class RoomSceneManager : GameManager
 
     [SerializeField] private GameObject scoreBoardUI;
     [SerializeField] private ScoreUI[] scoureRows;
+    [SerializeField] private SimplePDFViwer pdfViwer;
 
     private float elapsedTime = 1f;
     private float interval = 1f;
@@ -63,6 +63,8 @@ public class RoomSceneManager : GameManager
 
     [Header("Toast")]
     [SerializeField] private ToastTypeAndMessage toasts;
+    [SerializeField] private GameObject forceExitToast;
+    [SerializeField] private GameObject forceExitButton;
 
     [SerializeField] private EventSyncronizerRoom eventSyncronizer;
 
@@ -72,6 +74,7 @@ public class RoomSceneManager : GameManager
     public Transform origin;
 
     public bool socreOrderBy = false;
+    public bool isStarted = false;
 
     private int currentProcess;
     public int CurrentProcess
@@ -88,6 +91,7 @@ public class RoomSceneManager : GameManager
 
     private void Awake()
     {
+        Debug.Log("RoomScnenManager: Awake Begin");
         if (Instance == null)
         {
             Instance = this;
@@ -96,16 +100,24 @@ public class RoomSceneManager : GameManager
         {
             Destroy(Instance.gameObject);
         }
+        Debug.Log("RoomScnenManager: Awake End");
     }
 
     private void Start()
     {
+        Debug.Log("RoomScnenManager: Start Begin");
         NetworkManager.Instance.SetRoomNumber(roomNumber);
         NetworkManager.Instance.roomType = RoomType.Room;
+        SetIdleMode(IdleMode.STAND);
+        Debug.Log("RoomScnenManager: Start End");
     }
 
     private void Update()
     {
+        if(isStarted)
+        {
+            requiredPlayer = PhotonNetwork.CurrentRoom.PlayerCount;
+        }
         RoomState?.OnUpdate();
     }
 
@@ -163,21 +175,15 @@ public class RoomSceneManager : GameManager
 
     public bool IsReady()
     {
-        return PhotonNetwork.CurrentRoom.PlayerCount >= requiredPlayer;
+        if (PhotonNetwork.CurrentRoom != null)
+        {
+            return PhotonNetwork.CurrentRoom.PlayerCount >= requiredPlayer;
+        }
+        return false;
     }
     public bool IsReady(int playerCount)
     {
         return playerCount >= requiredPlayer;
-    }
-
-    public void NextPage()
-    {
-        pdfViewr.GoToNextPage();
-    }
-
-    public void PrevPage()
-    {
-        pdfViewr.GoToPreviousPage();
     }
 
     public override void OnJoinedRoom()
@@ -186,19 +192,61 @@ public class RoomSceneManager : GameManager
         origin.position = SpawnPlayer(spawnPivot.position);
         localRecoder.TransmitEnabled = false;
         NetworkManager.Instance.roomType = RoomType.Room;
+        NetworkManager.Instance.onTextChat = false;
+        if(NetworkManager.User.userType == UserType.Lecture)
+        {
+            forceExitButton.SetActive(true);
+        }
         RoomState = roomStateWaitPlayer;
 
         if (photonView.IsMine) DataManager.Instance.UpdateRoomPlayerCount(roomNumber, PhotonNetwork.CurrentRoom.PlayerCount);
         roomData = DataManager.Instance.GetRoomData()[roomNumber];
         DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, roomNumber);
+        DataManager.Instance.InitializeQuizScore(NetworkManager.User.email);
         requiredPlayer = roomData.requirePlayerCount;
 
-        StartCoroutine(JoinVoice());
+        //StartCoroutine(JoinVoice());
+    }
+
+    public void ForceExit()
+    {
+        photonView.RPC(nameof(ForceExitRPC), RpcTarget.All);
+    }
+
+    [PunRPC]
+    public void ForceExitRPC()
+    {
+        LeaveRoom();
+    }
+    public void LeaveRoom()
+    {
+        Debug.Log("Leave Room");
+        DataManager.Instance.UpdateRoomPlayerCount(NetworkManager.RoomNumber, PhotonNetwork.CurrentRoom.PlayerCount - 1);
+        if (PhotonNetwork.CurrentRoom.PlayerCount <= 0)
+        {
+            DataManager.Instance.UpdateRoomProgress(roomNumber, 0);
+            DataManager.Instance.UpdateRoomState(roomNumber, false);
+
+            string message = $"{EventMessageType.PROGRESS}_{ProgressEventType.UPDATE}_{roomNumber}";
+            SendEventMessage(message);
+        }
+        PhotonNetwork.LeaveRoom();
+    }
+
+    public void ForceExitPopUp()
+    {
+        if(forceExitToast.activeSelf)
+        {
+            forceExitToast.SetActive(false);
+        }
+        else
+        {
+            forceExitToast.SetActive(true);
+        }
     }
 
     private IEnumerator JoinVoice()
     {
-        Debug.Log("Test Joined");
         while(true)
         {
             if(isEventServerConnected)
@@ -211,14 +259,10 @@ public class RoomSceneManager : GameManager
 
                 string message = $"{EventMessageType.NOTICE}_{NoticeEventType.JOIN}_{roomNumber}_{NetworkManager.User.email}";
                 eventMessage?.Invoke(message);
-
-                Debug.Log("Test Join Server");
-
                 break;
             }
             yield return null;
         }
-        Debug.Log("Test Ended");
     }
 
     public override void OnLeftRoom()
@@ -232,8 +276,17 @@ public class RoomSceneManager : GameManager
         string message = $"{EventMessageType.NOTICE}_{NoticeEventType.DISCONNECT}_{roomNumber}_{NetworkManager.User.email}";
         eventMessage?.Invoke(message);
 
-        //eventSyncronizer.Disconnect();
-        PhotonNetwork.SendAllOutgoingCommands();
+        if (NetworkManager.User.userType == UserType.Lecture)
+        {
+            DataManager.Instance.UpdateRoomProgress(roomNumber, 0);
+            DataManager.Instance.UpdateRoomState(roomNumber, false);
+
+            message = $"{EventMessageType.PROGRESS}_{ProgressEventType.UPDATE}_{roomNumber}";
+            SendEventMessage(message);
+
+            message = $"{EventMessageType.UPDATEROOMSTATE}_{roomNumber}";
+            SendEventMessage(message);
+        }
     }
 
     public override void OnDisconnected(DisconnectCause cause)
@@ -243,12 +296,12 @@ public class RoomSceneManager : GameManager
 
     public override void OnConnectedToMaster()
     {
-        PhotonNetwork.JoinLobby();
+        PhotonNetwork.LoadLevel("Loundge");
     }
 
     public override void OnJoinedLobby()
     {
-        PhotonNetwork.LoadLevel("Loundge");
+       
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
@@ -257,6 +310,16 @@ public class RoomSceneManager : GameManager
         {
             ((GameObject)PhotonNetwork.LocalPlayer.TagObject).GetComponent<NetworkPlayer>().InvokeProperties();
         }
+    }
+
+    public void NextPage()
+    {
+        pdfViwer.NextPage();
+    }
+
+    public void PrevPage()
+    {
+        pdfViwer.PrevPage();
     }
 
     private void OnApplicationQuit()
@@ -278,9 +341,40 @@ public class RoomSceneManager : GameManager
 
             message = $"{EventMessageType.PROGRESS}_{ProgressEventType.UPDATE}_{roomNumber}";
             SendEventMessage(message);
-        }
 
-        //eventSyncronizer.Disconnect();
-        PhotonNetwork.SendAllOutgoingCommands();
+            message = $"{EventMessageType.UPDATEROOMSTATE}_{roomNumber}";
+            SendEventMessage(message);
+
+            message = $"{EventMessageType.FORCEEXIT}";
+            SendEventMessage(message);
+
+        }
+    }
+    private void OnApplicationPause()
+    {
+        RoomData roomData = DataManager.Instance.GetRoomData(roomNumber);
+        int playerCount = roomData.currentPlayerCount - 1;
+
+        DataManager.Instance.UpdateRoomPlayerCount(roomNumber, playerCount);
+        DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, 999);
+        DataManager.Instance.SetOffline(NetworkManager.User.email);
+
+        string message = $"{EventMessageType.NOTICE}_{NoticeEventType.DISCONNECT}_{roomNumber}_{NetworkManager.User.email}";
+        eventMessage?.Invoke(message);
+
+        if (NetworkManager.User.userType == UserType.Lecture)
+        {
+            DataManager.Instance.UpdateRoomProgress(roomNumber, 0);
+            DataManager.Instance.UpdateRoomState(roomNumber, false);
+
+            message = $"{EventMessageType.PROGRESS}_{ProgressEventType.UPDATE}_{roomNumber}";
+            SendEventMessage(message);
+
+            message = $"{EventMessageType.UPDATEROOMSTATE}_{roomNumber}";
+            SendEventMessage(message);
+
+            message = $"{EventMessageType.FORCEEXIT}";
+            SendEventMessage(message);
+        }
     }
 }

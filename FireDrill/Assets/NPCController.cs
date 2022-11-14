@@ -9,8 +9,6 @@ using TMPro;
 using Photon.Pun;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
-using SelectedEffectOutline;
-
 public class NPCController : MonoBehaviourPun //, IPunInstantiateMagicCallback
 {
     public delegate void EventMessage(string message);
@@ -66,9 +64,11 @@ public class NPCController : MonoBehaviourPun //, IPunInstantiateMagicCallback
     [SerializeField] private SkinnedMeshRenderer outlineFemale;
 
     [SerializeField] private TMP_Text userName;
-    [SerializeField] private Image lectureIcon;
-    [SerializeField] private Image studentIcon;
-    [SerializeField] private Image onVoiceChatIcon; 
+    [SerializeField] private GameObject lectureIcon;
+    [SerializeField] private GameObject studentIcon;
+    [SerializeField] private Image onVoiceChatIcon;
+
+    public SpeachBubble speachBubble;
 
     public bool senderIsOnVoiceChat = false;
     public bool isVoiceChatReady = false;
@@ -151,7 +151,49 @@ public class NPCController : MonoBehaviourPun //, IPunInstantiateMagicCallback
     //}
     public void OnRequestPrivateVoiceChat()
     {
-        if (!user.onVoiceChat && isVoiceChatReady && isHovered && !senderIsOnVoiceChat)
+        DataManager.Instance.FindLobbyUser(NetworkManager.User);
+        LoundgeUser reciever = DataManager.Instance.GetUser(user.email);
+        
+
+        bool recieverIsOnVoiceChat = reciever.onVoiceChat;
+        bool recieverIsOnRequestVoiceChat = reciever.onRequestVoiceChat;
+
+        LoundgeUser sender = DataManager.Instance.GetUser(NetworkManager.LoundgeUser.email);
+
+        bool senderIsOnVoiceChat = sender.onVoiceChat;
+        bool senderIsOnRequestVoiceChat = sender.onRequestVoiceChat;
+        if (isVoiceChatReady && isHovered && !senderIsOnVoiceChat && !senderIsOnRequestVoiceChat && !recieverIsOnRequestVoiceChat && !recieverIsOnVoiceChat)
+        {
+            string message = $"{EventMessageType.VOICECHAT}_{VoiceEventType.REQUEST}_{NetworkManager.User.email}_{user.email}";
+            eventMessage?.Invoke(message);
+        }
+    }
+
+    private Coroutine requestPrivateVoiceChat;
+    private IEnumerator RequestPrivateVoiceChat()
+    {
+        WaitForSeconds delay = new WaitForSeconds(0.1f);
+        LoundgeUser reciever = null;
+        while(reciever == null)
+        {
+            reciever = DataManager.Instance.GetUser(user.email);
+            yield return delay;
+        }
+
+        bool recieverIsOnVoiceChat = reciever.onVoiceChat;
+        bool recieverIsOnRequestVoiceChat = reciever.onRequestVoiceChat;
+
+        LoundgeUser sender = null;
+        while(sender == null)
+        {
+            sender = DataManager.Instance.GetUser(NetworkManager.LoundgeUser.email);
+            yield return delay;
+        }
+
+        bool senderIsOnVoiceChat = sender.onVoiceChat;
+        bool senderIsOnRequestVoiceChat = sender.onRequestVoiceChat;
+
+        if (isVoiceChatReady && isHovered && !senderIsOnVoiceChat && !senderIsOnRequestVoiceChat && !recieverIsOnRequestVoiceChat && !recieverIsOnVoiceChat)
         {
             string message = $"{EventMessageType.VOICECHAT}_{VoiceEventType.REQUEST}_{NetworkManager.User.email}_{user.email}";
             eventMessage?.Invoke(message);
@@ -165,17 +207,8 @@ public class NPCController : MonoBehaviourPun //, IPunInstantiateMagicCallback
 
     public void OnHoverEnter()
     {
-        if(senderIsOnVoiceChat)
-        {
-            return;
-        }
-
         isHovered = true;
-
-        if (!user.onVoiceChat && isVoiceChatReady)
-        {
-            OutlineEnable();
-        }
+        OutlineEnable();
     }
 
     public void OnHoverExit()
@@ -203,5 +236,28 @@ public class NPCController : MonoBehaviourPun //, IPunInstantiateMagicCallback
     public void OutlineDisable()
     {
         outline.gameObject.SetActive(false);
+    }
+
+    public void ShowBubble(string message)
+    {
+        if(speachTimer != null)
+        {
+            StopCoroutine(speachTimer);
+        }
+        speachTimer = null;
+        if (gameObject.activeInHierarchy)
+        {
+            speachTimer = StartCoroutine(SpeachTimer(message));
+        }
+    }
+
+    private Coroutine speachTimer;
+    private IEnumerator SpeachTimer(string message)
+    {
+        speachBubble.ShowBubble(message);
+
+        yield return new WaitForSeconds(5f);
+
+        speachBubble.HideBubble();
     }
 }

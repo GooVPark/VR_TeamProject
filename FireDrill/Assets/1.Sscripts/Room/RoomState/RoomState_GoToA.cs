@@ -41,6 +41,11 @@ public class RoomState_GoToA : RoomState
         if (NetworkManager.User.userType == UserType.Lecture)
         {
             DataManager.Instance.UpdateRoomState(roomSceneManager.roomNumber, true);
+            string message = $"{EventMessageType.UPDATEROOMSTATE}_{roomSceneManager.roomNumber}";
+            roomSceneManager.SendEventMessage(message);
+            message = $"{EventMessageType.LAMPUPDATE}";
+            SendEventMessage(message);
+
         }
     }
 

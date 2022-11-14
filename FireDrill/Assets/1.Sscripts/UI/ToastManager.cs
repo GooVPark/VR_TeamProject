@@ -19,13 +19,3 @@ public class ToastManager : MonoBehaviour
         toast.SetToastMeesage(toastJson);
     }
 }
-
-
-[System.Serializable]
-public class ToastJson
-{
-    public ObjectId _id;
-    public string code;
-    public string text;
-    public string type;
-}

@@ -12,12 +12,14 @@ public class RoomEnterance : MonoBehaviour
     [SerializeField] private BoxCollider enteranceCollider;
     [SerializeField] private string targetTag;
 
+    [SerializeField] private GameObject cantJoinRoomToast;
     [SerializeField] private ButtonInteractor joinRoomButton;
     [SerializeField] private GameObject joinRoomError;
 
     [SerializeField] private TMP_Text roomInfo;
 
     [SerializeField] private LoundgeSceneManager loundgeSceneManager;
+    public bool isStarted = false;
     public GameObject interactionArea;
 
     private void Awake()
@@ -32,19 +34,43 @@ public class RoomEnterance : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("NetworkPlayerRoom"))
-        {
+        //if (other.CompareTag("NetworkPlayerRoom"))
+        //{
 
-            if (other.GetComponentInParent<PhotonView>().IsMine)
+        //    if (other.GetComponentInParent<PhotonView>().IsMine)
+        //    {
+        //        joinRoomButton.gameObject.SetActive(false);
+        //        joinRoomError.gameObject.SetActive(true);
+        //    }
+        //}
+        //else if(other.CompareTag("NetworkPlayer"))
+        //{
+        //    joinRoomError.gameObject.SetActive(false);
+        //    joinRoomButton.gameObject.SetActive(true);
+        //}
+        if(other.CompareTag(targetTag))
+        {
+            if(isStarted)
+            {
+                joinRoomButton.gameObject.SetActive(false);
+                joinRoomError.SetActive(false);
+                cantJoinRoomToast.SetActive(true);
+                return;
+            }
+            else
+            {
+                cantJoinRoomToast.SetActive(false);
+            }
+            if(NetworkManager.Instance.onVoiceChat)
             {
                 joinRoomButton.gameObject.SetActive(false);
                 joinRoomError.gameObject.SetActive(true);
             }
-        }
-        else if(other.CompareTag("NetworkPlayer"))
-        {
-            joinRoomError.gameObject.SetActive(false);
-            joinRoomButton.gameObject.SetActive(true);
+            else
+            {
+                joinRoomError.gameObject.SetActive(false);
+                joinRoomButton.gameObject.SetActive(true);
+            }
         }
     }
 
@@ -54,6 +80,7 @@ public class RoomEnterance : MonoBehaviour
         {
             joinRoomError.gameObject.SetActive(false);
             joinRoomButton.gameObject.SetActive(false);
+            cantJoinRoomToast.SetActive(false);
         }
     }
 
@@ -68,4 +95,5 @@ public class RoomEnterance : MonoBehaviour
         loundgeSceneManager.JoinRoom(roomNumber);
 
     }
+
 }

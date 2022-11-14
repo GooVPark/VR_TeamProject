@@ -111,64 +111,6 @@ public class UserTable
 
 
 
-[System.Serializable]
-public class User
-{
-
-    public string email;
-    public string password;
-
-    public int id;
-    public string name;
-    public UserType userType;
-    public string company;
-
-    public int characterNumber;
-
-    public bool isOnline;
-
-    public int trainingProgress = 0;
-    public bool hasExtingisher;
-
-    public int currentRoom = 999;
-    public int[] quizResult = new int[10];
-    public int totalScore;
-
-    public User()
-    {
-
-    }
-
-    public User(string email, string password, string name, UserType userType, string company, int id)
-    {
-        this.email = email;
-        this.password = password;
-        this.name = name;
-        this.userType = userType;
-        this.company = company;
-        this.id = id;
-    }
-}
-
-[System.Serializable]
-public class LoundgeUser
-{
-    public ObjectId id;
-    public string email;
-    public string name;
-    public int characterNumber;
-    public bool onVoiceChat;
-    public UserType userType;
-
-    public LoundgeUser(User user)
-    {
-        email = user.email;
-        name = user.name;
-        characterNumber = user.characterNumber;
-        onVoiceChat = false;
-        userType = user.userType;
-    }
-}
 
 public static class DataBbaseSystem
 {

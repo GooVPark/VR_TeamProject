@@ -88,7 +88,10 @@ public class FireObject : MonoBehaviourPun
                 StopCoroutine(extinguishTrigger);
                 extinguishTrigger = null;
             }
-            extinguishTrigger = StartCoroutine(ExtinguishTrigger());
+            if (gameObject.activeSelf)
+            {
+                extinguishTrigger = StartCoroutine(ExtinguishTrigger());
+            }
         }
     }
 

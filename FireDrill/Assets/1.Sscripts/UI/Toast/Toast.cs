@@ -5,7 +5,26 @@ using TMPro;
 
 public class Toast : MonoBehaviour
 {
+    public float duration;
+    public bool hasDurationTime;
     public TMP_Text message;
+
+    private void OnEnable()
+    {
+        if (hasDurationTime)
+        {
+            toastDuration = StartCoroutine(ToastDuration(duration));
+        }
+    }
+
+    private void OnDisable()
+    {
+        if(toastDuration != null)
+        {
+            StopCoroutine(toastDuration);
+            toastDuration = null;
+        }
+    }
 
     public void Activate(float duration)
     {
@@ -22,6 +41,8 @@ public class Toast : MonoBehaviour
     {
         this.message.text = message;
     }
+
+    private Coroutine toastDuration;
 
     private IEnumerator ToastDuration(float duration)
     {

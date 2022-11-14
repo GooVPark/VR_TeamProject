@@ -20,7 +20,7 @@ public class VRMap
 public class VRRig : MonoBehaviour
 {    
     public float turnSmoothness;
-    
+    private GameManager gameManager;
     public VRMap head;
     public VRMap leftHand;
     public VRMap rightHand;
@@ -30,6 +30,8 @@ public class VRRig : MonoBehaviour
 
     void Start()
     {
+        gameManager = FindObjectOfType<GameManager>();
+
         headBodyOffset = transform.position - headConstraint.position;
         transform.rotation *= Quaternion.Euler(new Vector3(0, 90, 0));
     }

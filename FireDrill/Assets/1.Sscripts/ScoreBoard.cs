@@ -47,7 +47,6 @@ public class ScoreBoard : MonoBehaviour
         }
 
         UpdateScoreBoard();
-        elapsedTime = 0f;
     }
 
     public void UpdateScoreBoard()
@@ -56,14 +55,31 @@ public class ScoreBoard : MonoBehaviour
         
         if(isOrderd)
         {
-            var list = from user in users orderby user.totalScore descending select users;
-            users = (List<User>)list;
+            var list = from user in users orderby user.totalScore descending select user;
+
+            users = list.ToList();
+        }
+
+        int index = 0;
+        for(int i = 0; i < users.Count; i++)
+        {
+            if (users[i].email.Equals(NetworkManager.User.email))
+            {
+                index = i;
+                break;
+            }
+        }
+
+        users.RemoveAt(index);
+
+        Debug.Log("Sorted User List");
+        foreach(var user in users)
+        {
+            Debug.Log(user.email);
         }
 
         for (int i = 0; i < users.Count; i++)
         {
-            if (users[i].userType == UserType.Lecture) continue;
-
             scoureRows[i].gameObject.SetActive(true);
             scoureRows[i].UpdateScore(users[i]);
         }

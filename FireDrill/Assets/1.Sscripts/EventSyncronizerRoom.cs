@@ -112,6 +112,9 @@ public class EventSyncronizerRoom : MonoBehaviour, IChatClientListener
             }
 
             string message = messages[^1].ToString();
+
+            Debug.Log(message);
+
             string[] command = message.Split('_');
 
             string type = command[0];
@@ -120,12 +123,18 @@ public class EventSyncronizerRoom : MonoBehaviour, IChatClientListener
             {
                 string sender = command[1];
                 string chatMessage = command[2];
+                int roomNumber = int.Parse(command[3]);
 
-                textChatManager.OnGetMessage(sender, chatMessage, NetworkManager.RoomNumber);
+                textChatManager.OnGetMessage(sender, chatMessage, roomNumber);
             }
             if (type.Equals(EventMessageType.QUIZ.ToString()))
             {
                 scoreBoard.UpdateScoreBoard();
+            }
+            if(type.Equals(EventMessageType.FORCEEXIT.ToString()))
+            {
+                Debug.Log("Leave Room Event Message");
+                roomSceneManager.LeaveRoom();
             }
         }
     }

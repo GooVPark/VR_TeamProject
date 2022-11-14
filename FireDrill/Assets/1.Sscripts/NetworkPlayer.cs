@@ -10,7 +10,7 @@ using Photon.Pun;
 using Photon.Voice.Unity;
 using Photon.Voice.PUN;
 
-public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
+public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
 {
     #region 동기화 프로퍼티
     [SerializeField] private string userID;
@@ -39,16 +39,16 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         switch (userLevel)
         {
             case UserType.Lecture:
+                studentIcon.gameObject.SetActive(false);
                 lectureIcon.gameObject.SetActive(true);
                 break;
             case UserType.Student:
+                lectureIcon.gameObject.SetActive(false);
                 studentIcon.gameObject.SetActive(true);
-                scoreUI.gameObject.SetActive(true);
-                scoreUI.text = "-";
-                uiGroup.sizeDelta = new Vector2(220, 0) + uiGroup.sizeDelta;
+                //uiGroup.sizeDelta = new Vector2(220, 0) + uiGroup.sizeDelta;
                 break;
         }
-        uiGroup.sizeDelta = new Vector2(100, 0) + uiGroup.sizeDelta;
+        //uiGroup.sizeDelta = new Vector2(100, 0) + uiGroup.sizeDelta;
     }
 
     [SerializeField] private int currentCharacter;
@@ -65,17 +65,53 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     [PunRPC]
     private void SetHasExtinguisher(bool value)
     {
-        hasExtinguisher = value;
-        if(hasExtinguisher)
+        if (NetworkManager.RoomNumber == 999)
         {
-            extinguisherIcon.gameObject.SetActive(true);
-            uiGroup.sizeDelta = new Vector2(100, 0) + uiGroup.sizeDelta;
+            hasExtinguisher = false;
         }
         else
         {
-            extinguisherDisabled.SetActive(false);
-            //var collision = hoseWater.collision;
-            //collision.enabled = false;
+            hasExtinguisher = value;
+            if (hasExtinguisher)
+            {
+                extinguisherIcon.gameObject.SetActive(true);
+                //uiGroup.sizeDelta = new Vector2(100, 0) + uiGroup.sizeDelta;
+            }
+            else
+            {
+                extinguisherIcon.gameObject.SetActive(false);
+                //var collision = hoseWater.collision;
+                //collision.enabled = false;
+            }
+        }
+    }
+
+    [SerializeField] private int quizScore;
+    public int QuizScore { get => quizScore; set => ActionRPC(nameof(SetQuizScoreRPC), value); }
+    [PunRPC]
+    private void SetQuizScoreRPC(int value)
+    {
+        quizScore = value;
+        scoreUI.gameObject.SetActive(false);
+        if (UserLevel == UserType.Student)
+        {
+            if (NetworkManager.Instance.roomType == RoomType.Room)
+            {
+                if (value < 0)
+                {
+                    scoreUI.text = $" - ";
+                }
+                else
+                {
+                    scoreUI.text = $"{value}/100";
+                }
+                scoreUI.gameObject.SetActive(true);
+            }
+            else
+            {
+                scoreUI.text = "-";
+                scoreUI.gameObject.SetActive(false);
+            }
         }
     }
 
@@ -84,7 +120,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     [PunRPC]
     private void SetOnVoiceChatRPC(bool value)
     {
-        onVoiceChat = value;    
+        onVoiceChat = value;
     }
 
     [SerializeField] private bool onMegaphone;
@@ -92,19 +128,38 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     [PunRPC]
     private void SetOnMegaPhoneRPC(bool value)
     {
-        if(value)
+        if (value)
         {
-            megaphoneEnabled.SetActive(true);
+            megaphoneIcon.gameObject.SetActive(true);
         }
         else
         {
-            megaphoneEnabled.SetActive(false);
+            megaphoneIcon.gameObject.SetActive(false);
+        }
+    }
+
+    [SerializeField] private bool onPersonalChat;
+    public bool OnPersonalChat { get => onPersonalChat; set => ActionRPC(nameof(SetOnPersonalChatRPC), value); }
+    [PunRPC]
+    private void SetOnPersonalChatRPC(bool value)
+    {
+        onPersonalChat = value;
+        if (value)
+        {
+            //personalVoice.SetActive(true);
+        }
+        else
+        {
+            //personalVoice.SetActive(false);
         }
     }
 
     private void ActionRPC(string functionName, object value)
     {
-        photonView.RPC(functionName, RpcTarget.All, value);
+        if (value != null)
+        {
+            photonView.RPC(functionName, RpcTarget.All, value);
+        }
     }
 
     public void InvokeProperties()
@@ -116,6 +171,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         OnMegaPhone = OnMegaPhone;
         OnVoiceChat = OnVoiceChat;
         CurrentCharacter = CurrentCharacter;
+        QuizScore = QuizScore;
     }
     #endregion
 
@@ -128,7 +184,6 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     public Transform leftHand;
     public Transform rightHand;
 
-    private PhotonView photonView;
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioSource megaphone;
 
@@ -147,9 +202,10 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     public GameObject userInfoUI;
     public RectTransform uiGroup;
     public TMP_Text userNameUI;
-    public Image lectureIcon;
-    public Image studentIcon;
-    public Image extinguisherIcon;
+    public GameObject lectureIcon;
+    public GameObject studentIcon;
+    public GameObject extinguisherIcon;
+    public Image megaphoneIcon;
     public TMP_Text scoreUI;
 
     public GameObject speachBubble;
@@ -165,15 +221,6 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     public GameObject extinguisherDisabled;
     [Space(5)]
 
-    [Header("Voice Chat Icons")]
-    public GameObject voiceChatDisabled;
-    public GameObject voiceChatEnabled;
-    public GameObject voiceChatHoverd;
-    public GameObject voiceChatOn;
-    [Space(5)]
-
-    [Header("Megaphotn Icon")]
-    public GameObject megaphoneEnabled;
     [Space(5)]
 
     [SerializeField] private ActionBasedController leftController;
@@ -199,6 +246,8 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     [SerializeField] private Animator leftHandAnimator;
     [SerializeField] private Animator rightHandAnimator;
 
+    [SerializeField] private Animator genderLeftHandAnimator;
+    [SerializeField] private Animator genderRightHandAnimator;
     [SerializeField] private Animator femaleLeftHandAnimator;
     [SerializeField] private Animator femaleRightHandAnimator;
     [SerializeField] private Animator maleLeftHandAnimator;
@@ -215,6 +264,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     public Extinguisher extinguisher;
     public ParticleSystem hoseWater;
     public GameObject hose;
+    public Nozzle nozzle;
     private GameObject extinguisherObject;
     private Transform extinguisherPivot;
     [SerializeField] private Transform extinguisherPivotMale;
@@ -236,6 +286,8 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     [SerializeField] private AnimationCurve voiceAudioCurve;
     [SerializeField] private AnimationCurve megaphoneAudioCurve;
 
+    [SerializeField] private XRSimpleInteractable interactable;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -243,7 +295,6 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
 
         Transform parent = GameObject.Find("Players").transform;
         transform.SetParent(parent);
-        photonView = GetComponent<PhotonView>();
 
         GameManager gameManager = FindObjectOfType<GameManager>();
         //gameManager.showSpeechBubble += OnSendChatMessage;
@@ -255,10 +306,21 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         leftHandAnimation = GameObject.Find("Left Direct Interactor").GetComponent<HandAnimationController>();
         rightHandAnimation = GameObject.Find("Right Direct Interactor").GetComponent<HandAnimationController>();
 
-        if(photonView.IsMine)
+        rightHandAnimation.animator.SetInteger("Pose", 0);
+        rightHandAnimation.animator.SetFloat("Flex", 0f);
+        leftHandAnimation.animator.SetInteger("Pose", 0);
+        leftHandAnimation.animator.SetFloat("Flex", 0f);
+
+
+        if (photonView.IsMine)
         {
-            leftWrist.gameObject.SetActive(true);
-            rightWrist.gameObject.SetActive(true);
+            if(NetworkManager.Instance.roomType == RoomType.Room)
+            {
+                leftWrist.gameObject.SetActive(true);
+                rightWrist.gameObject.SetActive(true);
+            }
+
+            interactable.enabled = false;
         }
 
         leftWristOrigin = leftWrist.localRotation;
@@ -269,7 +331,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         voiceView = GetComponent<PhotonVoiceView>();
         voiceView.SpeakerInUse = micSpeaker;
 
-        
+
         Initialize();
     }
 
@@ -310,7 +372,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
 
     public void OnSelectMRPlayer()
     {
-        if(isHovered)
+        if (isHovered)
         {
             onPlayerSelectEvent?.Invoke(this);
         }
@@ -324,7 +386,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     [PunRPC]
     private void OnSelectedMRPlayerRPC()
     {
-        if(photonView.IsMine)
+        if (photonView.IsMine)
         {
             HasExtinguisher = true;
             NetworkManager.User.hasExtingisher = true;
@@ -332,48 +394,58 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         }
     }
 
-    public void OnExtinguisher(Vector3 position)
+    public void OnExtinguisher(Transform pivot)
     {
         Debug.Log("OnExtinguisher");
         if (photonView.IsMine)
         {
             Debug.Log("OnExtinguisher Is Mine");
 
-            extinguisherObject = PhotonNetwork.Instantiate("Extinguisher", extinguisherPivot.position, extinguisherPivot.rotation);
-            onExtinguisher = true;
+            extinguisherObject = PhotonNetwork.Instantiate("Extinguisher", pivot.position, Quaternion.identity);
+            extinguisherObject.GetComponent<Extinguisher>().extinguisherOrigin = pivot;
+            extinguisherObject.GetComponent<InteractableObject>().enabled = true;
+            //onExtinguisher = true;
             photonView.RPC(nameof(OnExtinguisherRPC), RpcTarget.All, extinguisherObject.name);
         }
     }
     [PunRPC]
     public void OnExtinguisherRPC(string name)
     {
-        extinguisher = GameObject.Find(name).GetComponent<Extinguisher>();
-        pinTrigger = extinguisher.pinTrigger;
+        extinguisher = FindObjectOfType<Extinguisher>();
+        pinTrigger = extinguisher.pinTrigger.GetComponent<PinTrigger>();
         hose = extinguisher.hose;
         hoseWater = extinguisher.hoseWater;
-
+        nozzle = extinguisher.nozzle.GetComponent<Nozzle>();
         hose.SetActive(true);
         extinguisher.gameObject.SetActive(true);
     }
 
     public void OffExtinguisher()
     {
-        photonView.RPC(nameof(OffExtinguisher), RpcTarget.All);
+        photonView.RPC(nameof(OffExtinguisherRPC), RpcTarget.All);
     }
 
     [PunRPC]
     private void OffExtinguisherRPC()
     {
-        if(photonView.IsMine)
+        if (photonView.IsMine)
         {
             extinguisher.gameObject.SetActive(false);
             hose.gameObject.SetActive(false);
+        }
+        else
+        {
+            extinguisher = FindObjectOfType<Extinguisher>();
+            nozzle = FindObjectOfType<Nozzle>();
+
+            extinguisher.gameObject.SetActive(false);
+            nozzle.gameObject.SetActive(false);
         }
     }
 
     public void Spread(bool value)
     {
-        if(photonView.IsMine)
+        if (photonView.IsMine)
         {
             photonView.RPC(nameof(SpreadRPC), RpcTarget.All, value);
         }
@@ -382,15 +454,25 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     [PunRPC]
     public void SpreadRPC(bool value)
     {
-        if(value)
+        if (hoseWater == null || nozzle == null)
         {
-            hoseWater.Play();
+            return;
+        }
+        if (value)
+        {
+            if (!nozzle.isSelected)
+            {
+                hoseWater.Stop();
+            }
+            else
+            {
+                hoseWater.Play();
+            }
         }
         else
         {
             hoseWater.Stop();
         }
-        Debug.Log("Spread Value: " + value);
     }
 
     public void Initialize()
@@ -405,6 +487,10 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
 
             userInfoUI.SetActive(false);
 
+            maleHelmet.transform.GetChild(0).gameObject.layer = 31;
+            maleHelmet.transform.GetChild(1).gameObject.layer = 31;
+            femaleHelmet.transform.GetChild(0).gameObject.layer = 31;
+            femaleHelmet.transform.GetChild(1).gameObject.layer = 31;
             maleMesh.layer = 31;
             femaleMesh.layer = 31;
             headModel.layer = 31;
@@ -412,13 +498,20 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
             rightHand.gameObject.layer = 31;
             outlineObject.gameObject.layer = 31;
 
-            if (NetworkManager.Instance.roomType == RoomType.Room)
-            {
-                FindObjectOfType<TextChatManager>().sendChatMessage += OnSendChatMessage;
-            }
+            //if (NetworkManager.Instance.roomType == RoomType.Room)
+            //{
+            //    FindObjectOfType<TextChatManager>().sendChatMessage += OnSendChatMessage;
+            //}
+            FindObjectOfType<TextChatManager>().sendChatMessage = null;
+            FindObjectOfType<TextChatManager>().sendChatMessage += OnSendChatMessage;
         }
 
         //requestVoiceChatButton.onClick.AddListener(() => LoundgeSceneManager.Instance.RequsetVoiceChat(NetworkManager.User.id, UserID));
+    }
+
+    private void OnDestroy()
+    {
+        FindObjectOfType<TextChatManager>().sendChatMessage = null;
     }
 
     [PunRPC]
@@ -461,19 +554,52 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
     {
         if (rightHandAnimation.animator.GetInteger("Pose") == 0)
         {
+            rightHandAnimator.SetInteger("Pose", 0);
             rightHandAnimator.SetFloat("Flex", rightHandAnimation.flex);
             rightHandAnimator.SetLayerWeight(2, rightHandAnimation.animator.GetLayerWeight(2));
             rightHandAnimator.SetLayerWeight(1, rightHandAnimation.animator.GetLayerWeight(1));
 
-  //          Quaternion rightWristRotation = rightHandAnimation.transform.rotation;
-//            rightWrist.localRotation = rightWristRotation;
+            genderRightHandAnimator.SetInteger("Pose", 0);
+            genderRightHandAnimator.SetFloat("Flex", rightHandAnimation.flex);
+            genderRightHandAnimator.SetLayerWeight(2, rightHandAnimation.animator.GetLayerWeight(2));
+            genderRightHandAnimator.SetLayerWeight(1, rightHandAnimation.animator.GetLayerWeight(1));
+        }
+        else
+        {
+            int pose = rightHandAnimation.poseIndex;
+
+            rightHandAnimator.SetInteger("Pose", pose);
+            rightHandAnimator.SetLayerWeight(2, 0);
+            rightHandAnimator.SetLayerWeight(1, 0);
+
+            genderRightHandAnimator.SetInteger("Pose", pose);
+            genderRightHandAnimator.SetLayerWeight(2, 0);
+            genderRightHandAnimator.SetLayerWeight(1, 0);
         }
 
         if (leftHandAnimation.animator.GetInteger("Pose") == 0)
         {
+            leftHandAnimator.SetInteger("Pose", 0);
             leftHandAnimator.SetFloat("Flex", leftHandAnimation.flex);
             leftHandAnimator.SetLayerWeight(2, leftHandAnimation.animator.GetLayerWeight(2));
             leftHandAnimator.SetLayerWeight(1, leftHandAnimation.animator.GetLayerWeight(1));
+
+            genderLeftHandAnimator.SetInteger("Pose", 0);
+            genderLeftHandAnimator.SetFloat("Flex", leftHandAnimation.flex);
+            genderLeftHandAnimator.SetLayerWeight(2, leftHandAnimation.animator.GetLayerWeight(2));
+            genderLeftHandAnimator.SetLayerWeight(1, leftHandAnimation.animator.GetLayerWeight(1));
+        }
+        else
+        {
+            int pose = leftHandAnimation.poseIndex;
+
+            leftHandAnimator.SetInteger("Pose", pose);
+            leftHandAnimator.SetLayerWeight(2, 0);
+            leftHandAnimator.SetLayerWeight(1, 0);
+
+            genderLeftHandAnimator.SetInteger("Pose", pose);
+            genderLeftHandAnimator.SetLayerWeight(2, 0);
+            genderLeftHandAnimator.SetLayerWeight(1, 0);
         }
     }
 
@@ -494,13 +620,9 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
             extinguisherPivot = extinguisherPivotMale;
             
             skinnedMeshRenderer = skinnedMeshRendererMale;
-            //leftHandAnimator = maleLeftHandAnimator;
-            //rightHandAnimator = maleRightHandAnimator;
 
-            if(UserLevel == UserType.Lecture)
-            {
-                maleHelmet.SetActive(false);
-            }
+            genderLeftHandAnimator = maleLeftHandAnimator;
+            genderRightHandAnimator = maleRightHandAnimator;
         }
         else
         {
@@ -512,13 +634,9 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
             extinguisherPivot = extinguisherPivotFemale;
 
             skinnedMeshRenderer = skinnedMeshRendererFemale;
-            //leftHandAnimator = femaleLeftHandAnimator;
-            //rightHandAnimator = femaleRightHandAnimator;
 
-            if (UserLevel == UserType.Lecture)
-            {
-                femaleHelmet.SetActive(false);
-            }
+            genderLeftHandAnimator = femaleLeftHandAnimator;
+            genderRightHandAnimator = femaleRightHandAnimator;
         }
 
         skinnedMeshRenderer.sharedMaterial = materials[value];
@@ -559,6 +677,7 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         if (popChat != null)
         {
             StopCoroutine(popChat);
+            popChat = null;
         }
         popChat = StartCoroutine(PopChat(message));
 
@@ -633,7 +752,8 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         audioSource.maxDistance = 500f;
         audioSource.SetCustomCurve(AudioSourceCurveType.CustomRolloff, megaphoneAudioCurve);
 
-        megaphoneEnabled.SetActive(true);
+        megaphoneIcon.gameObject.SetActive(true);
+        //megaphoneEnabled.SetActive(true);
 
     }
 
@@ -648,7 +768,8 @@ public class NetworkPlayer : MonoBehaviour, IPunInstantiateMagicCallback
         audioSource.maxDistance = 5f;
         audioSource.SetCustomCurve(AudioSourceCurveType.CustomRolloff, voiceAudioCurve);
 
-        megaphoneEnabled.SetActive(false);
+        megaphoneIcon.gameObject.SetActive(false);
+        //megaphoneEnabled.SetActive(false);
     }
 
     #endregion

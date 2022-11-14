@@ -86,13 +86,10 @@ public class VoiceManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-
-        groupText.text = recorder.InterestGroup.ToString();
-
-
-        acceptVoiceChatButton.onClick += AcceptVoiceChat;
-        deacceptVoiceChatButton.onClick += DeaccpetVoiceChat;
-        cancelVoiceChatButton.onClick += CancelVoiceChat;
+        recorder = FindObjectOfType<Recorder>();
+        //acceptVoiceChatButton.onClick += AcceptVoiceChat;
+        //deacceptVoiceChatButton.onClick += DeaccpetVoiceChat;
+        //cancelVoiceChatButton.onClick += CancelVoiceChat;
     }
 
     public void Initialize(int viewID)
@@ -107,10 +104,10 @@ public class VoiceManager : MonoBehaviourPunCallbacks
     {
         //localPlayer.SetVoiceState(VoiceChatState.Send);
         Debug.Log($"OnVoiceChatSendEvent - Sender: {sender.email}, Reciever: {reciever.email}");
-
+        DataManager.Instance.SetUserOnRequest(sender.email, true);
         CurrentToast = cancelVoiceChatToast.gameObject;
         string userName = reciever.name;
-        cancelVoiceChatToast.message.text = $"{userName}님에게 1:1 대화 요청";
+        cancelVoiceChatToast.message.text = $"{userName}님의 대화 수락 요청을 기다리는 중...";
 
         this.sender = sender;
         this.reciever = reciever;
@@ -120,10 +117,10 @@ public class VoiceManager : MonoBehaviourPunCallbacks
     {
         //localPlayer.SetVoiceState(VoiceChatState.Recieve);
         Debug.Log($"OnVoiceChatRecieveEvent - Sender: {sender.email}, Reciever: {reciever.email}");
-
+        DataManager.Instance.SetUserOnRequest(reciever.email, true);
         CurrentToast = voiceChatRequestToast.gameObject;
         string userName = sender.name;
-        voiceChatRequestToast.message.text = $"{userName}님의 1:1 대화 요청";
+        voiceChatRequestToast.message.text = $"{userName}님이 대화 요청을 보냈습니다. 대화를 원하시면 YES, 아니면 NO를\n클릭해주세요.";
 
         this.sender = sender;
         this.reciever = reciever;
@@ -135,19 +132,20 @@ public class VoiceManager : MonoBehaviourPunCallbacks
         Debug.Log($"OnVoiceChatCancleEvent - Sender: {sender.email}, Reciever: {reciever.email}");
 
         CurrentToast = voiceChatCanceledToast.gameObject;
+        DataManager.Instance.SetUserOnRequest(user.email, false);
         string userName = user.name;
-        voiceChatCanceledToast.message.text = $"{userName}님과의 대화가 취소되었습니다";
+        voiceChatCanceledToast.message.text = $"{userName}님과의 대화가 취소되었습니다.";
+
+        NetworkManager.Instance.voiceChatDisabled = true;
+        NetworkManager.Instance.onVoiceChat = false;
 
         sender = null;
         reciever = null;
-
-        Invoke(nameof(CloseToast), 3f);
     }
 
     public void CancelVoiceChat()
     {
         Debug.Log($"CancelVoiceChat - Sender: {sender.email}, Reciever: {reciever.email}");
-
         string message = $"{EventMessageType.VOICECHAT}_{VoiceEventType.CANCEL}_{sender.email}_{reciever.email}";
         eventMessage?.Invoke(message);
     }
@@ -170,7 +168,7 @@ public class VoiceManager : MonoBehaviourPunCallbacks
 
         voiceChatToggleButton.onClick.RemoveAllListeners();
 
-        Invoke(nameof(CloseToast), 3f);
+     
     }
 
     public void DisconnectVoiceChat()
@@ -178,8 +176,6 @@ public class VoiceManager : MonoBehaviourPunCallbacks
         string message = $"{EventMessageType.VOICECHAT}_{VoiceEventType.DISCONNECT}_{sender.email}_{reciever.email}";
         eventMessage?.Invoke(message);
     }
-
-
     public void AcceptVoiceChat()
     {
         string message = $"{EventMessageType.VOICECHAT}_{VoiceEventType.ACCEPT}_{sender.email}_{reciever.email}";
@@ -197,6 +193,7 @@ public class VoiceManager : MonoBehaviourPunCallbacks
         CurrentToast = acceptVoiceChatToast.gameObject;
         acceptVoiceChatToast.message.text = $"{reciever.name}님과의 1:1 대화가 수락 되었습니다.";
 
+        DataManager.Instance.SetUserOnRequest(sender.email, false);
         DataManager.Instance.UpdateLobbyUser(sender);
         NetworkManager.Instance.voiceChatDisabled = false;
         NetworkManager.Instance.onVoiceChat = true;
@@ -204,12 +201,14 @@ public class VoiceManager : MonoBehaviourPunCallbacks
         string message = $"{EventMessageType.VOICECHAT}_{VoiceEventType.CONNECT}_{sender.email}_{reciever.email}";
         eventMessage?.Invoke(message);
 
-        Invoke(nameof(CloseToast), 3f);
     }
     public void OnAcceptVoiceChatEventReciever(LoundgeUser sender, LoundgeUser reciever)
     {
         CurrentToast = acceptVoiceChatToast.gameObject;
         acceptVoiceChatToast.message.text = $"{sender.name}님과의 1:1 대화가 수락 되었습니다.";
+
+        DataManager.Instance.SetUserOnRequest(reciever.email, false);
+
         NetworkManager.Instance.voiceChatDisabled = false;
         NetworkManager.Instance.onVoiceChat = true;
 
@@ -217,25 +216,22 @@ public class VoiceManager : MonoBehaviourPunCallbacks
 
         DataManager.Instance.UpdateLobbyUser(reciever);
 
-        string message = $"{EventMessageType.VOICECHAT}_{VoiceEventType.CONNECT}_{sender.email}_{reciever.email}";
-        eventMessage?.Invoke(message);
+        //string message = $"{EventMessageType.VOICECHAT}_{VoiceEventType.CONNECT}_{sender.email}_{reciever.email}";
+        //eventMessage?.Invoke(message);
 
-        Invoke(nameof(CloseToast), 3f);
     }
 
     public void OnDeacceptVoiceChatEventSender(LoundgeUser sender, LoundgeUser reciever)
     {
         CurrentToast = deacceptVoiceChatToastSender.gameObject;
+        DataManager.Instance.SetUserOnRequest(sender.email, false);
         deacceptVoiceChatToastSender.message.text = $"{reciever.name}님과의 1:1 대화가 거절 되었습니다.";
-
-        Invoke(nameof(CloseToast), 3f);
     }
     public void OnDeacceptVoiceChatEventReciever(LoundgeUser sender, LoundgeUser reciever)
     {
         CurrentToast = deacceptVoiceChatToastReciever.gameObject;
+        DataManager.Instance.SetUserOnRequest(reciever.email, false);
         deacceptVoiceChatToastReciever.message.text = $"{sender.name}님과의 1:1 대화가 거절 되었습니다.";
-
-        Invoke(nameof(CloseToast), 3f);
     }
 
     public void OnConnectVoiceManagerEvent(string userEmail)
@@ -364,11 +360,6 @@ public class VoiceManager : MonoBehaviourPunCallbacks
         }
 
         return null;
-    }
-
-    private void CloseToast()
-    {
-        CurrentToast = null;
     }
 
     private void OnApplicationQuit()
