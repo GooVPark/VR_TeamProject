@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
-
 using UnityEngine;
 using Photon.Pun;
 using Photon.Chat;
@@ -24,9 +22,6 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
 
     private ChatClient chatClient;
     [SerializeField] private string eventServer;
-
-    private Thread eventThread;
-    private Queue<string> eventQueue = new Queue<string>();
 
     private void Start()
     {

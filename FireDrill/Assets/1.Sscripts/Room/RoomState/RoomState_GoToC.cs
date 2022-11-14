@@ -51,7 +51,9 @@ public class RoomState_GoToC : RoomState
     {
         toast.gameObject.SetActive(false);
 
+        eventAreaMarker.gameObject.SetActive(false);
         eventAreaMR.gameObject.SetActive(false);
+        eventAreaMarker.gameObject.SetActive(false);
         eventArea.gameObject.SetActive(false);
         base.OnStateExit();
     }

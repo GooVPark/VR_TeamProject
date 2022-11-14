@@ -102,15 +102,17 @@ public class LoundgeSceneManager : GameManager
             initializer = null;
         }
     }
+
     void Delay()
     {
-        Debug.Log("Delay");
+
     }
+
     public void SpawnNPC()
     {
         List<LoundgeUser> loundgeUsers = DataManager.Instance.GetLoundgeUsers();
 
-        Invoke("Delay", 1);
+        Invoke("Delay", 1f);
 
         foreach (LoundgeUser loundgeUser in loundgeUsers)
         {
