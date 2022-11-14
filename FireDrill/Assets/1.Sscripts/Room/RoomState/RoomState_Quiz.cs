@@ -152,6 +152,7 @@ public class RoomState_Quiz : RoomState, IPunObservable
     {
         if (NetworkManager.User.userType == UserType.Student || roomSceneManager.RoomState != roomStateQuizWait)
         {
+            quizManager.gameObject.SetActive(false);
             timerObjectLecture.SetActive(false);
             timerObject.SetActive(false);
             toast.gameObject.SetActive(true);
