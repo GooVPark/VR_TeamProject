@@ -64,6 +64,8 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject idCheckErrorPopUp;
     [SerializeField] private TMP_Text idCheckText;
     [SerializeField] private bool idCheck = false;
+
+    [SerializeField] private Toggle lectureToggle;
     [Space(5)]
 
     [Header("Idle Mode UI")]
@@ -71,6 +73,9 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
 
     private static User userData;
     public static User UserData { get => userData; }
+
+    private bool isLecture = false;
+    private bool isStudent = true;
 
     private string gameVersion = "1.0";
 
@@ -193,6 +198,12 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
     public void ShowSignInWindow()
     {
         CurrentWindow = signInWindow;
+
+        isLecture = false;
+        isStudent = true;
+
+        lectureToggle.isOn = false;
+
         signInID.text = "";
         signInPassword.text = "";
         signInPasswordCheck.text = "";
@@ -226,7 +237,7 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
             email = signInID.text,
             password = signInPassword.text,
             name = signInName.text,
-            userType = UserType.Student,
+            userType = isLecture ? UserType.Lecture : UserType.Student
             //_id = DataManager.Instance.GetUserCount() + 100000
         };
 
@@ -260,6 +271,13 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
     {
         idCheckPopUp.SetActive(false);
         idCheckErrorPopUp.SetActive(false);
+    }
+
+    public void SetLecture()
+    {
+        isLecture = !isLecture;
+       
+        lectureToggle.isOn = isLecture;
     }
 
     #endregion

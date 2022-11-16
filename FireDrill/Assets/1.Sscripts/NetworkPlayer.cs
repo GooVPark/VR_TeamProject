@@ -430,16 +430,12 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
     {
         if (photonView.IsMine)
         {
-            extinguisher.gameObject.SetActive(false);
-            hose.gameObject.SetActive(false);
+            PhotonNetwork.Destroy(extinguisher.GetComponent<PhotonView>());
+            PhotonNetwork.Destroy(hose.GetComponent<PhotonView>());
         }
         else
         {
-            extinguisher = FindObjectOfType<Extinguisher>();
-            nozzle = FindObjectOfType<Nozzle>();
 
-            extinguisher.gameObject.SetActive(false);
-            nozzle.gameObject.SetActive(false);
         }
     }
 

@@ -46,6 +46,11 @@ public class RoomState_GoToC : RoomState
             eventAreaMRMarker.gameObject.SetActive(false);
             eventAreaMarker.gameObject.SetActive(true);
         }
+
+        if(roomSceneManager.isStarted)
+        {
+            roomSceneManager.requiredPlayer = PhotonNetwork.CurrentRoom.PlayerCount;
+        }
         toast.gameObject.SetActive(true);
     }
 

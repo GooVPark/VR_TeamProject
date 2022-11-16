@@ -114,10 +114,6 @@ public class RoomSceneManager : GameManager
 
     private void Update()
     {
-        if(isStarted)
-        {
-            requiredPlayer = PhotonNetwork.CurrentRoom.PlayerCount;
-        }
         RoomState?.OnUpdate();
     }
 

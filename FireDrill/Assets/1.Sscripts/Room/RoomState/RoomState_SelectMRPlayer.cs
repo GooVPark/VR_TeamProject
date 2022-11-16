@@ -83,7 +83,8 @@ public class RoomState_SelectMRPlayer : RoomState
     public void Cancel()
     {
         targetPlayer = null;
-        lectureToast.gameObject.SetActive(false);
+        lectureToast.gameObject.SetActive(true);
+        lectureSelectToast.gameObject.SetActive(false);
     }
 
     [PunRPC]
