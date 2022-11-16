@@ -42,8 +42,6 @@ public class RoomState_WaitPlayer : RoomState
 
         DataManager.Instance.UpdateRoomProgress(roomSceneManager.roomNumber, 0);
 
-        
-
         if (user.userType == UserType.Lecture)
         {
             NetworkManager.Instance.scoreBoardDisabled = false;

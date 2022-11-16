@@ -183,6 +183,10 @@ public class RoomSceneManager : GameManager
     }
     public bool IsReady(int playerCount)
     {
+        if(isStarted)
+        {
+            requiredPlayer = PhotonNetwork.CurrentRoom.PlayerCount;
+        }
         return playerCount >= requiredPlayer;
     }
 
@@ -289,6 +293,8 @@ public class RoomSceneManager : GameManager
         }
     }
 
+
+
     public override void OnDisconnected(DisconnectCause cause)
     {
 
@@ -330,6 +336,14 @@ public class RoomSceneManager : GameManager
     public void PrevPageRPC()
     {
         pdfViwer.PrevPage();
+    }
+
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        if(newMasterClient.IsMasterClient)
+        {
+            DataManager.Instance.UpdateRoomPlayerCount(roomNumber, PhotonNetwork.CurrentRoom.PlayerCount);
+        }
     }
 
     private void OnApplicationQuit()

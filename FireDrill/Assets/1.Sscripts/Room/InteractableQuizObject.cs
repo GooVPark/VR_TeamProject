@@ -161,6 +161,7 @@ public class InteractableQuizObject : MonoBehaviour
         }
 
         
+        
         selectionQuizUI.SetActive(false);
         oxQuizUI.SetActive(false);
         quizResult.gameObject.SetActive(false);
@@ -203,6 +204,12 @@ public class InteractableQuizObject : MonoBehaviour
         }
 
         signImage.gameObject.SetActive(false);
+
+        selectionQuestionUI.SetActive(false);
+        selectionFeedbackUI.SetActive(false);
+        oxQuestionUI.SetActive(false);
+        oxFeedbackUI.SetActive(false);  
+
         QuizObject quiz = quizObjects[quizNumber];
 
         if (quizObjects.Count > 1)

@@ -21,6 +21,7 @@ public class RoomState_StartQuiz : RoomState
     public override void OnStateEnter()
     {
         base.OnStateEnter();
+        time = 3f;
         toast.gameObject.SetActive(true);
     }
 
