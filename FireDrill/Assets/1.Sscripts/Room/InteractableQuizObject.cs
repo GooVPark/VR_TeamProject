@@ -163,6 +163,7 @@ public class InteractableQuizObject : MonoBehaviour
         
         selectionQuizUI.SetActive(false);
         oxQuizUI.SetActive(false);
+        quizResult.gameObject.SetActive(false);
     }
 
     private void Update()

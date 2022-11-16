@@ -90,6 +90,7 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
         }
 
         chatClient.PublishMessage(eventServer, message);
+        DataManager.Instance.WriteLog(message);
     }
 
     public void OnGetMessages(string channelName, string[] senders, object[] messages)
@@ -105,8 +106,6 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
             }
 
             string message = messages[^1].ToString();
-
-            DataManager.Instance.WriteLog(message);
 
             string[] command = message.Split('_');
 

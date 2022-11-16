@@ -38,10 +38,12 @@ public class RoomState_GoToC : RoomState
 
         if (user.hasExtingisher)
         {
+            eventAreaMarker.gameObject.SetActive(false);
             eventAreaMRMarker.gameObject.SetActive(true);
         }
         else
         {
+            eventAreaMRMarker.gameObject.SetActive(false);
             eventAreaMarker.gameObject.SetActive(true);
         }
         toast.gameObject.SetActive(true);

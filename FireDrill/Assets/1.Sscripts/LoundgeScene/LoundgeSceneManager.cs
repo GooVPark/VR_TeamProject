@@ -37,6 +37,10 @@ public class LoundgeSceneManager : GameManager
     [SerializeField] private List<RoomEnterance> roomEnterances;
 
     [SerializeField] private Announcement announcement;
+
+    private int currentUserCount;
+    private bool onSpawn;
+
     private void Awake()
     {
         if(Instance == null)
@@ -62,7 +66,31 @@ public class LoundgeSceneManager : GameManager
     {
         UpdateRoomPlayerCount(0);
     }
-    
+
+    private Coroutine checkPlayerCount;
+    private IEnumerator CheckPlayerCount()
+    {
+        WaitForSeconds delay = new WaitForSeconds(1f);
+        while(true)
+        {
+            yield return delay;
+
+            if(currentUserCount != DataManager.Instance.GetLoundgeUsers().Count)
+            {
+                if(!onSpawn)
+                {
+                    if(spawnNPC != null)
+                    {
+                        StopCoroutine(spawnNPC);
+                    }
+
+                    spawnNPC = null;
+                    spawnNPC = StartCoroutine(SpawnProcess());
+                }
+            }
+        }
+    }
+
     private Coroutine initializer;
     private IEnumerator Initializer()
     {
@@ -103,16 +131,20 @@ public class LoundgeSceneManager : GameManager
         }
     }
 
-    void Delay()
-    {
-
-    }
-
     public void SpawnNPC()
     {
-        List<LoundgeUser> loundgeUsers = DataManager.Instance.GetLoundgeUsers();
+        if(!onSpawn)
+        {
+            
+        }
+    }
 
-        Invoke("Delay", 1f);
+
+    private Coroutine spawnNPC;
+    public IEnumerator SpawnProcess()
+    {
+        onSpawn = true;
+        List<LoundgeUser> loundgeUsers = DataManager.Instance.GetLoundgeUsers();
 
         foreach (LoundgeUser loundgeUser in loundgeUsers)
         {
@@ -139,7 +171,10 @@ public class LoundgeSceneManager : GameManager
                     npcObject.SetActive(false);
                 }
             }
+
+            yield return null;
         }
+        onSpawn = false;
     }
 
     public void JoinVoiceChatRoom(string userID)
@@ -500,6 +535,13 @@ public class LoundgeSceneManager : GameManager
 
 
         initializer = StartCoroutine(Initializer());
+        if(checkPlayerCount != null)
+        {
+            StopCoroutine(checkPlayerCount);
+            checkPlayerCount = null;
+        }
+
+        checkPlayerCount = StartCoroutine(CheckPlayerCount());
     }
 
 

@@ -74,6 +74,7 @@ public class EventSyncronizerRoom : MonoBehaviour, IChatClientListener
         }
 
         chatClient.PublishMessage(eventServer, message);
+        DataManager.Instance.WriteLog(message);
     }
 
     public void DebugReturn(DebugLevel level, string message)
