@@ -106,15 +106,16 @@ public class RoomState_Quiz : RoomState, IPunObservable
         {
             time = 0;
         }
-        timerText.text = $"{(int)recieverTime / 60} : {(int)recieverTime % 60}";
-        timerTextLecture.text = $"{(int)recieverTime / 60} : {(int)recieverTime % 60}";
+        timerText.text = $"{(int)time / 60} : {(int)time % 60}";
+        timerTextLecture.text = $"{(int)time / 60} : {(int)time % 60}";
         progressText.text = $"{solveCount}/10";
         scoreText.text = $"{scoreCount}";
 
+        time -= Time.deltaTime;
+        
+
         if (NetworkManager.User.userType == UserType.Lecture)
         {
-            time -= Time.deltaTime;
-
             //photonView.RPC(nameof(Timer), RpcTarget.All, time);
 
             if (time <= 0 && !endQuiz)
@@ -198,15 +199,14 @@ public class RoomState_Quiz : RoomState, IPunObservable
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        if(stream.IsWriting)
-        {
-            stream.SendNext(time);
-        }
-
-        if(stream.IsReading)
-        {
-            recieverTime = (int)stream.ReceiveNext();
-        }
+        //if(stream.IsWriting)
+        //{
+        //    stream.SendNext(time);
+        //}
+        //else
+        //{
+        //    recieverTime = (int)stream.ReceiveNext();
+        //}
     }
 
     [PunRPC]

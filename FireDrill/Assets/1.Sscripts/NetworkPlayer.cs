@@ -109,7 +109,7 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
             }
             else
             {
-                scoreUI.text = "-";
+                scoreUI.text = " - ";
                 scoreUI.gameObject.SetActive(false);
             }
         }
