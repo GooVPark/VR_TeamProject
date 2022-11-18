@@ -659,6 +659,11 @@ public class DataManager : MonoBehaviour
         return loundgeUsers;
     }
 
+    public int GetLoundgeUserCount()
+    {
+        return (int)loundgeUsercollection.CountDocuments(new BsonDocument());
+    }
+
     public void UpdateLobbyUser(LoundgeUser user)
     {
         var filter = Builders<LoundgeUser>.Filter.Eq("email", user.email);

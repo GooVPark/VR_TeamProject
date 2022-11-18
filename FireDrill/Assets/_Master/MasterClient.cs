@@ -78,18 +78,20 @@ public class MasterClient : MonoBehaviour, IChatClientListener
 
         client = new MongoClient("mongodb+srv://firedrillMember:member11@cluster0.pt8thqp.mongodb.net/?retryWrites=true&w=majority");
 
+        roomDatabase = client.GetDatabase("RoomDatabase");
         roomUserCollection = roomDatabase.GetCollection<RoomUser>("Room1");
+        lobbyDatabase = client.GetDatabase("LobbyData");
         loundgeUsercollection = lobbyDatabase.GetCollection<LoundgeUser>("Loundge");
 
         Connect();
 
-        StartCoroutine(UpdateRoomUserCount());
+        StartCoroutine(UpdateUserCount());
     }
 
 
     private float serviceTimer;
 
-    void Update()
+    void FixedUpdate()
     {
         if (messageQueue.Count > 0)
         {
@@ -99,16 +101,7 @@ public class MasterClient : MonoBehaviour, IChatClientListener
         }
 
         CheckAliving();
-
-
-        // 0.05초에 한 번씩 서비스하도록. 초당20회.
-        serviceTimer -= Time.unscaledDeltaTime;
-        if (serviceTimer < 0)
-        {
-            if (chatClient != null)
-                chatClient.Service();
-            serviceTimer = 0.05f;
-        }
+        chatClient.Service();
     }
 
     public void OnPrivateMessage(string sender, object message, string channelName)
@@ -248,6 +241,7 @@ public class MasterClient : MonoBehaviour, IChatClientListener
 
     public void OnGetMessages(string channelName, string[] senders, object[] messages)
     {
+        if (senders[^1].Equals("_MASTER_")) return;
         MasterLogger.Log("OnGetMessages: " + senders[^1] + ", message: " + messages[^1]);
     }
 
@@ -286,15 +280,22 @@ public class MasterClient : MonoBehaviour, IChatClientListener
 
     }
 
-    private IEnumerator UpdateRoomUserCount()
+    private IEnumerator UpdateUserCount()
     {
         WaitForSeconds wait = new WaitForSeconds(1f);
         while(true)
         {
-            string message = $"{EventMessageType.UPDATEROOMRUSERCOUNT}_{GetRoomUserCount(0)}";
-            messageQueue.Add(new MessageWrapper("_MASTER_", message, eventServer));
+            string message = $"{EventMessageType.UPDATEUSERCOUNT}_{GetLoundgeUserCount()}_{GetRoomUserCount(0)}";
+            chatClient.PublishMessage(eventServer, message);
+
             yield return wait;
         }
+    }
+
+    public int GetLoundgeUserCount()
+    {
+        var filter = Builders<LoundgeUser>.Filter.Empty;
+        return (int)loundgeUsercollection.CountDocuments(FilterDefinition<LoundgeUser>.Empty);
     }
 
     public int GetRoomUserCount(int roomNumber)
@@ -303,13 +304,11 @@ public class MasterClient : MonoBehaviour, IChatClientListener
         switch (roomNumber)
         {
             case 0:
-                var filter = Builders<RoomUser>.Filter.Empty;
-                List<RoomUser> roomUsers = roomUserCollection.Find(filter).ToList();
-                userCounts = roomUsers.Count;
+                userCounts = (int)roomUserCollection.CountDocuments(FilterDefinition<RoomUser>.Empty);
                 break;
         }
 
-        Debug.Log($"Room Number: {roomNumber}\nUser Counts: {userCounts}");
+        //Debug.Log($"Room Number: {roomNumber}\nUser Counts: {userCounts}");
         return userCounts;
     }
 }

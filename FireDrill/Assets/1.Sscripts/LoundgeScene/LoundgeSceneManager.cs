@@ -482,20 +482,9 @@ public class LoundgeSceneManager : GameManager
             progressUIs[i].sprite = progressImages[roomDatas[i].progress];
         }
     }
-    public void UpdateLobbyPlayerCount()
+    public void UpdateLobbyPlayerCount(int count)
     {
-        playerCountText.text = DataManager.Instance.GetLoundgeUsers().Count.ToString();
-    }
-
-    private Coroutine lobbyPlayerCountUpdater;
-    private IEnumerator LobbyPlayerCountUpdater()
-    {
-        WaitForSeconds wait = new WaitForSeconds(3f);
-        while(true)
-        {
-            UpdateLobbyPlayerCount();
-            yield return wait;
-        }
+        playerCountText.text = count.ToString();
     }
 
     public void UpdateRoomPlayerCount(int count)
@@ -568,14 +557,6 @@ public class LoundgeSceneManager : GameManager
         DisableTextChat();
         NetworkManager.Instance.roomType = RoomType.Loundge;
         NetworkManager.Instance.SetRoomNumber(roomNumber);
-
-        if(lobbyPlayerCountUpdater != null)
-        {
-            StopCoroutine(lobbyPlayerCountUpdater);
-            lobbyPlayerCountUpdater = null;
-        }
-
-        lobbyPlayerCountUpdater = StartCoroutine(LobbyPlayerCountUpdater());
 
         SetIdleMode(IdleMode.STAND);
 

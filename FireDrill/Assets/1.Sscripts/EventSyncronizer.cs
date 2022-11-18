@@ -6,7 +6,7 @@ using Photon.Pun;
 using Photon.Chat;
 using ExitGames.Client.Photon;
 
-public enum EventMessageType { TEXTCHAT, MOVE, VOICECHAT, SPAWN, DISCONNECT, NOTICE, PROGRESS, QUIZ, UPDATEROOMSTATE, UPDATEROOMRUSERCOUNT, LAMPUPDATE, FORCEEXIT, OUT }
+public enum EventMessageType { TEXTCHAT, MOVE, VOICECHAT, SPAWN, DISCONNECT, NOTICE, PROGRESS, QUIZ, UPDATEROOMSTATE, UPDATEUSERCOUNT, LAMPUPDATE, FORCEEXIT, OUT }
 public enum VoiceEventType { REQUEST, CANCEL, ACCEPT, DEACCEPT, DISCONNECT, CONNECT }
 public enum NoticeEventType { ONVOICE, JOIN, DISCONNECT }
 public enum ProgressEventType { UPDATE, PLAYERCOUNT }
@@ -28,7 +28,7 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
     [SerializeField] private string eventServer;
 
     private Queue<string> eventQueue = new Queue<string>();
-    private List<string> eventList = new List<string>();
+    [SerializeField] private List<string> eventList = new List<string>();
 
     [Header("To Master")]
     [SerializeField] private float responseIntervalToMaster = 3f;
@@ -139,8 +139,12 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
             string[] command = message.Split('_');
 
             string type = command[0];
-
-            if(type.Equals(EventMessageType.LAMPUPDATE.ToString()))
+            if (type.Equals(EventMessageType.OUT))
+            {
+                string target = command[1];
+                loundgeManager.RemoveTargetNPC(target);
+            }
+            if (type.Equals(EventMessageType.LAMPUPDATE.ToString()))
             {
                 loundgeManager.UpdateRoomStateLamp();
             }
@@ -160,30 +164,34 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
                     }
                 }
             }
-            if(type.Equals(EventMessageType.UPDATEROOMRUSERCOUNT))
+            if(type.Equals(EventMessageType.UPDATEUSERCOUNT.ToString()))
             {
-                int count = int.Parse(command[1]);
-                loundgeManager.UpdateRoomPlayerCount(count);
-            }
-            if(type.Equals(EventMessageType.NOTICE.ToString()))
-            {
-                string noticeEventType = command[1];
+                int loundgeUserCount = int.Parse(command[1]);
+                loundgeManager.UpdateLobbyPlayerCount(loundgeUserCount);
+                int roomUserCount = int.Parse(command[2]);
+                loundgeManager.UpdateRoomPlayerCount(roomUserCount);
 
-                if(noticeEventType.Equals(NoticeEventType.JOIN.ToString()))
-                {
-                    int roomNumber = int.Parse(command[2]);
-                    string targetEmail = command[3];
-                    loundgeManager.UpdateRoomPlayerCount(roomNumber);
-                    loundgeManager.UpdateLobbyPlayerCount();
-                }
-                if(noticeEventType.Equals(NoticeEventType.DISCONNECT.ToString()))
-                {
-                    int roomNumber = int.Parse(command[2]);
-                    string targetEmail = command[3];
-                    loundgeManager.UpdateRoomPlayerCount(roomNumber);
-                    loundgeManager.UpdateLobbyPlayerCount();
-                }
+                Debug.Log($"Loundge User Count: {loundgeUserCount}\nRoom User Count: {roomUserCount}");
             }
+            //if(type.Equals(EventMessageType.NOTICE.ToString()))
+            //{
+            //    string noticeEventType = command[1];
+
+            //    if(noticeEventType.Equals(NoticeEventType.JOIN.ToString()))
+            //    {
+            //        int roomNumber = int.Parse(command[2]);
+            //        string targetEmail = command[3];
+            //        loundgeManager.UpdateRoomPlayerCount(roomNumber);
+            //        loundgeManager.UpdateLobbyPlayerCount();
+            //    }
+            //    if(noticeEventType.Equals(NoticeEventType.DISCONNECT.ToString()))
+            //    {
+            //        int roomNumber = int.Parse(command[2]);
+            //        string targetEmail = command[3];
+            //        loundgeManager.UpdateRoomPlayerCount(roomNumber);
+            //        loundgeManager.UpdateLobbyPlayerCount();
+            //    }
+            //}
             if(type.Equals(EventMessageType.PROGRESS.ToString()))
             {
                 string progreesEventType = command[1];
@@ -197,13 +205,11 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
             if (type.Equals(EventMessageType.SPAWN.ToString()))
             {
                 LoundgeSceneManager.Instance.SpawnNPC();
-                loundgeManager.UpdateLobbyPlayerCount();
             }
             if (type.Equals(EventMessageType.DISCONNECT.ToString()))
             {
                 string email = command[1];
                 loundgeManager.RemoveNPCObject(email);
-                loundgeManager.UpdateLobbyPlayerCount();
             }
             if(type.Equals(EventMessageType.UPDATEROOMSTATE.ToString()))
             {
@@ -413,25 +419,25 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
             string target = command[1];
             loundgeManager.RemoveTargetNPC(target);
         }
-        if (type.Equals(EventMessageType.NOTICE.ToString()))
-        {
-            string noticeEventType = command[1];
+        //if (type.Equals(EventMessageType.NOTICE.ToString()))
+        //{
+        //    string noticeEventType = command[1];
 
-            if (noticeEventType.Equals(NoticeEventType.JOIN.ToString()))
-            {
-                int roomNumber = int.Parse(command[2]);
-                string targetEmail = command[3];
-                loundgeManager.UpdateRoomPlayerCount(roomNumber);
-                loundgeManager.UpdateLobbyPlayerCount();
-            }
-            if (noticeEventType.Equals(NoticeEventType.DISCONNECT.ToString()))
-            {
-                int roomNumber = int.Parse(command[2]);
-                string targetEmail = command[3];
-                loundgeManager.UpdateRoomPlayerCount(roomNumber);
-                loundgeManager.UpdateLobbyPlayerCount();
-            }
-        }
+        //    if (noticeEventType.Equals(NoticeEventType.JOIN.ToString()))
+        //    {
+        //        int roomNumber = int.Parse(command[2]);
+        //        string targetEmail = command[3];
+        //        loundgeManager.UpdateRoomPlayerCount(roomNumber);
+        //        loundgeManager.UpdateLobbyPlayerCount();
+        //    }
+        //    if (noticeEventType.Equals(NoticeEventType.DISCONNECT.ToString()))
+        //    {
+        //        int roomNumber = int.Parse(command[2]);
+        //        string targetEmail = command[3];
+        //        loundgeManager.UpdateRoomPlayerCount(roomNumber);
+        //        loundgeManager.UpdateLobbyPlayerCount();
+        //    }
+        //}
         if (type.Equals(EventMessageType.PROGRESS.ToString()))
         {
             string progreesEventType = command[1];
@@ -445,13 +451,11 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
         if (type.Equals(EventMessageType.SPAWN.ToString()))
         {
             LoundgeSceneManager.Instance.SpawnNPC();
-            loundgeManager.UpdateLobbyPlayerCount();
         }
         if (type.Equals(EventMessageType.DISCONNECT.ToString()))
         {
             string email = command[1];
             loundgeManager.RemoveNPCObject(email);
-            loundgeManager.UpdateLobbyPlayerCount();
         }
         if (type.Equals(EventMessageType.UPDATEROOMSTATE.ToString()))
         {

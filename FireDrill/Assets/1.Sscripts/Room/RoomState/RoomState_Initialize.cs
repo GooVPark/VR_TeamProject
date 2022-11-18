@@ -89,6 +89,11 @@ public class RoomState_Initialize : RoomState
         {
             Destroy(extinguisher.gameObject);
         }
+        Nozzle nozzle = FindObjectOfType<Nozzle>();
+        if(nozzle != null)
+        {
+            Destroy(nozzle.gameObject);
+        }
 
         if(!NetworkManager.User.hasExtingisher)
         {

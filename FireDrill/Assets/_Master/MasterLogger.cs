@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Text;
-using System;    
+using System;
+using System.IO;
 
 public class MasterLogger : MonoBehaviour
 {
@@ -75,7 +76,7 @@ public class MasterLogger : MonoBehaviour
 
     public void CopyLog()
     {
-        GUIUtility.systemCopyBuffer = sb.ToString();
+        //GUIUtility.systemCopyBuffer = sb.ToString();              
     }
 
 
