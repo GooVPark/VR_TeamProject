@@ -480,6 +480,7 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
             UserLevel = NetworkManager.User.userType;
             HasExtinguisher = NetworkManager.User.hasExtingisher;
             CurrentCharacter = NetworkManager.User.characterNumber;
+            QuizScore = -1;
 
             userInfoUI.SetActive(false);
 

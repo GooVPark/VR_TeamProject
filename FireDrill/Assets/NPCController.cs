@@ -240,6 +240,7 @@ public class NPCController : MonoBehaviourPun //, IPunInstantiateMagicCallback
 
     public void ShowBubble(string message)
     {
+        Debug.Log(user.name +  " ShowChatBubble");
         if(speachTimer != null)
         {
             StopCoroutine(speachTimer);

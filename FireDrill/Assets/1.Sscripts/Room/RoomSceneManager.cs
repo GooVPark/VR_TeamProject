@@ -352,6 +352,7 @@ public class RoomSceneManager : GameManager
 
         DataManager.Instance.UpdateRoomPlayerCount(roomNumber, playerCount);
         DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, 999);
+        DataManager.Instance.DeleteRoomUser(NetworkManager.User);
         DataManager.Instance.SetOffline(NetworkManager.User.email);
 
         string message = $"{EventMessageType.NOTICE}_{NoticeEventType.DISCONNECT}_{roomNumber}_{NetworkManager.User.email}";
@@ -380,6 +381,7 @@ public class RoomSceneManager : GameManager
 
         DataManager.Instance.UpdateRoomPlayerCount(roomNumber, playerCount);
         DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, 999);
+        DataManager.Instance.DeleteRoomUser(NetworkManager.User);
         DataManager.Instance.SetOffline(NetworkManager.User.email);
 
         string message = $"{EventMessageType.NOTICE}_{NoticeEventType.DISCONNECT}_{roomNumber}_{NetworkManager.User.email}";

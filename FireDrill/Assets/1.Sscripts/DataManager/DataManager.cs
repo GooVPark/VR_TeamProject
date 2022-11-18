@@ -458,11 +458,20 @@ public class DataManager : MonoBehaviour
         roomUserCollection.DeleteOne(filter);
     }
 
-    public int GetRoomUserCount()
+    public int GetRoomUserCount(int roomNumber)
     {
-        var filter = Builders<RoomUser>.Filter.Empty;
-        List<RoomUser> roomUsers = roomUserCollection.Find(filter).ToList();
-        return roomUsers.Count;
+        int userCounts = 0;
+        switch (roomNumber)
+        {
+            case 0:
+                var filter = Builders<RoomUser>.Filter.Empty;
+                List<RoomUser> roomUsers = roomUserCollection.Find(filter).ToList();
+                userCounts = roomUsers.Count;
+                break;
+        }
+
+        Debug.Log($"Room Number: {roomNumber}\nUser Counts: {userCounts}");
+        return userCounts;
     }
     #endregion
 

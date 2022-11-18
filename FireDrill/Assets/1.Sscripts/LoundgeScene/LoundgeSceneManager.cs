@@ -62,10 +62,6 @@ public class LoundgeSceneManager : GameManager
     {
     }
 
-    private void FixedUpdate()
-    {
-        UpdateRoomPlayerCount(0);
-    }
 
     private Coroutine checkPlayerCount;
     private IEnumerator CheckPlayerCount()
@@ -114,10 +110,10 @@ public class LoundgeSceneManager : GameManager
         string message = $"{EventMessageType.SPAWN}_{NetworkManager.User.email}";
         eventMesage?.Invoke(message);
 
-        for (int i = 0; i < playerCountsText.Length; i++)
-        {
-            UpdateRoomPlayerCount(i);
-        }
+        //for (int i = 0; i < playerCountsText.Length; i++)
+        //{
+        //    UpdateRoomPlayerCount(i);
+        //}
 
         for (int i = 0; i < roomEnterances.Count; i++)
         {
@@ -311,7 +307,7 @@ public class LoundgeSceneManager : GameManager
         WaitForSeconds wait = new WaitForSeconds(1f);
         while(true)
         {
-            UpdateRoomPlayerCount(DataManager.Instance.GetRoomUserCount());
+            UpdateRoomPlayerCount(DataManager.Instance.GetRoomUserCount(0));
             yield return wait;
         }
     }
@@ -502,19 +498,18 @@ public class LoundgeSceneManager : GameManager
         }
     }
 
-    public void UpdateRoomPlayerCount(int roomNumber)
+    public void UpdateRoomPlayerCount(int count)
     {
-        //RoomData roomData = DataManager.Instance.GetRoomData(roomNumber);
 
         //int playerCount = roomData.currentPlayerCount < 0 ? 0 : roomData.currentPlayerCount;
         //int maxPlayerCount = roomData.maxPlayerCount;
-        int playerCount = 0;
-        if (cachedRoomList.ContainsKey(roomNumber.ToString()))
-        {
-            playerCount = cachedRoomList[roomNumber.ToString()].PlayerCount;
-        }
+        //int playerCount = 0;
+        //if (cachedRoomList.ContainsKey(roomNumber.ToString()))
+        //{
+        //    playerCount = cachedRoomList[roomNumber.ToString()].PlayerCount;
+        //}
 
-        playerCountsText[roomNumber].text = $"{playerCount}/16";
+        playerCountsText[0].text = $"{count}/16";
     }
     private Dictionary<string, RoomInfo> cachedRoomList = new Dictionary<string, RoomInfo>();
 

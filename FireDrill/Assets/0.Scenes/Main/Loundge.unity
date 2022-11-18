@@ -6666,7 +6666,7 @@ PrefabInstance:
     - target: {fileID: 4552839287454678015, guid: 4259bbcc0288c3148a7f5508189bede4,
         type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4552839287454678015, guid: 4259bbcc0288c3148a7f5508189bede4,
         type: 3}
@@ -6749,10 +6749,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b7bc1f9102baf44c83f432b3efbd98b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  masterChannel: _MASTER_
   voiceManager: {fileID: 1337410979}
   loundgeManager: {fileID: 442421932}
   textChatManager: {fileID: 1499728229}
   eventServer: EventServer
+  responseIntervalToMaster: 3
 --- !u!4 &438715285
 Transform:
   m_ObjectHideFlags: 0
@@ -17945,7 +17947,7 @@ Transform:
   - {fileID: 1611122709}
   - {fileID: 276944042}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1184046499
 GameObject:
@@ -22518,7 +22520,7 @@ PrefabInstance:
     - target: {fileID: 4417060369753287056, guid: 7b8f509c03310b947b04cd048ff6ab72,
         type: 3}
       propertyPath: m_RootOrder
-      value: 16
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 4417060369753287056, guid: 7b8f509c03310b947b04cd048ff6ab72,
         type: 3}
@@ -25810,7 +25812,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 15
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1505960067
 GameObject:
@@ -26436,7 +26438,7 @@ RectTransform:
   - {fileID: 1345871372}
   - {fileID: 1047899725}
   m_Father: {fileID: 0}
-  m_RootOrder: 14
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -36210,7 +36212,7 @@ Transform:
   - {fileID: 1987543555}
   - {fileID: 1337722034}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &779158800427111306
 GameObject:

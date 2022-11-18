@@ -4,6 +4,8 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Chat;
 using ExitGames.Client.Photon;
+using MongoDB.Bson;
+using MongoDB.Driver;
 
 public class MasterClient : MonoBehaviour, IChatClientListener
 {
@@ -50,6 +52,16 @@ public class MasterClient : MonoBehaviour, IChatClientListener
 
     private ChatClient chatClient;
 
+
+    MongoClient client;
+
+    IMongoDatabase roomDatabase;
+    IMongoCollection<RoomData> roomCollection;
+    IMongoCollection<RoomUser> roomUserCollection;
+
+    IMongoDatabase lobbyDatabase;
+    IMongoCollection<LoundgeUser> loundgeUsercollection;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -64,9 +76,14 @@ public class MasterClient : MonoBehaviour, IChatClientListener
         PhotonNetwork.GameVersion = "1";
         PhotonNetwork.ConnectUsingSettings();
 
+        client = new MongoClient("mongodb+srv://firedrillMember:member11@cluster0.pt8thqp.mongodb.net/?retryWrites=true&w=majority");
 
+        roomUserCollection = roomDatabase.GetCollection<RoomUser>("Room1");
+        loundgeUsercollection = lobbyDatabase.GetCollection<LoundgeUser>("Loundge");
 
         Connect();
+
+        StartCoroutine(UpdateRoomUserCount());
     }
 
 
@@ -129,8 +146,10 @@ public class MasterClient : MonoBehaviour, IChatClientListener
         {
             MasterLogger.Log($"({sender}) HANDLE: {message}");
             // to all user
-            for (int i = 0; i < alivingUsers.Count; i++)
-                chatClient.SendPrivateMessage(alivingUsers[i].userName, message);
+            //for (int i = 0; i < alivingUsers.Count; i++)
+            //    chatClient.SendPrivateMessage(alivingUsers[i].userName, message);
+
+            chatClient.PublishMessage(eventServer, message);
         }
     }
 
@@ -265,5 +284,32 @@ public class MasterClient : MonoBehaviour, IChatClientListener
     public void OnUserUnsubscribed(string channel, string user)
     {
 
+    }
+
+    private IEnumerator UpdateRoomUserCount()
+    {
+        WaitForSeconds wait = new WaitForSeconds(1f);
+        while(true)
+        {
+            string message = $"{EventMessageType.UPDATEROOMRUSERCOUNT}_{GetRoomUserCount(0)}";
+            messageQueue.Add(new MessageWrapper("_MASTER_", message, eventServer));
+            yield return wait;
+        }
+    }
+
+    public int GetRoomUserCount(int roomNumber)
+    {
+        int userCounts = 0;
+        switch (roomNumber)
+        {
+            case 0:
+                var filter = Builders<RoomUser>.Filter.Empty;
+                List<RoomUser> roomUsers = roomUserCollection.Find(filter).ToList();
+                userCounts = roomUsers.Count;
+                break;
+        }
+
+        Debug.Log($"Room Number: {roomNumber}\nUser Counts: {userCounts}");
+        return userCounts;
     }
 }

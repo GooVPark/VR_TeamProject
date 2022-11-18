@@ -6,7 +6,7 @@ using Photon.Pun;
 using Photon.Chat;
 using ExitGames.Client.Photon;
 
-public enum EventMessageType { TEXTCHAT, MOVE, VOICECHAT, SPAWN, DISCONNECT, NOTICE, PROGRESS, QUIZ, UPDATEROOMSTATE, LAMPUPDATE, FORCEEXIT, OUT }
+public enum EventMessageType { TEXTCHAT, MOVE, VOICECHAT, SPAWN, DISCONNECT, NOTICE, PROGRESS, QUIZ, UPDATEROOMSTATE, UPDATEROOMRUSERCOUNT, LAMPUPDATE, FORCEEXIT, OUT }
 public enum VoiceEventType { REQUEST, CANCEL, ACCEPT, DEACCEPT, DISCONNECT, CONNECT }
 public enum NoticeEventType { ONVOICE, JOIN, DISCONNECT }
 public enum ProgressEventType { UPDATE, PLAYERCOUNT }
@@ -109,7 +109,7 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
 
     public void OnSendMessage(string message)
     {
-        //if(string.IsNullOrEmpty(message))
+        //if(string.isnullorempty(message))
         //{
         //    return;
         //}
@@ -122,7 +122,6 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
 
     public void OnGetMessages(string channelName, string[] senders, object[] messages)
     {
-        return;
         if(channelName.Equals(eventServer))
         {
             ChatChannel channel = null;
@@ -147,18 +146,24 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
             }
             if(type.Equals(EventMessageType.TEXTCHAT.ToString()))
             {
-                string sender = command[1];
-                string chatMessage = command[2];
-                int roomNumber = int.Parse(command[3]);
+                string senderEmail = command[1];
+                string senderName = command[2];
+                string chatMessage = command[3];
+                int roomNumber = int.Parse(command[4]);
 
-                textChatManager.OnGetMessage(sender, chatMessage, roomNumber);
-                if(!NetworkManager.User.email.Equals(sender))
+                textChatManager.OnGetMessage(senderName, chatMessage, roomNumber);
+                if (!NetworkManager.User.email.Equals(senderEmail))
                 {
-                    if (loundgeManager.spawnedNPCObject.ContainsKey(sender))
+                    if (loundgeManager.spawnedNPCObject.ContainsKey(senderEmail))
                     {
-                        loundgeManager.spawnedNPCObject[sender].GetComponent<NPCController>().ShowBubble(chatMessage.Split('=')[0]);
+                        loundgeManager.spawnedNPCObject[senderEmail].GetComponent<NPCController>().ShowBubble(chatMessage.Split('=')[0]);
                     }
                 }
+            }
+            if(type.Equals(EventMessageType.UPDATEROOMRUSERCOUNT))
+            {
+                int count = int.Parse(command[1]);
+                loundgeManager.UpdateRoomPlayerCount(count);
             }
             if(type.Equals(EventMessageType.NOTICE.ToString()))
             {
@@ -388,16 +393,17 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
         }
         if (type.Equals(EventMessageType.TEXTCHAT.ToString()))
         {
-            string sender = command[1];
-            string chatMessage = command[2];
-            int roomNumber = int.Parse(command[3]);
+            string senderEmail = command[1];
+            string senderName = command[2];
+            string chatMessage = command[3];
+            int roomNumber = int.Parse(command[4]);
 
-            textChatManager.OnGetMessage(sender, chatMessage, roomNumber);
-            if (!NetworkManager.User.email.Equals(sender))
+            textChatManager.OnGetMessage(senderName, chatMessage, roomNumber);
+            if (!NetworkManager.User.email.Equals(senderEmail))
             {
-                if (loundgeManager.spawnedNPCObject.ContainsKey(sender))
+                if (loundgeManager.spawnedNPCObject.ContainsKey(senderEmail))
                 {
-                    loundgeManager.spawnedNPCObject[sender].GetComponent<NPCController>().ShowBubble(chatMessage.Split('=')[0]);
+                    loundgeManager.spawnedNPCObject[senderEmail].GetComponent<NPCController>().ShowBubble(chatMessage.Split('=')[0]);
                 }
             }
         }

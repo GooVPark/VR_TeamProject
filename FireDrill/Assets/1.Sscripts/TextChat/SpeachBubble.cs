@@ -12,6 +12,7 @@ public class SpeachBubble : MonoBehaviour
     {
         bubble.gameObject.SetActive(true);
         bubbleText.text = message;
+        Debug.Log("Show Bubble  " + bubble.transform.position);
 
     }
 

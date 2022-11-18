@@ -43,7 +43,7 @@ public class TextChatManager : MonoBehaviour
             return;
         }
 
-        string message = $"{EventMessageType.TEXTCHAT}_{NetworkManager.User.name}_{inputField.text}={colorNumber}_{NetworkManager.RoomNumber}";
+        string message = $"{EventMessageType.TEXTCHAT}_{NetworkManager.User.email}_{NetworkManager.User.name}_{inputField.text}={colorNumber}_{NetworkManager.RoomNumber}";
         eventMessage?.Invoke(message);
         sendChatMessage?.Invoke(inputField.text);
     }
