@@ -45,7 +45,7 @@ public class AvatarLodExample : MonoBehaviour
                     meshTransform.name += $"_LOD{lodLevel}";
 
                     mainMeshRenderer = meshTransform.GetComponent<SkinnedMeshRenderer>();
-                    
+
                     mainMeshRenderer.enabled = false;
                     meshRenderersList.Add(mainMeshRenderer);
                 }

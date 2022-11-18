@@ -189,6 +189,7 @@ public class RoomSceneManager : GameManager
     public override void OnJoinedRoom()
     {
         Initialize();
+
         origin.position = SpawnPlayer(spawnPivot.position);
         localRecoder.TransmitEnabled = false;
         NetworkManager.Instance.roomType = RoomType.Room;
@@ -203,6 +204,7 @@ public class RoomSceneManager : GameManager
         roomData = DataManager.Instance.GetRoomData()[roomNumber];
         DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, roomNumber);
         DataManager.Instance.InitializeQuizScore(NetworkManager.User.email);
+        DataManager.Instance.InsertRoomUser(NetworkManager.User);
         requiredPlayer = roomData.requirePlayerCount;
 
         //StartCoroutine(JoinVoice());
@@ -271,7 +273,8 @@ public class RoomSceneManager : GameManager
         int playerCount = roomData.currentPlayerCount - 1;
 
         DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, 999);
-        DataManager.Instance.UpdateRoomPlayerCount(roomNumber, playerCount);
+        //DataManager.Instance.UpdateRoomPlayerCount(roomNumber, playerCount);
+        DataManager.Instance.DeleteRoomUser(NetworkManager.User);
 
         string message = $"{EventMessageType.NOTICE}_{NoticeEventType.DISCONNECT}_{roomNumber}_{NetworkManager.User.email}";
         eventMessage?.Invoke(message);

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.13.1] - 2022.11.09
+
+### Fixed
+- Url processor handling for shortcodes to support url redirects
+- Fix for CORS related issued with Cloudfront URLs in WebGL
+- LOD Example slider fix
 
 ## [1.13.0] - 2022.10.26
 

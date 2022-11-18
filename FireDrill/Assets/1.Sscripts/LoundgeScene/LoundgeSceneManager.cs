@@ -133,9 +133,33 @@ public class LoundgeSceneManager : GameManager
 
     public void SpawnNPC()
     {
-        if(!onSpawn)
+        List<LoundgeUser> loundgeUsers = DataManager.Instance.GetLoundgeUsers();
+
+        foreach (LoundgeUser loundgeUser in loundgeUsers)
         {
-            
+            if (!spawnedNPC.ContainsKey(loundgeUser.email))
+            {
+                spawnedNPC.Add(loundgeUser.email, loundgeUser);
+
+                Vector2 randomValue = Random.insideUnitCircle * 3f;
+                Vector3 spawnPosition = this.spawnPosition.transform.position + new Vector3(randomValue.x, 0, randomValue.y);
+
+                GameObject npcObject = Instantiate(npcPrefab, spawnPosition, Quaternion.identity, NPCTransforms);
+                spawnedNPCObject.Add(loundgeUser.email, npcObject);
+                NPCController npc = npcObject.GetComponent<NPCController>();
+                npc.Initialize(loundgeUser);
+                npc.eventMessage += eventSyncronizer.OnSendMessage;
+
+                if (NetworkManager.Instance.onVoiceChat)
+                {
+                    npc.senderIsOnVoiceChat = true;
+                }
+
+                if (loundgeUser.email.Equals(NetworkManager.User.email))
+                {
+                    npcObject.SetActive(false);
+                }
+            }
         }
     }
 
@@ -177,6 +201,14 @@ public class LoundgeSceneManager : GameManager
         onSpawn = false;
     }
 
+    public void RemoveTargetNPC(string targetKey)
+    {
+        GameObject target = spawnedNPCObject[targetKey];
+        spawnedNPCObject.Remove(targetKey);
+        Destroy(target);
+        spawnedNPC.Remove(targetKey);
+    }
+
     public void JoinVoiceChatRoom(string userID)
     {
         if(!NetworkManager.Instance.onVoiceChat)
@@ -215,16 +247,10 @@ public class LoundgeSceneManager : GameManager
 
     public void RemoveNPCObject(string email)
     {
-        Destroy(spawnedNPCObject[email]);
-
-        if(spawnedNPC.ContainsKey(email))
-        {
-            spawnedNPC.Remove(email);
-        }
-        if (spawnedNPCObject.ContainsKey(email))
-        {
-            spawnedNPCObject.Remove(email);
-        }
+        GameObject npc = spawnedNPCObject[email];
+        spawnedNPC.Remove(email);
+        spawnedNPCObject.Remove(email);
+        Destroy(npc);
 
         DataManager.Instance.DeleteLobbyUser(email);
     }
@@ -277,6 +303,17 @@ public class LoundgeSceneManager : GameManager
     private void DeleteUserData()
     {
 
+    }
+
+    private Coroutine updateUserCountInVoiceChat;
+    private IEnumerator UpdateRoomUserCountInVoiceChat()
+    {
+        WaitForSeconds wait = new WaitForSeconds(1f);
+        while(true)
+        {
+            UpdateRoomPlayerCount(DataManager.Instance.GetRoomUserCount());
+            yield return wait;
+        }
     }
 
     #endregion
@@ -453,6 +490,18 @@ public class LoundgeSceneManager : GameManager
     {
         playerCountText.text = DataManager.Instance.GetLoundgeUsers().Count.ToString();
     }
+
+    private Coroutine lobbyPlayerCountUpdater;
+    private IEnumerator LobbyPlayerCountUpdater()
+    {
+        WaitForSeconds wait = new WaitForSeconds(3f);
+        while(true)
+        {
+            UpdateLobbyPlayerCount();
+            yield return wait;
+        }
+    }
+
     public void UpdateRoomPlayerCount(int roomNumber)
     {
         //RoomData roomData = DataManager.Instance.GetRoomData(roomNumber);
@@ -524,6 +573,14 @@ public class LoundgeSceneManager : GameManager
         DisableTextChat();
         NetworkManager.Instance.roomType = RoomType.Loundge;
         NetworkManager.Instance.SetRoomNumber(roomNumber);
+
+        if(lobbyPlayerCountUpdater != null)
+        {
+            StopCoroutine(lobbyPlayerCountUpdater);
+            lobbyPlayerCountUpdater = null;
+        }
+
+        lobbyPlayerCountUpdater = StartCoroutine(LobbyPlayerCountUpdater());
 
         SetIdleMode(IdleMode.STAND);
 
@@ -598,6 +655,12 @@ public class LoundgeSceneManager : GameManager
                 DisableTextChat();
 
                 announcement.StopAudio();
+                if(updateUserCountInVoiceChat != null)
+                {
+                    StopCoroutine(updateUserCountInVoiceChat);
+                    updateUserCountInVoiceChat = null;
+                }
+                updateUserCountInVoiceChat = StartCoroutine(UpdateRoomUserCountInVoiceChat());
 
                 foreach(string key in spawnedNPCObject.Keys)
                 {

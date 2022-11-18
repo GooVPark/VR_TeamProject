@@ -83,6 +83,23 @@ public class LoundgeUser
     }
 }
 
+
+[System.Serializable]
+public class RoomUser
+{
+    public ObjectId _id;
+    public string email;
+    public string name;
+    public int characterNumber;
+
+    public RoomUser(User user)
+    {
+        email = user.email;
+        name = user.name;
+        characterNumber = user.characterNumber;
+    }
+}
+
 [System.Serializable]
 public class ToastJson
 {
@@ -108,7 +125,8 @@ public class DataManager : MonoBehaviour
 
     IMongoDatabase roomDatabase;
     IMongoCollection<RoomData> roomCollection;
-    
+    IMongoCollection<RoomUser> roomUserCollection;
+
     IMongoDatabase textDatabase;
     IMongoCollection<ToastJson> toastCollection;
 
@@ -173,6 +191,7 @@ public class DataManager : MonoBehaviour
         else
         {
             roomCollection = roomDatabase.GetCollection<RoomData>("RoomInfo");
+            roomUserCollection = roomDatabase.GetCollection<RoomUser>("Room1");
         }
         
         textDatabase = client.GetDatabase("TextDatabase");
@@ -408,6 +427,43 @@ public class DataManager : MonoBehaviour
         return roomDatas[0];
     }
 
+    public bool FindRoomUser(string email)
+    {
+        var filter = Builders<RoomUser>.Filter.Eq("email", email);
+        var roomUsers = roomUserCollection.Find(filter).ToList();
+
+        if (roomUsers.Count > 0)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public void InsertRoomUser(User user)
+    {
+        if (FindRoomUser(user.email))
+        {
+            return;
+        }
+        RoomUser roomUser = new RoomUser(user);
+        //NetworkManager.Instance.SetLoundgeUser(roomUser);
+        roomUserCollection.InsertOne(roomUser);
+    }
+
+    public void DeleteRoomUser(User user)
+    {
+        var filter = Builders<RoomUser>.Filter.Eq("email", user.email);
+
+        roomUserCollection.DeleteOne(filter);
+    }
+
+    public int GetRoomUserCount()
+    {
+        var filter = Builders<RoomUser>.Filter.Empty;
+        List<RoomUser> roomUsers = roomUserCollection.Find(filter).ToList();
+        return roomUsers.Count;
+    }
     #endregion
 
     #region Quiz

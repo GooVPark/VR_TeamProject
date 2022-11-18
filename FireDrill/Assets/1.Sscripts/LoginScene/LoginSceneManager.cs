@@ -77,7 +77,7 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
     private bool isLecture = false;
     private bool isStudent = true;
 
-    private string gameVersion = "1.0";
+    [SerializeField ]private string gameVersion = "1";
 
     private GameObject currentWindow;
     public GameObject CurrentWindow
@@ -143,7 +143,7 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
         NetworkManager.Instance.SetUser(_userData);
 
         PhotonNetwork.LocalPlayer.NickName = _userData.name;
-
+        
         PhotonNetwork.GameVersion = gameVersion;
         PhotonNetwork.ConnectUsingSettings();
     }

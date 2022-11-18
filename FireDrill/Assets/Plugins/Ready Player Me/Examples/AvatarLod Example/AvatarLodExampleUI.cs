@@ -9,7 +9,8 @@ namespace ReadyPlayerMe
         private Slider uiSlider;
         private Vector3 cameraStartPos;
         private Text lodInfoText;
-        private Camera mainCamera;
+
+        [SerializeField] private Camera mainCamera;
 
         public LODGroup LodGroup { set; get; }
 
@@ -17,11 +18,9 @@ namespace ReadyPlayerMe
         {
             lodInfoText = GetComponentInChildren<Text>();
             uiSlider = GetComponentInChildren<Slider>();
-            mainCamera = Camera.main;
-            cameraStartPos = (mainCamera) ? mainCamera.transform.position : Vector3.zero;
+            cameraStartPos = mainCamera ? mainCamera.transform.position : Vector3.zero;
 
             uiSlider.onValueChanged.AddListener(UpdatePosition);
-            uiSlider.onValueChanged.AddListener(UpdateCurrentLod);
         }
 
         public void Show()
@@ -32,9 +31,10 @@ namespace ReadyPlayerMe
         private void UpdatePosition(float value)
         {
             mainCamera.transform.position = new Vector3(cameraStartPos.x, cameraStartPos.y, cameraStartPos.z + value);
+            Invoke(nameof(UpdateCurrentLod), 0.1f);
         }
 
-        private void UpdateCurrentLod(float value)
+        private void UpdateCurrentLod()
         {
             if (LodGroup != null)
             {
