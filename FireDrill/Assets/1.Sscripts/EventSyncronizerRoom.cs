@@ -117,7 +117,6 @@ public class EventSyncronizerRoom : MonoBehaviour, IChatClientListener
 
     public void OnGetMessages(string channelName, string[] senders, object[] messages)
     {
-        return;
         if (channelName.Equals(eventServer))
         {
             ChatChannel channel = null;
@@ -138,11 +137,12 @@ public class EventSyncronizerRoom : MonoBehaviour, IChatClientListener
 
             if (type.Equals(EventMessageType.TEXTCHAT.ToString()))
             {
-                string sender = command[1];
-                string chatMessage = command[2];
-                int roomNumber = int.Parse(command[3]);
+                string senderEmail = command[1];
+                string senderName = command[2];
+                string chatMessage = command[3];
+                int roomNumber = int.Parse(command[4]);
 
-                textChatManager.OnGetMessage(sender, chatMessage, roomNumber);
+                textChatManager.OnGetMessage(senderName, chatMessage, roomNumber);
             }
             if (type.Equals(EventMessageType.QUIZ.ToString()))
             {
@@ -166,14 +166,6 @@ public class EventSyncronizerRoom : MonoBehaviour, IChatClientListener
 
         string type = command[0];
 
-        if (type.Equals(EventMessageType.TEXTCHAT.ToString()))
-        {
-            string sender = command[1];
-            string chatMessage = command[2];
-            int roomNumber = int.Parse(command[3]);
-
-            textChatManager.OnGetMessage(sender, chatMessage, roomNumber);
-        }
         if (type.Equals(EventMessageType.QUIZ.ToString()))
         {
             scoreBoard.UpdateScoreBoard();
@@ -188,12 +180,12 @@ public class EventSyncronizerRoom : MonoBehaviour, IChatClientListener
 
     public void OnPrivateMessage(string sender, object message, string channelName)
     {
-        if (sender.Equals(masterChannel))
-        {
-            Debug.Log("Get Private Message: " + message.ToString());
-            //eventQueue.Enqueue(message.ToString());
-            eventList.Add(message.ToString());
-        }
+        //if (sender.Equals(masterChannel))
+        //{
+        //    Debug.Log("Get Private Message: " + message.ToString());
+        //    //eventQueue.Enqueue(message.ToString());
+        //    eventList.Add(message.ToString());
+        //}
     }
 
     public void OnStatusUpdate(string user, int status, bool gotMessage, object message)

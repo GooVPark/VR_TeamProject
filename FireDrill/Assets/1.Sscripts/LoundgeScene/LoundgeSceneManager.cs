@@ -29,6 +29,7 @@ public class LoundgeSceneManager : GameManager
 
     private bool isOnline = false;
     public bool isEventServerConnected = false;
+    private bool onVoiceChat = false;
 
     [SerializeField] private GameObject voiceChatErrorToast;
     [SerializeField] private GameObject megaphoneErrorToast;
@@ -287,6 +288,55 @@ public class LoundgeSceneManager : GameManager
     {
         bool isStarted = DataManager.Instance.GetRoomProgressState(roomNumber);
         roomEnterances[roomNumber].isStarted = isStarted;
+    }
+
+    [SerializeField] float responeInterval;
+    [SerializeField] float timeoutInterval;
+    private bool isResponsed;
+    private Coroutine voiceChatTimer;
+    private IEnumerator VoiceChatTimer()
+    {
+        WaitForFixedUpdate wait = new WaitForFixedUpdate();
+        float responseInterval = 3f;
+        float responseElapsed = 0f;
+
+        float timeOutInterval = 10;
+        float timeOutElapsed = 0;
+
+        while(timeOutInterval > timeOutElapsed)
+        {
+            responseElapsed += Time.fixedDeltaTime;
+            timeOutElapsed += Time.fixedDeltaTime;
+
+            if (responseElapsed > responseInterval)
+            {
+                if(!photonView.IsMine)
+                {
+                    photonView.RPC(nameof(CheckOther), RpcTarget.All);
+                }
+
+                responseElapsed = 0f;
+            }
+            if(isResponsed)
+            {
+                timeOutElapsed = 0f;
+                isResponsed = false;
+            }
+
+            this.responeInterval = responseElapsed;
+            this.timeoutInterval = timeOutElapsed;
+
+            yield return wait;
+        }
+
+        voiceManager.OnDisconnectVoiceChatEvent(NetworkManager.User.email);
+        LeaveVoiceChatRoom();
+    }
+
+    [PunRPC]
+    private void CheckOther()
+    {
+        isResponsed = true;
     }
 
     #region Database
@@ -617,6 +667,13 @@ public class LoundgeSceneManager : GameManager
             case RoomType.Room:
                 break;
             case RoomType.VoiceRoom:
+                if(voiceChatTimer != null)
+                {
+                    StopCoroutine(voiceChatTimer);
+                    voiceChatTimer = null;
+                }
+
+                voiceChatTimer = StartCoroutine(VoiceChatTimer());
 
                 spawnedNPCObject[voiceManager.sender.email].SetActive(false);
                 spawnedNPCObject[voiceManager.reciever.email].SetActive(false);
@@ -691,6 +748,12 @@ public class LoundgeSceneManager : GameManager
                 foreach (string key in spawnedNPCObject.Keys)
                 {
                     spawnedNPCObject[key].GetComponent<NPCController>().SetVoiceChatState(false);
+                }
+
+                if (voiceChatTimer != null)
+                {
+                    StopCoroutine(voiceChatTimer);
+                    voiceChatTimer = null;
                 }
                 break;
             case RoomType.Loundge:

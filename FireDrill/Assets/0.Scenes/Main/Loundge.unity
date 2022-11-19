@@ -8,8 +8,9 @@ OcclusionCullingSettings:
     smallestOccluder: 5
     smallestHole: 0.25
     backfaceThreshold: 100
-  m_SceneGUID: 00000000000000000000000000000000
-  m_OcclusionCullingData: {fileID: 0}
+  m_SceneGUID: f58c3b5ba4d01ed45825a113bc489c18
+  m_OcclusionCullingData: {fileID: 36300000, guid: 45df507c6962e7347aebeddf53607c84,
+    type: 2}
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
@@ -6754,6 +6755,7 @@ MonoBehaviour:
   loundgeManager: {fileID: 442421932}
   textChatManager: {fileID: 1499728229}
   eventServer: EventServer
+  eventList: []
   responseIntervalToMaster: 3
 --- !u!4 &438715285
 Transform:

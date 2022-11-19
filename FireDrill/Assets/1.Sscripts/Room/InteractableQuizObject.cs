@@ -74,7 +74,9 @@ public class InteractableQuizObject : MonoBehaviour
     [SerializeField] private TMP_Text selectionQuizCounts;
     private bool onQuizCounts = false;
     public Transform target;
+    public bool interactable;
     [Space(5)]
+
 
     private QuizSlot selectedSlot;
     public QuizSlot SelectedSlot
@@ -173,10 +175,18 @@ public class InteractableQuizObject : MonoBehaviour
         {
             if (Vector3.Distance(transform.position, target.position) < 5f)
             {
+                foreach(var item in selectionButtons)
+                {
+                    item.enabled = true;
+                }
                 pannel.enabled = true;
             }
             else
             {
+                foreach (var item in selectionButtons)
+                {
+                    item.enabled = false;
+                }
                 pannel.enabled = false;
             }
         }

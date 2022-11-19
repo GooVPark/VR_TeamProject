@@ -7,7 +7,7 @@ using Photon.Chat;
 using ExitGames.Client.Photon;
 
 public enum EventMessageType { TEXTCHAT, MOVE, VOICECHAT, SPAWN, DISCONNECT, NOTICE, PROGRESS, QUIZ, UPDATEROOMSTATE, UPDATEUSERCOUNT, LAMPUPDATE, FORCEEXIT, OUT }
-public enum VoiceEventType { REQUEST, CANCEL, ACCEPT, DEACCEPT, DISCONNECT, CONNECT }
+public enum VoiceEventType { REQUEST, CANCEL, ACCEPT, DEACCEPT, DISCONNECT, CONNECT, TIMEOUT }
 public enum NoticeEventType { ONVOICE, JOIN, DISCONNECT }
 public enum ProgressEventType { UPDATE, PLAYERCOUNT }
 
@@ -566,12 +566,20 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
 
                 if (recieverEmail.Equals(NetworkManager.User.email))
                 {
+                    if(NetworkManager.Instance.roomType != RoomType.VoiceRoom)
+                    {
+                        return;
+                    }
                     Debug.Log("DisconnectEvent RecieverEmail:" + recieverEmail);
                     loundgeManager.LeaveVoiceChatRoom();
                     voiceManager.OnDisconnectVoiceChatEvent(recieverEmail);
                 }
                 if (senderEmail.Equals(NetworkManager.User.email))
                 {
+                    if (NetworkManager.Instance.roomType != RoomType.VoiceRoom)
+                    {
+                        return;
+                    }
                     Debug.Log("DisconnectEvent SenderEmail: " + senderEmail);
                     loundgeManager.LeaveVoiceChatRoom();
                     voiceManager.OnDisconnectVoiceChatEvent(senderEmail);
