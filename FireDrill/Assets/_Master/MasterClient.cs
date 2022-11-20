@@ -169,6 +169,9 @@ public class MasterClient : MonoBehaviour, IChatClientListener
         alivingUsers.Remove(user);
         alivingUsersDict.Remove(user.userName);
 
+        var filter = Builders<LoundgeUser>.Filter.Eq("email", user.userName);
+        loundgeUsercollection.DeleteOne(filter);
+
         string msg = $"{EventMessageType.OUT}_{user.userName}";
         for (int i = 0; i < alivingUsers.Count; i++)
             chatClient.SendPrivateMessage(alivingUsers[i].userName, msg);

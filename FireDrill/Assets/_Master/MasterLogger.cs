@@ -76,7 +76,7 @@ public class MasterLogger : MonoBehaviour
 
     public void CopyLog()
     {
-        //GUIUtility.systemCopyBuffer = sb.ToString();              
+        GUIUtility.systemCopyBuffer = sb.ToString();              
     }
 
 
