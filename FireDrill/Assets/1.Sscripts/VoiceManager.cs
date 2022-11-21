@@ -66,7 +66,7 @@ public class VoiceManager : MonoBehaviourPunCallbacks
     public NPCController localPlayer;
 
     public int viewID;
-    private bool onRequest = false;
+    public bool onRequest = false;
 
     private Hashtable roomCustomProperties;
 
@@ -106,7 +106,6 @@ public class VoiceManager : MonoBehaviourPunCallbacks
         //localPlayer.SetVoiceState(VoiceChatState.Send);
         Debug.Log($"OnVoiceChatSendEvent - Sender: {sender.email}, Reciever: {reciever.email}");
         DataManager.Instance.SetUserOnRequest(sender.email, true);
-        onRequest = true;
 
         CurrentToast = cancelVoiceChatToast.gameObject;
         string userName = reciever.name;
@@ -125,14 +124,9 @@ public class VoiceManager : MonoBehaviourPunCallbacks
     }
     public void OnVoiceChatRecieveEvent(LoundgeUser sender, LoundgeUser reciever)
     {
-        if(onRequest)
-        {
-            return;
-        }
         //localPlayer.SetVoiceState(VoiceChatState.Recieve);
         Debug.Log($"OnVoiceChatRecieveEvent - Sender: {sender.email}, Reciever: {reciever.email}");
         DataManager.Instance.SetUserOnRequest(reciever.email, true);
-        onRequest = true;
         CurrentToast = voiceChatRequestToast.gameObject;
         string userName = sender.name;
         voiceChatRequestToast.message.text = $"{userName}님이 대화 요청을 보냈습니다. 대화를 원하시면 YES, 아니면 NO를\n클릭해주세요.";
@@ -148,7 +142,6 @@ public class VoiceManager : MonoBehaviourPunCallbacks
 
         CurrentToast = voiceChatCanceledToast.gameObject;
         DataManager.Instance.SetUserOnRequest(user.email, false);
-        onRequest = false;
         string userName = user.name;
         voiceChatCanceledToast.message.text = $"{userName}님과의 대화가 취소되었습니다.";
 
@@ -208,7 +201,6 @@ public class VoiceManager : MonoBehaviourPunCallbacks
     {
         CurrentToast = acceptVoiceChatToast.gameObject;
         acceptVoiceChatToast.message.text = $"{reciever.name}님과의 1:1 대화가 수락 되었습니다.";
-
         DataManager.Instance.SetUserOnRequest(sender.email, false);
         DataManager.Instance.UpdateLobbyUser(sender);
         NetworkManager.Instance.voiceChatDisabled = false;

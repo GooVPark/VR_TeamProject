@@ -31,6 +31,12 @@ public class MasterClient : MonoBehaviour, IChatClientListener
         public float userLife;
         public const float MAX_LIFE = 10f;
 
+        public string sender;
+        public string reciever;
+
+        public bool onRequest = false;
+        public bool onVoiceChat = false;
+
         public OnlineUser(string userName)
         {
             this.userName = userName;
@@ -145,6 +151,42 @@ public class MasterClient : MonoBehaviour, IChatClientListener
             // to all user
             //for (int i = 0; i < alivingUsers.Count; i++)
             //    chatClient.SendPrivateMessage(alivingUsers[i].userName, message);
+            string[] command = message.Split('_');
+            //sender의 reciever가 reciever의 sender와 같을때 return
+            //if (command[0].Equals(EventMessageType.VOICECHAT.ToString()))
+            //{
+            //    if (command[1].Equals(VoiceEventType.REQUEST.ToString()))
+            //    {
+            //        string senderEmail = command[2];
+            //        string recieverEmail = command[3];
+
+            //        if (alivingUsersDict[recieverEmail].onRequest || alivingUsersDict[recieverEmail].onVoiceChat)
+            //        {
+            //            return;
+            //        }
+
+            //        alivingUsersDict[recieverEmail].onRequest = true;
+            //        alivingUsersDict[senderEmail].onRequest = true;
+            //    //    if (alivingUsersDict[recieverEmail].reciever.Equals(senderEmail))
+            //    //    {
+            //    //        return;
+            //    //    }
+            //    //    if (!alivingUsersDict[recieverEmail].reciever.Equals(string.Empty) && !alivingUsersDict[recieverEmail].)
+            //    //    {
+
+            //            //    }
+
+
+
+            //            //    alivingUsersDict[recieverEmail].sender = senderEmail;
+            //            //    alivingUsersDict[senderEmail].reciever = recieverEmail;
+            //    }
+            //    if (command[1].Equals(VoiceEventType.CANCEL.ToString()))
+            //    {
+            //        string senderEmail = command[2];
+            //        string recieverEmail = command[3];
+            //    }
+            //}
 
             chatClient.PublishMessage(eventServer, message);
         }
