@@ -278,7 +278,7 @@ public class InteractableQuizObject : MonoBehaviour
 
         for (int i = 0; i < selectionButtons.Length; i++)
         {
-            selectionButtons[i].enabled = true;
+            selectionButtons[i].GetComponent<QuizSlot>().SetInteractable(false);
             selectionButtons[i].gameObject.GetComponent<QuizSlot>().Deselect();
         }
     }
@@ -290,7 +290,7 @@ public class InteractableQuizObject : MonoBehaviour
 
         for(int i = 0; i < selectionButtons.Length; i++)
         {
-            selectionButtons[i].enabled = false;
+            selectionButtons[i].GetComponent<QuizSlot>().SetInteractable(true);
         }
 
         bool isCollect = false;

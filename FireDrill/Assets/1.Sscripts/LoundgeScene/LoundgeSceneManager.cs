@@ -329,8 +329,10 @@ public class LoundgeSceneManager : GameManager
             yield return wait;
         }
 
-        voiceManager.OnDisconnectVoiceChatEvent(NetworkManager.User.email);
-        LeaveVoiceChatRoom();
+        //voiceManager.OnDisconnectVoiceChatEvent(NetworkManager.User.email);
+        //LeaveVoiceChatRoom();
+
+        voiceManager.DisconnectVoiceChat();
     }
 
     [PunRPC]

@@ -83,12 +83,13 @@ public class RoomState_Quiz : RoomState, IPunObservable
     {
         timerObject.SetActive(false);
         timerObjectLecture.SetActive(false);
+        toast.gameObject.SetActive(false);
 
         if (NetworkManager.User.userType == UserType.Student)
         {
             foreach (var quizObject in quizObjects)
             {
-                quizObject.Activate();
+                quizObject.Deactivate();
             }
 
             roomSceneManager.onRoomStateEvent -= ConfirmQuizResult;

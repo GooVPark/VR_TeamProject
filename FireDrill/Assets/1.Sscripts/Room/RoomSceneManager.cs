@@ -222,8 +222,17 @@ public class RoomSceneManager : GameManager
     }
     public void LeaveRoom()
     {
+        StartCoroutine(ExcuteLeaveRoom());   
+    }
+
+    private IEnumerator ExcuteLeaveRoom()
+    {
         Debug.Log("Leave Room");
         DataManager.Instance.UpdateRoomPlayerCount(NetworkManager.RoomNumber, PhotonNetwork.CurrentRoom.PlayerCount - 1);
+        DataManager.Instance.InsertLobbyUser(NetworkManager.User);
+
+        yield return new WaitForSeconds(1f);
+
         if (PhotonNetwork.CurrentRoom.PlayerCount <= 0)
         {
             DataManager.Instance.UpdateRoomProgress(roomNumber, 0);

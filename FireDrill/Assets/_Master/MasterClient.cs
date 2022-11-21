@@ -25,13 +25,13 @@ public class MasterClient : MonoBehaviour, IChatClientListener
     }
 
     [System.Serializable]
-    public class User
+    public class OnlineUser
     {
         public string userName;
         public float userLife;
         public const float MAX_LIFE = 10f;
 
-        public User(string userName)
+        public OnlineUser(string userName)
         {
             this.userName = userName;
             UpdateUserLife();
@@ -46,14 +46,16 @@ public class MasterClient : MonoBehaviour, IChatClientListener
 
     [SerializeField] private string eventServer;
 
-    public List<User> alivingUsers;
-    public Dictionary<string, User> alivingUsersDict;
+    public List<OnlineUser> alivingUsers;
+    public Dictionary<string, OnlineUser> alivingUsersDict;
     public List<MessageWrapper> messageQueue;
 
     private ChatClient chatClient;
 
 
     MongoClient client;
+    IMongoDatabase userAccountDatabase;
+    IMongoCollection<User> accountCollection;
 
     IMongoDatabase roomDatabase;
     IMongoCollection<RoomData> roomCollection;
@@ -66,8 +68,8 @@ public class MasterClient : MonoBehaviour, IChatClientListener
     void Start()
     {
         messageQueue = new List<MessageWrapper>();
-        alivingUsers = new List<User>();
-        alivingUsersDict = new Dictionary<string, User>();
+        alivingUsers = new List<OnlineUser>();
+        alivingUsersDict = new Dictionary<string, OnlineUser>();
 
 
 
@@ -78,6 +80,8 @@ public class MasterClient : MonoBehaviour, IChatClientListener
 
         client = new MongoClient("mongodb+srv://firedrillMember:member11@cluster0.pt8thqp.mongodb.net/?retryWrites=true&w=majority");
 
+        userAccountDatabase = client.GetDatabase("UserAccount");
+        accountCollection = userAccountDatabase.GetCollection<User>("UserAccounts");
         roomDatabase = client.GetDatabase("RoomDatabase");
         roomUserCollection = roomDatabase.GetCollection<RoomUser>("Room1");
         lobbyDatabase = client.GetDatabase("LobbyData");
@@ -162,7 +166,7 @@ public class MasterClient : MonoBehaviour, IChatClientListener
     }
 
 
-    public void OnUserTimeout(User user)
+    public void OnUserTimeout(OnlineUser user)
     {
         MasterLogger.Good("User Timeout: " + user.userName);
 
@@ -171,6 +175,10 @@ public class MasterClient : MonoBehaviour, IChatClientListener
 
         var filter = Builders<LoundgeUser>.Filter.Eq("email", user.userName);
         loundgeUsercollection.DeleteOne(filter);
+
+        var filter2 = Builders<User>.Filter.Eq("email", user.userName);
+        var update = Builders<User>.Update.Set("isOnline" , false);
+        accountCollection.UpdateOne(filter2, update);
 
         string msg = $"{EventMessageType.OUT}_{user.userName}";
         for (int i = 0; i < alivingUsers.Count; i++)
@@ -185,7 +193,7 @@ public class MasterClient : MonoBehaviour, IChatClientListener
             return;
         }
         MasterLogger.Good("새로운 유저: <" + userName + ">");
-        User user = new User(userName);
+        OnlineUser user = new OnlineUser(userName);
         alivingUsers.Add(user);
         alivingUsersDict.Add(userName, user);
     }
