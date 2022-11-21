@@ -19,28 +19,34 @@ public class PlayerDetector : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if(other.CompareTag("NPC"))
+        if (NetworkManager.Instance.roomType == RoomType.Loundge)
         {
-            //other.GetComponentInChildren<Outline>().OutlineEnable();
+            if (other.CompareTag("NPC"))
+            {
+                //other.GetComponentInChildren<Outline>().OutlineEnable();
 
-            NPCController npc = other.GetComponent<NPCController>();
-            //VoiceContorller voiceContorller = other.GetComponent<VoiceContorller>();
+                NPCController npc = other.GetComponent<NPCController>();
+                //VoiceContorller voiceContorller = other.GetComponent<VoiceContorller>();
 
-            npc.isVoiceChatReady = true;
+                npc.isVoiceChatReady = true;
+            }
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if(other.CompareTag("NPC"))
+        if (NetworkManager.Instance.roomType == RoomType.Loundge)
         {
-            //other.GetComponentInChildren<Outline>().OutlineDisable();
+            if (other.CompareTag("NPC"))
+            {
+                //other.GetComponentInChildren<Outline>().OutlineDisable();
 
-            NPCController npc = other.GetComponent<NPCController>();
-            //VoiceContorller voiceContorller = other.GetComponent<VoiceContorller>();
+                NPCController npc = other.GetComponent<NPCController>();
+                //VoiceContorller voiceContorller = other.GetComponent<VoiceContorller>();
 
-            npc.OutlineDisable();
-            npc.isVoiceChatReady = false;
+                npc.OutlineDisable();
+                npc.isVoiceChatReady = false;
+            }
         }
     }
 }

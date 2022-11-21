@@ -414,7 +414,7 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
             }
         }
         //마스터로 부터 OUT메세지를 받음
-        if(type.Equals(EventMessageType.OUT))
+        if(type.Equals(EventMessageType.OUT.ToString()))
         {
             string target = command[1];
             loundgeManager.RemoveTargetNPC(target);

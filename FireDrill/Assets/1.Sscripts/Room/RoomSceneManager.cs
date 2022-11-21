@@ -105,11 +105,7 @@ public class RoomSceneManager : GameManager
 
     private void Start()
     {
-        Debug.Log("RoomScnenManager: Start Begin");
-        NetworkManager.Instance.SetRoomNumber(roomNumber);
-        NetworkManager.Instance.roomType = RoomType.Room;
-        SetIdleMode(IdleMode.STAND);
-        Debug.Log("RoomScnenManager: Start End");
+
     }
 
     private void Update()
@@ -188,6 +184,10 @@ public class RoomSceneManager : GameManager
 
     public override void OnJoinedRoom()
     {
+        NetworkManager.Instance.SetRoomNumber(roomNumber);
+        NetworkManager.Instance.roomType = RoomType.Room;
+        SetIdleMode(IdleMode.STAND);
+
         Initialize();
 
         origin.position = SpawnPlayer(spawnPivot.position);

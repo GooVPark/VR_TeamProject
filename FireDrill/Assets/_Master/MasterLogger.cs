@@ -61,15 +61,15 @@ public class MasterLogger : MonoBehaviour
     private void Add(string log)
     {
         string d = DateTime.Now.ToString("u")[0..^1];
-        sb.AppendLine($"[{d}] {++ind} : {log}");
+        //sb.AppendLine($"[{d}] {++ind} : {log}");
         text.SetText(sb.ToString());
 
-        if (sr.verticalNormalizedPosition < 0.001f)
-        {
-            Canvas.ForceUpdateCanvases();
+        //if (sr.verticalNormalizedPosition < 0.001f)
+        //{
+        //    Canvas.ForceUpdateCanvases();
 
-            sr.verticalNormalizedPosition = 0f;
-        }
+        //    sr.verticalNormalizedPosition = 0f;
+        //}
     }
 
 
