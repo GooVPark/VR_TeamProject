@@ -109,7 +109,7 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
             }
             else
             {
-                scoreUI.text = "-";
+                scoreUI.text = " - ";
                 scoreUI.gameObject.SetActive(false);
             }
         }
@@ -288,33 +288,98 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
 
     [SerializeField] private XRSimpleInteractable interactable;
 
+    private bool isReady = false;
     // Start is called before the first frame update
     void Start()
     {
+        StartCoroutine(FindVR());
         voiceAudioCurve = audioSource.GetCustomCurve(AudioSourceCurveType.CustomRolloff);
 
         Transform parent = GameObject.Find("Players").transform;
         transform.SetParent(parent);
-
-        GameManager gameManager = FindObjectOfType<GameManager>();
         //gameManager.showSpeechBubble += OnSendChatMessage;
 
-        headset = Camera.main;
-        leftController = GameObject.Find("Left Direct Interactor").GetComponent<ActionBasedController>();
-        rightController = GameObject.Find("Right Direct Interactor").GetComponent<ActionBasedController>();
+        //headset = Camera.main;
+        //leftController = GameObject.Find("Left Direct Interactor").GetComponent<ActionBasedController>();
+        //rightController = GameObject.Find("Right Direct Interactor").GetComponent<ActionBasedController>();
 
-        leftHandAnimation = GameObject.Find("Left Direct Interactor").GetComponent<HandAnimationController>();
-        rightHandAnimation = GameObject.Find("Right Direct Interactor").GetComponent<HandAnimationController>();
+        //leftHandAnimation = GameObject.Find("Left Direct Interactor").GetComponent<HandAnimationController>();
+        //rightHandAnimation = GameObject.Find("Right Direct Interactor").GetComponent<HandAnimationController>();
 
-        rightHandAnimation.animator.SetInteger("Pose", 0);
-        rightHandAnimation.animator.SetFloat("Flex", 0f);
-        leftHandAnimation.animator.SetInteger("Pose", 0);
-        leftHandAnimation.animator.SetFloat("Flex", 0f);
+        //rightHandAnimation.animator.SetInteger("Pose", 0);
+        //rightHandAnimation.animator.SetFloat("Flex", 0f);
+        //leftHandAnimation.animator.SetInteger("Pose", 0);
+        //leftHandAnimation.animator.SetFloat("Flex", 0f);
 
+
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (photonView.IsMine)
+        {
+            //head.gameObject.SetActive(false);
+            //leftHand.gameObject.SetActive(false);
+            //rightHand.gameObject.SetActive(false);
+
+            if (isReady)
+            {
+                MapPosition();
+                SyncAnimation();
+            }
+            if (onExtinguisher)
+            {
+                extinguisherObject.transform.position = extinguisherPivot.position;
+                extinguisherObject.transform.rotation = extinguisherPivot.rotation;
+            }
+        }
+    }
+
+    private IEnumerator FindVR()
+    {
+        while(headset == null || leftController == null || rightController == null || leftHandAnimation == null || rightHandAnimation == null)
+        {
+            if (headset == null)
+            {
+                Debug.Log("Set Headset");
+                headset = Camera.main;
+            }
+            if(leftController == null)
+            {
+                Debug.Log("Set leftController");
+                leftController = GameObject.Find("Left Direct Interactor").GetComponent<ActionBasedController>();
+            }
+            if (rightController == null)
+            {
+                Debug.Log("Set rightController");
+                rightController = GameObject.Find("Right Direct Interactor").GetComponent<ActionBasedController>();
+            }
+            if(leftHandAnimation == null)
+            {
+                Debug.Log("Set leftHandAnimation");
+                leftHandAnimation = GameObject.Find("Left Direct Interactor").GetComponent<HandAnimationController>();
+                leftHandAnimation.animator.SetInteger("Pose", 0);
+                leftHandAnimation.animator.SetFloat("Flex", 0f);
+            }
+            if (rightHandAnimation == null)
+            {
+                Debug.Log("Set rightHandAnimation");
+                rightHandAnimation = GameObject.Find("Right Direct Interactor").GetComponent<HandAnimationController>();
+                rightHandAnimation.animator.SetInteger("Pose", 0);
+                rightHandAnimation.animator.SetFloat("Flex", 0f);
+            }
+           
+
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        isReady = true;
 
         if (photonView.IsMine)
         {
-            if(NetworkManager.Instance.roomType == RoomType.Room)
+            if (NetworkManager.Instance.roomType == RoomType.Room)
             {
                 leftWrist.gameObject.SetActive(true);
                 rightWrist.gameObject.SetActive(true);
@@ -333,26 +398,6 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
 
 
         Initialize();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (photonView.IsMine)
-        {
-            //head.gameObject.SetActive(false);
-            //leftHand.gameObject.SetActive(false);
-            //rightHand.gameObject.SetActive(false);
-
-            MapPosition();
-            SyncAnimation();
-
-            if (onExtinguisher)
-            {
-                extinguisherObject.transform.position = extinguisherPivot.position;
-                extinguisherObject.transform.rotation = extinguisherPivot.rotation;
-            }
-        }
     }
 
     public void OutlineEnabled()
@@ -430,16 +475,12 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
     {
         if (photonView.IsMine)
         {
-            extinguisher.gameObject.SetActive(false);
-            hose.gameObject.SetActive(false);
+            PhotonNetwork.Destroy(extinguisher.GetComponent<PhotonView>());
+            PhotonNetwork.Destroy(hose.GetComponent<PhotonView>());
         }
         else
         {
-            extinguisher = FindObjectOfType<Extinguisher>();
-            nozzle = FindObjectOfType<Nozzle>();
 
-            extinguisher.gameObject.SetActive(false);
-            nozzle.gameObject.SetActive(false);
         }
     }
 
@@ -484,6 +525,7 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
             UserLevel = NetworkManager.User.userType;
             HasExtinguisher = NetworkManager.User.hasExtingisher;
             CurrentCharacter = NetworkManager.User.characterNumber;
+            QuizScore = -1;
 
             userInfoUI.SetActive(false);
 

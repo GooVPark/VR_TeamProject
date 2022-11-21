@@ -164,6 +164,7 @@ public class NPCController : MonoBehaviourPun //, IPunInstantiateMagicCallback
         bool senderIsOnRequestVoiceChat = sender.onRequestVoiceChat;
         if (isVoiceChatReady && isHovered && !senderIsOnVoiceChat && !senderIsOnRequestVoiceChat && !recieverIsOnRequestVoiceChat && !recieverIsOnVoiceChat)
         {
+            FindObjectOfType<VoiceManager>().onRequest = true;
             string message = $"{EventMessageType.VOICECHAT}_{VoiceEventType.REQUEST}_{NetworkManager.User.email}_{user.email}";
             eventMessage?.Invoke(message);
         }
@@ -240,6 +241,7 @@ public class NPCController : MonoBehaviourPun //, IPunInstantiateMagicCallback
 
     public void ShowBubble(string message)
     {
+        Debug.Log(user.name +  " ShowChatBubble");
         if(speachTimer != null)
         {
             StopCoroutine(speachTimer);

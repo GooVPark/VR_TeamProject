@@ -107,7 +107,14 @@ public class AIController : MonoBehaviour
                 case BehaviourState.Talk:
 
                     timer -= Time.deltaTime;
-                    transform.LookAt(new Vector3(transform.position.x , transform.position.y, talkInteractable.interlocutor.transform.position.z));
+                    if (talkInteractable.interlocutor != null)
+                    {
+                        transform.LookAt(new Vector3(transform.position.x, transform.position.y, talkInteractable.interlocutor.transform.position.z));
+                    }
+                    else
+                    {
+                        timer = -1;
+                    }
 
                     if(timer < 0)
                     {

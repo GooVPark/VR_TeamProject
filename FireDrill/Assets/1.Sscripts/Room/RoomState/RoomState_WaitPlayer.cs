@@ -42,16 +42,15 @@ public class RoomState_WaitPlayer : RoomState
 
         DataManager.Instance.UpdateRoomProgress(roomSceneManager.roomNumber, 0);
 
-        
-
         if (user.userType == UserType.Lecture)
         {
             NetworkManager.Instance.scoreBoardDisabled = false;
             NetworkManager.Instance.onScoreBoard = false;
 
-            scoreBoard.button.OnClick.AddListener(() => ShowScoreBoard());
-
             NetworkManager.Instance.megaphoneDisabled = false;
+
+            scoreBoard.button.OnClick.AddListener(() => ShowScoreBoard());
+            megaphone.button.OnClick.AddListener(() => roomSceneManager.MegaphoneToggle());
 
             message = $"{EventMessageType.PROGRESS}_{ProgressEventType.UPDATE}_{roomSceneManager.roomNumber}";
             SendEventMessage(message);

@@ -43,7 +43,20 @@ public class TextChatManager : MonoBehaviour
             return;
         }
 
-        string message = $"{EventMessageType.TEXTCHAT}_{NetworkManager.User.name}_{inputField.text}={colorNumber}_{NetworkManager.RoomNumber}";
+        string message = $"{EventMessageType.TEXTCHAT}_{NetworkManager.User.email}_{NetworkManager.User.name}_{inputField.text}={colorNumber}_{NetworkManager.RoomNumber}";
+        if(eventMessage == null)
+        {
+            EventSyncronizer eventSyncronizer = FindObjectOfType<EventSyncronizer>();
+            if(eventSyncronizer != null)
+            {
+                eventMessage += eventSyncronizer.OnSendMessage;
+            }
+            else
+            {
+                EventSyncronizerRoom eventSyncronizerRoom = FindObjectOfType<EventSyncronizerRoom>();
+                eventMessage += eventSyncronizerRoom.OnSendMessage;
+            }
+        }
         eventMessage?.Invoke(message);
         sendChatMessage?.Invoke(inputField.text);
     }

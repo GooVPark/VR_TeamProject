@@ -21,6 +21,7 @@ public class QuizSlot : MonoBehaviour
     public UnityEvent OnClick;
 
     private bool isHovered;
+    private bool isSoleved;
 
     private void OnEnable()
     {
@@ -35,7 +36,7 @@ public class QuizSlot : MonoBehaviour
 
     public void OnSelected()
     {
-        if (isHovered)
+        if (isHovered && !isSoleved)
         {
             OnClick?.Invoke();
         }
@@ -84,6 +85,6 @@ public class QuizSlot : MonoBehaviour
 
     public void SetInteractable(bool value)
     {
-        gameObject.GetComponent<Button>().interactable = value;
+        isSoleved = value;
     }
 }

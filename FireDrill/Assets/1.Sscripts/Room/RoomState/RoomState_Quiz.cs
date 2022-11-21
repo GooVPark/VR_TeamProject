@@ -36,21 +36,25 @@ public class RoomState_Quiz : RoomState, IPunObservable
 
     [SerializeField] private float originTime;
     [SerializeField] private float time = 60f;
+    [SerializeField] private float recieverTime = 0f;
     private int scoreCount = 0;
     private int solveCount = 0;
     [SerializeField] private int playerCount = 1;
     private bool endQuiz = false;
+    private bool solvedAll = false;
 
     public override void OnStateEnter()
     {
         base.OnStateEnter();
         playerCount = 1;
         time = originTime;
+        recieverTime = 0;
 
         scoreCount = 0;
         solveCount = 0;
 
         endQuiz = false;
+        solvedAll = false;
 
         if(NetworkManager.User.userType == UserType.Lecture)
         {
@@ -79,12 +83,13 @@ public class RoomState_Quiz : RoomState, IPunObservable
     {
         timerObject.SetActive(false);
         timerObjectLecture.SetActive(false);
+        toast.gameObject.SetActive(false);
 
         if (NetworkManager.User.userType == UserType.Student)
         {
             foreach (var quizObject in quizObjects)
             {
-                quizObject.Activate();
+                quizObject.Deactivate();
             }
 
             roomSceneManager.onRoomStateEvent -= ConfirmQuizResult;
@@ -107,11 +112,12 @@ public class RoomState_Quiz : RoomState, IPunObservable
         progressText.text = $"{solveCount}/10";
         scoreText.text = $"{scoreCount}";
 
+        time -= Time.deltaTime;
+        
+
         if (NetworkManager.User.userType == UserType.Lecture)
         {
-            time -= Time.deltaTime;
-
-            photonView.RPC(nameof(Timer), RpcTarget.All, time);
+            //photonView.RPC(nameof(Timer), RpcTarget.All, time);
 
             if (time <= 0 && !endQuiz)
             {
@@ -125,9 +131,15 @@ public class RoomState_Quiz : RoomState, IPunObservable
             }
         }
 
-        if (solveCount >= quizManager.quizObjects.Length)
+        if (solveCount >= quizManager.quizObjects.Length && !solvedAll)
         {
-            ShowQuizResult();
+            solvedAll = true;
+            if(resultDelay != null)
+            {
+                StopCoroutine(resultDelay);
+                resultDelay = null;
+            }
+            resultDelay = StartCoroutine(ResultDelay());
         }
     }
 
@@ -141,6 +153,13 @@ public class RoomState_Quiz : RoomState, IPunObservable
 
         roomSceneManager.player.QuizScore = scoreCount * 10;
         //photonView.RPC(nameof(SetScoreRPC), RpcTarget.All, scoreCount);
+    }
+
+    private Coroutine resultDelay;
+    private IEnumerator ResultDelay()
+    {
+        yield return new WaitForSeconds(5.1f);
+        ShowQuizResult();
     }
 
     [PunRPC]
@@ -181,7 +200,14 @@ public class RoomState_Quiz : RoomState, IPunObservable
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-
+        //if(stream.IsWriting)
+        //{
+        //    stream.SendNext(time);
+        //}
+        //else
+        //{
+        //    recieverTime = (int)stream.ReceiveNext();
+        //}
     }
 
     [PunRPC]

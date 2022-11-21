@@ -29,6 +29,7 @@ public class LoundgeSceneManager : GameManager
 
     private bool isOnline = false;
     public bool isEventServerConnected = false;
+    private bool onVoiceChat = false;
 
     [SerializeField] private GameObject voiceChatErrorToast;
     [SerializeField] private GameObject megaphoneErrorToast;
@@ -62,10 +63,6 @@ public class LoundgeSceneManager : GameManager
     {
     }
 
-    private void FixedUpdate()
-    {
-        UpdateRoomPlayerCount(0);
-    }
 
     private Coroutine checkPlayerCount;
     private IEnumerator CheckPlayerCount()
@@ -114,10 +111,10 @@ public class LoundgeSceneManager : GameManager
         string message = $"{EventMessageType.SPAWN}_{NetworkManager.User.email}";
         eventMesage?.Invoke(message);
 
-        for (int i = 0; i < playerCountsText.Length; i++)
-        {
-            UpdateRoomPlayerCount(i);
-        }
+        //for (int i = 0; i < playerCountsText.Length; i++)
+        //{
+        //    UpdateRoomPlayerCount(i);
+        //}
 
         for (int i = 0; i < roomEnterances.Count; i++)
         {
@@ -133,9 +130,33 @@ public class LoundgeSceneManager : GameManager
 
     public void SpawnNPC()
     {
-        if(!onSpawn)
+        List<LoundgeUser> loundgeUsers = DataManager.Instance.GetLoundgeUsers();
+
+        foreach (LoundgeUser loundgeUser in loundgeUsers)
         {
-            
+            if (!spawnedNPC.ContainsKey(loundgeUser.email))
+            {
+                spawnedNPC.Add(loundgeUser.email, loundgeUser);
+
+                Vector2 randomValue = Random.insideUnitCircle * 3f;
+                Vector3 spawnPosition = this.spawnPosition.transform.position + new Vector3(randomValue.x, 0, randomValue.y);
+
+                GameObject npcObject = Instantiate(npcPrefab, spawnPosition, Quaternion.identity, NPCTransforms);
+                spawnedNPCObject.Add(loundgeUser.email, npcObject);
+                NPCController npc = npcObject.GetComponent<NPCController>();
+                npc.Initialize(loundgeUser);
+                npc.eventMessage += eventSyncronizer.OnSendMessage;
+
+                if (NetworkManager.Instance.onVoiceChat)
+                {
+                    npc.senderIsOnVoiceChat = true;
+                }
+
+                if (loundgeUser.email.Equals(NetworkManager.User.email))
+                {
+                    npcObject.SetActive(false);
+                }
+            }
         }
     }
 
@@ -177,6 +198,14 @@ public class LoundgeSceneManager : GameManager
         onSpawn = false;
     }
 
+    public void RemoveTargetNPC(string targetKey)
+    {
+        GameObject target = spawnedNPCObject[targetKey];
+        spawnedNPCObject.Remove(targetKey);
+        Destroy(target);
+        spawnedNPC.Remove(targetKey);
+    }
+
     public void JoinVoiceChatRoom(string userID)
     {
         if(!NetworkManager.Instance.onVoiceChat)
@@ -215,16 +244,10 @@ public class LoundgeSceneManager : GameManager
 
     public void RemoveNPCObject(string email)
     {
-        Destroy(spawnedNPCObject[email]);
-
-        if(spawnedNPC.ContainsKey(email))
-        {
-            spawnedNPC.Remove(email);
-        }
-        if (spawnedNPCObject.ContainsKey(email))
-        {
-            spawnedNPCObject.Remove(email);
-        }
+        GameObject npc = spawnedNPCObject[email];
+        spawnedNPC.Remove(email);
+        spawnedNPCObject.Remove(email);
+        Destroy(npc);
 
         DataManager.Instance.DeleteLobbyUser(email);
     }
@@ -267,6 +290,57 @@ public class LoundgeSceneManager : GameManager
         roomEnterances[roomNumber].isStarted = isStarted;
     }
 
+    [SerializeField] float responeInterval;
+    [SerializeField] float timeoutInterval;
+    private bool isResponsed;
+    private Coroutine voiceChatTimer;
+    private IEnumerator VoiceChatTimer()
+    {
+        WaitForFixedUpdate wait = new WaitForFixedUpdate();
+        float responseInterval = 3f;
+        float responseElapsed = 0f;
+
+        float timeOutInterval = 10;
+        float timeOutElapsed = 0;
+
+        while(timeOutInterval > timeOutElapsed)
+        {
+            responseElapsed += Time.fixedDeltaTime;
+            timeOutElapsed += Time.fixedDeltaTime;
+
+            if (responseElapsed > responseInterval)
+            {
+                if(!photonView.IsMine)
+                {
+                    photonView.RPC(nameof(CheckOther), RpcTarget.All);
+                }
+
+                responseElapsed = 0f;
+            }
+            if(isResponsed)
+            {
+                timeOutElapsed = 0f;
+                isResponsed = false;
+            }
+
+            this.responeInterval = responseElapsed;
+            this.timeoutInterval = timeOutElapsed;
+
+            yield return wait;
+        }
+
+        //voiceManager.OnDisconnectVoiceChatEvent(NetworkManager.User.email);
+        //LeaveVoiceChatRoom();
+
+        voiceManager.DisconnectVoiceChat();
+    }
+
+    [PunRPC]
+    private void CheckOther()
+    {
+        isResponsed = true;
+    }
+
     #region Database
 
     private void InsertUserData()
@@ -277,6 +351,17 @@ public class LoundgeSceneManager : GameManager
     private void DeleteUserData()
     {
 
+    }
+
+    private Coroutine updateUserCountInVoiceChat;
+    private IEnumerator UpdateRoomUserCountInVoiceChat()
+    {
+        WaitForSeconds wait = new WaitForSeconds(1f);
+        while(true)
+        {
+            UpdateRoomPlayerCount(DataManager.Instance.GetRoomUserCount(0));
+            yield return wait;
+        }
     }
 
     #endregion
@@ -449,23 +534,23 @@ public class LoundgeSceneManager : GameManager
             progressUIs[i].sprite = progressImages[roomDatas[i].progress];
         }
     }
-    public void UpdateLobbyPlayerCount()
+    public void UpdateLobbyPlayerCount(int count)
     {
-        playerCountText.text = DataManager.Instance.GetLoundgeUsers().Count.ToString();
+        playerCountText.text = count.ToString();
     }
-    public void UpdateRoomPlayerCount(int roomNumber)
+
+    public void UpdateRoomPlayerCount(int count)
     {
-        //RoomData roomData = DataManager.Instance.GetRoomData(roomNumber);
 
         //int playerCount = roomData.currentPlayerCount < 0 ? 0 : roomData.currentPlayerCount;
         //int maxPlayerCount = roomData.maxPlayerCount;
-        int playerCount = 0;
-        if (cachedRoomList.ContainsKey(roomNumber.ToString()))
-        {
-            playerCount = cachedRoomList[roomNumber.ToString()].PlayerCount;
-        }
+        //int playerCount = 0;
+        //if (cachedRoomList.ContainsKey(roomNumber.ToString()))
+        //{
+        //    playerCount = cachedRoomList[roomNumber.ToString()].PlayerCount;
+        //}
 
-        playerCountsText[roomNumber].text = $"{playerCount}/16";
+        playerCountsText[0].text = $"{count}/16";
     }
     private Dictionary<string, RoomInfo> cachedRoomList = new Dictionary<string, RoomInfo>();
 
@@ -584,6 +669,13 @@ public class LoundgeSceneManager : GameManager
             case RoomType.Room:
                 break;
             case RoomType.VoiceRoom:
+                if(voiceChatTimer != null)
+                {
+                    StopCoroutine(voiceChatTimer);
+                    voiceChatTimer = null;
+                }
+
+                voiceChatTimer = StartCoroutine(VoiceChatTimer());
 
                 spawnedNPCObject[voiceManager.sender.email].SetActive(false);
                 spawnedNPCObject[voiceManager.reciever.email].SetActive(false);
@@ -598,6 +690,12 @@ public class LoundgeSceneManager : GameManager
                 DisableTextChat();
 
                 announcement.StopAudio();
+                if(updateUserCountInVoiceChat != null)
+                {
+                    StopCoroutine(updateUserCountInVoiceChat);
+                    updateUserCountInVoiceChat = null;
+                }
+                updateUserCountInVoiceChat = StartCoroutine(UpdateRoomUserCountInVoiceChat());
 
                 foreach(string key in spawnedNPCObject.Keys)
                 {
@@ -652,6 +750,12 @@ public class LoundgeSceneManager : GameManager
                 foreach (string key in spawnedNPCObject.Keys)
                 {
                     spawnedNPCObject[key].GetComponent<NPCController>().SetVoiceChatState(false);
+                }
+
+                if (voiceChatTimer != null)
+                {
+                    StopCoroutine(voiceChatTimer);
+                    voiceChatTimer = null;
                 }
                 break;
             case RoomType.Loundge:

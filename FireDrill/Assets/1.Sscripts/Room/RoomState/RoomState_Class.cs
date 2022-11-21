@@ -54,9 +54,9 @@ public class RoomState_Class : RoomState
 
             currentToast = lectureToast.gameObject;
             lectureToast.gameObject.SetActive(true);
-            roomSceneManager.MegaphoneOn();
+            //roomSceneManager.MegaphoneOn();
             //megaphone.button.onClick += roomSceneManager.MegaphoneToggle;
-            megaphone.button.OnClick.AddListener(() => roomSceneManager.MegaphoneToggle());
+            //megaphone.button.OnClick.AddListener(() => roomSceneManager.MegaphoneToggle());
         }
         if(NetworkManager.User.userType == UserType.Student)
         {

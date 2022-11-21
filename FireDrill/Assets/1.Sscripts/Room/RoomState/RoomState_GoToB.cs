@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class RoomState_GoToB : RoomState
 {
@@ -36,6 +37,12 @@ public class RoomState_GoToB : RoomState
         toast.gameObject.SetActive(true);
 
         npcObject.SetActive(true);
+
+
+        if (roomSceneManager.isStarted)
+        {
+            roomSceneManager.requiredPlayer = PhotonNetwork.CurrentRoom.PlayerCount;
+        }
     }
 
     public override void OnStateExit()

@@ -74,7 +74,9 @@ public class InteractableQuizObject : MonoBehaviour
     [SerializeField] private TMP_Text selectionQuizCounts;
     private bool onQuizCounts = false;
     public Transform target;
+    public bool interactable;
     [Space(5)]
+
 
     private QuizSlot selectedSlot;
     public QuizSlot SelectedSlot
@@ -161,6 +163,7 @@ public class InteractableQuizObject : MonoBehaviour
         }
 
         
+        
         selectionQuizUI.SetActive(false);
         oxQuizUI.SetActive(false);
         quizResult.gameObject.SetActive(false);
@@ -172,10 +175,18 @@ public class InteractableQuizObject : MonoBehaviour
         {
             if (Vector3.Distance(transform.position, target.position) < 5f)
             {
+                foreach(var item in selectionButtons)
+                {
+                    item.enabled = true;
+                }
                 pannel.enabled = true;
             }
             else
             {
+                foreach (var item in selectionButtons)
+                {
+                    item.enabled = false;
+                }
                 pannel.enabled = false;
             }
         }
@@ -203,6 +214,12 @@ public class InteractableQuizObject : MonoBehaviour
         }
 
         signImage.gameObject.SetActive(false);
+
+        selectionQuestionUI.SetActive(false);
+        selectionFeedbackUI.SetActive(false);
+        oxQuestionUI.SetActive(false);
+        oxFeedbackUI.SetActive(false);  
+
         QuizObject quiz = quizObjects[quizNumber];
 
         if (quizObjects.Count > 1)
@@ -261,7 +278,7 @@ public class InteractableQuizObject : MonoBehaviour
 
         for (int i = 0; i < selectionButtons.Length; i++)
         {
-            selectionButtons[i].enabled = true;
+            selectionButtons[i].GetComponent<QuizSlot>().SetInteractable(false);
             selectionButtons[i].gameObject.GetComponent<QuizSlot>().Deselect();
         }
     }
@@ -273,7 +290,7 @@ public class InteractableQuizObject : MonoBehaviour
 
         for(int i = 0; i < selectionButtons.Length; i++)
         {
-            selectionButtons[i].enabled = false;
+            selectionButtons[i].GetComponent<QuizSlot>().SetInteractable(true);
         }
 
         bool isCollect = false;

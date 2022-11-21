@@ -105,19 +105,11 @@ public class RoomSceneManager : GameManager
 
     private void Start()
     {
-        Debug.Log("RoomScnenManager: Start Begin");
-        NetworkManager.Instance.SetRoomNumber(roomNumber);
-        NetworkManager.Instance.roomType = RoomType.Room;
-        SetIdleMode(IdleMode.STAND);
-        Debug.Log("RoomScnenManager: Start End");
+
     }
 
     private void Update()
     {
-        if(isStarted)
-        {
-            requiredPlayer = PhotonNetwork.CurrentRoom.PlayerCount;
-        }
         RoomState?.OnUpdate();
     }
 
@@ -183,12 +175,21 @@ public class RoomSceneManager : GameManager
     }
     public bool IsReady(int playerCount)
     {
+        if(isStarted)
+        {
+            requiredPlayer = PhotonNetwork.CurrentRoom.PlayerCount;
+        }
         return playerCount >= requiredPlayer;
     }
 
     public override void OnJoinedRoom()
     {
+        NetworkManager.Instance.SetRoomNumber(roomNumber);
+        NetworkManager.Instance.roomType = RoomType.Room;
+        SetIdleMode(IdleMode.STAND);
+
         Initialize();
+
         origin.position = SpawnPlayer(spawnPivot.position);
         localRecoder.TransmitEnabled = false;
         NetworkManager.Instance.roomType = RoomType.Room;
@@ -203,6 +204,7 @@ public class RoomSceneManager : GameManager
         roomData = DataManager.Instance.GetRoomData()[roomNumber];
         DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, roomNumber);
         DataManager.Instance.InitializeQuizScore(NetworkManager.User.email);
+        DataManager.Instance.InsertRoomUser(NetworkManager.User);
         requiredPlayer = roomData.requirePlayerCount;
 
         //StartCoroutine(JoinVoice());
@@ -220,8 +222,17 @@ public class RoomSceneManager : GameManager
     }
     public void LeaveRoom()
     {
+        StartCoroutine(ExcuteLeaveRoom());   
+    }
+
+    private IEnumerator ExcuteLeaveRoom()
+    {
         Debug.Log("Leave Room");
         DataManager.Instance.UpdateRoomPlayerCount(NetworkManager.RoomNumber, PhotonNetwork.CurrentRoom.PlayerCount - 1);
+        DataManager.Instance.InsertLobbyUser(NetworkManager.User);
+
+        yield return new WaitForSeconds(1f);
+
         if (PhotonNetwork.CurrentRoom.PlayerCount <= 0)
         {
             DataManager.Instance.UpdateRoomProgress(roomNumber, 0);
@@ -271,7 +282,8 @@ public class RoomSceneManager : GameManager
         int playerCount = roomData.currentPlayerCount - 1;
 
         DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, 999);
-        DataManager.Instance.UpdateRoomPlayerCount(roomNumber, playerCount);
+        //DataManager.Instance.UpdateRoomPlayerCount(roomNumber, playerCount);
+        DataManager.Instance.DeleteRoomUser(NetworkManager.User);
 
         string message = $"{EventMessageType.NOTICE}_{NoticeEventType.DISCONNECT}_{roomNumber}_{NetworkManager.User.email}";
         eventMessage?.Invoke(message);
@@ -288,6 +300,8 @@ public class RoomSceneManager : GameManager
             SendEventMessage(message);
         }
     }
+
+
 
     public override void OnDisconnected(DisconnectCause cause)
     {
@@ -332,6 +346,14 @@ public class RoomSceneManager : GameManager
         pdfViwer.PrevPage();
     }
 
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        if(newMasterClient.IsMasterClient)
+        {
+            DataManager.Instance.UpdateRoomPlayerCount(roomNumber, PhotonNetwork.CurrentRoom.PlayerCount);
+        }
+    }
+
     private void OnApplicationQuit()
     {
         RoomData roomData = DataManager.Instance.GetRoomData(roomNumber);
@@ -339,6 +361,7 @@ public class RoomSceneManager : GameManager
 
         DataManager.Instance.UpdateRoomPlayerCount(roomNumber, playerCount);
         DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, 999);
+        DataManager.Instance.DeleteRoomUser(NetworkManager.User);
         DataManager.Instance.SetOffline(NetworkManager.User.email);
 
         string message = $"{EventMessageType.NOTICE}_{NoticeEventType.DISCONNECT}_{roomNumber}_{NetworkManager.User.email}";
@@ -367,6 +390,7 @@ public class RoomSceneManager : GameManager
 
         DataManager.Instance.UpdateRoomPlayerCount(roomNumber, playerCount);
         DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, 999);
+        DataManager.Instance.DeleteRoomUser(NetworkManager.User);
         DataManager.Instance.SetOffline(NetworkManager.User.email);
 
         string message = $"{EventMessageType.NOTICE}_{NoticeEventType.DISCONNECT}_{roomNumber}_{NetworkManager.User.email}";

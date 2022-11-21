@@ -66,6 +66,7 @@ public class VoiceManager : MonoBehaviourPunCallbacks
     public NPCController localPlayer;
 
     public int viewID;
+    public bool onRequest = false;
 
     private Hashtable roomCustomProperties;
 
@@ -105,6 +106,7 @@ public class VoiceManager : MonoBehaviourPunCallbacks
         //localPlayer.SetVoiceState(VoiceChatState.Send);
         Debug.Log($"OnVoiceChatSendEvent - Sender: {sender.email}, Reciever: {reciever.email}");
         DataManager.Instance.SetUserOnRequest(sender.email, true);
+
         CurrentToast = cancelVoiceChatToast.gameObject;
         string userName = reciever.name;
         cancelVoiceChatToast.message.text = $"{userName}님의 대화 수락 요청을 기다리는 중...";
@@ -113,6 +115,13 @@ public class VoiceManager : MonoBehaviourPunCallbacks
         this.reciever = reciever;
     }
 
+    private IEnumerator CatchRequestOverlapException()
+    {
+        while(true)
+        {
+            yield return null;
+        }
+    }
     public void OnVoiceChatRecieveEvent(LoundgeUser sender, LoundgeUser reciever)
     {
         //localPlayer.SetVoiceState(VoiceChatState.Recieve);
@@ -192,7 +201,6 @@ public class VoiceManager : MonoBehaviourPunCallbacks
     {
         CurrentToast = acceptVoiceChatToast.gameObject;
         acceptVoiceChatToast.message.text = $"{reciever.name}님과의 1:1 대화가 수락 되었습니다.";
-
         DataManager.Instance.SetUserOnRequest(sender.email, false);
         DataManager.Instance.UpdateLobbyUser(sender);
         NetworkManager.Instance.voiceChatDisabled = false;
