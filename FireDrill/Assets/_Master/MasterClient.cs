@@ -9,6 +9,7 @@ using MongoDB.Driver;
 
 public class MasterClient : MonoBehaviour, IChatClientListener
 {
+    public enum VoiceState { ON, OFF, CANCEL, ACCEPT, DEACCEPT, REQUEST }
     [System.Serializable]
     public class MessageWrapper
     {
@@ -31,11 +32,14 @@ public class MasterClient : MonoBehaviour, IChatClientListener
         public float userLife;
         public const float MAX_LIFE = 10f;
 
+        public string voiceTarget;
         public string sender;
         public string reciever;
 
         public bool onRequest = false;
         public bool onVoiceChat = false;
+
+        public VoiceState voiceState = VoiceState.OFF;
 
         public OnlineUser(string userName)
         {
@@ -153,48 +157,134 @@ public class MasterClient : MonoBehaviour, IChatClientListener
             //    chatClient.SendPrivateMessage(alivingUsers[i].userName, message);
             string[] command = message.Split('_');
             //sender의 reciever가 reciever의 sender와 같을때 return
-            //if (command[0].Equals(EventMessageType.VOICECHAT.ToString()))
-            //{
-            //    if (command[1].Equals(VoiceEventType.REQUEST.ToString()))
-            //    {
-            //        string senderEmail = command[2];
-            //        string recieverEmail = command[3];
+            if (command[0].Equals(EventMessageType.VOICECHAT.ToString()))
+            {
+                if (command[1].Equals(VoiceEventType.REQUEST.ToString()))
+                {
+                    string senderEmail = command[2];
+                    string recieverEmail = command[3];
 
-            //        if (alivingUsersDict[recieverEmail].onRequest || alivingUsersDict[recieverEmail].onVoiceChat)
-            //        {
-            //            return;
-            //        }
+                    VoiceChatRequestOverlap(senderEmail, recieverEmail, message);
+                }
+                else if (command[1].Equals(VoiceEventType.CANCEL.ToString()))
+                {
+                    string senderEmail = command[2];
+                    string recieverEmail = command[3];
 
-            //        alivingUsersDict[recieverEmail].onRequest = true;
-            //        alivingUsersDict[senderEmail].onRequest = true;
-            //    //    if (alivingUsersDict[recieverEmail].reciever.Equals(senderEmail))
-            //    //    {
-            //    //        return;
-            //    //    }
-            //    //    if (!alivingUsersDict[recieverEmail].reciever.Equals(string.Empty) && !alivingUsersDict[recieverEmail].)
-            //    //    {
+                    VoiceChatCancelOverlap(senderEmail, recieverEmail, message);
+                }
+                else if (command[1].Equals(VoiceEventType.ACCEPT.ToString()))
+                {
+                    string senderEmail = command[2];
+                    string recieverEmail = command[3];
 
-            //            //    }
+                    VoiceChatAccept(senderEmail, recieverEmail, message);
+                }
+                else if (command[1].Equals(VoiceEventType.DEACCEPT.ToString()))
+                {
+                    string senderEmail = command[2];
+                    string recieverEmail = command[3];
 
+                    VoiceChatDeaccept(senderEmail, recieverEmail, message);
+                }
+                else if (command[1].Equals(VoiceEventType.DISCONNECT.ToString()))
+                {
+                    string senderEmail = command[2];
+                    string recieverEmail = command[3];
 
+                    VoiceChatDisconnect(senderEmail, recieverEmail, message);
+                }
+                else
+                {
+                    chatClient.PublishMessage(eventServer, message);
+                }
+            }
+            else
+            {
+                chatClient.PublishMessage(eventServer, message);
+            }
+        }
+    }
+    private void VoiceChatRequestOverlap(string senderEmail, string recieverEmail, string message)
+    {
+        OnlineUser sender = alivingUsersDict[senderEmail];
+        OnlineUser reciever = alivingUsersDict[recieverEmail];
 
-            //            //    alivingUsersDict[recieverEmail].sender = senderEmail;
-            //            //    alivingUsersDict[senderEmail].reciever = recieverEmail;
-            //    }
-            //    if (command[1].Equals(VoiceEventType.CANCEL.ToString()))
-            //    {
-            //        string senderEmail = command[2];
-            //        string recieverEmail = command[3];
-            //    }
-            //}
+        if(reciever.voiceState != VoiceState.OFF)
+        {
+            return;
+        }
+        else
+        {
+            sender.voiceState = VoiceState.REQUEST;
+            sender.voiceTarget = recieverEmail;
+            reciever.voiceState = VoiceState.REQUEST;
+            reciever.voiceTarget = senderEmail;
 
             chatClient.PublishMessage(eventServer, message);
         }
     }
 
+    private void VoiceChatCancelOverlap(string senderEmail, string recieverEmail, string message)
+    {
+        OnlineUser sender = alivingUsersDict[senderEmail];
+        OnlineUser reciever = alivingUsersDict[recieverEmail];
+        
+        if(reciever.voiceState != VoiceState.REQUEST || !reciever.voiceTarget.Equals(senderEmail))
+        {
+            return;
+        }
+        else
+        {
+            reciever.voiceState = VoiceState.OFF;
+            sender.voiceState = VoiceState.OFF;
 
+            reciever.voiceTarget = string.Empty;
+            sender.voiceTarget = string.Empty;
 
+            chatClient.PublishMessage(eventServer, message);
+        }
+         
+    }
 
+    private void VoiceChatAccept(string senderEmail, string recieverEmail, string message)
+    {
+        OnlineUser sender = alivingUsersDict[senderEmail];
+        OnlineUser reciever = alivingUsersDict[recieverEmail];
+
+        sender.voiceState = VoiceState.ON;
+        reciever.voiceState = VoiceState.ON;
+
+        chatClient.PublishMessage(eventServer, message);
+    }
+
+    private void VoiceChatDeaccept(string senderEmail, string recieverEmail, string message)
+    {
+        OnlineUser sender = alivingUsersDict[senderEmail];
+        OnlineUser reciever = alivingUsersDict[recieverEmail];
+
+        sender.voiceState = VoiceState.OFF;
+        reciever.voiceState = VoiceState.OFF;
+
+        sender.voiceTarget = string.Empty;
+        reciever.voiceTarget = string.Empty;
+
+        chatClient.PublishMessage(eventServer, message);
+    }
+
+    private void VoiceChatDisconnect(string senderEmail, string recieverEmail, string message)
+    {
+        OnlineUser sender = alivingUsersDict[senderEmail];
+        OnlineUser reciever = alivingUsersDict[recieverEmail];
+
+        sender.voiceState = VoiceState.OFF;
+        reciever.voiceState = VoiceState.OFF;
+
+        sender.voiceTarget = string.Empty;
+        reciever.voiceTarget = string.Empty;
+
+        chatClient.PublishMessage(eventServer, message);
+    }
 
     private void CheckAliving()
     {

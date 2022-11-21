@@ -659,7 +659,7 @@ public class LoundgeSceneManager : GameManager
         roomOptions.MaxPlayers = 0;
 
         PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, TypedLobby.Default);
-        PhotonNetwork.LoadLevel("Room");
+        PhotonNetwork.LoadLevel("Room (BG3)");
     }
 
     public override void OnJoinedRoom()

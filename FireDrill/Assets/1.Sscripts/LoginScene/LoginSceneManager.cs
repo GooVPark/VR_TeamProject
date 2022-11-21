@@ -181,7 +181,7 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
         DataManager.Instance.UpdateUserData("email", NetworkManager.User.email, "characterNumber", index);
         //characterObjects.SetActive(false);
 
-        PhotonNetwork.LoadLevel("Loundge");
+        PhotonNetwork.LoadLevel("Loundge (BG3)");
     }
 
     public void SelectExtingusher(bool isSelected)
