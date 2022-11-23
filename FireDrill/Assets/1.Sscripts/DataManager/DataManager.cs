@@ -61,6 +61,14 @@ public class User
     }
 }
 
+public class ServerSetting
+{
+    public ObjectId _id;
+    public bool isOnline = false;
+
+    public double announceInterval = 30;
+}
+
 [System.Serializable]
 public class LoundgeUser
 {

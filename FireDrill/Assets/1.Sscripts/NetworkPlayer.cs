@@ -28,6 +28,7 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
     {
         userName = value;
         userNameUI.text = userName;
+        userNameUI.gameObject.SetActive(true);
     }
 
     [SerializeField] private UserType userLevel;
@@ -311,7 +312,15 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
         //leftHandAnimation.animator.SetInteger("Pose", 0);
         //leftHandAnimation.animator.SetFloat("Flex", 0f);
 
-
+        if(photonView.IsMine)
+        {
+            UserID = NetworkManager.User.email;
+            UserName = NetworkManager.User.name;
+            UserLevel = NetworkManager.User.userType;
+            HasExtinguisher = NetworkManager.User.hasExtingisher;
+            CurrentCharacter = NetworkManager.User.characterNumber;
+            QuizScore = -1;
+        }
 
     }
 

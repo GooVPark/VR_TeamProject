@@ -61,9 +61,13 @@ public class MasterClient : MonoBehaviour, IChatClientListener
     public List<MessageWrapper> messageQueue;
 
     private ChatClient chatClient;
-
+    private bool isOnline = false;
 
     MongoClient client;
+
+    IMongoDatabase serverSettingDatabase;
+    IMongoCollection<ServerSetting> serverSettingCollection;
+
     IMongoDatabase userAccountDatabase;
     IMongoCollection<User> accountCollection;
 
@@ -97,9 +101,11 @@ public class MasterClient : MonoBehaviour, IChatClientListener
         lobbyDatabase = client.GetDatabase("LobbyData");
         loundgeUsercollection = lobbyDatabase.GetCollection<LoundgeUser>("Loundge");
 
+        serverSettingDatabase = client.GetDatabase("ServeSetting");
+        serverSettingCollection = serverSettingDatabase.GetCollection<ServerSetting>("Setting");
+
         Connect();
 
-        StartCoroutine(UpdateUserCount());
     }
 
 
@@ -107,15 +113,18 @@ public class MasterClient : MonoBehaviour, IChatClientListener
 
     void FixedUpdate()
     {
-        if (messageQueue.Count > 0)
+        if (isOnline == true)
         {
-            MessageWrapper m = messageQueue[0];
-            messageQueue.RemoveAt(0);
-            HandlePrivateMessage(m.sender, m.message, m.channelName);
-        }
+            if (messageQueue.Count > 0)
+            {
+                MessageWrapper m = messageQueue[0];
+                messageQueue.RemoveAt(0);
+                HandlePrivateMessage(m.sender, m.message, m.channelName);
+            }
 
-        CheckAliving();
-        chatClient.Service();
+            CheckAliving();
+            chatClient.Service();
+        }
     }
 
     public void OnPrivateMessage(string sender, object message, string channelName)
@@ -207,6 +216,11 @@ public class MasterClient : MonoBehaviour, IChatClientListener
     }
     private void VoiceChatRequestOverlap(string senderEmail, string recieverEmail, string message)
     {
+        if(string.IsNullOrEmpty(senderEmail) || string.IsNullOrEmpty(recieverEmail))
+        {
+            return;
+        }
+
         OnlineUser sender = alivingUsersDict[senderEmail];
         OnlineUser reciever = alivingUsersDict[recieverEmail];
 
@@ -305,12 +319,23 @@ public class MasterClient : MonoBehaviour, IChatClientListener
         alivingUsers.Remove(user);
         alivingUsersDict.Remove(user.userName);
 
-        var filter = Builders<LoundgeUser>.Filter.Eq("email", user.userName);
-        loundgeUsercollection.DeleteOne(filter);
+        var filterLoundge = Builders<LoundgeUser>.Filter.Eq("email", user.userName);
+        var filterRoom = Builders<RoomUser>.Filter.Eq("email", user.userName);
+        var filterUser = Builders<User>.Filter.Eq("email", user.userName);
 
-        var filter2 = Builders<User>.Filter.Eq("email", user.userName);
+        User targetUser = accountCollection.Find(filterUser).ToList()[0];
+
+        if(targetUser.currentRoom == 999)
+        {
+            loundgeUsercollection.DeleteOne(filterLoundge);
+        }
+        else
+        {
+            roomUserCollection.DeleteOne(filterRoom);
+        }
+
         var update = Builders<User>.Update.Set("isOnline" , false);
-        accountCollection.UpdateOne(filter2, update);
+        accountCollection.UpdateOne(filterUser, update);
 
         string msg = $"{EventMessageType.OUT}_{user.userName}";
         for (int i = 0; i < alivingUsers.Count; i++)
@@ -341,17 +366,28 @@ public class MasterClient : MonoBehaviour, IChatClientListener
 
     public void Connect()
     {
-        Application.runInBackground = true;
-
-        chatClient = new ChatClient(this)
+        if (IsOnline())
         {
-            UseBackgroundWorkerForSending = true
-        };
+            MasterLogger.Log("Server is already Online");
+        }
+        else
+        {
+            SetOnline(true);
+            isOnline = true;
+            Application.runInBackground = true;
 
-        MasterLogger.Log("AppIdChat: " + PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat + ", AppVersion: " + PhotonNetwork.AppVersion);
-        MasterLogger.Log("GameVersion: " + PhotonNetwork.GameVersion);
-        chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, PhotonNetwork.AppVersion, new Photon.Chat.AuthenticationValues("_MASTER_"));
+            chatClient = new ChatClient(this)
+            {
+                UseBackgroundWorkerForSending = true
+            };
 
+
+            MasterLogger.Log("AppIdChat: " + PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat + ", AppVersion: " + PhotonNetwork.AppVersion);
+            MasterLogger.Log("GameVersion: " + PhotonNetwork.GameVersion);
+            chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, PhotonNetwork.AppVersion, new Photon.Chat.AuthenticationValues("_MASTER_"));
+
+            StartCoroutine(UpdateUserCount());
+        }
     }
 
     public void Disconnect()
@@ -453,5 +489,48 @@ public class MasterClient : MonoBehaviour, IChatClientListener
 
         //Debug.Log($"Room Number: {roomNumber}\nUser Counts: {userCounts}");
         return userCounts;
+    }
+
+    #region ServerSetting
+
+    public bool IsOnline()
+    {
+        var filter = Builders<ServerSetting>.Filter.Empty;
+        var setting = serverSettingCollection.Find(filter);
+        if (setting == null)
+        {
+            return false;
+        }
+        Debug.Log(setting.ToList().Count);
+        return setting.ToList()[0].isOnline;
+    }
+
+    public void SetOnline(bool value)
+    {
+        var filter = Builders<ServerSetting>.Filter.Empty;
+        var update = Builders<ServerSetting>.Update.Set("isOnline", value);
+
+        serverSettingCollection.UpdateOne(filter, update);
+    }
+
+    [ContextMenu("서버설정 생성")]
+    public void InsertServerSetting()
+    {
+        serverSettingCollection.InsertOne(new ServerSetting());
+    }
+
+    #endregion
+
+
+
+    private void OnApplicationQuit()
+    {
+        isOnline = false;
+        SetOnline(false);
+
+        foreach(var user in alivingUsers)
+        {
+            OnUserTimeout(user);
+        }
     }
 }
