@@ -610,6 +610,8 @@ public class LoundgeSceneManager : GameManager
         NetworkManager.Instance.roomType = RoomType.Loundge;
         NetworkManager.Instance.SetRoomNumber(roomNumber);
 
+        
+
         SetIdleMode(IdleMode.STAND);
 
         InsertUserData();
@@ -620,13 +622,13 @@ public class LoundgeSceneManager : GameManager
 
 
         initializer = StartCoroutine(Initializer());
-        if(checkPlayerCount != null)
-        {
-            StopCoroutine(checkPlayerCount);
-            checkPlayerCount = null;
-        }
+        //if(checkPlayerCount != null)
+        //{
+        //    StopCoroutine(checkPlayerCount);
+        //    checkPlayerCount = null;
+        //}
 
-        checkPlayerCount = StartCoroutine(CheckPlayerCount());
+        //checkPlayerCount = StartCoroutine(CheckPlayerCount());
     }
 
 
@@ -690,12 +692,12 @@ public class LoundgeSceneManager : GameManager
                 DisableTextChat();
 
                 announcement.StopAudio();
-                if(updateUserCountInVoiceChat != null)
-                {
-                    StopCoroutine(updateUserCountInVoiceChat);
-                    updateUserCountInVoiceChat = null;
-                }
-                updateUserCountInVoiceChat = StartCoroutine(UpdateRoomUserCountInVoiceChat());
+                //if(updateUserCountInVoiceChat != null)
+                //{
+                //    StopCoroutine(updateUserCountInVoiceChat);
+                //    updateUserCountInVoiceChat = null;
+                //}
+                //updateUserCountInVoiceChat = StartCoroutine(UpdateRoomUserCountInVoiceChat());
 
                 foreach(string key in spawnedNPCObject.Keys)
                 {

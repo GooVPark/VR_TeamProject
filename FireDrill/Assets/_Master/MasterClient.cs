@@ -471,11 +471,13 @@ public class MasterClient : MonoBehaviour, IChatClientListener
         }
     }
 
+
     public int GetLoundgeUserCount()
     {
         var filter = Builders<LoundgeUser>.Filter.Empty;
         return (int)loundgeUsercollection.CountDocuments(FilterDefinition<LoundgeUser>.Empty);
     }
+
 
     public int GetRoomUserCount(int roomNumber)
     {
