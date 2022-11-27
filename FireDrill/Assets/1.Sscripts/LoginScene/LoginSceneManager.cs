@@ -15,57 +15,57 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
     #endregion
 
     [Header("Logo UI")]
-    [SerializeField] private GameObject logoWindow;
-    [SerializeField] private Button shoLoginWindowButton;
+    public GameObject logoWindow;
+    public Button shoLoginWindowButton;
     [Space(5)]
 
     [Header("Log In UI")]
-    [SerializeField] private GameObject loginWindow;
-    [SerializeField] private GameObject virtualKeyboard;
+    public GameObject loginWindow;
+    public GameObject virtualKeyboard;
 
-    [SerializeField] private Button loginButton;
+    public Button loginButton;
 
-    [SerializeField] private TMP_InputField emailInputField;
-    [SerializeField] private TMP_InputField passwordInputField;
+    public TMP_InputField emailInputField;
+    public TMP_InputField passwordInputField;
 
-    [SerializeField] private GameObject loginErrorWindow;
-    [SerializeField] private Button confirmLoginErrorButton;
+    public GameObject loginErrorWindow;
+    public Button confirmLoginErrorButton;
 
-    [SerializeField] private GameObject loginErrorWindow2;
-    [SerializeField] private Button confirmLoginErrorButton2;
+    public GameObject loginErrorWindow2;
+    public Button confirmLoginErrorButton2;
 
     [Space(5)]
 
     [Header("Character Select UI")]
-    [SerializeField] private GameObject characterObjects;
-    [SerializeField] private GameObject CharacterSelectWindow;
-    [SerializeField] private Button nextButton;
-    [SerializeField] private Button previewButton;
+    public GameObject characterObjects;
+    public GameObject CharacterSelectWindow;
+    public Button nextButton;
+    public Button previewButton;
     [Space(5)]
 
 
     [Header("Extingusher Select UI")]
-    [SerializeField] private GameObject extingusherSelectWindow;
-    [SerializeField] private Button selectExtingusherButton;
-    [SerializeField] private Button deselectExtingusherButton;
+    public GameObject extingusherSelectWindow;
+    public Button selectExtingusherButton;
+    public Button deselectExtingusherButton;
     [Space(5)]
 
 
     [Header("Sign-In UI")]
-    [SerializeField] private TMP_InputField signInID;
-    [SerializeField] private TMP_InputField signInPassword;
-    [SerializeField] private TMP_InputField signInPasswordCheck;
-    [SerializeField] private TMP_InputField signInName;
+    public TMP_InputField signInID;
+    public TMP_InputField signInPassword;
+    public TMP_InputField signInPasswordCheck;
+    public TMP_InputField signInName;
 
-    [SerializeField] private GameObject signInWindow;
-    [SerializeField] private Button idCheckButton;
-    [SerializeField] private GameObject idCheckPopUp;
-    [SerializeField] private Button idCheckErrorButton;
-    [SerializeField] private GameObject idCheckErrorPopUp;
-    [SerializeField] private TMP_Text idCheckText;
-    [SerializeField] private bool idCheck = false;
+    public GameObject signInWindow;
+    public Button idCheckButton;
+    public GameObject idCheckPopUp;
+    public Button idCheckErrorButton;
+    public GameObject idCheckErrorPopUp;
+    public TMP_Text idCheckText;
+    public bool idCheck = false;
 
-    [SerializeField] private Toggle lectureToggle;
+    public Toggle lectureToggle;
     [Space(5)]
 
     [Header("Idle Mode UI")]
@@ -181,7 +181,7 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
         DataManager.Instance.UpdateUserData("email", NetworkManager.User.email, "characterNumber", index);
         //characterObjects.SetActive(false);
 
-        PhotonNetwork.LoadLevel("Loundge (BG3)");
+        LoadingSceneController.LoadScene("Loundge (BG3)");
     }
 
     public void SelectExtingusher(bool isSelected)

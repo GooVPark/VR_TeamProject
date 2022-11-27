@@ -20,12 +20,12 @@ public class LineVisualizerHandler : MonoBehaviour
         switch (handType)
         {
             case HandType.Right:
-                InputManager.rightTriggerButton = null;
-                InputManager.rightTriggerButton += LineVisualize;
+                InputManager.rightTriggerTouchEvent = null;
+                InputManager.rightTriggerTouchEvent += LineVisualize;
                 break;
             case HandType.Left:
-                InputManager.leftTriggerButton = null;
-                InputManager.leftTriggerButton += LineVisualize;
+                InputManager.leftTriggerTouchEvent = null;
+                InputManager.leftTriggerTouchEvent += LineVisualize;
                 break;
         }
     }

@@ -56,6 +56,7 @@ public class LoundgeSceneManager : GameManager
 
     private void Start()
     {
+        Debug.Log("Start Loundge Scene Manager");
         PhotonNetwork.JoinLobby();
     }
 
@@ -91,13 +92,16 @@ public class LoundgeSceneManager : GameManager
     private Coroutine initializer;
     private IEnumerator Initializer()
     {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(0.1f);
+        Debug.Log("Lounge Initialize");
+        WaitForSeconds waitForSeconds = new WaitForSeconds(1f);
         while (!isOnline || !isEventServerConnected)
         {
             isOnline = DataManager.Instance.FindLobbyUser(NetworkManager.User);
             yield return waitForSeconds;
         }
-        
+
+        Debug.Log("Set UI Data");
+
         DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, roomNumber);
 
         NetworkManager.Instance.SetRoomNumber(roomNumber);
@@ -661,7 +665,7 @@ public class LoundgeSceneManager : GameManager
         roomOptions.MaxPlayers = 0;
 
         PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, TypedLobby.Default);
-        PhotonNetwork.LoadLevel("Room (BG3)");
+        LoadingSceneController.LoadScene("Room (BG3)");
     }
 
     public override void OnJoinedRoom()

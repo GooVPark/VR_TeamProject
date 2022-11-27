@@ -544,7 +544,7 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
             femaleHelmet.transform.GetChild(1).gameObject.layer = 31;
             maleMesh.layer = 31;
             femaleMesh.layer = 31;
-            headModel.layer = 31;
+            //headModel.layer = 31;
             leftHand.gameObject.layer = 31;
             rightHand.gameObject.layer = 31;
             outlineObject.gameObject.layer = 31;

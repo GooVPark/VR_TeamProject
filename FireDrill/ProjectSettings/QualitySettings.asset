@@ -20,8 +20,8 @@ QualitySettings:
     shadowmaskMode: 0
     skinWeights: 4
     textureQuality: 1
-    anisotropicTextures: 0
-    antiAliasing: 0
+    anisotropicTextures: 2
+    antiAliasing: 4
     softParticles: 0
     softVegetation: 0
     realtimeReflectionProbes: 0
@@ -79,7 +79,10 @@ QualitySettings:
     resolutionScalingFixedDPIFactor: 1
     customRenderPipeline: {fileID: 11400000, guid: df022179d13ff2a4d92793c69fd6d942,
       type: 2}
-    excludedTargetPlatforms: []
+    excludedTargetPlatforms:
+    - Standalone
+    - Server
+    - Android
   - serializedVersion: 2
     name: Simple
     pixelLightCount: 1
@@ -116,7 +119,10 @@ QualitySettings:
     resolutionScalingFixedDPIFactor: 1
     customRenderPipeline: {fileID: 11400000, guid: 71b235561057e1d4ca2698c8d2091180,
       type: 2}
-    excludedTargetPlatforms: []
+    excludedTargetPlatforms:
+    - Android
+    - Server
+    - Standalone
   - serializedVersion: 2
     name: Good
     pixelLightCount: 2
@@ -153,7 +159,10 @@ QualitySettings:
     resolutionScalingFixedDPIFactor: 1
     customRenderPipeline: {fileID: 11400000, guid: 2616dfcd48d1923459e0751843ada765,
       type: 2}
-    excludedTargetPlatforms: []
+    excludedTargetPlatforms:
+    - Standalone
+    - Server
+    - Android
   - serializedVersion: 2
     name: Beautiful
     pixelLightCount: 3
@@ -190,7 +199,10 @@ QualitySettings:
     resolutionScalingFixedDPIFactor: 1
     customRenderPipeline: {fileID: 11400000, guid: f5dea0afe6160fe46aabf53cacfc1404,
       type: 2}
-    excludedTargetPlatforms: []
+    excludedTargetPlatforms:
+    - Android
+    - Server
+    - Standalone
   - serializedVersion: 2
     name: Fantastic
     pixelLightCount: 4
@@ -227,7 +239,10 @@ QualitySettings:
     resolutionScalingFixedDPIFactor: 1
     customRenderPipeline: {fileID: 11400000, guid: a72bff21bc100d64e917ce957bf350a8,
       type: 2}
-    excludedTargetPlatforms: []
+    excludedTargetPlatforms:
+    - Standalone
+    - Server
+    - Android
   m_PerPlatformDefaultQuality:
     Android: 0
     Server: 0

@@ -17,9 +17,11 @@ public class InputManager : MonoBehaviour
 
     public delegate void LeftTriggerButtonEvent(bool value);
     public static LeftTriggerButtonEvent leftTriggerButton;
+    public static LeftTriggerButtonEvent leftTriggerTouchEvent;
 
     public delegate void RightTriggerButtonEvent(bool value);
     public static RightTriggerButtonEvent rightTriggerButton;
+    public static RightTriggerButtonEvent rightTriggerTouchEvent;
 
     public delegate void BoolEvent(bool value);
 
@@ -240,12 +242,14 @@ public class InputManager : MonoBehaviour
 
     private void OnLeftTriggerTouchedStarted(InputAction.CallbackContext context)
     {
-        onLeftTriggerTouched?.Invoke(0);   
+        onLeftTriggerTouched?.Invoke(0);
+        leftTriggerTouchEvent?.Invoke(true);
     }
 
     private void OnLeftTriggerTouchedCanceled(InputAction.CallbackContext context)
     {
         onLeftTriggerTouched?.Invoke(1);
+        leftTriggerTouchEvent?.Invoke(false);
     }
     private void OnLeftTriggerStarted(InputAction.CallbackContext context)
     {
@@ -347,11 +351,13 @@ public class InputManager : MonoBehaviour
     private void OnRightTriggerTouchedStarted(InputAction.CallbackContext context)
     {
         onRightTriggerTouched?.Invoke(0);
+        rightTriggerTouchEvent?.Invoke(true);
     }
 
     private void OnRightTriggerTouchedCanceled(InputAction.CallbackContext context)
     {
         onRightTriggerTouched?.Invoke(1);
+        rightTriggerTouchEvent?.Invoke(false);
     }
 
     private void OnRightThumbsUpStarted(InputAction.CallbackContext context)

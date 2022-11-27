@@ -310,7 +310,7 @@ public class RoomSceneManager : GameManager
 
     public override void OnConnectedToMaster()
     {
-        PhotonNetwork.LoadLevel("Loundge (BG3)");
+        LoadingSceneController.LoadScene("Loundge (BG3)");
     }
 
     public override void OnJoinedLobby()
