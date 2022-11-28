@@ -221,6 +221,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         DataManager.Instance.SetOffline(User.email);
     }
 
+    public void ServerDownEvent()
+    {
+        Application.Quit();
+    }
+
     void OnGUI()
     {
         int w = Screen.width, h = Screen.height;

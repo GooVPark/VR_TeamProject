@@ -548,6 +548,9 @@ public class MasterClient : MonoBehaviour, IChatClientListener
     //마스터 클라이언트 종료시 호출 - 룸, 라운지에 남아있는 유저 처리 및 룸들의 상태 초기화
     private void CloseServer()
     {
+        string message = EventMessageType.SERVERDOWN.ToString() + "_FROMMASTER";
+        chatClient.PublishMessage(eventServer, message);
+
         var filter = Builders<User>.Filter.Empty;
         var updateOnline = Builders<User>.Update.Set("isOnline", false);
         var updateRoom = Builders<User>.Update.Set("currentRoom", 999);
@@ -573,6 +576,8 @@ public class MasterClient : MonoBehaviour, IChatClientListener
 
     private void OnApplicationQuit()
     {
+        CloseServer();
+
         isOnline = false;
         SetOnline(false);
 
@@ -580,7 +585,5 @@ public class MasterClient : MonoBehaviour, IChatClientListener
         {
             OnUserTimeout(user);
         }
-
-        CloseServer();
     }
 }

@@ -153,6 +153,10 @@ public class EventSyncronizerRoom : MonoBehaviour, IChatClientListener
                 Debug.Log("Leave Room Event Message");
                 roomSceneManager.LeaveRoom();
             }
+            if (type.Equals(EventMessageType.SERVERDOWN.ToString()))
+            {
+                NetworkManager.Instance.ServerDownEvent();
+            }
         }
     }
 

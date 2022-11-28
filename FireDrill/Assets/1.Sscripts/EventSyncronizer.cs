@@ -6,7 +6,7 @@ using Photon.Pun;
 using Photon.Chat;
 using ExitGames.Client.Photon;
 
-public enum EventMessageType { TEXTCHAT, MOVE, VOICECHAT, SPAWN, DISCONNECT, NOTICE, PROGRESS, QUIZ, UPDATEROOMSTATE, UPDATEUSERCOUNT, LAMPUPDATE, FORCEEXIT, OUT }
+public enum EventMessageType { TEXTCHAT, MOVE, VOICECHAT, SPAWN, DISCONNECT, NOTICE, PROGRESS, QUIZ, UPDATEROOMSTATE, UPDATEUSERCOUNT, LAMPUPDATE, FORCEEXIT, OUT, SERVERDOWN }
 public enum VoiceEventType { REQUEST, CANCEL, ACCEPT, DEACCEPT, DISCONNECT, CONNECT, TIMEOUT }
 public enum NoticeEventType { ONVOICE, JOIN, DISCONNECT }
 public enum ProgressEventType { UPDATE, PLAYERCOUNT }
@@ -139,6 +139,12 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
             string[] command = message.Split('_');
 
             string type = command[0];
+
+            if (type.Equals(EventMessageType.SERVERDOWN.ToString()))
+            {
+                NetworkManager.Instance.ServerDownEvent();
+            }
+
             if (type.Equals(EventMessageType.OUT))
             {
                 string target = command[1];
@@ -171,7 +177,7 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
                 int roomUserCount = int.Parse(command[2]);
                 loundgeManager.UpdateRoomPlayerCount(roomUserCount);
 
-                Debug.Log($"Loundge User Count: {loundgeUserCount}\nRoom User Count: {roomUserCount}");
+                //Debug.Log($"Loundge User Count: {loundgeUserCount}\nRoom User Count: {roomUserCount}");
             }
             //if(type.Equals(EventMessageType.NOTICE.ToString()))
             //{
@@ -287,16 +293,16 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
                 }
                 if (voiceEventType.Equals(VoiceEventType.CONNECT.ToString()))
                 {
-                    Debug.Log("Connect Voice Chat");
+                    //Debug.Log("Connect Voice Chat");
                     if (recieverEmail.Equals(NetworkManager.User.email))
                     {
-                        Debug.Log("ConnectEvent Reciever: " + recieverEmail);
+                        //Debug.Log("ConnectEvent Reciever: " + recieverEmail);
                         voiceManager.OnConnectVoiceManagerEvent(recieverEmail);
                         loundgeManager.JoinVoiceChatRoom(senderEmail);
                     }
                     if (senderEmail.Equals(NetworkManager.User.email))
                     {
-                        Debug.Log("ConnectEvent Sender: " + senderEmail);
+                       // Debug.Log("ConnectEvent Sender: " + senderEmail);
                         voiceManager.OnConnectVoiceManagerEvent(senderEmail);
                         loundgeManager.JoinVoiceChatRoom(senderEmail);
                     }
@@ -320,13 +326,13 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
 
                     if (recieverEmail.Equals(NetworkManager.User.email))
                     {
-                        Debug.Log("DisconnectEvent RecieverEmail:" + recieverEmail);
+                        //Debug.Log("DisconnectEvent RecieverEmail:" + recieverEmail);
                         loundgeManager.LeaveVoiceChatRoom();
                         voiceManager.OnDisconnectVoiceChatEvent(recieverEmail);
                     }
                     if (senderEmail.Equals(NetworkManager.User.email))
                     {
-                        Debug.Log("DisconnectEvent SenderEmail: " + senderEmail);
+                        //Debug.Log("DisconnectEvent SenderEmail: " + senderEmail);
                         loundgeManager.LeaveVoiceChatRoom();
                         voiceManager.OnDisconnectVoiceChatEvent(senderEmail);
 
@@ -354,7 +360,7 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
     {
         if(sender.Equals(masterChannel))
         {
-            Debug.Log("Get Private Message: " + message.ToString());
+            //Debug.Log("Get Private Message: " + message.ToString());
             //eventQueue.Enqueue(message.ToString());
             eventList.Add(message.ToString());
         }
@@ -387,7 +393,7 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
 
     private void ExcuteEvent(string eventMessage)
     {
-        Debug.Log("Excute Event: " + eventMessage);
+       // Debug.Log("Excute Event: " + eventMessage);
 
         string[] command = eventMessage.Split('_');
 
@@ -533,16 +539,16 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
             }
             if (voiceEventType.Equals(VoiceEventType.CONNECT.ToString()))
             {
-                Debug.Log("Connect Voice Chat");
+              //  Debug.Log("Connect Voice Chat");
                 if (recieverEmail.Equals(NetworkManager.User.email))
                 {
-                    Debug.Log("ConnectEvent Reciever: " + recieverEmail);
+                   // Debug.Log("ConnectEvent Reciever: " + recieverEmail);
                     voiceManager.OnConnectVoiceManagerEvent(recieverEmail);
                     loundgeManager.JoinVoiceChatRoom(senderEmail);
                 }
                 if (senderEmail.Equals(NetworkManager.User.email))
                 {
-                    Debug.Log("ConnectEvent Sender: " + senderEmail);
+                  //  Debug.Log("ConnectEvent Sender: " + senderEmail);
                     voiceManager.OnConnectVoiceManagerEvent(senderEmail);
                     loundgeManager.JoinVoiceChatRoom(senderEmail);
                 }
@@ -570,7 +576,7 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
                     {
                         return;
                     }
-                    Debug.Log("DisconnectEvent RecieverEmail:" + recieverEmail);
+                   // Debug.Log("DisconnectEvent RecieverEmail:" + recieverEmail);
                     loundgeManager.LeaveVoiceChatRoom();
                     voiceManager.OnDisconnectVoiceChatEvent(recieverEmail);
                 }
@@ -580,7 +586,7 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
                     {
                         return;
                     }
-                    Debug.Log("DisconnectEvent SenderEmail: " + senderEmail);
+                  //  Debug.Log("DisconnectEvent SenderEmail: " + senderEmail);
                     loundgeManager.LeaveVoiceChatRoom();
                     voiceManager.OnDisconnectVoiceChatEvent(senderEmail);
 
@@ -621,7 +627,7 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
         while(true)
         {
             yield return wait;
-            Debug.Log("Responed to Master");
+            //Debug.Log("Responed to Master");
             ResponseToMasterClient(NetworkManager.User.email);
         }
     }
@@ -632,7 +638,7 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
     /// <param name="message"></param>
     public void SendToMasterClient(string message)
     {
-        Debug.Log("Send Message: " + message);
+       // Debug.Log("Send Message: " + message);
         chatClient.SendPrivateMessage(masterChannel, message);
     }
 
