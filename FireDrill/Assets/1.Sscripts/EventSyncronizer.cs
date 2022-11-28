@@ -134,7 +134,7 @@ public class EventSyncronizer : MonoBehaviour, IChatClientListener
 
             string message = messages[^1].ToString();
 
-            Debug.Log("Get Public Message: " + message);
+            //Debug.Log("Get Public Message: " + message);
 
             string[] command = message.Split('_');
 

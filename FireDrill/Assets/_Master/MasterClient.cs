@@ -7,6 +7,12 @@ using ExitGames.Client.Photon;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
+/// <summary>
+/// 마스터 클라이언트
+/// 
+/// 데이터 동기화 및 중복 이벤트 처리
+/// </summary>
+
 public class MasterClient : MonoBehaviour, IChatClientListener
 {
     public enum VoiceState { ON, OFF, CANCEL, ACCEPT, DEACCEPT, REQUEST }
@@ -75,6 +81,7 @@ public class MasterClient : MonoBehaviour, IChatClientListener
     IMongoCollection<RoomData> roomCollection;
     IMongoCollection<RoomUser> roomUserCollection;
 
+
     IMongoDatabase lobbyDatabase;
     IMongoCollection<LoundgeUser> loundgeUsercollection;
 
@@ -98,6 +105,8 @@ public class MasterClient : MonoBehaviour, IChatClientListener
         accountCollection = userAccountDatabase.GetCollection<User>("UserAccounts");
         roomDatabase = client.GetDatabase("RoomDatabase");
         roomUserCollection = roomDatabase.GetCollection<RoomUser>("Room1");
+        roomCollection = roomDatabase.GetCollection<RoomData>("RoomInfo");
+        
         lobbyDatabase = client.GetDatabase("LobbyData");
         loundgeUsercollection = lobbyDatabase.GetCollection<LoundgeUser>("Loundge");
 
@@ -113,6 +122,7 @@ public class MasterClient : MonoBehaviour, IChatClientListener
 
     void FixedUpdate()
     {
+        //서버가 Online이면 매 프레임마다 플레이어들에게 이벤트 전달
         if (isOnline == true)
         {
             if (messageQueue.Count > 0)
@@ -123,6 +133,7 @@ public class MasterClient : MonoBehaviour, IChatClientListener
             }
 
             CheckAliving();
+
             chatClient.Service();
         }
     }
@@ -130,10 +141,13 @@ public class MasterClient : MonoBehaviour, IChatClientListener
     public void OnPrivateMessage(string sender, object message, string channelName)
     {
         if (sender.Equals("_MASTER_"))
+        {
             return;
+        }
         messageQueue.Add(new MessageWrapper(sender, message, channelName));
     }
 
+    //수신한 이벤트 메세지를 처리하고 다시 송신함
     public void HandlePrivateMessage(string sender, object messageOb, string channelName)
     {
         /*if (!channelName.Equals(eventServer))
@@ -214,6 +228,10 @@ public class MasterClient : MonoBehaviour, IChatClientListener
             }
         }
     }
+
+    //플레이어간 동시입력 제어
+    #region Voice Chat Event Overlap
+
     private void VoiceChatRequestOverlap(string senderEmail, string recieverEmail, string message)
     {
         if(string.IsNullOrEmpty(senderEmail) || string.IsNullOrEmpty(recieverEmail))
@@ -300,6 +318,11 @@ public class MasterClient : MonoBehaviour, IChatClientListener
         chatClient.PublishMessage(eventServer, message);
     }
 
+    #endregion
+
+    //연결이 끊어진 플레이어를 검사
+    #region Player TimeOut Control
+
     private void CheckAliving()
     {
         float deltaTime = Time.unscaledDeltaTime;
@@ -342,6 +365,8 @@ public class MasterClient : MonoBehaviour, IChatClientListener
             chatClient.SendPrivateMessage(alivingUsers[i].userName, msg);
     }
 
+    #endregion
+
     public void AddUser(string userName)
     {
         if (alivingUsersDict.ContainsKey(userName))
@@ -354,15 +379,6 @@ public class MasterClient : MonoBehaviour, IChatClientListener
         alivingUsers.Add(user);
         alivingUsersDict.Add(userName, user);
     }
-
-
-    
-
-
-
-
-
-
 
     public void Connect()
     {
@@ -418,12 +434,17 @@ public class MasterClient : MonoBehaviour, IChatClientListener
 
     }
 
+    //받은 이벤트 메세지의 로그
     public void OnGetMessages(string channelName, string[] senders, object[] messages)
     {
-        if (senders[^1].Equals("_MASTER_")) return;
+        if (senders[^1].Equals("_MASTER_"))
+        {
+            return;
+        }
         MasterLogger.Log("OnGetMessages: " + senders[^1] + ", message: " + messages[^1]);
     }
 
+    //채팅서버 구독
     public void OnSubscribed(string[] channels, bool[] results)
     {
         MasterLogger.Log("OnSubscribed" + channels + ", " + results);
@@ -459,6 +480,7 @@ public class MasterClient : MonoBehaviour, IChatClientListener
 
     }
 
+    //일정 시간마다 룸과 라운지의 유저 수 갱신
     private IEnumerator UpdateUserCount()
     {
         WaitForSeconds wait = new WaitForSeconds(1f);
@@ -471,14 +493,14 @@ public class MasterClient : MonoBehaviour, IChatClientListener
         }
     }
 
-
+    //라운지의 유저 수 반환
     public int GetLoundgeUserCount()
     {
         var filter = Builders<LoundgeUser>.Filter.Empty;
         return (int)loundgeUsercollection.CountDocuments(FilterDefinition<LoundgeUser>.Empty);
     }
 
-
+    //룸의 유저 수 반환
     public int GetRoomUserCount(int roomNumber)
     {
         int userCounts = 0;
@@ -523,7 +545,31 @@ public class MasterClient : MonoBehaviour, IChatClientListener
 
     #endregion
 
+    //마스터 클라이언트 종료시 호출 - 룸, 라운지에 남아있는 유저 처리 및 룸들의 상태 초기화
+    private void CloseServer()
+    {
+        var filter = Builders<User>.Filter.Empty;
+        var updateOnline = Builders<User>.Update.Set("isOnline", false);
+        var updateRoom = Builders<User>.Update.Set("currentRoom", 999);
 
+        accountCollection.UpdateMany(filter, updateOnline);
+        accountCollection.UpdateMany(filter, updateRoom);
+
+        var roomFilter = Builders<RoomData>.Filter.Empty;
+        var updateRoomProgress = Builders<RoomData>.Update.Set("progress", 0);
+        var updateRoomState = Builders<RoomData>.Update.Set("isStarted", false);
+
+        roomCollection.UpdateMany(roomFilter, updateRoomProgress);
+        roomCollection.UpdateMany(roomFilter, updateRoomState);
+
+        var loundgeUserFilter = Builders<LoundgeUser>.Filter.Empty;
+
+        loundgeUsercollection.DeleteMany(loundgeUserFilter);
+
+        var roomUserFilter = Builders<RoomUser>.Filter.Empty;
+
+        roomUserCollection.DeleteMany(roomUserFilter);
+    }
 
     private void OnApplicationQuit()
     {
@@ -534,5 +580,7 @@ public class MasterClient : MonoBehaviour, IChatClientListener
         {
             OnUserTimeout(user);
         }
+
+        CloseServer();
     }
 }

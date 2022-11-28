@@ -365,11 +365,8 @@ public class InteractableQuizObject : MonoBehaviour
             oxResultPopUp = StartCoroutine(OXResultPopUp(isCollected));
         }
 
-
-
         string message = $"{EventMessageType.QUIZ}";
         eventMessage?.Invoke(message);
-
     }
 
     private Coroutine selectionResultPopUp;

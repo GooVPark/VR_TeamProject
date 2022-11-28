@@ -675,14 +675,6 @@ public class LoundgeSceneManager : GameManager
             case RoomType.Room:
                 break;
             case RoomType.VoiceRoom:
-                //if(voiceChatTimer != null)
-                //{
-                //    StopCoroutine(voiceChatTimer);
-                //    voiceChatTimer = null;
-                //}
-
-                //voiceChatTimer = StartCoroutine(VoiceChatTimer());
-
                 spawnedNPCObject[voiceManager.sender.email].SetActive(false);
                 spawnedNPCObject[voiceManager.reciever.email].SetActive(false);
 
@@ -696,12 +688,6 @@ public class LoundgeSceneManager : GameManager
                 DisableTextChat();
 
                 announcement.StopAudio();
-                //if(updateUserCountInVoiceChat != null)
-                //{
-                //    StopCoroutine(updateUserCountInVoiceChat);
-                //    updateUserCountInVoiceChat = null;
-                //}
-                //updateUserCountInVoiceChat = StartCoroutine(UpdateRoomUserCountInVoiceChat());
 
                 foreach(string key in spawnedNPCObject.Keys)
                 {

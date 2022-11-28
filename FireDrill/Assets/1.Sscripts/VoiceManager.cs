@@ -129,7 +129,7 @@ public class VoiceManager : MonoBehaviourPunCallbacks
         DataManager.Instance.SetUserOnRequest(reciever.email, true);
         CurrentToast = voiceChatRequestToast.gameObject;
         string userName = sender.name;
-        voiceChatRequestToast.message.text = $"{userName}님이 대화 요청을 보냈습니다. 대화를 원하시면 YES, 아니면 NO를\n클릭해주세요.";
+        //voiceChatRequestToast.message.text = $"{userName}님이 대화 요청을 보냈습니다. 대화를 원하시면 YES, 아니면 NO를\n클릭해주세요.";
 
         this.sender = sender;
         this.reciever = reciever;
@@ -200,7 +200,7 @@ public class VoiceManager : MonoBehaviourPunCallbacks
     public void OnAcceptVoiceChatEventSender(LoundgeUser sender, LoundgeUser reciever)
     {
         CurrentToast = acceptVoiceChatToast.gameObject;
-        acceptVoiceChatToast.message.text = $"{reciever.name}님과의 1:1 대화가 수락 되었습니다.";
+        //acceptVoiceChatToast.message.text = $"{reciever.name}님과의 1:1 대화가 수락 되었습니다.";
         DataManager.Instance.SetUserOnRequest(sender.email, false);
         DataManager.Instance.UpdateLobbyUser(sender);
         NetworkManager.Instance.voiceChatDisabled = false;
