@@ -90,8 +90,7 @@ public class RoomSceneManager : GameManager
     public bool isEventServerConnected;
 
     private void Awake()
-    {
-        Debug.Log("RoomScnenManager: Awake Begin");
+    {     
         if (Instance == null)
         {
             Instance = this;
@@ -100,7 +99,6 @@ public class RoomSceneManager : GameManager
         {
             Destroy(Instance.gameObject);
         }
-        Debug.Log("RoomScnenManager: Awake End");
     }
 
     private void Start()
@@ -144,8 +142,6 @@ public class RoomSceneManager : GameManager
 
         NetworkManager.Instance.onScoreBoard = true;
         scoreBoardUI.SetActive(true);
-
-        //UpdateScoreBoard();
     }
 
     private void UpdateScoreBoard()
@@ -165,7 +161,9 @@ public class RoomSceneManager : GameManager
         }
     }
 
-    public bool IsReady()
+    //룸에서 단계를 진행하기 위해 필요한 사람 수를 체크함
+    //강의 시작 이후 부터는 현재 플레이어의 수가 필요한 사람 수로 바뀜. 기본은 16명
+    public bool IsReady()//방에 사람이 16명이 다 찼을경우 단계를 진행시킴
     {
         if (PhotonNetwork.CurrentRoom != null)
         {
@@ -173,7 +171,7 @@ public class RoomSceneManager : GameManager
         }
         return false;
     }
-    public bool IsReady(int playerCount)
+    public bool IsReady(int playerCount)//필요한 인원수가 가변적으로 변하는 상황에 사용
     {
         if(isStarted)
         {
@@ -205,9 +203,8 @@ public class RoomSceneManager : GameManager
         DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, roomNumber);
         DataManager.Instance.InitializeQuizScore(NetworkManager.User.email);
         DataManager.Instance.InsertRoomUser(NetworkManager.User);
-        requiredPlayer = roomData.requirePlayerCount;
 
-        //StartCoroutine(JoinVoice());
+        requiredPlayer = roomData.requirePlayerCount;
     }
 
     public void ForceExit()
@@ -262,9 +259,6 @@ public class RoomSceneManager : GameManager
         {
             if(isEventServerConnected)
             {
-                //PhotonVoiceNetwork.Instance.Client.OpChangeGroups(new byte[0], new byte[0]);
-                //PhotonVoiceNetwork.Instance.PrimaryRecorder.InterestGroup = 0;
-
                 DataManager.Instance.UpdateRoomPlayerCount(roomNumber, PhotonNetwork.CurrentRoom.PlayerCount);
                 DataManager.Instance.InitializeQuizScore(NetworkManager.User.email);
 
@@ -282,7 +276,6 @@ public class RoomSceneManager : GameManager
         int playerCount = roomData.currentPlayerCount - 1;
 
         DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, 999);
-        //DataManager.Instance.UpdateRoomPlayerCount(roomNumber, playerCount);
         DataManager.Instance.DeleteRoomUser(NetworkManager.User);
 
         string message = $"{EventMessageType.NOTICE}_{NoticeEventType.DISCONNECT}_{roomNumber}_{NetworkManager.User.email}";
@@ -410,5 +403,7 @@ public class RoomSceneManager : GameManager
             message = $"{EventMessageType.FORCEEXIT}";
             SendEventMessage(message);
         }
+
+        eventSyncronizer.Disconnect();
     }
 }

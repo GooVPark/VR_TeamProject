@@ -407,6 +407,13 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
 
 
         Initialize();
+
+        Invoke("UpdateFPSInfo", 1f);
+    }
+
+    public void UpdateFPSInfo()
+    {
+        DataManager.Instance.UpdateRoomFPS(NetworkManager.Instance.fps, PhotonNetwork.GetPing().ToString(), NetworkManager.User.email);
     }
 
     public void OutlineEnabled()
@@ -544,20 +551,13 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
             femaleHelmet.transform.GetChild(1).gameObject.layer = 31;
             maleMesh.layer = 31;
             femaleMesh.layer = 31;
-            //headModel.layer = 31;
             leftHand.gameObject.layer = 31;
             rightHand.gameObject.layer = 31;
             outlineObject.gameObject.layer = 31;
 
-            //if (NetworkManager.Instance.roomType == RoomType.Room)
-            //{
-            //    FindObjectOfType<TextChatManager>().sendChatMessage += OnSendChatMessage;
-            //}
             FindObjectOfType<TextChatManager>().sendChatMessage = null;
             FindObjectOfType<TextChatManager>().sendChatMessage += OnSendChatMessage;
         }
-
-        //requestVoiceChatButton.onClick.AddListener(() => LoundgeSceneManager.Instance.RequsetVoiceChat(NetworkManager.User.id, UserID));
     }
 
     private void OnDestroy()
@@ -652,11 +652,6 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
             genderLeftHandAnimator.SetLayerWeight(2, 0);
             genderLeftHandAnimator.SetLayerWeight(1, 0);
         }
-    }
-
-    public void InteractionTest()
-    {
-     //   Debug.Log("On Cursor Hoverd");
     }
 
     private void SetCurrentCharacter(int value)
@@ -804,8 +799,6 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
         audioSource.SetCustomCurve(AudioSourceCurveType.CustomRolloff, megaphoneAudioCurve);
 
         megaphoneIcon.gameObject.SetActive(true);
-        //megaphoneEnabled.SetActive(true);
-
     }
 
     public void MegaphoneOff()
@@ -820,7 +813,6 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
         audioSource.SetCustomCurve(AudioSourceCurveType.CustomRolloff, voiceAudioCurve);
 
         megaphoneIcon.gameObject.SetActive(false);
-        //megaphoneEnabled.SetActive(false);
     }
 
     #endregion

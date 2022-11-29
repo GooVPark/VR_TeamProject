@@ -180,13 +180,12 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
         NetworkManager.User.characterNumber = index;
         DataManager.Instance.UpdateUserData("email", NetworkManager.User.email, "characterNumber", index);
         //characterObjects.SetActive(false);
-
         LoadingSceneController.LoadScene("Loundge (BG3)");
     }
 
     public void SelectExtingusher(bool isSelected)
     {
-        Debug.Log("LoginManager : SelectExtingusher");
+        //Debug.Log("LoginManager : SelectExtingusher");
         NetworkManager.User.hasExtingisher = isSelected;
         PhotonNetwork.JoinLobby();
     }
@@ -212,26 +211,26 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
 
     public void SignInAccount()
     {
-        Debug.Log("SignInAccount");
+        //Debug.Log("SignInAccount");
 
         if(signInPassword.text == string.Empty || signInPasswordCheck.text == string.Empty || signInID.text == string.Empty || signInName.text == string.Empty)
         {
-            Debug.Log("Empty Slot Exist");
+            //Debug.Log("Empty Slot Exist");
             return;
         }
         else if(!idCheck)
         {
-            Debug.Log("Need ID Check");
+            //Debug.Log("Need ID Check");
             return;
         }
         else if(!signInPassword.text.Equals(signInPasswordCheck.text))
         {
-            Debug.Log("Password Not Equal");
+            //Debug.Log("Password Not Equal");
             return;
         }
 
         //아이디가 영어인지 검사
-        Debug.Log("Set UserData");
+        //Debug.Log("Set UserData");
         User member = new User
         {
             email = signInID.text,
@@ -241,7 +240,7 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
             //_id = DataManager.Instance.GetUserCount() + 100000
         };
 
-        Debug.Log("Insert Request");
+        //Debug.Log("Insert Request");
         DataManager.Instance.InsertMember(member);
 
         CurrentWindow = loginWindow;
@@ -301,7 +300,8 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster()
     {
-        Debug.Log("LoginManager : OnConnectedToMaster");
+        DataManager.Instance.UpdateLoginFPS(NetworkManager.Instance.fps, PhotonNetwork.GetPing().ToString(), NetworkManager.User.email);
+
         ShowCharacterSelectWindow();
         DataManager.Instance.SetOnline(NetworkManager.User.email);
     }

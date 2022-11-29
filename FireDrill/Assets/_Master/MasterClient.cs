@@ -576,8 +576,10 @@ public class MasterClient : MonoBehaviour, IChatClientListener
 
     private void OnApplicationQuit()
     {
-        CloseServer();
-
+        if (isOnline)
+        {
+            CloseServer();
+        }
         isOnline = false;
         SetOnline(false);
 

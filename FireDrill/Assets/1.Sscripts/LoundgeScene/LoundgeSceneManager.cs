@@ -125,6 +125,8 @@ public class LoundgeSceneManager : GameManager
             UpdateRoomEnterence(i);
         }
 
+        DataManager.Instance.UpdateLoundgeFPS(NetworkManager.Instance.fps, PhotonNetwork.GetPing().ToString(), NetworkManager.User.email);
+
         if (initializer != null)
         {
             StopCoroutine(initializer);
@@ -333,9 +335,6 @@ public class LoundgeSceneManager : GameManager
             yield return wait;
         }
 
-        //voiceManager.OnDisconnectVoiceChatEvent(NetworkManager.User.email);
-        //LeaveVoiceChatRoom();
-
         voiceManager.DisconnectVoiceChat();
     }
 
@@ -352,10 +351,6 @@ public class LoundgeSceneManager : GameManager
         DataManager.Instance.InsertLobbyUser(NetworkManager.User);
     }
     
-    private void DeleteUserData()
-    {
-
-    }
 
     private Coroutine updateUserCountInVoiceChat;
     private IEnumerator UpdateRoomUserCountInVoiceChat()
@@ -620,19 +615,10 @@ public class LoundgeSceneManager : GameManager
 
         InsertUserData();
 
-        //NetworkManager.Instance.PullRoomList();
-        //LoadFirstPage();
         UpdateProgressBoard();
 
 
         initializer = StartCoroutine(Initializer());
-        //if(checkPlayerCount != null)
-        //{
-        //    StopCoroutine(checkPlayerCount);
-        //    checkPlayerCount = null;
-        //}
-
-        //checkPlayerCount = StartCoroutine(CheckPlayerCount());
     }
 
 
@@ -650,14 +636,8 @@ public class LoundgeSceneManager : GameManager
         eventMesage?.Invoke(message);
 
         DataManager.Instance.DeleteLobbyUser(NetworkManager.User);
-
-        Debug.Log("Join Room: " + roomNumber);
-        //textChatManager.DisconnectChat();
-        //eventSyncronizer.DisconnectChat();
         NetworkManager.Instance.SetRoomNumber(roomNumber);
         roomName = roomNumber.ToString();
-
-        //NetworkManager.Instance.roomType = NetworkManager.RoomType.Room;
 
         roomOptions = new RoomOptions();
         roomOptions.IsOpen = true;
@@ -665,6 +645,7 @@ public class LoundgeSceneManager : GameManager
         roomOptions.MaxPlayers = 0;
 
         PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, TypedLobby.Default);
+        eventSyncronizer.Disconnect();
         LoadingSceneController.LoadScene("Room (BG3)");
     }
 
@@ -744,11 +725,6 @@ public class LoundgeSceneManager : GameManager
                     spawnedNPCObject[key].GetComponent<NPCController>().SetVoiceChatState(false);
                 }
 
-                //if (voiceChatTimer != null)
-                //{
-                //    StopCoroutine(voiceChatTimer);
-                //    voiceChatTimer = null;
-                //}
                 break;
             case RoomType.Loundge:
                 break;
@@ -761,7 +737,6 @@ public class LoundgeSceneManager : GameManager
     public override void OnLeftLobby()
     {
         cachedRoomList.Clear();
-        //eventSyncronizer.DisconnectChat();
     }
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
@@ -776,7 +751,7 @@ public class LoundgeSceneManager : GameManager
     {
         string message = $"{EventMessageType.DISCONNECT}_{NetworkManager.User.email}";
         eventMesage?.Invoke(message);
-        //eventSyncronizer.DisconnectChat();
+        eventSyncronizer.Disconnect();
 
         DataManager.Instance.SetOffline(NetworkManager.User.email);
         DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, roomNumber);
@@ -786,7 +761,7 @@ public class LoundgeSceneManager : GameManager
     {
         string message = $"{EventMessageType.DISCONNECT}_{NetworkManager.User.email}";
         eventMesage?.Invoke(message);
-        //eventSyncronizer.DisconnectChat();
+        eventSyncronizer.Disconnect();
 
         DataManager.Instance.SetOffline(NetworkManager.User.email);
         DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, roomNumber);

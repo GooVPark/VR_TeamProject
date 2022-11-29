@@ -45,6 +45,15 @@ public class User
     public int[] quizResult = new int[10];
     public int totalScore;
 
+    public string loginPing;
+    public string loginFPS;
+
+    public string loundgePing;
+    public string loundgeFPS;
+
+    public string roomPing;
+    public string roomFPS;
+
     public User()
     {
 
@@ -591,22 +600,37 @@ public class DataManager : MonoBehaviour
         return users;
     }
 
-    #endregion
+    public void UpdateLoginFPS(string fps, string ping, string email)
+    {
+        var filter = Builders<User>.Filter.Eq("email", email);
 
-    ///
-    /// Mongo DB 예제
-    /// 
-    /// filter를 만들어서 찾을때 쓸수있을거같다
-    /// 
-    /// var filter = Builduers<User>.Filter.Eq(x => x.name, "name"); 같은거
-    /// var filter = Builduers<User>.Filter.Ne(x => x.name, "name"); 다른거
-    /// var filter = Builduers<User>.Filter.Gt(x => x.name, "name"); 초과
-    /// var filter = Builduers<User>.Filter.Gte(x => x.name, "name"); 이상
-    /// var filter = Builduers<User>.Filter.Lt(x => x.name, "name"); 미만
-    /// var filter = Builduers<User>.Filter.Lte(x => x.name, "name"); 이하
-    /// 
-    /// var result = collection.Find(filter).ToList(); 필터로 가져오기
-    ///
+        var updatePing = Builders<User>.Update.Set("loginPing", ping);
+        var updateFps = Builders<User>.Update.Set("loginFPS", fps);
+
+        accountCollection.UpdateOne(filter, updatePing);
+        accountCollection.UpdateOne(filter, updateFps);
+    }
+    public void UpdateLoundgeFPS(string fps, string ping, string email)
+    {
+        var filter = Builders<User>.Filter.Eq("email", email);
+
+        var updatePing = Builders<User>.Update.Set("loundgePing", ping);
+        var updateFps = Builders<User>.Update.Set("loundgeFPS", fps);
+
+        accountCollection.UpdateOne(filter, updatePing);
+        accountCollection.UpdateOne(filter, updateFps);
+    }
+    public void UpdateRoomFPS(string fps, string ping, string email)
+    {
+        var filter = Builders<User>.Filter.Eq("email", email);
+
+        var updatePing = Builders<User>.Update.Set("roomPing", ping);
+        var updateFps = Builders<User>.Update.Set("roomFPS", fps);
+
+        accountCollection.UpdateOne(filter, updatePing);
+        accountCollection.UpdateOne(filter, updateFps);
+    }
+    #endregion
 
     #region Lobby
 

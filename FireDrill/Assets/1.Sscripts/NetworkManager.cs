@@ -48,6 +48,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public bool textChatDisabled = false;
 
     public string fpsInfo;
+    public string fps;
+    public string ping;
 
     private void Awake()
     {
@@ -240,6 +242,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         float fps = 1.0f / deltaTime;
         string text = string.Format("{0:0.0} ms ({1:0.} fps)", msec, fps);
         fpsInfo = text;
+        ping = msec.ToString();
+        this.fps = fps.ToString();
         GUI.Label(rect, text, style);
     }
 }
