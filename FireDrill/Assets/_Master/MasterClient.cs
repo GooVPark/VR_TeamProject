@@ -334,7 +334,7 @@ public class MasterClient : MonoBehaviour, IChatClientListener
         }
     }
 
-
+    //일정시간 이상 응답이 없는 플레이어는 접속을 끊었다고 판단하고 다른 플레이어들에게서 안보이게 처리함
     public void OnUserTimeout(OnlineUser user)
     {
         MasterLogger.Good("User Timeout: " + user.userName);
@@ -517,6 +517,7 @@ public class MasterClient : MonoBehaviour, IChatClientListener
 
     #region ServerSetting
 
+    //다른 마스터 클라이언트가 켜져있는지를 검사함
     public bool IsOnline()
     {
         var filter = Builders<ServerSetting>.Filter.Empty;
@@ -525,10 +526,11 @@ public class MasterClient : MonoBehaviour, IChatClientListener
         {
             return false;
         }
-        Debug.Log(setting.ToList().Count);
+        //Debug.Log(setting.ToList().Count);
         return setting.ToList()[0].isOnline;
     }
 
+    //다른 켜진 마스터 클라이언트가 없다면 서버를 Online상태로 만듬
     public void SetOnline(bool value)
     {
         var filter = Builders<ServerSetting>.Filter.Empty;

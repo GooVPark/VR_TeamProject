@@ -4,11 +4,11 @@ using UnityEngine;
 using Photon.Pun;
 /// <summary>
 /// 룸에 처음 들어온 상태
-/// 보이스, 택스트쳇 사용가능
-/// 확성기, 채점판 사용 불가능
+/// 로컬 플레이어들의 버튼 상태와 이벤트 등록 및 데이터 초기화
 /// </summary>
 public class RoomState_WaitPlayer : RoomState
 {
+    //현재 상태에서 넘어갈 수 있는 상태들 선언
     public RoomState_GoToA roomStateGoToA;
 
     public ToastOneButton forceStartToast;
@@ -17,24 +17,22 @@ public class RoomState_WaitPlayer : RoomState
     [SerializeField] protected GameObject nextButton;
     [SerializeField] protected GameObject prevButton;
 
-    public GameObject view;
-    public GameObject selectLevelUI;
+    public GameObject classObject; //구역 A의 강의에 사용되는 화면 오브젝트
+    public GameObject selectLevelUI; //단계를 선택하는 버튼 오브젝트
     public ScoreBoard scoreBoardObject;
 
     public override void OnStateEnter()
     {
         base.OnStateEnter();
-        view.gameObject.SetActive(true);
+        classObject.gameObject.SetActive(true);
         NetworkManager.Instance.voiceChatDisabled = false;
         NetworkManager.Instance.textChatDisabled = false;
         roomSceneManager.player.QuizScore = -1;
 
         voiceChat.UpdateState(ButtonState.Deactivate);
-        //voiceChat.button.onClick += roomSceneManager.ToggleVoiceChat;
         voiceChat.button.OnClick.AddListener(() => roomSceneManager.ToggleVoiceChat());
 
         textChat.UpdateState(ButtonState.Deactivate);
-        //textChat.button.onClick += roomSceneManager.ToggleTextChat;
         textChat.button.OnClick.AddListener(() => roomSceneManager.ToggleTextChat());
 
         string message = $"{EventMessageType.LAMPUPDATE}";
@@ -46,7 +44,6 @@ public class RoomState_WaitPlayer : RoomState
         {
             NetworkManager.Instance.scoreBoardDisabled = false;
             NetworkManager.Instance.onScoreBoard = false;
-
             NetworkManager.Instance.megaphoneDisabled = false;
 
             scoreBoard.button.OnClick.AddListener(() => ShowScoreBoard());
@@ -64,7 +61,7 @@ public class RoomState_WaitPlayer : RoomState
             prevButton.SetActive(false);
             selectLevelUI.SetActive(false);
         }
-        view.gameObject.SetActive(false);
+        classObject.gameObject.SetActive(false);
     }
 
     public override void OnStateExit()
@@ -82,6 +79,7 @@ public class RoomState_WaitPlayer : RoomState
         }
     }
 
+    //강의를 강제로 시작
     public void ForceStart()
     {
         photonView.RPC(nameof(ForceStartRPC), RpcTarget.All);

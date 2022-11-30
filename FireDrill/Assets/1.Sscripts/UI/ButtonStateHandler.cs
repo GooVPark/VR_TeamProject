@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// 화면 UI 버튼의 상태 관리
+/// </summary>
 public class ButtonStateHandler : MonoBehaviour
 {
     public enum UIButtonType { Megaphone, Score, VoiceChat, TextChat }
@@ -21,12 +24,8 @@ public class ButtonStateHandler : MonoBehaviour
     private void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-
         button = gameObject.GetComponent<ButtonInteractor>();
-        //button.OnClick.AddListener(() => OnSelect());
-
         UpdateState(buttonState);
-
     }
 
     private void Update()
@@ -48,8 +47,11 @@ public class ButtonStateHandler : MonoBehaviour
         }
     }
 
+    //NetworkManager의 버튼 파라미터에서 값을 받아와서 상태를 바꿔줌
     private void UpdateState(bool isDisabled, bool state)
     {
+        //Disalbe되면 버튼을 누를 수 없는 상태
+        //이후 Activate/Diactivate 토글
         if (isDisabled)
         {
             image.sprite = disable;
@@ -80,8 +82,6 @@ public class ButtonStateHandler : MonoBehaviour
                 sprite = deactivate;
                 break;
         }
-
-        //image.sprite = sprite;
     }
 
     public void OnSelect()
@@ -94,15 +94,11 @@ public class ButtonStateHandler : MonoBehaviour
 
                 buttonState = ButtonState.Deactivate;
                 image.sprite = deactivate;
-
-
                 break;
             case ButtonState.Deactivate:
 
                 buttonState = ButtonState.Activate;
                 image.sprite = activate;
-
-
                 break;
         }
     }

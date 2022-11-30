@@ -148,19 +148,19 @@ public class AIController : MonoBehaviour
         {
             case BehaviourState.Idle:
 
-                randomAnimationindex = (float)Random.Range(0, idleAnimationCount - 1) / (idleAnimationCount - 1);
+                randomAnimationindex = (float)Random.Range(0, idleAnimationCount - 1);
                 animator.SetFloat("AnimationIndex", randomAnimationindex);
 
                 break;
             case BehaviourState.Walk:
 
-                randomAnimationindex = (float)Random.Range(0, walkAnimationCount - 1) / (walkAnimationCount - 1);
+                randomAnimationindex = (float)Random.Range(0, walkAnimationCount - 1);
                 animator.SetFloat("AnimationIndex", randomAnimationindex);
 
                 break;
             case BehaviourState.Talk:
 
-                randomAnimationindex = (float)Random.Range(0, talkAnimationCount - 1) / (talkAnimationCount - 1);
+                randomAnimationindex = (float)Random.Range(0, talkAnimationCount - 1);
                 animator.SetFloat("AnimationIndex", randomAnimationindex);
 
                 break;

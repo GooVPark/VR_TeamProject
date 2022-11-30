@@ -121,7 +121,6 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
 
     public void Login()
     {
-        //User userData;
         bool isContain = DataManager.Instance.IsExistAccount(emailInputField.text, passwordInputField.text, out userData);
         if (isContain)
         {
@@ -179,7 +178,7 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
     {
         NetworkManager.User.characterNumber = index;
         DataManager.Instance.UpdateUserData("email", NetworkManager.User.email, "characterNumber", index);
-        //characterObjects.SetActive(false);
+        
         LoadingSceneController.LoadScene("Loundge (BG3)");
     }
 
@@ -304,24 +303,6 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
 
         ShowCharacterSelectWindow();
         DataManager.Instance.SetOnline(NetworkManager.User.email);
-    }
-
-    public override void OnJoinedLobby()
-    {
-        //Debug.Log("LoginManager : OnJoinedLobby");
-        //string roomName = $"Loundge";
-
-        ////NetworkManager.Instance.roomType = NetworkManager.RoomType.Loundge;
-
-        //RoomOptions roomOptions = new RoomOptions();
-        //roomOptions.IsOpen = true;
-        //roomOptions.IsVisible = true;
-        //roomOptions.MaxPlayers = 0;
-        //roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable();
-
-        //PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, null);
-
-        //PhotonNetwork.LoadLevel("Loundge");
     }
 
     #endregion

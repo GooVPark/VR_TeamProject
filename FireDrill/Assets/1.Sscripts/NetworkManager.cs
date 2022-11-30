@@ -35,6 +35,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     private bool onChangeRoom = false;
 
+    #region 플레이어 화면의 메인 UI 버튼 파라미터
+
     public bool onMegaphone = false;
     public bool megaphoneDisabled = false;
 
@@ -46,6 +48,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public bool onTextChat = false;
     public bool textChatDisabled = false;
+
+    #endregion
 
     public string fpsInfo;
     public string fps;
@@ -152,24 +156,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     #endregion
 
-    #region Chat
-
-    public delegate void ChatCallbackEvent(string message);
-    public static ChatCallbackEvent ChatCallback;
-
-    public void SendChat(string msg)
-    {
-        photonView.RPC(nameof(ChatRPC), RpcTarget.All, msg);
-    }
-
-    [PunRPC]
-    private void ChatRPC(string msg)
-    {
-        ChatCallback(msg);
-    }
-
-    #endregion
-
     #region UserStatus
 
     public bool hasExtingusher = false;
@@ -180,27 +166,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     }
 
     #endregion
-
-    public void PullRoomList()
-    {
-        RoomPuller roomPoller = gameObject.AddComponent<RoomPuller>();
-        roomPoller.OnGetRoomsInfo
-        (
-            (roomInfos) =>
-            {
-                // 룸리스트를 받고나서 작업 코드 넣기
-                Debug.Log($"현재 방 갯수 : {roomInfos.Count}");
-                for(int i = 0; i < roomInfos.Count; i++)
-                {
-                    Debug.Log($"룸 {roomInfos[i].Name}의 인원 수: {roomInfos[i].PlayerCount}");
-                }
-
-                roomList = roomInfos;
-                // 마지막엔 오브젝트 제거해주기
-                Destroy(roomPoller);
-            }
-        );
-    }
 
     public bool IsMine(string email)
     {

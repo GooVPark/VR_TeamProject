@@ -124,12 +124,11 @@ public class VoiceManager : MonoBehaviourPunCallbacks
     }
     public void OnVoiceChatRecieveEvent(LoundgeUser sender, LoundgeUser reciever)
     {
-        //localPlayer.SetVoiceState(VoiceChatState.Recieve);
         Debug.Log($"OnVoiceChatRecieveEvent - Sender: {sender.email}, Reciever: {reciever.email}");
         DataManager.Instance.SetUserOnRequest(reciever.email, true);
         CurrentToast = voiceChatRequestToast.gameObject;
         string userName = sender.name;
-        //voiceChatRequestToast.message.text = $"{userName}님이 대화 요청을 보냈습니다. 대화를 원하시면 YES, 아니면 NO를\n클릭해주세요.";
+        voiceChatRequestToast.message.text = $"{userName}님이 대화 요청을 보냈습니다. 대화를 원하시면 YES, 아니면 NO를\n클릭해주세요.";
 
         this.sender = sender;
         this.reciever = reciever;

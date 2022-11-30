@@ -365,150 +365,6 @@ public class LoundgeSceneManager : GameManager
 
     #endregion
 
-
-    #region Notice Board
-
-    [Header("Notice Board")]
-    [SerializeField] private List<PostUI> posts = new List<PostUI>();
-    [SerializeField] private int currentPage = 0;
-    [SerializeField] private int totalPage = 0;
-    [SerializeField] private float refreshTime = 10f;
-    [SerializeField] private float refreshTimeCount = 0f;
-    [Space(5)]
-
-    [Header("Post Window")]
-    [SerializeField] private PostContext postWindow;
-    [SerializeField] private Button returnToBoardButton;
-
-    [Space(5)]
-
-    [Header("Post Write")]
-    [SerializeField] private GameObject postingWindow;
-    [SerializeField] private TMP_InputField titleInput;
-    [SerializeField] private TMP_InputField bodyInput;
-
-    [Space(5)]
-
-    [SerializeField] private Button postCheckButton;
-    [SerializeField] private GameObject postCheck;
-    [SerializeField] private Button confirmPostButton;
-    [SerializeField] private Button canclePostButton;
-
-    [Space(5)]
-
-    [SerializeField] private Button canclePostCheckButton;
-    [SerializeField] GameObject cancleCheck;
-    [SerializeField] private Button confirmCancleButton;
-    [SerializeField] private Button cancleCancleButton;
-
-
-    public void ShowNextPage()
-    {
-        if (currentPage == totalPage - 1) return;
-        currentPage++;
-
-        RefreshNoticeBoard();
-    }
-
-    public void ShowPrevPage()
-    {
-        if (currentPage == 0) return;
-        currentPage--;
-
-        RefreshNoticeBoard();
-    }
-
-    public void LoadFirstPage()
-    {
-        currentPage = 0;
-        RefreshNoticeBoard();
-    }
-
-    public void RefreshNoticeBoard()
-    {
-        List<Post> currentPosts = DataManager.Instance.GetPostInCurrentPage(currentPage, posts.Count);
-        totalPage = (int)Mathf.Ceil((float)DataManager.Instance.GetLastPostNumber() / (float)posts.Count);
-        totalPage = Mathf.Clamp(totalPage, 1, totalPage);
-
-        for(int i = 0; i < currentPosts.Count; i++)
-        {
-            posts[i].gameObject.SetActive(true);
-            posts[i].UpdatePost(currentPosts[i]);
-        }
-
-        for(int i = currentPosts.Count; i < posts.Count; i++)
-        {
-            posts[i].gameObject.SetActive(false);
-        }
-    }
-
-    public void ShowPost(Post post)
-    {
-        postWindow.gameObject.SetActive(true);
-        postWindow.UpdatePost(post);
-    }
-
-    public void BackFromPost()
-    {
-        postWindow.gameObject.SetActive(false);
-    }
-
-
-    public void WritePost()
-    {
-        postingWindow.gameObject.SetActive(true);
-        titleInput.text = "";
-        bodyInput.text = "";
-    }
-
-
-    public void UploadPost()
-    {
-        postCheck.SetActive(true);
-    }
-
-    public void CheckUploadPost(bool value)
-    {
-        postCheck.SetActive(false);
-
-        if (value)
-        {
-            int postNumber = DataManager.Instance.GetLastPostNumber();
-            string title = titleInput.text;
-            string body = bodyInput.text;
-
-            string writer = NetworkManager.User.name;
-            string uploadDate = System.DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
-
-            Post post = new Post();
-            post.uploadTime = uploadDate;
-            post.postNumber = postNumber;
-            post.writer = writer;
-            post.title = title;
-            post.body = body;
-
-            DataManager.Instance.UploadPost(post);
-            LoadFirstPage();
-
-            postingWindow.SetActive(false);
-        }
-    }
-
-    public void CanclePosting()
-    {
-        cancleCheck.SetActive(true);
-    }
-
-    public void CheckCanclePosting(bool value)
-    {
-        cancleCheck.SetActive(false);
-        if(value) postingWindow.SetActive(false);
-    }
-
-
-
-    #endregion
-
     #region Training Progress Boards
 
     [Header("Progress Board")]
@@ -524,6 +380,7 @@ public class LoundgeSceneManager : GameManager
     private float progressBoardElapsedTime = 0f;
     private float progressBoardUpdateInterval = 1f;
 
+    //라운지 전광판의 진행도를 업데이트 함
     public void UpdateProgressBoard()
     {
         roomDatas = DataManager.Instance.GetRoomData();
@@ -533,42 +390,18 @@ public class LoundgeSceneManager : GameManager
             progressUIs[i].sprite = progressImages[roomDatas[i].progress];
         }
     }
+
+    //라운지 전광판의 라운지 유저 수를 업데이트 함
     public void UpdateLobbyPlayerCount(int count)
     {
         playerCountText.text = count.ToString();
     }
 
+    //라운지 전광판의 룸 유저 수를 업데이트함
     public void UpdateRoomPlayerCount(int count)
     {
-
-        //int playerCount = roomData.currentPlayerCount < 0 ? 0 : roomData.currentPlayerCount;
-        //int maxPlayerCount = roomData.maxPlayerCount;
-        //int playerCount = 0;
-        //if (cachedRoomList.ContainsKey(roomNumber.ToString()))
-        //{
-        //    playerCount = cachedRoomList[roomNumber.ToString()].PlayerCount;
-        //}
-
         playerCountsText[0].text = $"{count}/16";
     }
-    private Dictionary<string, RoomInfo> cachedRoomList = new Dictionary<string, RoomInfo>();
-
-    private void UpdateCachedRoomList(List<RoomInfo> roomList)
-    {
-        for (int i = 0; i < roomList.Count; i++)
-        {
-            RoomInfo info = roomList[i];
-            if (info.RemovedFromList)
-            {
-                cachedRoomList.Remove(info.Name);
-            }
-            else
-            {
-                cachedRoomList[info.Name] = info;
-            }
-        }
-    }
-
     #endregion
 
     #region Room State Lamp
@@ -596,9 +429,6 @@ public class LoundgeSceneManager : GameManager
 
     public override void OnJoinedLobby()
     {
-        cachedRoomList.Clear();
-        Debug.Log("Loundge Maanger: Joined Lobby");
-
         Initialize();
 
         NetworkManager.Instance.inFireControl = false;
@@ -619,12 +449,6 @@ public class LoundgeSceneManager : GameManager
 
 
         initializer = StartCoroutine(Initializer());
-    }
-
-
-    public override void OnRoomListUpdate(List<RoomInfo> roomList)
-    {
-        UpdateCachedRoomList(roomList);
     }
 
     public int roomNumber;
@@ -649,13 +473,15 @@ public class LoundgeSceneManager : GameManager
         LoadingSceneController.LoadScene("Room (BG3)");
     }
 
+    //플레이어가 룸, 1:1음성채팅에 들어갈때 호출됨, 포톤 기본함수임 -> 현재 라운지 매니저에서 호출되는 OnJoinedRoom의 경우 1:1 음성채팅에 진입 할 경우에만 호출됨.
     public override void OnJoinedRoom()
     {
+        //플레이어가 진입하는 룸의 종류에 따라 다른 처리
         switch (NetworkManager.Instance.roomType)
         {
-            case RoomType.Room:
+            case RoomType.Room: //플레이어가 룸으로 이동 했을 경우 - 지금은 특별한 동작 없음.
                 break;
-            case RoomType.VoiceRoom:
+            case RoomType.VoiceRoom: //라운지에서 1:1 음성채팅에 진입하는 경우
                 spawnedNPCObject[voiceManager.sender.email].SetActive(false);
                 spawnedNPCObject[voiceManager.reciever.email].SetActive(false);
 
@@ -676,20 +502,22 @@ public class LoundgeSceneManager : GameManager
                 }
 
                 break;
-            case RoomType.Loundge:
+            case RoomType.Loundge: //라운지로 진입하는 경우
                 break;
         }
 
         PhotonNetwork.Instantiate("Player", Vector3.one, Quaternion.identity);
     }
 
+    //플레이어가 룸, 1:1 음성채팅에서 나올때 호출됨, 포톤 기본함수임
     public override void OnLeftRoom()
     {
+        //플레이어가 있던 룸의 종류에 따라 다른 처리
         switch (NetworkManager.Instance.roomType)
         {
             case RoomType.Room:
                 break;
-            case RoomType.VoiceRoom:
+            case RoomType.VoiceRoom: //라운지에서 1:1 음성채팅 중 종료 했을 경우 호출됨
 
                 if(voiceManager.sender.email == NetworkManager.User.email)
                 {
@@ -707,37 +535,26 @@ public class LoundgeSceneManager : GameManager
                         npcObject.SetActive(true);
                     }
                 }
-
                 NetworkManager.Instance.roomType = RoomType.Loundge;
                 NetworkManager.Instance.onVoiceChat = false;
                 NetworkManager.Instance.voiceChatDisabled = true;
                 FindObjectOfType<Photon.Voice.Unity.Recorder>().TransmitEnabled = false;
-
                 NetworkManager.Instance.onTextChat = false;
                 DisableTextChat();
-
                 announcement.PlayAudio();
-
                 voiceChatButton.button.OnClick.RemoveAllListeners();
 
                 foreach (string key in spawnedNPCObject.Keys)
                 {
                     spawnedNPCObject[key].GetComponent<NPCController>().SetVoiceChatState(false);
                 }
-
                 break;
             case RoomType.Loundge:
                 break;
         }
     }
-    public override void OnDisconnected(DisconnectCause cause)
-    {
-        cachedRoomList.Clear();
-    }
-    public override void OnLeftLobby()
-    {
-        cachedRoomList.Clear();
-    }
+    
+    //룸에 다른 플레이어가 접속하면 호출된다.
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         if (newPlayer != PhotonNetwork.LocalPlayer)
