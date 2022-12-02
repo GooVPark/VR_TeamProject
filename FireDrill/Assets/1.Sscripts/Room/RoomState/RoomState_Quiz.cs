@@ -117,8 +117,6 @@ public class RoomState_Quiz : RoomState, IPunObservable
 
         if (NetworkManager.User.userType == UserType.Lecture)
         {
-            //photonView.RPC(nameof(Timer), RpcTarget.All, time);
-
             if (time <= 0 && !endQuiz)
             {
                 endQuiz = true;
@@ -152,7 +150,6 @@ public class RoomState_Quiz : RoomState, IPunObservable
         solveCount++;
 
         roomSceneManager.player.QuizScore = scoreCount * 10;
-        //photonView.RPC(nameof(SetScoreRPC), RpcTarget.All, scoreCount);
     }
 
     private Coroutine resultDelay;

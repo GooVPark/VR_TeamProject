@@ -11,9 +11,6 @@ public class ToastEventHandler : MonoBehaviour
 
     public void OnToastEvent()
     {
-        ToastJson json = DataManager.Instance.toastsByCode[code];
-
-        toast.SetToastMeesage(json);
         toast.Activate(duration);
     }
 }

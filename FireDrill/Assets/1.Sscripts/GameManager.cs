@@ -24,8 +24,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     protected void Initialize()
     {
         localRecoder = FindObjectOfType<Recorder>();
-        //SpawnPlayer();
-        NetworkManager.ChatCallback += UpdateChat;
 
 
         switch (NetworkManager.User.userType)
@@ -106,9 +104,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         player.MegaphoneOn();
 
         NetworkManager.Instance.onMegaphone = true;
-        //megaphoneButton.UpdateState(ButtonState.Activate);
-
-        //Haptic(0.5f, 0.1f);
     }
 
     public void MegaphoneOff()
@@ -119,9 +114,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         player.MegaphoneOff();
 
         NetworkManager.Instance.onMegaphone = false;
-        //megaphoneButton.UpdateState(ButtonState.Deactivate);
-
-        //Haptic(0.5f, 0.1f);
     }
 
     public void MegaphoneToggle()

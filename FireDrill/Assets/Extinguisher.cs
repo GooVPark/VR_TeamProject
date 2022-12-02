@@ -34,29 +34,15 @@ public class Extinguisher : MonoBehaviourPun
         nozzleCollider.enabled = true;
         nozzle.GetComponent<Nozzle>().Activate();
         pinTrigger.GetComponent<PinTrigger>().Activate();
-        //nozzle.GetComponent<Rigidbody>().isKinematic = false;
-
+        
         Collider pinTriggerCollider = pinTrigger.GetComponent<Collider>();
         pinTriggerCollider.enabled = true;
-        //nozzle.GetComponent<Rigidbody>().isKinematic = false;
     }
 
     public void OnDettach()
     {
         nozzle.GetComponent<Nozzle>().Deactivate();
         pinTrigger.GetComponent<PinTrigger>().Deactivate();
-        //Debug.Log("OnDettach");
-        //if (!isPinOff)
-        //{
-        //    Collider nozzleCollider = nozzle.GetComponent<Collider>();
-        //    nozzleCollider.enabled = false;
-        //}
-        //if (!isNozzleOff)
-        //{
-        //    Debug.Log("IsNozzleOff");
-        //    Collider pinTriggerCollider = pinTrigger.GetComponent<Collider>();
-        //    pinTriggerCollider.enabled = false;
-        //}
 
         transform.position = extinguisherOrigin.position;
         transform.rotation = extinguisherOrigin.rotation;

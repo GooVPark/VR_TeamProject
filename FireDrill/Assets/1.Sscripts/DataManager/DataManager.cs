@@ -134,6 +134,7 @@ public class DataManager : MonoBehaviour
     //public TestDataManager testDataManager;
 
     MongoClient client;
+
     IMongoDatabase noticeBoardDatabase;
     IMongoCollection<Post> postCollection;
 
@@ -143,15 +144,6 @@ public class DataManager : MonoBehaviour
     IMongoDatabase roomDatabase;
     IMongoCollection<RoomData> roomCollection;
     IMongoCollection<RoomUser> roomUserCollection;
-
-    IMongoDatabase textDatabase;
-    IMongoCollection<ToastJson> toastCollection;
-
-    IMongoDatabase quizDatabase;
-    IMongoCollection<QuizJson> selectionQuizCollection;
-    IMongoCollection<QuizJson> quizTypeACollection;
-    IMongoCollection<QuizJson> quizTypeBCollection;
-    IMongoCollection<QuizJson> quizTypeCCollection;
 
     IMongoDatabase lobbyDatabase;
     IMongoCollection<LoundgeUser> loundgeUsercollection;
@@ -197,9 +189,6 @@ public class DataManager : MonoBehaviour
             accountCollection = userAccountDatabase.GetCollection<User>("UserAccounts");
         }
 
-        noticeBoardDatabase = client.GetDatabase("NoticeBoard");
-        postCollection = noticeBoardDatabase.GetCollection<Post>("Posts");
-
         roomDatabase = client.GetDatabase("RoomDatabase");
         if (testBuild)
         {
@@ -210,12 +199,6 @@ public class DataManager : MonoBehaviour
             roomCollection = roomDatabase.GetCollection<RoomData>("RoomInfo");
             roomUserCollection = roomDatabase.GetCollection<RoomUser>("Room1");
         }
-        
-        textDatabase = client.GetDatabase("TextDatabase");
-        toastCollection = textDatabase.GetCollection<ToastJson>("Toasts");
-
-        quizDatabase = client.GetDatabase("QuizDatabase");
-        selectionQuizCollection = quizDatabase.GetCollection<QuizJson>("Selection");
 
         lobbyDatabase = client.GetDatabase("LobbyData");
         if (testBuild)
@@ -229,9 +212,6 @@ public class DataManager : MonoBehaviour
 
         eventLogDatabase = client.GetDatabase("EventData");
         eventLogCollection = eventLogDatabase.GetCollection<LogData>("EventLog");
-        
-        //GetAllToast();
-        //GetQuizDatabase();
     }
 
     #region Log
@@ -390,20 +370,6 @@ public class DataManager : MonoBehaviour
     #endregion
 
     #region Toast Text
-
-    public Dictionary<string, ToastJson> toastsByCode = new Dictionary<string, ToastJson>();
-
-    public void GetAllToast()
-    {
-        BsonDocument bson = new BsonDocument { };
-        List<ToastJson> toastJsons = new List<ToastJson>();
-        toastJsons = toastCollection.Find(bson).ToList();
-
-        foreach(ToastJson toast in toastJsons)
-        {
-            toastsByCode.Add(toast.code, toast);
-        }
-    }
 
 
     #endregion
@@ -581,6 +547,9 @@ public class DataManager : MonoBehaviour
     {
         var filter = Builders<User>.Filter.Eq("email", email);
         var update = Builders<User>.Update.Set("characterNumber", value);
+
+        accountCollection.UpdateOne(filter, update);
+
     }
 
     public void UpdateUserData(string filterField, object filterValue, string updateField, object updateValue)

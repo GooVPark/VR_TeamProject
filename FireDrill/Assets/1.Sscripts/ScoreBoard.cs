@@ -72,7 +72,6 @@ public class ScoreBoard : MonoBehaviour
 
         users.RemoveAt(index);
 
-        Debug.Log("Sorted User List");
         foreach(var user in users)
         {
             Debug.Log(user.email);

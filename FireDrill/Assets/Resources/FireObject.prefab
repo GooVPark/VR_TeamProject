@@ -499,6 +499,11 @@ PrefabInstance:
       propertyPath: InitialModule.rotation3D
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 198714429152696258, guid: ea4fb55d0227e604386f44f905cfe7c0,
+        type: 3}
+      propertyPath: InitialModule.maxNumParticles
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 199604171885040012, guid: ea4fb55d0227e604386f44f905cfe7c0,
         type: 3}
       propertyPath: m_AllowRoll
@@ -1253,6 +1258,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 4978563814344649411}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8849597090973106207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4976944077757967307}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6de882cead2bc54c96f95012e20374b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &4978962717834698879 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4430340635691708, guid: bb98861c48ad2024ca93498c7dd93a6c,

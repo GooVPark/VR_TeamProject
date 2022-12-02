@@ -15,7 +15,6 @@ public class ToastManager : MonoBehaviour
 
     public void OnToast(string code, Toast toast)
     {
-        ToastJson toastJson = DataManager.Instance.toastsByCode[code];
-        toast.SetToastMeesage(toastJson);
+
     }
 }

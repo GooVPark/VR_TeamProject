@@ -259,7 +259,7 @@ public class InputManager : MonoBehaviour
 
     private void OnLeftTriggerPerformed(InputAction.CallbackContext context)
     {
-        leftTriggerButton?.Invoke(true);
+        //leftTriggerButton?.Invoke(true);
     }
 
     private void OnLeftTriggerCanceled(InputAction.CallbackContext context)

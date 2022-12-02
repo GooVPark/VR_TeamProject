@@ -27,6 +27,6 @@ public class PostUI : MonoBehaviour
 
     public void ShowPost(Post post)
     {
-        LoundgeSceneManager.Instance.ShowPost(post);
+        //LoundgeSceneManager.Instance.ShowPost(post);
     }
 }

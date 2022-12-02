@@ -26,28 +26,8 @@ public class RoomEnterance : MonoBehaviour
     {
         enteranceCollider = GetComponent<BoxCollider>();
     }
-
-    private void Update()
-    {
-        //roomInfo.text = $"참여 인원 ({NetworkManager.Instance.GetPlayerCount(roomNumber)} / 16)";
-    }
-
     private void OnTriggerStay(Collider other)
     {
-        //if (other.CompareTag("NetworkPlayerRoom"))
-        //{
-
-        //    if (other.GetComponentInParent<PhotonView>().IsMine)
-        //    {
-        //        joinRoomButton.gameObject.SetActive(false);
-        //        joinRoomError.gameObject.SetActive(true);
-        //    }
-        //}
-        //else if(other.CompareTag("NetworkPlayer"))
-        //{
-        //    joinRoomError.gameObject.SetActive(false);
-        //    joinRoomButton.gameObject.SetActive(true);
-        //}
         if(other.CompareTag(targetTag))
         {
             if(isStarted)
