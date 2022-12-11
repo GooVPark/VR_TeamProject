@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 
-public class TrainingManager : MonoBehaviourPunCallbacks, IPunObservable
+public class TrainingManager : MonoBehaviourPunCallbacks
 {
     public delegate void TrainingProgressEvent(float progress);
     public event TrainingProgressEvent GetTrainingProgress;
@@ -18,12 +18,7 @@ public class TrainingManager : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField] private Transform[] fireSpot;
     private bool isEnd = false;
 
-    private void Start()
-    {
-
-    }
-
-    private void Update()
+    private void FixedUpdate()
     {
         currentProgress = GetCurrentProgress();
 
@@ -75,17 +70,6 @@ public class TrainingManager : MonoBehaviourPunCallbacks, IPunObservable
         return current;
     }
 
-    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    {
-        if (stream.IsWriting)
-        {
-            stream.SendNext(currentProgress);
-        }
-        if (stream.IsReading)
-        {
-            currentProgress = (float)stream.ReceiveNext();
-        }
-    }
 
     public void ClearFire()
     {

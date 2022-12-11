@@ -55,7 +55,10 @@ public class PointerHandler : MonoBehaviourPun
 
     public void OnHoverEntered()
     {
-        photonView.RPC(nameof(OnHoverEnteredRPC), RpcTarget.All);
+        if (userType == UserType.Lecture)
+        {
+            photonView.RPC(nameof(OnHoverEnteredRPC), RpcTarget.All);
+        }
     }
 
     [PunRPC]
@@ -68,7 +71,10 @@ public class PointerHandler : MonoBehaviourPun
 
     public void OnHoverExited()
     {
-        photonView.RPC(nameof(OnHoverExitedRPC), RpcTarget.All);
+        if (userType == UserType.Lecture)
+        {
+            photonView.RPC(nameof(OnHoverExitedRPC), RpcTarget.All);
+        }
     }
 
     [PunRPC]

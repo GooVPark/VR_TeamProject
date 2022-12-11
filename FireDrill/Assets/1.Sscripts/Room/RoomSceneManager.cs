@@ -376,34 +376,34 @@ public class RoomSceneManager : GameManager
 
         }
     }
-    private void OnApplicationPause()
-    {
-        RoomData roomData = DataManager.Instance.GetRoomData(roomNumber);
-        int playerCount = roomData.currentPlayerCount - 1;
+    //private void OnApplicationPause()
+    //{
+    //    RoomData roomData = DataManager.Instance.GetRoomData(roomNumber);
+    //    int playerCount = roomData.currentPlayerCount - 1;
 
-        DataManager.Instance.UpdateRoomPlayerCount(roomNumber, playerCount);
-        DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, 999);
-        DataManager.Instance.DeleteRoomUser(NetworkManager.User);
-        DataManager.Instance.SetOffline(NetworkManager.User.email);
+    //    DataManager.Instance.UpdateRoomPlayerCount(roomNumber, playerCount);
+    //    DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, 999);
+    //    DataManager.Instance.DeleteRoomUser(NetworkManager.User);
+    //    DataManager.Instance.SetOffline(NetworkManager.User.email);
 
-        string message = $"{EventMessageType.NOTICE}_{NoticeEventType.DISCONNECT}_{roomNumber}_{NetworkManager.User.email}";
-        eventMessage?.Invoke(message);
+    //    string message = $"{EventMessageType.NOTICE}_{NoticeEventType.DISCONNECT}_{roomNumber}_{NetworkManager.User.email}";
+    //    eventMessage?.Invoke(message);
 
-        if (NetworkManager.User.userType == UserType.Lecture)
-        {
-            DataManager.Instance.UpdateRoomProgress(roomNumber, 0);
-            DataManager.Instance.UpdateRoomState(roomNumber, false);
+    //    if (NetworkManager.User.userType == UserType.Lecture)
+    //    {
+    //        DataManager.Instance.UpdateRoomProgress(roomNumber, 0);
+    //        DataManager.Instance.UpdateRoomState(roomNumber, false);
 
-            message = $"{EventMessageType.PROGRESS}_{ProgressEventType.UPDATE}_{roomNumber}";
-            SendEventMessage(message);
+    //        message = $"{EventMessageType.PROGRESS}_{ProgressEventType.UPDATE}_{roomNumber}";
+    //        SendEventMessage(message);
 
-            message = $"{EventMessageType.UPDATEROOMSTATE}_{roomNumber}";
-            SendEventMessage(message);
+    //        message = $"{EventMessageType.UPDATEROOMSTATE}_{roomNumber}";
+    //        SendEventMessage(message);
 
-            message = $"{EventMessageType.FORCEEXIT}";
-            SendEventMessage(message);
-        }
+    //        message = $"{EventMessageType.FORCEEXIT}";
+    //        SendEventMessage(message);
+    //    }
 
-        eventSyncronizer.Disconnect();
-    }
+    //    eventSyncronizer.Disconnect();
+    //}
 }

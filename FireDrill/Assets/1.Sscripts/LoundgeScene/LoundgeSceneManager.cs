@@ -62,6 +62,10 @@ public class LoundgeSceneManager : GameManager
 
     private void Update()
     {
+        if(PhotonNetwork.CurrentRoom != null)
+        {
+            Debug.Log(PhotonNetwork.CurrentRoom.PlayerCount);
+        }
     }
 
 
@@ -218,8 +222,7 @@ public class LoundgeSceneManager : GameManager
         {
             return;
         }
-        Debug.Log("LoundgeManager: JoinVoiceChatRoom");
-        
+       
         string roomName = $"VoiceChatRoom_{userID}";
 
         RoomOptions roomOptions = new RoomOptions();
@@ -574,14 +577,14 @@ public class LoundgeSceneManager : GameManager
         DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, roomNumber);
         DataManager.Instance.DeleteLobbyUser(NetworkManager.User);
     }
-    private void OnApplicationPause()
-    {
-        string message = $"{EventMessageType.DISCONNECT}_{NetworkManager.User.email}";
-        eventMesage?.Invoke(message);
-        eventSyncronizer.Disconnect();
+    //private void OnApplicationPause()
+    //{
+    //    string message = $"{EventMessageType.DISCONNECT}_{NetworkManager.User.email}";
+    //    eventMesage?.Invoke(message);
+    //    eventSyncronizer.Disconnect();
 
-        DataManager.Instance.SetOffline(NetworkManager.User.email);
-        DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, roomNumber);
-        DataManager.Instance.DeleteLobbyUser(NetworkManager.User);
-    }
+    //    DataManager.Instance.SetOffline(NetworkManager.User.email);
+    //    DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, roomNumber);
+    //    DataManager.Instance.DeleteLobbyUser(NetworkManager.User);
+    //}
 }
