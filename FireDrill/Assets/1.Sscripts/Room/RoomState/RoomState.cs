@@ -18,6 +18,9 @@ public abstract class RoomState : MonoBehaviourPun
     /// 다른 RoomState들이 공통으로 가져야 하는 변수와 함수들을 선언하고 초기화 한다.
     /// </summary>
 
+    public delegate void EventMessage(string message);
+    public EventMessage eventMessage;
+
     public RoomSceneManager roomSceneManager;
     public EventSyncronizerRoom eventSyncronizer;
     protected User user;

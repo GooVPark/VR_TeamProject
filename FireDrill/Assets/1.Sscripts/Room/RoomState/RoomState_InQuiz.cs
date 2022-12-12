@@ -26,6 +26,18 @@ public class RoomState_InQuiz : RoomState
     public override void OnStateEnter()
     {
         base.OnStateEnter();
+
+        DataManager.Instance.InitializeQuizScore(NetworkManager.User.email);
+        roomSceneManager.player.QuizScore = -1;
+        if (user.userType == UserType.Lecture)
+        {
+            eventMessage = null;
+            eventMessage += eventSyncronizer.OnSendMessage;
+
+            string message = $"{EventMessageType.QUIZ}";
+            eventMessage?.Invoke(message);
+        }
+
         eventArea.gameObject.SetActive(false);
         quizObject.SetActive(true);
         npc.SetActive(true);

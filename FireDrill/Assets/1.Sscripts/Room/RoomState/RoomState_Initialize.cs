@@ -29,9 +29,6 @@ public class RoomState_Initialize : RoomState
     public RoomState_GoToB roomStateGoToB;
     public RoomState_SelectMRPlayer roomStateGoToC;
 
-    public delegate void EventMessage(string message);
-    public EventMessage eventMessage;   
-
     public override void OnStateEnter()
     {
         base.OnStateEnter();
@@ -63,19 +60,19 @@ public class RoomState_Initialize : RoomState
 
         #region Area B Initailzie
 
-        DataManager.Instance.InitializeQuizScore(NetworkManager.User.email);
+        //DataManager.Instance.InitializeQuizScore(NetworkManager.User.email);
         NetworkManager.User.hasExtingisher = false;
         roomSceneManager.player.HasExtinguisher = false;
-        roomSceneManager.player.QuizScore = -1;
+       // roomSceneManager.player.QuizScore = -1;
 
-        if (user.userType == UserType.Lecture)
-        {
-            eventMessage = null;
-            eventMessage += eventSyncronizer.OnSendMessage;
+        //if (user.userType == UserType.Lecture)
+        //{
+        //    eventMessage = null;
+        //    eventMessage += eventSyncronizer.OnSendMessage;
 
-            string message = $"{EventMessageType.QUIZ}";
-            eventMessage?.Invoke(message);
-        }
+        //    string message = $"{EventMessageType.QUIZ}";
+        //    eventMessage?.Invoke(message);
+        //}
         npc.SetActive(false);
         #endregion
 

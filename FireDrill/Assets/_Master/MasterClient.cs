@@ -284,10 +284,17 @@ public class MasterClient : MonoBehaviour, IChatClientListener
         OnlineUser sender = alivingUsersDict[senderEmail];
         OnlineUser reciever = alivingUsersDict[recieverEmail];
 
-        sender.voiceState = VoiceState.ON;
-        reciever.voiceState = VoiceState.ON;
+        if (reciever.voiceState != VoiceState.REQUEST || !reciever.voiceTarget.Equals(senderEmail))
+        {
+            return;
+        }
+        else
+        {
+            sender.voiceState = VoiceState.ON;
+            reciever.voiceState = VoiceState.ON;
 
-        chatClient.PublishMessage(eventServer, message);
+            chatClient.PublishMessage(eventServer, message);
+        }
     }
 
     private void VoiceChatDeaccept(string senderEmail, string recieverEmail, string message)
@@ -295,13 +302,20 @@ public class MasterClient : MonoBehaviour, IChatClientListener
         OnlineUser sender = alivingUsersDict[senderEmail];
         OnlineUser reciever = alivingUsersDict[recieverEmail];
 
-        sender.voiceState = VoiceState.OFF;
-        reciever.voiceState = VoiceState.OFF;
+        if (reciever.voiceState != VoiceState.REQUEST || !reciever.voiceTarget.Equals(senderEmail))
+        {
+            return;
+        }
+        else
+        {
+            sender.voiceState = VoiceState.OFF;
+            reciever.voiceState = VoiceState.OFF;
 
-        sender.voiceTarget = string.Empty;
-        reciever.voiceTarget = string.Empty;
+            sender.voiceTarget = string.Empty;
+            reciever.voiceTarget = string.Empty;
 
-        chatClient.PublishMessage(eventServer, message);
+            chatClient.PublishMessage(eventServer, message);
+        }
     }
 
     private void VoiceChatDisconnect(string senderEmail, string recieverEmail, string message)
