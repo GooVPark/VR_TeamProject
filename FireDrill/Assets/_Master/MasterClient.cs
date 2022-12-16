@@ -15,6 +15,8 @@ using MongoDB.Driver;
 
 public class MasterClient : MonoBehaviour, IChatClientListener
 {
+    public enum EventType { Send, Recieve }
+
     public enum VoiceState { ON, OFF, CANCEL, ACCEPT, DEACCEPT, REQUEST }
     [System.Serializable]
     public class MessageWrapper
@@ -22,12 +24,14 @@ public class MasterClient : MonoBehaviour, IChatClientListener
         public string sender;
         public object message;
         public string channelName;
+        public EventType EventType;
 
-        public MessageWrapper(string sender, object message, string channelName)
+        public MessageWrapper(string sender, object message, string channelName, EventType eventType)
         {
             this.sender = sender;
             this.message = message;
             this.channelName = channelName;
+            this.EventType = eventType;
         }
     }
 
@@ -129,7 +133,7 @@ public class MasterClient : MonoBehaviour, IChatClientListener
             {
                 MessageWrapper m = messageQueue[0];
                 messageQueue.RemoveAt(0);
-                HandlePrivateMessage(m.sender, m.message, m.channelName);
+                HandlePrivateMessage(m.sender, m.message, m.channelName, m.EventType);
             }
 
             CheckAliving();
@@ -144,11 +148,11 @@ public class MasterClient : MonoBehaviour, IChatClientListener
         {
             return;
         }
-        messageQueue.Add(new MessageWrapper(sender, message, channelName));
+        messageQueue.Add(new MessageWrapper(sender, message, channelName, EventType.Recieve));
     }
 
     //수신한 이벤트 메세지를 처리하고 다시 송신함
-    public void HandlePrivateMessage(string sender, object messageOb, string channelName)
+    public void HandlePrivateMessage(string sender, object messageOb, string channelName, EventType eventType)
     {
         /*if (!channelName.Equals(eventServer))
             return;
@@ -163,69 +167,76 @@ public class MasterClient : MonoBehaviour, IChatClientListener
 
         string message = messageOb.ToString().Trim();
 
-        if (message[0] == '!')
+        if (eventType == EventType.Recieve)
         {
-            // MasterLogger.Log("느낌표다! : " + sender);
-            if (!alivingUsersDict.ContainsKey(sender))
+            if (message[0] == '!')
             {
-                AddUser(sender);
+                // MasterLogger.Log("느낌표다! : " + sender);
+                if (!alivingUsersDict.ContainsKey(sender))
+                {
+                    AddUser(sender);
+                }
+                alivingUsersDict[sender].UpdateUserLife();
             }
-            alivingUsersDict[sender].UpdateUserLife();
-        }
-        else
-        {
-            MasterLogger.Log($"({sender}) HANDLE: {message}");
-            // to all user
-            //for (int i = 0; i < alivingUsers.Count; i++)
-            //    chatClient.SendPrivateMessage(alivingUsers[i].userName, message);
-            string[] command = message.Split('_');
-            //sender의 reciever가 reciever의 sender와 같을때 return
-            if (command[0].Equals(EventMessageType.VOICECHAT.ToString()))
+            else
             {
-                if (command[1].Equals(VoiceEventType.REQUEST.ToString()))
+                MasterLogger.Log($"({sender}) HANDLE: {message}");
+                // to all user
+                //for (int i = 0; i < alivingUsers.Count; i++)
+                //    chatClient.SendPrivateMessage(alivingUsers[i].userName, message);
+                string[] command = message.Split('_');
+                //sender의 reciever가 reciever의 sender와 같을때 return
+                if (command[0].Equals(EventMessageType.VOICECHAT.ToString()))
                 {
-                    string senderEmail = command[2];
-                    string recieverEmail = command[3];
+                    if (command[1].Equals(VoiceEventType.REQUEST.ToString()))
+                    {
+                        string senderEmail = command[2];
+                        string recieverEmail = command[3];
 
-                    VoiceChatRequestOverlap(senderEmail, recieverEmail, message);
-                }
-                else if (command[1].Equals(VoiceEventType.CANCEL.ToString()))
-                {
-                    string senderEmail = command[2];
-                    string recieverEmail = command[3];
+                        VoiceChatRequestOverlap(senderEmail, recieverEmail, message);
+                    }
+                    else if (command[1].Equals(VoiceEventType.CANCEL.ToString()))
+                    {
+                        string senderEmail = command[2];
+                        string recieverEmail = command[3];
 
-                    VoiceChatCancelOverlap(senderEmail, recieverEmail, message);
-                }
-                else if (command[1].Equals(VoiceEventType.ACCEPT.ToString()))
-                {
-                    string senderEmail = command[2];
-                    string recieverEmail = command[3];
+                        VoiceChatCancelOverlap(senderEmail, recieverEmail, message);
+                    }
+                    else if (command[1].Equals(VoiceEventType.ACCEPT.ToString()))
+                    {
+                        string senderEmail = command[2];
+                        string recieverEmail = command[3];
 
-                    VoiceChatAccept(senderEmail, recieverEmail, message);
-                }
-                else if (command[1].Equals(VoiceEventType.DEACCEPT.ToString()))
-                {
-                    string senderEmail = command[2];
-                    string recieverEmail = command[3];
+                        VoiceChatAccept(senderEmail, recieverEmail, message);
+                    }
+                    else if (command[1].Equals(VoiceEventType.DEACCEPT.ToString()))
+                    {
+                        string senderEmail = command[2];
+                        string recieverEmail = command[3];
 
-                    VoiceChatDeaccept(senderEmail, recieverEmail, message);
-                }
-                else if (command[1].Equals(VoiceEventType.DISCONNECT.ToString()))
-                {
-                    string senderEmail = command[2];
-                    string recieverEmail = command[3];
+                        VoiceChatDeaccept(senderEmail, recieverEmail, message);
+                    }
+                    else if (command[1].Equals(VoiceEventType.DISCONNECT.ToString()))
+                    {
+                        string senderEmail = command[2];
+                        string recieverEmail = command[3];
 
-                    VoiceChatDisconnect(senderEmail, recieverEmail, message);
+                        VoiceChatDisconnect(senderEmail, recieverEmail, message);
+                    }
+                    else
+                    {
+                        chatClient.PublishMessage(eventServer, message);
+                    }
                 }
                 else
                 {
                     chatClient.PublishMessage(eventServer, message);
                 }
             }
-            else
-            {
-                chatClient.PublishMessage(eventServer, message);
-            }
+        }
+        else
+        {
+            chatClient.PublishMessage(eventServer, message);
         }
     }
 
@@ -253,7 +264,8 @@ public class MasterClient : MonoBehaviour, IChatClientListener
             reciever.voiceState = VoiceState.REQUEST;
             reciever.voiceTarget = senderEmail;
 
-            chatClient.PublishMessage(eventServer, message);
+            //chatClient.PublishMessage(eventServer, message);
+            messageQueue.Add(new MessageWrapper(senderEmail, message, string.Empty, EventType.Send));
         }
     }
 
@@ -262,7 +274,7 @@ public class MasterClient : MonoBehaviour, IChatClientListener
         OnlineUser sender = alivingUsersDict[senderEmail];
         OnlineUser reciever = alivingUsersDict[recieverEmail];
         
-        if(reciever.voiceState != VoiceState.REQUEST || !reciever.voiceTarget.Equals(senderEmail))
+        if(reciever.voiceState != VoiceState.REQUEST)
         {
             return;
         }
@@ -274,9 +286,9 @@ public class MasterClient : MonoBehaviour, IChatClientListener
             reciever.voiceTarget = string.Empty;
             sender.voiceTarget = string.Empty;
 
-            chatClient.PublishMessage(eventServer, message);
+            //chatClient.PublishMessage(eventServer, message);
+            messageQueue.Add(new MessageWrapper(senderEmail, message, string.Empty, EventType.Send));
         }
-         
     }
 
     private void VoiceChatAccept(string senderEmail, string recieverEmail, string message)
@@ -284,7 +296,7 @@ public class MasterClient : MonoBehaviour, IChatClientListener
         OnlineUser sender = alivingUsersDict[senderEmail];
         OnlineUser reciever = alivingUsersDict[recieverEmail];
 
-        if (reciever.voiceState != VoiceState.REQUEST || !reciever.voiceTarget.Equals(senderEmail))
+        if (sender.voiceState != VoiceState.REQUEST)
         {
             return;
         }
@@ -293,7 +305,8 @@ public class MasterClient : MonoBehaviour, IChatClientListener
             sender.voiceState = VoiceState.ON;
             reciever.voiceState = VoiceState.ON;
 
-            chatClient.PublishMessage(eventServer, message);
+            //chatClient.PublishMessage(eventServer, message);
+            messageQueue.Add(new MessageWrapper(senderEmail, message, string.Empty, EventType.Send));
         }
     }
 
@@ -302,7 +315,7 @@ public class MasterClient : MonoBehaviour, IChatClientListener
         OnlineUser sender = alivingUsersDict[senderEmail];
         OnlineUser reciever = alivingUsersDict[recieverEmail];
 
-        if (reciever.voiceState != VoiceState.REQUEST || !reciever.voiceTarget.Equals(senderEmail))
+        if (sender.voiceState != VoiceState.REQUEST)
         {
             return;
         }
@@ -314,7 +327,8 @@ public class MasterClient : MonoBehaviour, IChatClientListener
             sender.voiceTarget = string.Empty;
             reciever.voiceTarget = string.Empty;
 
-            chatClient.PublishMessage(eventServer, message);
+            //chatClient.PublishMessage(eventServer, message);       
+            messageQueue.Add(new MessageWrapper(senderEmail, message, string.Empty, EventType.Send));
         }
     }
 
@@ -329,7 +343,8 @@ public class MasterClient : MonoBehaviour, IChatClientListener
         sender.voiceTarget = string.Empty;
         reciever.voiceTarget = string.Empty;
 
-        chatClient.PublishMessage(eventServer, message);
+        //chatClient.PublishMessage(eventServer, message);      
+        messageQueue.Add(new MessageWrapper(senderEmail, message, string.Empty, EventType.Send));
     }
 
     #endregion

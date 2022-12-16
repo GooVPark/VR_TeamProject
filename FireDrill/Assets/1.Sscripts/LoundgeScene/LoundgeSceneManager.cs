@@ -582,7 +582,7 @@ public class LoundgeSceneManager : GameManager
         DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, roomNumber);
         DataManager.Instance.DeleteLobbyUser(NetworkManager.User);
     }
-    private void OnApplicationPause()
+    private void OnApplicationPause(bool value)
     {
         //string message = $"{EventMessageType.DISCONNECT}_{NetworkManager.User.email}";
         //eventMesage?.Invoke(message);
@@ -592,9 +592,20 @@ public class LoundgeSceneManager : GameManager
         //DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, roomNumber);
         //DataManager.Instance.DeleteLobbyUser(NetworkManager.User);
 
-        if(NetworkManager.Instance.roomType == RoomType.VoiceRoom)
+        if (value)
         {
-            voiceManager.DisconnectVoiceChat();
+            if (NetworkManager.Instance.roomType == RoomType.VoiceRoom)
+            {
+                voiceManager.DisconnectVoiceChat();
+            }
+
+            string message = $"{EventMessageType.DISCONNECT}_{NetworkManager.User.email}";
+            eventMesage?.Invoke(message);
+            eventSyncronizer.Disconnect();
+
+            DataManager.Instance.SetOffline(NetworkManager.User.email);
+            DataManager.Instance.UpdateCurrentRoom(NetworkManager.User.email, roomNumber);
+            DataManager.Instance.DeleteLobbyUser(NetworkManager.User);
         }
     }
 }
