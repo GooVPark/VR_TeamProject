@@ -55,6 +55,8 @@ public class RoomState_InQuiz : RoomState
         {
             studnetToast.gameObject.SetActive(true);
         }
+
+        DataManager.Instance.UpdateRoomProgress(user.email, 3);
     }
 
     public override void OnStateExit()

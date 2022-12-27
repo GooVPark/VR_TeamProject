@@ -31,6 +31,7 @@ public class RoomState_ClassEnd : RoomState
             string message = $"{EventMessageType.PROGRESS}_{ProgressEventType.UPDATE}_{roomSceneManager.roomNumber}";
             SendEventMessage(message);
         }
+        DataManager.Instance.UpdateRoomProgress(user.email, 2);
     }
 
     public override void OnStateExit()

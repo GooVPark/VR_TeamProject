@@ -34,6 +34,8 @@ public class RoomState_EndTraining : RoomState
                 studentToast.gameObject.SetActive(true);
                 break;
         }
+
+        DataManager.Instance.UpdateRoomProgress(user.email, 6);
     }
 
     public override void OnStateExit()

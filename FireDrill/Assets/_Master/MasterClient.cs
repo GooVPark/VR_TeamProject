@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -389,11 +390,29 @@ public class MasterClient : MonoBehaviour, IChatClientListener
         var update = Builders<User>.Update.Set("isOnline" , false);
         accountCollection.UpdateOne(filterUser, update);
 
+        UpdateLogoutTime(user.userName);
+
         string msg = $"{EventMessageType.OUT}_{user.userName}";
         for (int i = 0; i < alivingUsers.Count; i++)
+        {
             chatClient.SendPrivateMessage(alivingUsers[i].userName, msg);
+        }
+    }
+    public void UpdateLoginTime(string email)
+    {
+        var filter = Builders<User>.Filter.Eq("email", email);
+        var update = Builders<User>.Update.Set("loginTime", DateTime.Now.ToString("F"));
+
+        accountCollection.UpdateOne(filter, update);
     }
 
+    public void UpdateLogoutTime(string email)
+    {
+        var filter = Builders<User>.Filter.Eq("email", email);
+        var update = Builders<User>.Update.Set("logoutTime", DateTime.Now.ToString("F"));
+
+        accountCollection.UpdateOne(filter, update);
+    }
     #endregion
 
     public void AddUser(string userName)
@@ -407,6 +426,8 @@ public class MasterClient : MonoBehaviour, IChatClientListener
         OnlineUser user = new OnlineUser(userName);
         alivingUsers.Add(user);
         alivingUsersDict.Add(userName, user);
+
+        UpdateLoginTime(userName);
     }
 
     public void Connect()

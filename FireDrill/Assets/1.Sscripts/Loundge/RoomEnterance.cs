@@ -22,6 +22,8 @@ public class RoomEnterance : MonoBehaviour
     public bool isStarted = false;
     public GameObject interactionArea;
 
+    public string className;
+
     private void Awake()
     {
         enteranceCollider = GetComponent<BoxCollider>();
@@ -73,7 +75,7 @@ public class RoomEnterance : MonoBehaviour
             return;
         }
         loundgeSceneManager.JoinRoom(roomNumber);
-
+        DataManager.Instance.SetClass(NetworkManager.User.email, className);
     }
 
 }

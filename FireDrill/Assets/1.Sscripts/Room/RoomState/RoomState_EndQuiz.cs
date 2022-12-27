@@ -26,6 +26,8 @@ public class RoomState_EndQuiz : RoomState
             toast.gameObject.SetActive(true);
             Invoke(nameof(SetState), 2f);
         }
+
+        DataManager.Instance.UpdateRoomProgress(user.email, 4);
     }
 
     public override void OnStateExit()

@@ -408,14 +408,18 @@ public class NetworkPlayer : MonoBehaviourPun, IPunInstantiateMagicCallback
 
         Initialize();
 
-        Invoke("UpdateFPSInfo", 1f);
+        StartCoroutine(FPSLogLoop());
     }
 
-    public void UpdateFPSInfo()
+    private IEnumerator FPSLogLoop()
     {
-        DataManager.Instance.UpdateRoomFPS(NetworkManager.Instance.fps, PhotonNetwork.GetPing().ToString(), NetworkManager.User.email);
+        WaitForSeconds waitForSeconds = new WaitForSeconds(300);
+        while (true)
+        {
+            DataManager.Instance.UpdateRoomFPS(NetworkManager.Instance.fps, PhotonNetwork.GetPing().ToString(), NetworkManager.User.email);
+            yield return waitForSeconds;
+        }
     }
-
     public void OutlineEnabled()
     {
         if (isHoverActivated)

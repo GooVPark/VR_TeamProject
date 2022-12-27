@@ -299,12 +299,22 @@ public class LoginSceneManager : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster()
     {
-        DataManager.Instance.UpdateLoginFPS(NetworkManager.Instance.fps, PhotonNetwork.GetPing().ToString(), NetworkManager.User.email);
+        StartCoroutine(FPSLogLoop());
 
         ShowCharacterSelectWindow();
         DataManager.Instance.SetOnline(NetworkManager.User.email);
     }
 
+    private IEnumerator FPSLogLoop()
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(300);
+        while(true)
+        {
+            DataManager.Instance.UpdateLoginFPS(NetworkManager.Instance.fps, PhotonNetwork.GetPing().ToString(), NetworkManager.User.email);
+
+            yield return waitForSeconds;
+        }
+    }
     #endregion
 
     public void Quit()

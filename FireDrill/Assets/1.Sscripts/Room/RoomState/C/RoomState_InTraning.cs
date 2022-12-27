@@ -51,6 +51,8 @@ public class RoomState_InTraning : RoomState
                 break;
         }
 
+        DataManager.Instance.UpdateRoomProgress(user.email, 5);
+
         currentToast.SetActive(true);
     }
 

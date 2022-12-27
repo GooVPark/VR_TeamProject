@@ -129,12 +129,22 @@ public class LoundgeSceneManager : GameManager
             UpdateRoomEnterence(i);
         }
 
-        DataManager.Instance.UpdateLoundgeFPS(NetworkManager.Instance.fps, PhotonNetwork.GetPing().ToString(), NetworkManager.User.email);
+        StartCoroutine(FPSLogLoop());
 
         if (initializer != null)
         {
             StopCoroutine(initializer);
             initializer = null;
+        }
+    }
+
+    private IEnumerator FPSLogLoop()
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(300);
+        while (true)
+        {
+            DataManager.Instance.UpdateLoundgeFPS(NetworkManager.Instance.fps, PhotonNetwork.GetPing().ToString(), NetworkManager.User.email);
+            yield return waitForSeconds;
         }
     }
 

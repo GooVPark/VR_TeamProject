@@ -52,6 +52,8 @@ public class RoomState_InClass : RoomState
             studentToast.gameObject.SetActive(true);
             currentToast = studentToast.gameObject;
         }
+
+        DataManager.Instance.UpdateRoomProgress(user.email, 1);
     }
 
     public override void OnStateExit()

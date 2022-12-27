@@ -61,6 +61,9 @@ public class RoomState_WaitPlayer : RoomState
             prevButton.SetActive(false);
             selectLevelUI.SetActive(false);
         }
+
+        DataManager.Instance.UpdateRoomProgress(user.email, 0);
+
         classObject.gameObject.SetActive(false);
     }
 

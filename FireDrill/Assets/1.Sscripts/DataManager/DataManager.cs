@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -34,6 +36,8 @@ public class User
     public IdleMode idleMode;
     public string company;
 
+    public string className;
+
     public int characterNumber;
 
     public bool isOnline;
@@ -53,6 +57,9 @@ public class User
 
     public string roomPing;
     public string roomFPS;
+
+    public string loginTime;
+    public string logoutTime;
 
     public User()
     {
@@ -291,6 +298,22 @@ public class DataManager : MonoBehaviour
     {
         Debug.Log("InsertMember");
         accountCollection.InsertOne(member);
+    }
+
+    public void SetClass(string email, string className)
+    {
+        var filter = Builders<User>.Filter.Eq("email", email);
+        var update = Builders<User>.Update.Set("className", className);
+
+        accountCollection.UpdateOne(filter, update);
+    }
+
+    public void UpdateRoomProgress(string email, int progress)
+    {
+        var filter = Builders<User>.Filter.Eq("email", email);
+        var update = Builders<User>.Update.Set("trainingProgress", progress);
+
+        accountCollection.UpdateOne(filter, update);
     }
 
     #endregion
