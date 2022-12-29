@@ -12,6 +12,7 @@ public class RoomState_EndTraining : RoomState
     public ToastOneButton lectureToast;
     public Toast studentToast;
 
+    public TrainingManager trainingManager;
     private float elapsedTime;
     private float time = 10f;
 
@@ -35,6 +36,7 @@ public class RoomState_EndTraining : RoomState
                 break;
         }
 
+        trainingManager.ClearFire();
         DataManager.Instance.UpdateRoomProgress(user.email, 6);
     }
 

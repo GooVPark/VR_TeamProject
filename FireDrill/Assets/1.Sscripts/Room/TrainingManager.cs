@@ -67,6 +67,7 @@ public class TrainingManager : MonoBehaviourPunCallbacks
                 current += fireObject.currentDuration;
             }
         }
+
         return current;
     }
 

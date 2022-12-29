@@ -22,7 +22,7 @@ public class FireObject : MonoBehaviourPun
 
     private void Start()
     {
-        totalDuration = flames.Length;
+        totalDuration = flames.Length-1;
     }
 
     private void Update()
@@ -36,14 +36,29 @@ public class FireObject : MonoBehaviourPun
             if (!isExtinguishing)
             {
                 reviveTime += Time.deltaTime;
-                if (reviveThrashold < reviveTime)
+                if (currentDuration == 0)
                 {
-                    //onFireObjectTriggerd(fireObjectIndex, flameIndex, true);
-                    photonView.RPC(nameof(ControlFire), RpcTarget.All, flameIndex, true);
-                    flameIndex--;
-                    flameIndex = Mathf.Clamp(flameIndex, 0, flames.Length);
+                    if (reviveThrashold + 0.5f < reviveTime)
+                    {
+                        //onFireObjectTriggerd(fireObjectIndex, flameIndex, true);
+                        photonView.RPC(nameof(ControlFire), RpcTarget.All, flameIndex, true);
+                        flameIndex--;
+                        flameIndex = Mathf.Clamp(flameIndex, 0, flames.Length);
 
-                    reviveTime = 0f;
+                        reviveTime = 0f;
+                    }
+                }
+                else
+                {
+                    if (reviveThrashold < reviveTime)
+                    {
+                        //onFireObjectTriggerd(fireObjectIndex, flameIndex, true);
+                        photonView.RPC(nameof(ControlFire), RpcTarget.All, flameIndex, true);
+                        flameIndex--;
+                        flameIndex = Mathf.Clamp(flameIndex, 0, flames.Length);
+
+                        reviveTime = 0f;
+                    }
                 }
             }
 
@@ -79,7 +94,8 @@ public class FireObject : MonoBehaviourPun
                 if (flameIndex >= flames.Length)
                 {
                     StopCoroutine(extinguishTrigger);
-                    gameObject.SetActive(false);
+                    //gameObject.SetActive(false);
+                    flameIndex = flames.Length - 1;
                 }
             }
 
