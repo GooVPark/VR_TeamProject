@@ -20,8 +20,11 @@ public class FireObject : MonoBehaviourPun
     private float reviveTime;
     [SerializeField] private bool isExtinguishing = false;
 
+    private SphereCollider collider;
+
     private void Start()
     {
+        collider = GetComponent<SphereCollider>();
         totalDuration = flames.Length-1;
     }
 
@@ -33,12 +36,22 @@ public class FireObject : MonoBehaviourPun
             {
                 return;
             }
+
+            if (flames[^1].activeSelf)
+            {
+                collider.enabled = true;
+            }
+            else
+            {
+                collider.enabled = false;
+            }
+
             if (!isExtinguishing)
             {
                 reviveTime += Time.deltaTime;
                 if (currentDuration == 0)
                 {
-                    if (reviveThrashold + 0.5f < reviveTime)
+                    if (reviveThrashold + 2f < reviveTime)
                     {
                         //onFireObjectTriggerd(fireObjectIndex, flameIndex, true);
                         photonView.RPC(nameof(ControlFire), RpcTarget.All, flameIndex, true);

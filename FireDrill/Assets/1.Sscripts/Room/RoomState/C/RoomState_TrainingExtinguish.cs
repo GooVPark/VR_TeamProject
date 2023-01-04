@@ -66,9 +66,12 @@ public class RoomState_TrainingExtinguish : RoomState
 
     public override void OnUpdate()
     {
-        if(progressUI.fillAmount == 0)
+        if (user.hasExtingisher)
         {
-            photonView.RPC(nameof(NextStateRPC), RpcTarget.All);
+            if (progressUI.fillAmount == 0)
+            {
+                photonView.RPC(nameof(NextStateRPC), RpcTarget.All);
+            }
         }
     }
 

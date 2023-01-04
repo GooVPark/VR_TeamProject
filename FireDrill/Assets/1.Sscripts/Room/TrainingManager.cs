@@ -96,14 +96,16 @@ public class TrainingManager : MonoBehaviourPunCallbacks
             GameObject firePrefab = PhotonNetwork.Instantiate("FireObject", fireSpot[i].position, Quaternion.identity);
             FireObject fire = firePrefab.GetComponent<FireObject>();
 
-            if (photonView.IsMine)
-            {
-                fireObjects.Add(fire);
-            }
-            else
-            {
-                photonView.RPC(nameof(AddFireObject), RpcTarget.All);
-            }
+            //if (photonView.IsMine)
+            //{
+            //    fireObjects.Add(fire);
+            //}
+            //else
+            //{
+            //    photonView.RPC(nameof(AddFireObject), RpcTarget.All);
+            //}
+
+            photonView.RPC(nameof(AddFireObject), RpcTarget.All);
         }
 
         for (int i = 0; i < fireObjects.Count; i++)
